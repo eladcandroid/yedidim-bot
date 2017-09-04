@@ -1,0 +1,129 @@
+{
+  "messages": {
+    "only_urgent": {
+      "text": "ערוץ זה נועד רק למתן עזרה דחופה",
+      "next": "get_started"
+    },
+    "select_answer": {
+      "text": "בבקשה בחר/י תשובה מהרשימה"
+    },
+    "get_started": {
+      "type": "generic",
+      "title": "היי, אני \"בוט\" ידיד",
+      "subtitle": "מטרתי היא לסייע לך ולאפשר למתנדב להגיע אליך בהקדם האפשרי. זקוק/ה לעזרה?",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/yedidim-sandbox.appspot.com/o/images%2Fyedidim-get-started.jpeg?alt=media&v=2",
+      "text": "זקוק/ה לעזרה?",
+      "buttons": [
+        {"payload": "need_help_yes"},
+        {"payload": "need_help_no"}
+      ]
+    },
+    "confirm_name": {
+      "type": "quick_replies",
+      "text": "האם שמך variable?",
+      "variable": "caller name",
+      "buttons": [
+        {"payload": "name_confirmed"},
+        {"payload": "name_not_confirmed"}
+      ]
+    },
+    "ask_for_name": {
+      "text": "מה שמך המלא?",
+      "field": "caller name",
+      "next": "problem_type"
+    },
+    "problem_type": {
+      "type": "quick_replies",
+      "text": "מה הבעיה?",
+      "field": "case",
+      "buttons": [
+        {"payload": "problem_fuel"},
+        {"payload": "problem_flat_tire"},
+        {"payload": "problem_battery"},
+        {"payload": "problem_rescue"},
+        {"payload": "problem_code"},
+        {"payload": "problem_other"}
+      ]
+    },
+    "more_details": {
+      "text": "אנא הקלד פרטים מורחבים על הבעיה, מה התרחש קדם לתקלה?",
+      "field": "more",
+      "next": "ask_for_location"
+    },
+    "ask_for_location": {
+      "type": "quick_replies",
+      "text": "מה הכתובת?",
+      "validate": "location",
+      "error": "invalid_location",
+      "next": "ask_for_phone",
+      "quick_replies": [
+        {"content_type": "location"}
+      ]
+    },
+    "invalid_location": {
+      "text": "בבקשה הכנס כתובת מדויקת"
+    },
+    "ask_for_phone": {
+      "text": "מה מספר הטלפון?",
+      "field": "phone number",
+      "validate": "phone",
+      "error": "invalid_phone",
+      "next": "confirm_request"
+    },
+    "invalid_phone": {
+      "text": "מספר טלפון לא חוקי"
+    },
+    "confirm_request": {
+      "final": true,
+      "text": "קריאתך התקבלה בהצלחה. מוקדן \"ידידים\" יצור איתך קשר בדקות הקרובות"
+    }
+  },
+  "payloads": {
+    "need_help_yes": {
+      "title": "כן, בבקשה",
+      "next": "confirm_name"
+    },
+    "need_help_no": {
+      "title": "לא, תודה",
+      "next": "only_urgent"
+    },
+    "name_confirmed": {
+      "title": "כן",
+      "next": "problem_type"
+    },
+    "name_not_confirmed": {
+      "title": "לא",
+      "next": "ask_for_name"
+    },
+    "problem_battery": {
+      "title": "כבלים ועזרה בהתנעה",
+      "case": 0,
+      "next": "more_details"
+    },
+    "problem_flat_tire": {
+      "title": "יש לי פנצ'ר",
+      "case": 1,
+      "next": "more_details"
+    },
+    "problem_fuel": {
+      "title": "חסר שמן/דלק/מים",
+      "case": 4,
+      "next": "more_details"
+    },
+    "problem_rescue": {
+      "title": "חילוץ הרכב",
+      "case": 5,
+      "next": "more_details"
+    },
+    "problem_code": {
+      "title": "הקודנית לא תקינה",
+      "case": 6,
+      "next": "more_details"
+    },
+    "problem_other": {
+      "title": "אחר",
+      "case": 8,
+      "next": "more_details"
+    }
+  }
+}
