@@ -1,8 +1,8 @@
 {
   "messages": {
-    "only_urgent": {
+    "general": {
       "text": "אתה מוזמן לקרוא עוד על פעילותה של עמותת \"ידידים\" ומתנדביה http://yedidim-il.org",
-      "next": "get_started"
+      "error_next": "get_started"
     },
     "select_answer": {
       "text": "בבקשה בחר/י תשובה מהרשימה"
@@ -114,7 +114,7 @@
     },
     "need_help_no": {
       "title": "לא, תודה",
-      "next": "only_urgent"
+      "next": "general"
     },
     "name_confirmed": {
       "title": "כן",

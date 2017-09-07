@@ -101,6 +101,9 @@ function sendFollowUpResponse(event, context) {
       } else if (!response.final) {
         //In case of final message resend last message in case of additional messages from user
         sendMessage(senderID, flow.messages[response.error ? response.error : lastMessage.error]);
+        if (lastMessage.error_next){
+          context.lastMessage = lastMessage.error_next;
+        }
       }
       const nextQuestion = flow.messages[context.lastMessage];
       if (nextQuestion.pre && response.valid){
