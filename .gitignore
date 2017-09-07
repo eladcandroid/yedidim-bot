@@ -4,3 +4,4 @@ node_modules
 /functions/_facebookTokens.json
 /functions/_firebaseKey.json
 /.firebaserc
+/firebase-debug.log
