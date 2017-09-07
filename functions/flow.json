@@ -1,7 +1,7 @@
 {
   "messages": {
     "only_urgent": {
-      "text": "ערוץ זה נועד רק למתן עזרה דחופה",
+      "text": "אתה מוזמן לקרוא עוד על פעילותה של עמותת \"ידידים\" ומתנדביה http://yedidim-il.org",
       "next": "get_started"
     },
     "select_answer": {
@@ -20,21 +20,23 @@
     },
     "confirm_name": {
       "type": "quick_replies",
-      "text": "האם שמך variable?",
+      "text": "האם שמך {variable}?",
       "variable": "caller name",
+      "pre": "כעת אבקש ממך לענות על מס' שאלות על מנת שאוכל להעביר את המידע למתנדב שיסייע לך",
       "buttons": [
         {"payload": "name_confirmed"},
         {"payload": "name_not_confirmed"}
       ]
     },
     "ask_for_name": {
-      "text": "מה שמך המלא?",
+      "text": "הקלד\\י בבקשה בעברית את שמך המלא כעת",
       "field": "caller name",
       "next": "problem_type"
     },
     "problem_type": {
       "type": "quick_replies",
-      "text": "מה הבעיה?",
+      "text": "{variable}, אנא בחר\\י את סוג התקלה ברכב",
+      "variable": "caller name",
       "field": "case",
       "buttons": [
         {"payload": "problem_fuel"},
@@ -45,14 +47,39 @@
         {"payload": "problem_other"}
       ]
     },
+    "more_details_fuel": {
+      "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה ומה המתנדב צריך להביא",
+      "field": "more",
+      "next": "ask_for_location"
+    },
+    "more_details_flat_tire": {
+      "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה ומה שהתרחש לפי התקלה. האם ברשותך גלגל רזרבי תקין וכלים להחלפת הצמיג?",
+      "field": "more",
+      "next": "ask_for_location"
+    },
+    "more_details_battery": {
+      "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה. מה התרחש לפני התקלה? מתי הרכב הונע\\נסע לאחרונה? האם הרכב ידני או אוטומטי?",
+      "field": "more",
+      "next": "ask_for_location"
+    },
+    "more_details_rescue": {
+      "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה. מה התרחש לפני התקלה? כיצד הרכב בדיוק תקוע? האם יש גישה לרכב רגיל או רק ל4X4?",
+      "field": "more",
+      "next": "ask_for_location"
+    },
+    "more_details_code": {
+      "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה. מה התרחש לפני התקלה?",
+      "field": "more",
+      "next": "ask_for_location"
+    },
     "more_details": {
-      "text": "אנא הקלד פרטים מורחבים על הבעיה, מה התרחש קדם לתקלה?",
+      "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה ומה התרחש לפני התקלה",
       "field": "more",
       "next": "ask_for_location"
     },
     "ask_for_location": {
       "type": "quick_replies",
-      "text": "מה הכתובת?",
+      "text": "אנא שתף\\י את מיקומך הנוכחי או הכנס\\י כתובת מדויקת",
       "validate": "location",
       "error": "invalid_location",
       "next": "ask_for_phone",
@@ -61,21 +88,23 @@
       ]
     },
     "invalid_location": {
-      "text": "בבקשה הכנס כתובת מדויקת"
+      "text": "לא הצלחתי לאתר את הכתובת. בבקשה הכנס כתובת מדויקת לדוגמא: \"הרצל 24 תל אביב\""
     },
     "ask_for_phone": {
-      "text": "מה מספר הטלפון?",
+      "text": "מה מספר הטלפון הנייד שאתו ניתן ליצור עמך קשר?",
       "field": "phone number",
       "validate": "phone",
+      "pre": "הכתובת התקבלה - {variable}",
+      "variable": "address",
       "error": "invalid_phone",
       "next": "confirm_request"
     },
     "invalid_phone": {
-      "text": "מספר טלפון לא חוקי"
+      "text": "מספר הטלפון שהזנת איננו תקין. אנא הקלד\\י מספר תקין בן 10 ספרות"
     },
     "confirm_request": {
       "final": true,
-      "text": "קריאתך התקבלה בהצלחה. מוקדן \"ידידים\" יצור איתך קשר בדקות הקרובות"
+      "text": "קריאתך התקבלה בהצלחה. מוקדן \"ידידים\" יצור איתך קשר בדקות הקרובות..."
     }
   },
   "payloads": {
@@ -98,27 +127,27 @@
     "problem_battery": {
       "title": "כבלים ועזרה בהתנעה",
       "case": 0,
-      "next": "more_details"
+      "next": "more_details_battery"
     },
     "problem_flat_tire": {
       "title": "יש לי פנצ'ר",
       "case": 1,
-      "next": "more_details"
+      "next": "more_details_flat_tire"
     },
     "problem_fuel": {
       "title": "חסר שמן/דלק/מים",
       "case": 4,
-      "next": "more_details"
+      "next": "more_details_fuel"
     },
     "problem_rescue": {
       "title": "חילוץ הרכב",
       "case": 5,
-      "next": "more_details"
+      "next": "more_details_rescue"
     },
     "problem_code": {
       "title": "הקודנית לא תקינה",
       "case": 6,
-      "next": "more_details"
+      "next": "more_details_code"
     },
     "problem_other": {
       "title": "אחר",

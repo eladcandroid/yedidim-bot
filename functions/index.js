@@ -97,12 +97,15 @@ function sendFollowUpResponse(event, context) {
   validateResponse(event, lastMessage)
     .then(response => {
       if (response.valid) {
-        setDetails(lastMessage, context, response);
+        setDetailsAndNextMessage(lastMessage, context, response);
       } else if (!response.final) {
         //In case of final message resend last message in case of additional messages from user
         sendMessage(senderID, flow.messages[response.error ? response.error : lastMessage.error]);
       }
       const nextQuestion = flow.messages[context.lastMessage];
+      if (nextQuestion.pre && response.valid){
+        sendMessage(senderID, getTextTemplate({text: nextQuestion.pre, variable: nextQuestion.variable}, context));
+      }
       sendMessage(senderID, getTemplate(nextQuestion, context));
       calls.set(senderID, context);
     })
@@ -165,7 +168,7 @@ function validateResponse(event, lastMessage) {
   });
 }
 
-function setDetails(lastMessage, context, response) {
+function setDetailsAndNextMessage(lastMessage, context, response) {
   if (!context.details){
     context.details = {};
   }
@@ -198,7 +201,7 @@ function getTemplate(message, context) {
   if (message.buttons) {
     return getButtonsTemplate(message);
   }
-  return getTextTemplate(message);
+  return getTextTemplate(message, context);
 }
 
 function getButtonsTemplate(message) {
@@ -230,27 +233,32 @@ function getButtonsTemplate(message) {
   return reply;
 }
 
-function getQuickRepliesTemplate(messsage, context){
+function getQuickRepliesTemplate(message, context){
+  replaceTextVariable(message, context);
   let reply = {
-    text: messsage.text
+    text: message.text
   };
-  if (messsage.variable && context.details){
-    reply.text = reply.text.replace(/variable/, context.details[messsage.variable]);
-  }
-  if (messsage.buttons) {
+  if (message.buttons) {
     reply.quick_replies = [];
-    messsage.buttons.map(button => {
+    message.buttons.map(button => {
       reply.quick_replies.push({content_type: 'text', title: flow.payloads[button.payload].title, payload: button.payload});
     });
   } else {
-    reply.quick_replies = messsage.quick_replies;
+    reply.quick_replies = message.quick_replies;
   }
   return reply;
 }
 
-function getTextTemplate(message) {
+function getTextTemplate(message, context) {
+  replaceTextVariable(message, context);
   return {
     text: message.text
+  }
+}
+
+function replaceTextVariable(message, context) {
+  if (message.variable && context.details) {
+    message.text = message.text.replace(/{variable}/, context.details[message.variable]);
   }
 }
 
