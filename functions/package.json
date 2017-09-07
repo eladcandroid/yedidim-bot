@@ -6,6 +6,7 @@
     "test": "./node_modules/.bin/mocha"
   },
   "dependencies": {
+    "async": "^2.5.0",
     "firebase-admin": "~4.2.1",
     "firebase-functions": "^0.5.7",
     "node-geocoder": "^3.20.0",

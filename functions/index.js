@@ -1,10 +1,13 @@
 const functions = require('firebase-functions');
 const request = require('request');
+const queue = require('async/queue');
 
 const tokens = require('./_facebookTokens.json');
 const flow = require('./flow.json');
 const calls = require('./calls');
 const geocoder = require('./geocoder');
+
+const sendAPIQueue = queue(callSendAPIAsync);
 
 //Main http function to handle all webhook calls
 exports.webhook = functions.https.onRequest((req, res) => {
@@ -270,20 +273,24 @@ function sendMessage(recipientId, message) {
   callSendAPI(messageData);
 }
 
-function callSendAPI(messageData) {
+function callSendAPIAsync(messageData, callback) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {access_token: tokens.PAGE_ACCESS_TOKEN},
     method: 'POST',
     json: messageData
 
-  }, function (error, response, body) {
+  }, callback);
+}
+
+function callSendAPI(messageData) {
+  sendAPIQueue.push(messageData, ((error, response, body) => {
     if (!error && response.statusCode === 200) {
       console.info('Successfully sent message : \n', JSON.stringify(messageData), body);
     } else {
       console.error('Unable to send message. : \n', JSON.stringify(messageData), error, body);
     }
-  });
+  }));
 }
 
 function getUserProfile(psid) {
