@@ -1,0 +1,5 @@
+button, div{
+  &:focus, &:active, &:active:focus {
+    outline: 0 none;
+  }
+}

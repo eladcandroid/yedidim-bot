@@ -3,5 +3,6 @@ node_modules
 /functions/_googleMapsKey.json
 /functions/_facebookTokens.json
 /functions/_firebaseKey.json
+/app/dist/
 /.firebaserc
 /firebase-debug.log

@@ -8,20 +8,29 @@ This is the a Facebook Bot that communicates with the user, collects all details
 
 ### Installing
 
-Run npn install in the functions directory
+Run npn install in the functions directory and in the app directory
 
 Copy the json key files to the functions directory
 
-### Running the emulator locally
+### Running the functions emulator locally
 
 ```
+cd functions
 firebase serve --only functions
+```
+
+### Running the app locally
+
+```
+cd app
+npm start
 ```
 
 ### Deploying to Firebase
 
 ```
 firebase deploy --only functions
+firebase deploy --only hosting
 ```
 
 ## Acknowledgments
