@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { checkUserAuth } from '../actions/dataSourceActions';
 import CallsList from "./CallsList";
+import {CallStatus, getCallStatus} from "../common/utils";
 
 class Home extends React.Component {
 
@@ -24,9 +25,9 @@ class Home extends React.Component {
     return (
       <div>
         <h3 className="pull-right">קריאות</h3>
-        <CallsList calls={this.props.calls.filter(call => call.lastMessage === 'confirm_request')}/>
+        <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Submitted)}/>
         <h3 className="pull-right">קריאות שלא הושלמו</h3>
-        <CallsList calls={this.props.calls.filter(call => call.lastMessage !== 'confirm_request')}/>
+        <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.InProgress)}/>
       </div>);
   }
 }
