@@ -1,9 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Grid, Row, Col } from 'react-bootstrap';
-import { formatCallCase, formatCallTime } from "../common/utils";
+import { Modal, Grid, Row, Col, Button } from 'react-bootstrap';
+import { CallStatus, formatCallCase, formatCallTime, getCallStatus } from "../common/utils";
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 export default class CallDetails extends React.Component {
+  static getCopyText(call) {
+    return `שם:${call.details['caller name']}\n  טלפון:${formatCallCase(call)}\n  בעיה:${call.details['more']}\n  פרטים:${call.details['more']}\n  כתובת:${call.details['address']}`;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {copied: false};
+  }
+
+  onCopy() {
+    this.setState({copied: true});
+    setTimeout(() => {this.setState({copied: false})}, 2000);
+  }
 
   render() {
     const call = this.props.call;
@@ -37,6 +51,16 @@ export default class CallDetails extends React.Component {
               <Col xs={4}><span className="pull-right">פרטים</span></Col>
             </Row>
           </Grid>
+          {getCallStatus(call) === CallStatus.Submitted ?
+            <div>
+              <CopyToClipboard text={CallDetails.getCopyText(call)} onCopy={this.onCopy.bind(this)}>
+                <Button bsStyle="primary">העתק</Button>
+              </CopyToClipboard>
+              {this.state.copied ? <span>הועתק</span> : undefined}
+              <Button bsStyle="success" className="pull-right">טופל</Button>
+            </div>
+            : undefined
+          }
         </Modal.Body>
       </Modal>
     );

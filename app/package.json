@@ -33,6 +33,7 @@
     "history": "^4.6.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.3",
+    "react-copy-to-clipboard": "^5.0.0",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
