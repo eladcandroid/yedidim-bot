@@ -49,6 +49,20 @@ export function checkUserAuth() {
   });
 }
 
+export function addCall(call) {
+  return (dispatch => {
+    call.key = firebase.database().ref().child('calls').push().key;
+    firebase.database().ref('calls/' + call.key).set(call, (err) => {
+      if (err) {
+        // dispatch(setError({title:"Failed to update!", message: err}));
+      } else {
+        dispatch(setCall(call));
+      }
+    });
+
+  });
+}
+
 function handleSignedInUser(user) {
   // setConnectionTime(user);
   return (dispatch => {
@@ -76,7 +90,7 @@ function handleSignedOutUser() {
 //   });
 // }
 
-export function loadCalls() {
+function loadCalls() {
   return (dispatch => {
     firebaseApp.database().ref('/calls').once('value').then((snapshot) => {
       let calls = objectToArray(snapshot.val());

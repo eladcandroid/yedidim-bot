@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Grid, Row, Col, Button } from 'react-bootstrap';
-import { CallStatus, formatCallCase, formatCallTime, getCallStatus } from "../common/utils";
+import { formatCallCase, formatCallTime, getCallStatus } from "../common/utils";
 import CopyToClipboard from 'react-copy-to-clipboard';
+import {CallStatus} from "../constants/consts";
 
 export default class CallDetails extends React.Component {
   static getCopyText(call) {
@@ -16,39 +17,42 @@ export default class CallDetails extends React.Component {
 
   onCopy() {
     this.setState({copied: true});
-    setTimeout(() => {this.setState({copied: false})}, 2000);
+    setTimeout(() => {this.setState({copied: false});}, 2000);
   }
 
   render() {
-    const call = this.props.call;
+    const call = this.props.call || {details: {}};
     return (
       <Modal show={true} onHide={this.props.onClose.bind(this)}>
-        <Modal.Body>
-          <h1>פרטים</h1>
+        <Modal.Body className="call-details">
+          <div className="details-header">פרטים</div>
           <Grid fluid={true}>
+            {call.timestamp ?
+              <Row>
+                <Col xs={9} className="details-value">{formatCallTime(call)}</Col>
+                <Col xs={3} className="details-title">זמן</Col>
+              </Row>
+              : undefined
+            }
             <Row>
-              <Col xs={8}><span className="pull-right">{formatCallTime(call)}</span></Col>
-              <Col xs={4}><span className="pull-right">זמן</span></Col>
+              <Col xs={9} className="details-value">{call.details['caller name']}</Col>
+              <Col xs={3} className="details-title">שם</Col>
             </Row>
             <Row>
-              <Col xs={8}><span className="pull-right">{call.details['caller name']}</span></Col>
-              <Col xs={4}><span className="pull-right">שם</span></Col>
+              <Col xs={9} className="details-value"><a href={`tel:${call.details['phone number']}`}>{call.details['phone number']}</a></Col>
+              <Col xs={3} className="details-title">טלפון</Col>
             </Row>
             <Row>
-              <Col xs={8}><span className="pull-right"><a href={`tel:${call.details['phone number']}`}>{call.details['phone number']}</a></span></Col>
-              <Col xs={4}><span className="pull-right">טלפון</span></Col>
+              <Col xs={9} className="details-value">{formatCallCase(call)}</Col>
+              <Col xs={3} className="details-title">סוג</Col>
             </Row>
             <Row>
-              <Col xs={8}><span className="pull-right">{formatCallCase(call)}</span></Col>
-              <Col xs={4}><span className="pull-right">סוג האירוע</span></Col>
+              <Col xs={9} className="details-value">{call.details['address']}</Col>
+              <Col xs={3} className="details-title">כתובת</Col>
             </Row>
             <Row>
-              <Col xs={8}><span className="pull-right">{call.details['address']}</span></Col>
-              <Col xs={4}><span className="pull-right">כתובת</span></Col>
-            </Row>
-            <Row>
-              <Col xs={8}><span className="pull-right">{call.details['more']}</span></Col>
-              <Col xs={4}><span className="pull-right">פרטים</span></Col>
+              <Col xs={9} className="details-value">{call.details['more']}</Col>
+              <Col xs={3} className="details-title">פרטים</Col>
             </Row>
           </Grid>
           {getCallStatus(call) === CallStatus.Submitted ?

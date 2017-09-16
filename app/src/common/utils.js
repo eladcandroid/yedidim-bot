@@ -1,6 +1,5 @@
 import dateFormat from 'dateformat';
-
-export const CallStatus = {Submitted: 'submitted', InProgress: 'in-progress'};
+import { CallStatus } from "../constants/consts";
 
 export const objectToArray = (obj) => {
   let arr = [];
@@ -23,7 +22,7 @@ export const formatCallCase = (call) => {
 };
 
 export const formatCallTime = (call) => {
-  return dateFormat(new Date(call.timestamp), "ddd mmm-d HH:mm");
+  return dateFormat(new Date(call.timestamp), "d/m HH:MM");
 };
 
 export const getCallStatus = (call) => {

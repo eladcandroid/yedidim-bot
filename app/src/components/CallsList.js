@@ -24,35 +24,37 @@ export default class CallsList extends React.Component {
       return <div>Loading...</div>;
     }
 
-    if (this.state.call){
-      return <CallDetails call={this.state.call} onClose={this.closeCallDetails.bind(this)}/>;
-    }
-
     return (
-      <Table striped bordered condensed>
-        <thead>
-          <tr>
-            <th><span className="pull-right">כתובת</span></th>
-            <th><span className="pull-right">שם</span></th>
-            <th><span className="pull-right">בעיה</span></th>
-            <th><span className="pull-right">זמן</span></th>
-          </tr>
-        </thead>
-        <tbody>
-        {
-         this.props.calls.map(call => {
-           return (
-             <tr key={call.key} className="show-grid" onClick={this.openCallDetails.bind(this, call)}>
-               <td><span className="pull-right">{call.details.address}</span></td>
-               <td><span className="pull-right">{call.details['caller name']}</span></td>
-               <td><span className="pull-right">{formatCallCase(call)}</span></td>
-               <td><span className="pull-right">{formatCallTime(call)}</span></td>
-             </tr>
-           );
-         })
+      <div>
+        <Table striped bordered condensed className="calls-list">
+          <thead>
+            <tr>
+              <th className="list-header">כתובת</th>
+              <th className="list-header">שם</th>
+              <th className="list-header">בעיה</th>
+              <th className="list-header">זמן</th>
+            </tr>
+          </thead>
+          <tbody>
+          {
+           this.props.calls.map(call => {
+             return (
+               <tr key={call.key} className="show-grid" onClick={this.openCallDetails.bind(this, call)}>
+                 <td className="list-cell">{call.details.address}</td>
+                 <td className="list-cell">{call.details['caller name']}</td>
+                 <td className="list-cell">{formatCallCase(call)}</td>
+                 <td className="list-cell">{formatCallTime(call)}</td>
+               </tr>
+             );
+           })
+          }
+          </tbody>
+        </Table>
+        {this.state.call ?
+          <CallDetails call={this.state.call} onClose={this.closeCallDetails.bind(this)}/>
+          : undefined
         }
-        </tbody>
-      </Table>
+      </div>
     );
   }
 }
