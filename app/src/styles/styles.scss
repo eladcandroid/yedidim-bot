@@ -1,6 +1,6 @@
 button, div {
   &:focus, &:active, &:active:focus {
-    outline: 0 none;
+    outline: 0 none !important;
   }
 }
 
