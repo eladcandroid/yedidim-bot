@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Grid, Row, Col, Button } from 'react-bootstrap';
-import { formatCallCase, formatCallTime, getCallStatus } from "../common/utils";
 import CopyToClipboard from 'react-copy-to-clipboard';
-import {CallStatus} from "../constants/consts";
+import { Modal, Grid, Row, Col, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { formatCallCase, formatCallTime, getCallStatus } from "../common/utils";
+import { CallStatus } from "../constants/consts";
+import { updateCallStatus } from "../actions/dataSourceActions";
 
-export default class CallDetails extends React.Component {
+class CallDetails extends React.Component {
   static getCopyText(call) {
-    return `שם:${call.details['caller name']}\n  טלפון:${formatCallCase(call)}\n  בעיה:${call.details['more']}\n  פרטים:${call.details['more']}\n  כתובת:${call.details['address']}`;
+    return `שם:${call.details['caller name']}\n  טלפון:${call.details['phone number']}\n  בעיה:${formatCallCase(call)}\n  פרטים:${call.details['more']}\n  כתובת:${call.details['address']}`;
   }
 
   constructor(props) {
@@ -18,6 +20,16 @@ export default class CallDetails extends React.Component {
   onCopy() {
     this.setState({copied: true});
     setTimeout(() => {this.setState({copied: false});}, 2000);
+  }
+
+  sendCall() {
+    this.props.updateCallStatus(this.props.call, CallStatus.Sent);
+    this.props.onClose();
+  }
+
+  completeCall() {
+    this.props.updateCallStatus(this.props.call, CallStatus.Completed);
+    this.props.onClose();
   }
 
   render() {
@@ -61,9 +73,14 @@ export default class CallDetails extends React.Component {
                 <Button bsStyle="primary">העתק</Button>
               </CopyToClipboard>
               {this.state.copied ? <span>הועתק</span> : undefined}
-              <Button bsStyle="success" className="pull-right">טופל</Button>
+              <Button bsStyle="success" className="pull-right" onClick={this.sendCall.bind(this)}>שלח</Button>
             </div>
-            : undefined
+            : getCallStatus(call) === CallStatus.Sent ?
+              <div>
+                <Button bsStyle="success" className="pull-right" onClick={this.completeCall.bind(this)}>טופל</Button>
+              </div>
+              : undefined
+
           }
         </Modal.Body>
       </Modal>
@@ -71,7 +88,18 @@ export default class CallDetails extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateCallStatus: (call, status) => {
+      dispatch(updateCallStatus(call, status));
+    }
+  };
+};
+
+export default connect(null, mapDispatchToProps)(CallDetails);
+
 CallDetails.propTypes = {
   call: PropTypes.object,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  updateCallStatus: PropTypes.func
 };

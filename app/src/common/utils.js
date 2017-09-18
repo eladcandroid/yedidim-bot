@@ -1,5 +1,4 @@
 import dateFormat from 'dateformat';
-import { CallStatus } from "../constants/consts";
 
 export const objectToArray = (obj) => {
   let arr = [];
@@ -26,8 +25,5 @@ export const formatCallTime = (call) => {
 };
 
 export const getCallStatus = (call) => {
-  if (call.lastMessage === 'confirm_request'){
-    return CallStatus.Submitted;
-  }
-  return CallStatus.InProgress;
+  return call.status;
 };

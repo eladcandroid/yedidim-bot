@@ -52,12 +52,12 @@ class Home extends React.Component {
         {this.renderNavHeader()}
         <div className="container-home">
           <AddCall onAdd={this.onAdd.bind(this)}/>
-          <div className="list-title">ארועים חדשים</div>
+          <div className="list-title">ארועים חדשים - פייסבוק</div>
           <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Submitted)}/>
           <div className="list-title">ארועים פעילים</div>
-          <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Assigned)}/>
+          <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Sent || getCallStatus(call) === CallStatus.Assigned)}/>
           <div className="list-title">פיתוח - קריאות שלא הושלמו</div>
-          <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.InProgress)}/>
+          <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Draft)}/>
         </div>
       </div>);
   }

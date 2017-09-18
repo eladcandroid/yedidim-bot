@@ -59,7 +59,19 @@ export function addCall(call) {
         dispatch(setCall(call));
       }
     });
+  });
+}
 
+export function updateCallStatus(call, status) {
+  const updatedCall = Object.assign({}, call, {status});
+  return (dispatch => {
+    firebase.database().ref('calls/' + call.key).set(updatedCall, (err) => {
+      if (err) {
+        // dispatch(setError({title:"Failed to update!", message: err}));
+      } else {
+        dispatch(setCall(updatedCall));
+      }
+    });
   });
 }
 
