@@ -13,7 +13,7 @@ export const objectToArray = (obj) => {
 };
 
 export const formatCallCase = (call) => {
-  if (!call.details.case){
+  if (!call.details.case && call.details.case !== 0){
     return 'לא ידוע';
   }
   const cases = ['כבלים', 'פנצ\'ר', 'קומפרסור', 'דלת נעולה', 'שמן\\מים\\דלק', 'חילוץ', 'קודנית', 'פנצ\'ר (אין רזרבי)', 'אחר'];
