@@ -19,7 +19,7 @@ class CallDetails extends React.Component {
 
   onCopy() {
     this.setState({copied: true});
-    setTimeout(() => {this.setState({copied: false});}, 2000);
+    setTimeout(() => {if (this.state.copied) this.setState({copied: false});}, 2000);
   }
 
   sendCall() {
@@ -67,21 +67,20 @@ class CallDetails extends React.Component {
               <Col xs={3} className="details-title">פרטים</Col>
             </Row>
           </Grid>
-          {getCallStatus(call) === CallStatus.Submitted ?
-            <div>
-              <CopyToClipboard text={CallDetails.getCopyText(call)} onCopy={this.onCopy.bind(this)}>
-                <Button bsStyle="primary">העתק</Button>
-              </CopyToClipboard>
-              {this.state.copied ? <span>הועתק</span> : undefined}
-              <Button bsStyle="success" className="pull-right" onClick={this.sendCall.bind(this)}>שלח</Button>
-            </div>
-            : getCallStatus(call) === CallStatus.Sent ?
-              <div>
-                <Button bsStyle="success" className="pull-right" onClick={this.completeCall.bind(this)}>טופל</Button>
+            {getCallStatus(call) === CallStatus.Submitted ?
+              <div className="buttons-row">
+                <CopyToClipboard text={CallDetails.getCopyText(call)} onCopy={this.onCopy.bind(this)}>
+                  <Button bsStyle="primary">העתק</Button>
+                </CopyToClipboard>
+                <span className={'copied-label' + (this.state.copied ? ' copied' : '')}>הועתק</span>
+                <Button bsStyle="success" onClick={this.sendCall.bind(this)}>שלח</Button>
               </div>
-              : undefined
-
-          }
+              : getCallStatus(call) === CallStatus.Sent ?
+                <div className="buttons-row one">
+                  <Button bsStyle="success" onClick={this.completeCall.bind(this)}>טופל</Button>
+                </div>
+                : undefined
+            }
         </Modal.Body>
       </Modal>
     );

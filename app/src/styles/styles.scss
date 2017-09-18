@@ -67,4 +67,19 @@ button, div {
   .details-value {
     text-align: right;
   }
+  .buttons-row {
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    &.one {
+      flex-flow: row-reverse;
+    }
+  }
+  .copied-label {
+    padding-left: 10px;
+    display: none;
+    &.copied {
+      display: inline;
+    }
+  }
 }
