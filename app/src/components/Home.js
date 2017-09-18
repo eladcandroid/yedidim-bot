@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Navbar, NavItem, Nav } from 'react-bootstrap';
-import { checkUserAuth, addCall } from '../actions/dataSourceActions';
+import { checkUserAuth, addNewCall } from '../actions/dataSourceActions';
 import { getCallStatus } from '../common/utils';
 import { CallSource, CallStatus } from '../constants/consts';
 import CallsList from './CallsList';
@@ -80,7 +80,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(checkUserAuth());
     },
     addNewCall: (call) => {
-      dispatch(addCall(call));
+      dispatch(addNewCall(call));
     }
   };
 };

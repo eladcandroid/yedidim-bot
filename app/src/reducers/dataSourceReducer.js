@@ -1,4 +1,4 @@
-import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL} from "../constants/actionTypes";
+import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL, ADD_CALL} from "../constants/actionTypes";
 
 export function dataSourceReducer(state = {}, action) {
   switch (action.type) {
@@ -22,6 +22,11 @@ export function dataSourceReducer(state = {}, action) {
         }
         calls.push(call);
       });
+      return Object.assign({}, state, {calls});
+    }
+    case ADD_CALL: {
+      let calls = Object.assign([], state.calls);
+      calls.push(action.call);
       return Object.assign({}, state, {calls});
     }
   }

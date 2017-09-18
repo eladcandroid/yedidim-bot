@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
-import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL } from '../constants/actionTypes';
+import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL, ADD_CALL } from '../constants/actionTypes';
 
 import { objectToArray } from '../common/utils';
 
@@ -49,7 +49,7 @@ export function checkUserAuth() {
   });
 }
 
-export function addCall(call) {
+export function addNewCall(call) {
   return (dispatch => {
     call.key = firebase.database().ref().child('calls').push().key;
     firebase.database().ref('calls/' + call.key).set(call, (err) => {
@@ -114,11 +114,17 @@ function loadCalls() {
         return 0;
       });
       dispatch(setCalls(calls));
-    });
-    firebaseApp.database().ref('/calls').on('child_changed', (data) => {
-      let call = data.val();
-      call.key = data.key;
-      dispatch(setCall(call));
+      const timestamp = calls.length > 0 ? calls[0].timestamp + 1 : 0;
+      firebaseApp.database().ref('/calls').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
+        let call = data.val();
+        call.key = data.key;
+        dispatch(addCall(call));
+      });
+      firebaseApp.database().ref('/calls').on('child_changed', (data) => {
+        let call = data.val();
+        call.key = data.key;
+        dispatch(setCall(call));
+      });
     });
   });
 }
@@ -146,6 +152,13 @@ function setCalls(calls){
 function setCall(call){
   return {
     type: SET_CALL,
+    call,
+  };
+}
+
+function addCall(call){
+  return {
+    type: ADD_CALL,
     call,
   };
 }
