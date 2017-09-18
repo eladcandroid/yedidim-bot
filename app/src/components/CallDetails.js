@@ -17,9 +17,13 @@ class CallDetails extends React.Component {
     this.state = {copied: false};
   }
 
+  componentWillUnmount() {
+    window.clearTimeout(this.timeout);
+  }
+
   onCopy() {
     this.setState({copied: true});
-    setTimeout(() => {if (this.state.copied) this.setState({copied: false});}, 2000);
+    this.timeout = setTimeout(() => {if (this.state.copied) this.setState({copied: false});}, 2000);
   }
 
   sendCall() {
