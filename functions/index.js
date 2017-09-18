@@ -6,7 +6,7 @@ const tokens = require('./_facebookTokens.json');
 const flow = require('./flow.json');
 const calls = require('./calls');
 const geocoder = require('./geocoder');
-const CallStatus = require('./consts');
+const CallStatus = require('./consts').CallStatus;
 
 const sendAPIQueue = queue(callSendAPIAsync);
 
@@ -58,10 +58,16 @@ function handleMessage(event) {
   calls.get(event.sender.id)
     .then(context => {
       if (!context ||
-          (event.postback && event.postback.payload === 'get_started') ||
-          (event.message && event.message.text === 'get started') //FOR TESTING: Start again even if the user has an active call
-      ){
+          (event.postback && event.postback.payload === 'get_started'))
+      {
         //This is the first message
+        sendInitialResponse(event);
+      } else if (event.message && event.message.text === 'get started') {
+        //FOR TESTING: Start again even if the user has an active call
+        if (context) {
+          context.status = CallStatus.Archived;
+          calls.set(context);
+        }
         sendInitialResponse(event);
       } else {
         sendFollowUpResponse(event, context);
@@ -76,22 +82,20 @@ function handleMessage(event) {
 
 function sendInitialResponse(event) {
   sendMessage(event.sender.id, getTemplate(flow.messages['get_started']));
+  let context = {
+    psid: event.sender.id,
+    lastMessage: 'get_started',
+    source: 'fb-bot',
+    status: CallStatus.Draft
+  };
   getUserProfile(event.sender.id)
     .then(response => {
-      const context = {
-        psid: event.sender.id,
-        lastMessage: 'get_started',
-        source: 'fb-bot',
-        status: CallStatus.Draft,
-        details: {
-          'caller name': response.first_name + ' ' + response.last_name
-        }
-      };
-      calls.set(event.sender.id, context);
+      context.details = {'caller name': response.first_name + ' ' + response.last_name};
+      calls.set(context);
     })
     .catch(() => {
       //Save without the name
-      calls.set(event.sender.id, {lastMessage: 'get_started'});
+      calls.set(context);
     });
 }
 
@@ -117,7 +121,7 @@ function sendFollowUpResponse(event, context) {
       if (nextQuestion.final){
         context.status = CallStatus.Submitted;
       }
-      calls.set(senderID, context);
+      calls.set(context);
     })
     .catch(err => {
       console.error(err);
@@ -185,7 +189,7 @@ function setDetailsAndNextMessage(lastMessage, context, response) {
   if (lastMessage.buttons) {
     const payload = flow.payloads[response.payload];
     if (lastMessage.field) {
-      context.details[lastMessage.field] = payload.case ? payload.case : payload.title;
+      context.details[lastMessage.field] = payload.case || payload.case === 0 ? payload.case : payload.title;
     }
     //In case of next use it otherwise the payload is the next
     context.lastMessage = payload.next ? payload.next : response.payload;
