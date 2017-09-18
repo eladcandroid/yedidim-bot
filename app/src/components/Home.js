@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Navbar, NavItem, Nav } from 'react-bootstrap';
 import { checkUserAuth, addCall } from '../actions/dataSourceActions';
 import { getCallStatus } from '../common/utils';
-import { CallStatus } from '../constants/consts';
+import { CallSource, CallStatus } from '../constants/consts';
 import CallsList from './CallsList';
 import AddCall from './AddCall';
 
@@ -43,7 +43,7 @@ class Home extends React.Component {
       );
     }
 
-    if (!this.props.calls){
+    if (!this.props.callsLoaded){
       return <div>Loading...</div>;
     }
 
@@ -53,20 +53,24 @@ class Home extends React.Component {
         <div className="container-home">
           <AddCall onAdd={this.onAdd.bind(this)}/>
           <div className="list-title">ארועים חדשים - פייסבוק</div>
-          <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Submitted)}/>
+          <CallsList calls={this.props.newCalls}/>
           <div className="list-title">ארועים פעילים</div>
-          <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Sent || getCallStatus(call) === CallStatus.Assigned)}/>
+          <CallsList calls={this.props.activeCalls}/>
           <div className="list-title">פיתוח - קריאות שלא הושלמו</div>
-          <CallsList calls={this.props.calls.filter(call => getCallStatus(call) === CallStatus.Draft)}/>
+          <CallsList calls={this.props.draftCalls}/>
         </div>
       </div>);
   }
 }
 
 const mapStateToProps = (state) => {
+  const calls = state.dataSource.calls;
   return {
-    calls: state.dataSource.calls,
-    user: state.dataSource.user
+    user: state.dataSource.user,
+    callsLoaded: calls !== undefined,
+    newCalls: calls ? calls.filter(call => getCallStatus(call) === CallStatus.Submitted && call.source === CallSource.FB_BOT) : [],
+    activeCalls: calls ? calls.filter(call => getCallStatus(call) === CallStatus.Sent || getCallStatus(call) === CallStatus.Assigned) : [],
+    draftCalls: calls ? calls.filter(call => getCallStatus(call) === CallStatus.Draft) : []
   };
 };
 
@@ -86,6 +90,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home);
 Home.propTypes = {
   checkUserAuth: PropTypes.func,
   addNewCall: PropTypes.func,
-  calls: PropTypes.array,
-  user: PropTypes.object
+  user: PropTypes.object,
+  callsLoaded: PropTypes.bool,
+  newCalls: PropTypes.array,
+  activeCalls: PropTypes.array,
+  draftCalls: PropTypes.array
 };
