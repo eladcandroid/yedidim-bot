@@ -6,6 +6,7 @@ const tokens = require('./_facebookTokens.json');
 const flow = require('./flow.json');
 const calls = require('./calls');
 const geocoder = require('./geocoder');
+const CallStatus = require('./consts');
 
 const sendAPIQueue = queue(callSendAPIAsync);
 
@@ -78,7 +79,10 @@ function sendInitialResponse(event) {
   getUserProfile(event.sender.id)
     .then(response => {
       const context = {
+        psid: event.sender.id,
         lastMessage: 'get_started',
+        source: 'fb-bot',
+        status: CallStatus.Draft,
         details: {
           'caller name': response.first_name + ' ' + response.last_name
         }
@@ -110,6 +114,9 @@ function sendFollowUpResponse(event, context) {
         sendMessage(senderID, getTextTemplate({text: nextQuestion.pre, variable: nextQuestion.variable}, context));
       }
       sendMessage(senderID, getTemplate(nextQuestion, context));
+      if (nextQuestion.final){
+        context.status = CallStatus.Submitted;
+      }
       calls.set(senderID, context);
     })
     .catch(err => {
