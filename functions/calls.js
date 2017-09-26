@@ -27,7 +27,7 @@ module.exports = {
                 if (call.timestamp < (Date.now() - 60 * 60 * 1000)) {
                   //if call was made more than 1 hour ago then start again
                   call.status = CallStatus.Archived;
-                  set(call);
+                  this.set(call);
                   resolve(undefined);
                 }
                 call.key = key;
