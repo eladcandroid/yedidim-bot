@@ -9,7 +9,7 @@ import { updateCallStatus } from "../actions/dataSourceActions";
 
 class CallDetails extends React.Component {
   static getCopyText(call) {
-    return `שם:${call.details['caller name']}\n  טלפון:${call.details['phone number']}\n  בעיה:${formatCallCase(call)}\n  פרטים:${call.details['more']}\n  כתובת:${call.details['address']}`;
+    return `*שם:* ${call.details['caller name']}\r\n*טלפון:* ${call.details['phone number']}\r\n*בעיה:* ${formatCallCase(call)}\r\n*פרטים:* ${call.details['more']}\r\n*כתובת:* ${call.details['address']}`;
   }
 
   constructor(props) {
