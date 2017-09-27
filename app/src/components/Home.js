@@ -99,6 +99,8 @@ Home.propTypes = {
   checkUserAuth: PropTypes.func,
   addNewCall: PropTypes.func,
   user: PropTypes.object,
+  allowAdd: PropTypes.bool,
+  production: PropTypes.bool,
   callsLoaded: PropTypes.bool,
   newCalls: PropTypes.array,
   activeCalls: PropTypes.array,
