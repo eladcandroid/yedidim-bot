@@ -8,7 +8,11 @@ require('./favicon.ico'); // Tell webpack to load favicon.ico
 //require('./apple-touch-icon.png');
 import './styles/styles.scss'; // Yep, that's right. You can import SASS/CSS files too! Webpack will run the associated loader and plug this into the page.
 
-const store = configureStore();
+const initialState = process.env.NODE_ENV === 'production' ?
+  {dataSource: {production: true, allowAdd: false}}
+  :
+  {dataSource: {production: false, allowAdd: false}};
+const store = configureStore(initialState);
 
 render(
   <AppContainer>

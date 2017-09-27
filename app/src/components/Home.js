@@ -51,12 +51,18 @@ class Home extends React.Component {
       <div>
         {this.renderNavHeader()}
         <div className="container-home">
-          <AddCall onAdd={this.onAdd.bind(this)}/>
+          {this.props.allowAdd ?
+            <AddCall onAdd={this.onAdd.bind(this)}/>
+            : undefined
+          }
           <div className="list-title">ארועים חדשים - פייסבוק</div>
           <CallsList calls={this.props.newCalls}/>
           <div className="list-title">ארועים פעילים</div>
           <CallsList calls={this.props.activeCalls}/>
-          <div className="list-title">פיתוח - קריאות שלא הושלמו</div>
+          {!this.props.production ?
+            <div className="list-title">פיתוח - קריאות שלא הושלמו</div>
+            : undefined
+          }
           <CallsList calls={this.props.draftCalls}/>
         </div>
       </div>);
@@ -67,6 +73,8 @@ const mapStateToProps = (state) => {
   const calls = state.dataSource.calls;
   return {
     user: state.dataSource.user,
+    allowAdd: state.dataSource.allowAdd,
+    production: state.dataSource.production,
     callsLoaded: calls !== undefined,
     newCalls: calls ? calls.filter(call => getCallStatus(call) === CallStatus.Submitted && call.source === CallSource.FB_BOT) : [],
     activeCalls: calls ? calls.filter(call => getCallStatus(call) === CallStatus.Sent || getCallStatus(call) === CallStatus.Assigned) : [],
