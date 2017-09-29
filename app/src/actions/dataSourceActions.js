@@ -24,11 +24,8 @@ const firebaseUIConfig = {
   'signInFlow': 'popup',
   'signInOptions': [
     {
-      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    },
-    // {
-    //   provider: firebase.auth.EmailAuthProvider.PROVIDER_ID
-    // },
+      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID
+    }
   ],
   'tosUrl': 'https://www.google.com'
 };
@@ -39,8 +36,8 @@ const firebaseuiAuth = new firebaseui.auth.AuthUI(firebaseApp.auth());
 export function checkUserAuth() {
   return (dispatch => {
     firebaseApp.auth().onAuthStateChanged(function(user) {
-      if (user){
-        dispatch(handleSignedInUser({email: user.email}));
+      if (user && user.providerData[0].providerId === 'password'){
+        dispatch(handleSignedInUser({uid: user.uid, email: user.email}));
       }
       else {
         dispatch(handleSignedOutUser());
@@ -78,7 +75,7 @@ export function updateCallStatus(call, status) {
 function handleSignedInUser(user) {
   // setConnectionTime(user);
   return (dispatch => {
-    dispatch(setUser(user));
+    dispatch(loadUserData(user));
     dispatch(loadCalls());
   });
 }
@@ -91,41 +88,52 @@ function handleSignedOutUser() {
   });
 }
 
-// function setConnectionTime(user) {
-//   const connectedRef = firebase.database().ref('.info/connected');
-//   connectedRef.on('value', function(snap) {
-//     if (snap.val() === true) {
-//       const userKey = user.email.split('.', 1);
-//       const lastOnlineRef = firebase.database().ref(`/users/${userKey}`);
-//       lastOnlineRef.onDisconnect().update({lastOnline: firebase.database.ServerValue.TIMESTAMP, lastOnlineDate: new Date()});
-//     }
-//   });
-// }
+function loadUserData(user) {
+  return (dispatch => {
+    const key = user.email.split('@')[0];
+    firebaseApp.database().ref('/dispatchers').child(key).once('value')
+        .then((snapshot) => {
+        const data = snapshot.val();
+        user.name = data.name;
+        dispatch(setUser(user));
+      })
+      .catch(() => {
+        user.name = user.email;
+        dispatch(user);
+      });
+  });
+}
 
 function loadCalls() {
   return (dispatch => {
-    firebaseApp.database().ref('/calls').once('value').then((snapshot) => {
-      let calls = objectToArray(snapshot.val());
-      calls.sort((c1, c2) => {
-        if (c1.timestamp > c2.timestamp)
-          return -1;
-        if (c1.timestamp < c2.timestamp)
-          return 1;
-        return 0;
+    firebaseApp.database().ref('/calls').once('value')
+      .then((snapshot) => {
+        let calls = objectToArray(snapshot.val());
+        calls.sort((c1, c2) => {
+          if (c1.timestamp > c2.timestamp)
+            return -1;
+          if (c1.timestamp < c2.timestamp)
+            return 1;
+          return 0;
+        });
+        dispatch(setCalls(calls));
+        const timestamp = calls.length > 0 ? calls[0].timestamp + 1 : 0;
+        firebaseApp.database().ref('/calls').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
+          let call = data.val();
+          call.key = data.key;
+          dispatch(addCall(call));
+        });
+        firebaseApp.database().ref('/calls').on('child_changed', (data) => {
+          let call = data.val();
+          call.key = data.key;
+          dispatch(setCall(call));
+        });
+      })
+      .catch(err => {
+        if (err) {
+          // dispatch(setError({title:"Failed to load data!", message: err}));
+        }
       });
-      dispatch(setCalls(calls));
-      const timestamp = calls.length > 0 ? calls[0].timestamp + 1 : 0;
-      firebaseApp.database().ref('/calls').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
-        let call = data.val();
-        call.key = data.key;
-        dispatch(addCall(call));
-      });
-      firebaseApp.database().ref('/calls').on('child_changed', (data) => {
-        let call = data.val();
-        call.key = data.key;
-        dispatch(setCall(call));
-      });
-    });
   });
 }
 

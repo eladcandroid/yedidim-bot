@@ -26,7 +26,7 @@ class Home extends React.Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse className="nav-menu">
-          <span className="user-name">{this.props.user.email}</span>
+          <span className="user-name">{this.props.user.name}</span>
           <Nav>
             <NavItem eventKey={1} href="#">היסטוריה</NavItem>
             <NavItem eventKey={2} href="#">יציאה</NavItem>
