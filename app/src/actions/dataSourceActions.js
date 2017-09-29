@@ -46,6 +46,14 @@ export function checkUserAuth() {
   });
 }
 
+export function signOutUser() {
+  return (dispatch => {
+    firebaseApp.auth().signOut().then(() => {
+      dispatch(handleSignedOutUser());
+    });
+  })
+}
+
 export function addNewCall(call) {
   return (dispatch => {
     call.key = firebase.database().ref().child('calls').push().key;

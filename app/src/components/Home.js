@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Navbar, NavItem, Nav } from 'react-bootstrap';
-import { checkUserAuth, addNewCall } from '../actions/dataSourceActions';
+import { checkUserAuth, signOutUser, addNewCall } from '../actions/dataSourceActions';
 import { getCallStatus } from '../common/utils';
 import { CallSource, CallStatus } from '../constants/consts';
 import CallsList from './CallsList';
@@ -29,7 +29,7 @@ class Home extends React.Component {
           <span className="user-name">{this.props.user.name}</span>
           <Nav>
             <NavItem eventKey={1} href="#">היסטוריה</NavItem>
-            <NavItem eventKey={2} href="#">יציאה</NavItem>
+            <NavItem eventKey={2} href="#" onClick={this.props.signOutUser.bind(this)}>יציאה</NavItem>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -87,6 +87,9 @@ const mapDispatchToProps = (dispatch) => {
     checkUserAuth: () => {
       dispatch(checkUserAuth());
     },
+    signOutUser: () => {
+      dispatch(signOutUser());
+    },
     addNewCall: (call) => {
       dispatch(addNewCall(call));
     }
@@ -97,6 +100,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 Home.propTypes = {
   checkUserAuth: PropTypes.func,
+  signOutUser: PropTypes.func,
   addNewCall: PropTypes.func,
   user: PropTypes.object,
   allowAdd: PropTypes.bool,
