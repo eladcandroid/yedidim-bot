@@ -132,7 +132,7 @@ function sendFollowUpResponse(event, context) {
         sendMessage(senderID, getTextTemplate({text: nextQuestion.pre, variable: nextQuestion.variable}, context));
       }
       sendMessage(senderID, getTemplate(nextQuestion, context));
-      if (nextQuestion.final){
+      if (nextQuestion.submit){
         context.status = CallStatus.Submitted;
       }
       calls.set(context);

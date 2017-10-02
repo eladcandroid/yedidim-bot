@@ -1,7 +1,8 @@
 {
   "messages": {
     "general": {
-      "text": "אתה מוזמן לקרוא עוד על פעילותה של עמותת \"ידידים\" ומתנדביה http://yedidim-il.org",
+      "text": "להצטרפות, יש לשלוח הודעת WhatsApp עם שם מלא וכתובת מגורים למספר 050-2744045 בהצלחה!",
+      "final": true,
       "error_next": "get_started"
     },
     "select_answer": {
@@ -50,31 +51,36 @@
     "more_details_fuel": {
       "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה ומה המתנדב צריך להביא",
       "field": "more",
-      "next": "ask_for_location"
+      "next": "car_type"
     },
     "more_details_flat_tire": {
       "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה ומה שהתרחש לפי התקלה. האם ברשותך גלגל רזרבי תקין וכלים להחלפת הצמיג?",
       "field": "more",
-      "next": "ask_for_location"
+      "next": "car_type"
     },
     "more_details_battery": {
       "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה. מה התרחש לפני התקלה? מתי הרכב הונע\\נסע לאחרונה? האם הרכב ידני או אוטומטי?",
       "field": "more",
-      "next": "ask_for_location"
+      "next": "car_type"
     },
     "more_details_rescue": {
       "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה. מה התרחש לפני התקלה? כיצד הרכב בדיוק תקוע? האם יש גישה לרכב רגיל או רק ל4X4?",
       "field": "more",
-      "next": "ask_for_location"
+      "next": "car_type"
     },
     "more_details_code": {
       "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה. מה התרחש לפני התקלה?",
       "field": "more",
-      "next": "ask_for_location"
+      "next": "car_type"
     },
     "more_details": {
       "text": "אנא תאר\\י את הבעיה שאת\\ה חווה בהרחבה ומה התרחש לפני התקלה",
       "field": "more",
+      "next": "car_type"
+    },
+    "car_type": {
+      "text": "מהו סוג הרכב? (לדוגמא מאזדה 3, קיה פיקנטו, מיצובישי...)",
+      "field": "car type",
       "next": "ask_for_location"
     },
     "ask_for_location": {
@@ -104,6 +110,7 @@
     },
     "confirm_request": {
       "final": true,
+      "submit": true,
       "text": "קריאתך התקבלה בהצלחה. מוקדן \"ידידים\" יצור איתך קשר בדקות הקרובות..."
     }
   },
