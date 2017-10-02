@@ -2,13 +2,27 @@ const functions = require('firebase-functions');
 const request = require('request');
 const queue = require('async/queue');
 
-const tokens = require('./_facebookTokens.json');
+const tokens = getTokens(require('./_tokens.json'));
 const flow = require('./flow.json');
 const calls = require('./calls');
 const geocoder = require('./geocoder');
 const CallStatus = require('./consts').CallStatus;
 
 const sendAPIQueue = queue(callSendAPIAsync);
+
+//Get the tokens according to the instance the functions run on
+function getTokens(json) {
+  if (functions.config().instance.name === 'sandbox') {
+    return json.sandbox;
+  }
+  if (functions.config().instance.name === 'production') {
+    return json.production;
+  }
+  return json.sandbox2;
+}
+
+calls.init(tokens.firebaseCert, tokens.firebaseConfig);
+geocoder.init(tokens.maps.apiKey);
 
 //Main http function to handle all webhook calls
 exports.webhook = functions.https.onRequest((req, res) => {
@@ -24,7 +38,7 @@ exports.webhook = functions.https.onRequest((req, res) => {
 //Sent when registering the webhook
 function handleWebHookGetRequest(req, res){
   if (req.query['hub.mode'] === 'subscribe' &&
-    req.query['hub.verify_token'] === tokens.WEBHOOK_VERIFY_TOKEN) {
+    req.query['hub.verify_token'] === tokens.facebook.WEBHOOK_VERIFY_TOKEN) {
     console.info('Webhook token is verified.');
     res.status(200).send(req.query['hub.challenge']);
   } else {
@@ -298,7 +312,7 @@ function sendMessage(recipientId, message) {
 function callSendAPIAsync(messageData, callback) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token: tokens.PAGE_ACCESS_TOKEN},
+    qs: {access_token: tokens.facebook.PAGE_ACCESS_TOKEN},
     method: 'POST',
     json: messageData
 
@@ -320,7 +334,7 @@ function getUserProfile(psid) {
     request({
       uri: 'https://graph.facebook.com/v2.6/' + psid,
       qs: {
-        access_token: tokens.PAGE_ACCESS_TOKEN,
+        access_token: tokens.facebook.PAGE_ACCESS_TOKEN,
         fields: 'first_name,last_name'
       },
       method: 'GET'
@@ -341,7 +355,7 @@ exports.manage = functions.https.onRequest((req, res) => {
   const action = req.query['action'];
   let data = {
     uri: 'https://graph.facebook.com/v2.6/me/messenger_profile',
-    qs: {access_token: tokens.PAGE_ACCESS_TOKEN},
+    qs: {access_token: tokens.facebook.PAGE_ACCESS_TOKEN},
     gzip: true
   };
   if (action === 'set_get_started'){

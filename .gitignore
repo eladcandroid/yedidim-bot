@@ -1,8 +1,4 @@
 node_modules
 .idea/
-/functions/_googleMapsKey.json
-/functions/_facebookTokens.json
-/functions/_firebaseKey.json
+/functions/_tokens.json
 /app/dist/
-/.firebaserc
-/firebase-debug.log

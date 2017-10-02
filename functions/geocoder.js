@@ -1,17 +1,18 @@
 const NodeGeocoder = require('node-geocoder');
-const GoogleMapsKey = require('./_googleMapsKey.json');
 
-const options = {
-  provider: 'google',
-  httpAdapter: 'https',
-  language: 'iw',
-  apiKey: GoogleMapsKey.apiKey,
-  formatter: null
-};
-
-const nodeGeocoder = NodeGeocoder(options);
+let nodeGeocoder;
 
 module.exports = {
+  init: function(apiKey){
+    const options = {
+      provider: 'google',
+      httpAdapter: 'https',
+      language: 'iw',
+      apiKey: apiKey,
+      formatter: null
+    };
+    nodeGeocoder = NodeGeocoder(options);
+  },
   geocode: function(address){
     return new Promise((resolve, reject) => {
       nodeGeocoder.geocode(address)

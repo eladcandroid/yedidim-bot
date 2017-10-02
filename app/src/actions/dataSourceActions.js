@@ -5,12 +5,22 @@ import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL, ADD_CALL } from '../constan
 import { objectToArray } from '../common/utils';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDp5-02CpUQ5gyquZt2ZHSfnRjCKY5lZis",
-  authDomain: "yedidim-sandbox.firebaseapp.com",
-  databaseURL: "https://yedidim-sandbox.firebaseio.com",
-  projectId: "yedidim-sandbox",
-  storageBucket: "yedidim-sandbox.appspot.com",
-  messagingSenderId: "918819260524"
+  sandbox: {
+    apiKey: "AIzaSyDp5-02CpUQ5gyquZt2ZHSfnRjCKY5lZis",
+    authDomain: "yedidim-sandbox.firebaseapp.com",
+    databaseURL: "https://yedidim-sandbox.firebaseio.com",
+    projectId: "yedidim-sandbox",
+    storageBucket: "yedidim-sandbox.appspot.com",
+    messagingSenderId: "918819260524"
+  },
+  sandbox2: {
+    apiKey: "AIzaSyAwKEsWodtnrprOhYXA5tFb9zbUnLqOBk4",
+    authDomain: "yedidim-sandbox-2.firebaseapp.com",
+    databaseURL: "https://yedidim-sandbox-2.firebaseio.com",
+    projectId: "yedidim-sandbox-2",
+    storageBucket: "yedidim-sandbox-2.appspot.com",
+    messagingSenderId: "1011917548573"
+  }
 };
 
 const firebaseUIConfig = {
@@ -30,7 +40,7 @@ const firebaseUIConfig = {
   'tosUrl': 'https://www.google.com'
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig.sandbox2);
 const firebaseuiAuth = new firebaseui.auth.AuthUI(firebaseApp.auth());
 
 export function checkUserAuth() {

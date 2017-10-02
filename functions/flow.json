@@ -11,7 +11,7 @@
       "type": "generic",
       "title": "היי, אני \"בוט\" ידיד",
       "subtitle": "מטרתי היא לסייע לך ולאפשר למתנדב להגיע אליך בהקדם האפשרי. זקוק/ה לעזרה?",
-      "image_url": "https://firebasestorage.googleapis.com/v0/b/yedidim-sandbox.appspot.com/o/images%2Fyedidim-get-started.jpeg?alt=media&v=2",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/yedidim-sandbox-2.appspot.com/o/images%2Fyedidim-get-started.jpeg?alt=media&v=2",
       "text": "זקוק/ה לעזרה?",
       "buttons": [
         {"payload": "need_help_yes"},

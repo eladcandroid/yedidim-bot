@@ -1,16 +1,18 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./_firebaseKey.json");
 
 const CallStatus = require('./consts').CallStatus;
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://yedidim-sandbox.firebaseio.com"
-});
-
-const db = admin.database();
+let db;
 
 module.exports = {
+  init: function(cert, config) {
+    admin.initializeApp({
+      credential: admin.credential.cert(cert),
+      databaseURL: config.databaseURL
+    });
+
+    db = admin.database();
+  },
   get: function(psid) {
     return new Promise((resolve) => {
       db.ref('/calls').orderByChild('psid').equalTo(psid).once('value')

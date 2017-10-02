@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "yedidim-sandbox-2",
+    "sandbox": "yedidim-sandbox",
+    "sandbox-2": "yedidim-sandbox-2"
+  }
+}

@@ -33,6 +33,13 @@ firebase deploy --only functions
 firebase deploy --only hosting
 ```
 
+### Deploying to Firebase (specific project/instance)
+
+```
+firebase functions:config:set instance.name=sandbox2
+firebase deploy --only functions  --project sandbox-2
+```
+
 ## Acknowledgments
 
 This is a StartAch project
