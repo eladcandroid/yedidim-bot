@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
 import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL, ADD_CALL } from '../constants/actionTypes';
+import { initMessaging, deleteToken } from './messagingActions';
 
 import { objectToArray } from '../common/utils';
 
@@ -94,12 +95,14 @@ function handleSignedInUser(user) {
   // setConnectionTime(user);
   return (dispatch => {
     dispatch(loadUserData(user));
+    dispatch(initMessaging());
     dispatch(loadCalls());
   });
 }
 
 function handleSignedOutUser() {
   return (dispatch => {
+    dispatch(deleteToken());
     dispatch(removeUser());
     firebaseuiAuth.reset();
     firebaseuiAuth.start('#firebaseui-auth-container', firebaseUIConfig);

@@ -4,6 +4,7 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import path from 'path';
 
@@ -70,7 +71,12 @@ export default {
         context: '/',
         postcss: () => [autoprefixer],
       }
-    })
+    }),
+
+    new CopyWebpackPlugin([
+      { from: 'src/manifest.json' },
+      { from: 'src/scripts' }
+    ])
   ],
   module: {
     rules: [

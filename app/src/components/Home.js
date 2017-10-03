@@ -7,6 +7,7 @@ import { getCallStatus } from '../common/utils';
 import { CallSource, CallStatus } from '../constants/consts';
 import CallsList from './CallsList';
 import AddCall from './AddCall';
+import PermissionDialog from "./PermissionDialog";
 
 class Home extends React.Component {
 
@@ -64,6 +65,10 @@ class Home extends React.Component {
             : undefined
           }
           <CallsList calls={this.props.draftCalls}/>
+          {!this.props.permissionSet ?
+            <PermissionDialog/>
+            : undefined
+          }
         </div>
       </div>);
   }
@@ -75,6 +80,7 @@ const mapStateToProps = (state) => {
     user: state.dataSource.user,
     allowAdd: state.dataSource.allowAdd,
     production: state.dataSource.production,
+    permissionSet: state.messaging.permissionSet,
     callsLoaded: calls !== undefined,
     newCalls: calls ? calls.filter(call => getCallStatus(call) === CallStatus.Submitted && call.source === CallSource.FB_BOT) : [],
     activeCalls: calls ? calls.filter(call => getCallStatus(call) === CallStatus.Sent || getCallStatus(call) === CallStatus.Assigned) : [],
@@ -105,6 +111,7 @@ Home.propTypes = {
   user: PropTypes.object,
   allowAdd: PropTypes.bool,
   production: PropTypes.bool,
+  permissionSet: PropTypes.bool,
   callsLoaded: PropTypes.bool,
   newCalls: PropTypes.array,
   activeCalls: PropTypes.array,
