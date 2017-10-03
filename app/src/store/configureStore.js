@@ -1,4 +1,5 @@
-import {createStore, compose, applyMiddleware} from 'redux';
+import LogRocket from 'logrocket';
+import { createStore, compose, applyMiddleware } from 'redux';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import thunk from 'redux-thunk';
 import createHistory from 'history/createBrowserHistory';
@@ -13,6 +14,7 @@ function configureStoreProd(initialState) {
     // Add other middleware on this line...
     thunk,
     reactRouterMiddleware,
+    LogRocket.reduxMiddleware()
   ];
 
   return createStore(rootReducer, initialState, compose(
@@ -29,6 +31,7 @@ function configureStoreDev(initialState) {
     reduxImmutableStateInvariant(),
     thunk,
     reactRouterMiddleware,
+    LogRocket.reduxMiddleware()
   ];
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools

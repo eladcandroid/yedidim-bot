@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import LogRocket from 'logrocket';
 import { SET_ERROR, SET_MESSAGING_TOKEN, SET_MESSAGING_PERMISSION } from '../constants/actionTypes';
 
 let messaging;
@@ -44,7 +45,7 @@ function getToken() {
     messaging.getToken()
       .then(function (token) {
         if (token) {
-          console.log('Token was retrieved: ' + token);
+          LogRocket.log('Token was retrieved', token);
           dispatch(setMessagingPermission(true));
           dispatch(storeMessagingToken(token));
         } else {
@@ -66,14 +67,16 @@ export function deleteToken() {
     }
     messaging.getToken()
       .then(function (token) {
-        messaging.deleteToken(token)
-          .then(function () {
-            // console.log('Token deleted.');
-            dispatch(storeMessagingToken());
-          })
-          .catch(function (err) {
-            dispatch(showError('Unable to delete token. ', err));
-          });
+        if (token) {
+          messaging.deleteToken(token)
+            .then(function () {
+              // console.log('Token deleted.');
+              dispatch(storeMessagingToken());
+            })
+            .catch(function (err) {
+              dispatch(showError('Unable to delete token. ', err));
+            });
+        }
       })
       .catch(function (err) {
         dispatch(showError('Unable to delete token. ', err));
@@ -82,10 +85,9 @@ export function deleteToken() {
 }
 
 function storeMessagingToken(token) {
-  //TODO handle delete token
   return ((dispatch, getState) => {
     const state = getState();
-    firebase.database().ref('dispatchers/' + state.dataSource.user.id).update({token, notification: true}, (err) => {
+    firebase.database().ref('dispatchers/' + state.dataSource.user.id).update({token, notification: (typeof token !== 'undefined')}, (err) => {
       if (err) {
         dispatch(showError('Unable to delete token. ', err));
       } else {
@@ -110,7 +112,7 @@ function setMessagingToken(token){
 }
 
 function showError(message, err){
-  console.error(message, err);
+  LogRocket.log(message, err);
   return {
     type: SET_ERROR,
     message,

@@ -1,3 +1,4 @@
+import LogRocket from 'logrocket';
 import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL, ADD_CALL} from "../constants/actionTypes";
 
 export function dataSourceReducer(state = {}, action) {
@@ -5,6 +6,7 @@ export function dataSourceReducer(state = {}, action) {
     case SET_USER: {
       let user = action.user;
       user.id = user.email.split('@')[0];
+      LogRocket.identify(user.id, user);
       return Object.assign({}, state, {user: action.user});
     }
     case REMOVE_USER: {
