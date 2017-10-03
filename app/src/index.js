@@ -9,11 +9,17 @@ require('./favicon.ico'); // Tell webpack to load favicon.ico
 //require('./apple-touch-icon.png');
 import './styles/styles.scss'; // Yep, that's right. You can import SASS/CSS files too! Webpack will run the associated loader and plug this into the page.
 
-LogRocket.init('amniis/yedidim', {network: {requestSanitizer: (request) => {
-    if (request.url.toLowerCase().indexOf('identitytoolkit') !== -1)
-      return null;
-    return request;
-  }},});
+if (process.env.NODE_ENV === 'production') {
+  LogRocket.init('amniis/yedidim', {
+    network: {
+      requestSanitizer: (request) => {
+        if (request.url.toLowerCase().indexOf('identitytoolkit') !== -1)
+          return null;
+        return request;
+      }
+    },
+  });
+}
 
 const initialState = process.env.NODE_ENV === 'production' ?
   {dataSource: {production: true, allowAdd: false}, messaging: {permissionSet: true}}
