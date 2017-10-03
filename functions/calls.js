@@ -1,16 +1,9 @@
-const admin = require("firebase-admin");
-
 const CallStatus = require('./consts').CallStatus;
 
 let db;
 
 module.exports = {
-  init: function(cert, config) {
-    admin.initializeApp({
-      credential: admin.credential.cert(cert),
-      databaseURL: config.databaseURL
-    });
-
+  init: function(admin) {
     db = admin.database();
   },
   get: function(psid) {
