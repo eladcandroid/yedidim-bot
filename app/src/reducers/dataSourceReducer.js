@@ -3,6 +3,8 @@ import { SET_USER, REMOVE_USER, SET_CALLS, SET_CALL, ADD_CALL} from "../constant
 export function dataSourceReducer(state = {}, action) {
   switch (action.type) {
     case SET_USER: {
+      let user = action.user;
+      user.id = user.email.split('@')[0];
       return Object.assign({}, state, {user: action.user});
     }
     case REMOVE_USER: {

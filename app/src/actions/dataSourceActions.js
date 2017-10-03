@@ -62,7 +62,7 @@ export function signOutUser() {
     firebaseApp.auth().signOut().then(() => {
       dispatch(handleSignedOutUser());
     });
-  })
+  });
 }
 
 export function addNewCall(call) {

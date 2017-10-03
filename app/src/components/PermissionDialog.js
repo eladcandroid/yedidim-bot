@@ -13,7 +13,7 @@ class PermissionDialog extends React.Component {
     return (
       <Modal show={true} onHide={this.onClose.bind(this)}>
         <Modal.Body className="permissions-dialog">
-          <div>בבקשה אפשר קבלת התראות</div>
+          <div>בבקשה אשר קבלת התראות</div>
           <Button onClick={this.props.requestPermission.bind(this)}>קבל התראות</Button>
         </Modal.Body>
       </Modal>

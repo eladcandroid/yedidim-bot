@@ -15,11 +15,10 @@ export function initMessaging() {
       navigator.serviceWorker.register('./' + (getState().dataSource.production ? '' : 'scripts/') + 'firebase-messaging-sw.js')
         .then((registration) => {
           messaging.useServiceWorker(registration);
-          // dispatch(requestPermission());
         })
         .catch(() => {
           dispatch(setMessagingPermission(false));
-        })
+        });
     } else {
       dispatch(setMessagingPermission(false));
     }
@@ -86,10 +85,9 @@ function storeMessagingToken(token) {
   //TODO handle delete token
   return ((dispatch, getState) => {
     const state = getState();
-    const userKey = state.dataSource.user.email.split('.', 1);
-    firebase.database().ref('users/' + userKey).set({token}, (err) => {
+    firebase.database().ref('dispatchers/' + state.dataSource.user.id).update({token, notification: true}, (err) => {
       if (err) {
-        // dispatch(setError({title:"Failed to update!", message: err}));
+        dispatch(showError('Unable to delete token. ', err));
       } else {
         dispatch(setMessagingToken(token));
       }
@@ -112,6 +110,7 @@ function setMessagingToken(token){
 }
 
 function showError(message, err){
+  console.error(message, err);
   return {
     type: SET_ERROR,
     message,
