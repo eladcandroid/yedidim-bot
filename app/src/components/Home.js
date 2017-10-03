@@ -61,10 +61,13 @@ class Home extends React.Component {
           <div className="list-title">ארועים פעילים</div>
           <CallsList calls={this.props.activeCalls}/>
           {!this.props.production ?
-            <div className="list-title">פיתוח - קריאות שלא הושלמו</div>
+            <div>
+              <div className="list-title">פיתוח - קריאות שלא הושלמו</div>
+              <CallsList calls={this.props.draftCalls}/>
+            </div>
             : undefined
           }
-          <CallsList calls={this.props.draftCalls}/>
+
           {!this.props.permissionSet ?
             <PermissionDialog/>
             : undefined
