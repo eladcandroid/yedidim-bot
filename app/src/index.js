@@ -9,9 +9,9 @@ require('./favicon.ico'); // Tell webpack to load favicon.ico
 import './styles/styles.scss'; // Yep, that's right. You can import SASS/CSS files too! Webpack will run the associated loader and plug this into the page.
 
 const initialState = process.env.NODE_ENV === 'production' ?
-  {dataSource: {production: true, allowAdd: false}}
+  {dataSource: {production: true, allowAdd: false}, messaging: {permissionSet: true}}
   :
-  {dataSource: {production: false, allowAdd: false}};
+  {dataSource: {production: false, allowAdd: false}, messaging: {permissionSet: true}};
 const store = configureStore(initialState);
 
 render(
