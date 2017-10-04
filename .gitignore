@@ -1,4 +1,4 @@
 node_modules
 .idea/
 /functions/_tokens.json
-/app/dist/
+/webApp/dist/
