@@ -5,7 +5,7 @@ const queue = require('async/queue');
 const tokens = getTokens(require('./_tokens.json'));
 const flow = require('./flow.json');
 const calls = require('./calls');
-const messages = require('./messages');
+const notifications = require('./notifications');
 const geocoder = require('./geocoder');
 const CallStatus = require('./consts').CallStatus;
 
@@ -24,7 +24,7 @@ function getTokens(json) {
 
 const admin = require('./admin').init(tokens.firebaseCert, tokens.firebaseConfig);
 calls.init(admin);
-messages.init(admin);
+notifications.init(admin);
 geocoder.init(tokens.maps.apiKey);
 
 //Main http function to handle all webhook calls
@@ -141,7 +141,7 @@ function sendFollowUpResponse(event, context) {
       calls.set(context);
       //After updating the call status send notifications
       if (nextQuestion.submit) {
-        messages.send(tokens.websiteUrl).then(() => {
+        notifications.send(context.details).then(() => {
           //Nothing to do afterwards
         });
       }
