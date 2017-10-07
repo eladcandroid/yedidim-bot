@@ -22,7 +22,7 @@ const firebaseConfig = {
   }
 };
 
-firebase.initializeApp(firebaseConfig.sandbox);
+firebase.initializeApp(firebaseConfig.sandbox2);
 
 export function checkUserAuth() {
   return (dispatch => {
