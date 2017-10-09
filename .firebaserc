@@ -2,6 +2,7 @@
   "projects": {
     "default": "yedidim-sandbox-2",
     "sandbox": "yedidim-sandbox",
-    "sandbox2": "yedidim-sandbox-2"
+    "sandbox2": "yedidim-sandbox-2",
+    "production": "yedidim-production"
   }
 }
