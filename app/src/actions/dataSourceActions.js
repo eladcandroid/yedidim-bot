@@ -19,7 +19,16 @@ const firebaseConfig = {
     projectId: "yedidim-sandbox-2",
     storageBucket: "yedidim-sandbox-2.appspot.com",
     messagingSenderId: "1011917548573"
+  },
+  production: {
+    apiKey: "AIzaSyC6bf7YfKoompBlyjw382AJZOzTvLaY7P0",
+    authDomain: "yedidim-production.firebaseapp.com",
+    databaseURL: "https://yedidim-production.firebaseio.com",
+    projectId: "yedidim-production",
+    storageBucket: "yedidim-production.appspot.com",
+    messagingSenderId: "33558411934"
   }
+
 };
 
 firebase.initializeApp(firebaseConfig.sandbox2);
