@@ -65,7 +65,7 @@ export function storeNotificationToken(token) {
     }
     firebase.database().ref('dispatchers/' + getState().dataSource.user.id).update({
       token,
-      notification: (typeof token !== 'undefined')
+      notification: true
     }, (err) => {
       if (err) {
         dispatch(setError('Unable to set token. ', err));
@@ -77,9 +77,11 @@ export function storeNotificationToken(token) {
 }
 
 export function signOutUser() {
-  return (dispatch => {
-    firebase.auth().signOut().then(() => {
-      dispatch(handleSignedOutUser());
+  return ((dispatch, getState) => {
+    deleteNotificationToken(getState().dataSource.user).then(() => {
+      firebase.auth().signOut().then(() => {
+        dispatch(handleSignedOutUser());
+      });
     });
   });
 }
@@ -108,8 +110,22 @@ function handleSignedInUser(user) {
 
 function handleSignedOutUser() {
   return (dispatch => {
-    dispatch(storeNotificationToken());
     dispatch(removeUser());
+  });
+}
+
+function deleteNotificationToken(user) {
+  return new Promise (resolve => {
+    firebase.database().ref('dispatchers/' + user.id).update({
+      notification: false
+    }, (err) => {
+      if (err) {
+        console.error('Unable to remove token. ', err);
+      } else {
+        console.log('Token was removed');
+      }
+      resolve();
+    });
   });
 }
 
