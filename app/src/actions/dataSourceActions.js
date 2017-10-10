@@ -47,12 +47,13 @@ export function checkUserAuth() {
   });
 }
 
-export function signIn(id, phone) {
+export function signIn(id, phone, onError) {
   return (dispatch => {
     const email = id + '@yedidim.org';
     firebase.auth().signInWithEmailAndPassword(email, phone)
       .catch(function (err) {
-        dispatch(setError(err));
+        console.log('failed to sign in', err);
+        onError('פרטים שגויים. נסה שנית');
       });
   });
 }
