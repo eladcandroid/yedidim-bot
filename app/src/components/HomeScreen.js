@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LoginScreen from "./LoginScreen";
-import EventsScreen from "./EventsScreen";
+import MainScreen from "./MainScreen";
 import { checkUserAuth } from "../actions/dataSourceActions";
 
 
@@ -24,7 +24,7 @@ class HomeScreen extends Component {
     if (!this.props.events) {
       return (<Expo.AppLoading />)
     }
-    return (<EventsScreen/>)
+    return (<MainScreen/>)
   }
 }
 const mapDispatchToProps = (dispatch) => {
