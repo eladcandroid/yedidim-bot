@@ -6,7 +6,7 @@ const EventsScreen = StackNavigator({
   EventList: {
     screen: EventsList,
     navigationOptions: {
-      title: 'ארועים',
+      title: 'אירועים',
     }
   },
   EventDetails: {

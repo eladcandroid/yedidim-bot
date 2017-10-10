@@ -37,8 +37,8 @@ class EventsList extends Component {
 
   render() {
     let sections = [
-      {title: 'ארועים חדשים - פייסבוק', data: this.props.newEvents},
-      {title: 'ארועים פעילים', data: this.props.activeEvents}];
+      {title: 'אירועים חדשים - פייסבוק', data: this.props.newEvents},
+      {title: 'אירועים פעילים', data: this.props.activeEvents}];
     return (
       <View style={{paddingTop:20}}>
         <SectionList
