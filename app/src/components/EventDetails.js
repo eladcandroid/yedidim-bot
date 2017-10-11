@@ -42,8 +42,12 @@ class EventDetails extends Component {
           <Text style={styles.fieldValue}>{event.details['phone number']}</Text>
         </View>
         <View>
-          <Text style={styles.fieldName}>סוג</Text>
+          <Text style={styles.fieldName}>בעיה</Text>
           <Text style={styles.fieldValue}>{formatEventCase(event)}</Text>
+        </View>
+        <View>
+          <Text style={styles.fieldName}>סוג רכב</Text>
+          <Text style={styles.fieldValue}>{event.details['car type']}</Text>
         </View>
         <View>
           <Text style={styles.fieldName}>כתובת</Text>

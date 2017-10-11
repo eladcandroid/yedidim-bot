@@ -27,7 +27,7 @@ class EventsListHeader extends Component {
         <Text style={styles.headerTitle}>{this.props.title}</Text>
         <View style={styles.headerRow}>
           <Text style={styles.columnTime}>זמן</Text>
-          <Text style={styles.columnCase}>סוג</Text>
+          <Text style={styles.columnCase}>בעיה</Text>
           <Text style={styles.columnAddress}>כתובת</Text>
         </View>
       </View>
