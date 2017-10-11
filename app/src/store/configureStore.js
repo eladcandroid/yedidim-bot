@@ -4,6 +4,7 @@ import reducers from '../reducers';
 
 const configureStore = createStore(
   reducers,
+  {dataSource: {instance: Expo.Constants.manifest.extra.instance}},
   applyMiddleware(thunk),
 );
 

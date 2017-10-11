@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import { InstanceTypes } from "../constants/consts";
 import { signOutUser } from "../actions/dataSourceActions";
 
 
@@ -14,6 +15,10 @@ class ProfileScreen extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.field}>{this.props.user.name}</Text>
+        {this.props.instance !== InstanceTypes.Production ?
+          <Text style={styles.field}>{this.props.instance}</Text>
+          : undefined
+        }
         <Button
           onPress={this.props.signOut.bind(this)}
           title="התנתק"
@@ -33,13 +38,15 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.dataSource.user,
+    instance: state.dataSource.instance,
+    user: state.dataSource.user
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
 
 ProfileScreen.propTypes = {
+  instance: PropTypes.string,
   user: PropTypes.object,
   signOut: PropTypes.func
 };

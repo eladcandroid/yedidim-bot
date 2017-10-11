@@ -1,22 +1,20 @@
 {
   "expo": {
-    "name": "yedidimDispatcherApp",
+    "name": "ידידים - מוקדן",
     "description": "ידידים - מוקדן",
     "slug": "dispatcher",
-    "privacy": "unlisted",
     "sdkVersion": "21.0.0",
     "version": "0.1.0",
     "orientation": "portrait",
-    "primaryColor": "#cccccc",
     "icon": "./assets/icons/app-icon.png",
     "loading": {
       "icon": "./assets/icons/loading-icon.png"
     },
-    "packagerOpts": {
-      "assetExts": ["ttf", "mp4"]
-    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
+    },
+    "extra": {
+      "instance": "sandbox2"
     }
   }
 }

@@ -31,7 +31,7 @@ const firebaseConfig = {
 
 };
 
-firebase.initializeApp(firebaseConfig.sandbox2);
+firebase.initializeApp(firebaseConfig[Expo.Constants.manifest.extra.instance]);
 
 export function checkUserAuth() {
   return (dispatch => {
