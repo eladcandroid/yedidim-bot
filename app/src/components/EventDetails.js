@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Button, Clipboard } from 'react-native';
+import { View, Text, Button, Clipboard, StyleSheet } from 'react-native';
 import { formatEventCase, formatEventTime, getEventStatus, getCopyText } from "../common/utils";
 import { EventStatus } from "../constants/consts";
 import { updateEventStatus } from "../actions/dataSourceActions";
@@ -25,42 +25,42 @@ class EventDetails extends Component {
   render() {
     const event = this.props.event;
     return (
-      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-start', paddingTop:20}}>
+      <View style={styles.container}>
         {event.timestamp ?
-          <View style={{margin:6}}>
-            <Text style={{fontWeight: 'bold', textAlign:'right'}}>זמן</Text>
-            <Text style={{textAlign:'right'}}>{formatEventTime(event)}</Text>
+          <View>
+            <Text style={styles.fieldName}>זמן</Text>
+            <Text style={styles.fieldValue}>{formatEventTime(event)}</Text>
           </View>
           : undefined
         }
-        <View style={{margin:6}}>
-          <Text style={{fontWeight: 'bold', textAlign:'right'}}>שם</Text>
-          <Text style={{textAlign:'right'}}>{event.details['caller name']}</Text>
+        <View>
+          <Text style={styles.fieldName}>שם</Text>
+          <Text style={styles.fieldValue}>{event.details['caller name']}</Text>
         </View>
-        <View style={{margin:6}}>
-          <Text style={{fontWeight: 'bold', textAlign:'right'}}>טלפון</Text>
-          <Text style={{textAlign:'right'}}>{event.details['phone number']}</Text>
+        <View>
+          <Text style={styles.fieldName}>טלפון</Text>
+          <Text style={styles.fieldValue}>{event.details['phone number']}</Text>
         </View>
-        <View style={{margin:6}}>
-          <Text style={{fontWeight: 'bold', textAlign:'right'}}>סוג</Text>
-          <Text style={{textAlign:'right'}}>{formatEventCase(event)}</Text>
+        <View>
+          <Text style={styles.fieldName}>סוג</Text>
+          <Text style={styles.fieldValue}>{formatEventCase(event)}</Text>
         </View>
-        <View style={{margin:6}}>
-          <Text style={{fontWeight: 'bold', textAlign:'right'}}>כתובת</Text>
-          <Text style={{textAlign:'right'}}>{event.details['address']}</Text>
+        <View>
+          <Text style={styles.fieldName}>כתובת</Text>
+          <Text style={styles.fieldValue}>{event.details['address']}</Text>
         </View>
-        <View style={{margin:6}}>
-          <Text style={{fontWeight: 'bold', textAlign:'right'}}>פרטים</Text>
-          <Text style={{textAlign:'right'}}>{event.details['more']}</Text>
+        <View>
+          <Text style={styles.fieldName}>פרטים</Text>
+          <Text style={styles.fieldValue}>{event.details['more']}</Text>
         </View>
         {getEventStatus(event) === EventStatus.Submitted ?
-          <View style={{flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
-            <Button onPress={this.sendEvent.bind(this)} title='שלח'/>
-            <Button onPress={this.copyToClipboard.bind(this)} title='העתק'/>
+          <View style={styles.buttonsRow}>
+            <Button style={styles.button} onPress={this.sendEvent.bind(this)} title='שלח'/>
+            <Button style={styles.button} onPress={this.copyToClipboard.bind(this)} title='העתק'/>
           </View>
           : getEventStatus(event) === EventStatus.Sent ?
-            <View style={{flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
-              <Button onPress={this.completeEvent.bind(this)} title='טופל'/>
+            <View style={styles.buttonsRow}>
+              <Button style={styles.button} onPress={this.completeEvent.bind(this)} title='טופל'/>
             </View>
             : undefined
         }
@@ -92,3 +92,30 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 EventDetails.propTypes = {
   updateEventStatus: PropTypes.func
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    paddingTop: 20,
+    paddingRight: 8,
+    paddingBottom: 10,
+    paddingLeft: 8
+  },
+  fieldName: {
+    fontWeight: 'bold',
+    textAlign:'right'
+  },
+  fieldValue: {
+    textAlign:'right'
+  },
+  buttonsRow: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    paddingTop: 20
+  },
+  button: {
+    width: 100
+  }
+});
