@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingRight: 8,
     paddingBottom: 10,
-    paddingLeft: 8
+    paddingLeft: 8,
+    backgroundColor: 'white'
   },
   fieldName: {
     fontWeight: 'bold',

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { TouchableHighlight, View, SectionList, Text } from 'react-native';
+import { TouchableHighlight, ScrollView, View, FlatList, Text, StyleSheet } from 'react-native';
 import { getEventStatus, formatEventCase, formatEventTime } from '../common/utils';
 import { EventSource, EventStatus } from '../constants/consts';
 import EventDetails from './EventDetails';
@@ -10,10 +10,10 @@ class EventsListItem extends Component {
   render() {
     return (
       <TouchableHighlight onPress={this.props.onPress.bind(this)}>
-        <View style={{flex:1, height:50,flexDirection: 'row-reverse'}}>
-          <Text style={{width:60,textAlign:'right', paddingLeft:10}}>{formatEventTime(this.props.event)}</Text>
-          <Text style={{width:120,textAlign:'right', paddingLeft:10}}>{formatEventCase(this.props.event)}</Text>
-          <Text style={{textAlign:'right'}}>{this.props.event.details.address}</Text>
+        <View style={styles.row}>
+          <Text style={styles.columnTime}>{formatEventTime(this.props.event)}</Text>
+          <Text style={styles.columnCase}>{formatEventCase(this.props.event)}</Text>
+          <Text style={styles.columnAddress}>{this.props.event.details.address}</Text>
         </View>
       </TouchableHighlight>
     );
@@ -23,8 +23,13 @@ class EventsListItem extends Component {
 class EventsListHeader extends Component {
   render() {
     return (
-      <View>
-        <Text style={{fontSize: 18, textAlign:'right'}}>{this.props.title}</Text>
+      <View style={styles.listHeader}>
+        <Text style={styles.headerTitle}>{this.props.title}</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.columnTime}>זמן</Text>
+          <Text style={styles.columnCase}>סוג</Text>
+          <Text style={styles.columnAddress}>כתובת</Text>
+        </View>
       </View>
     );
   }
@@ -36,16 +41,20 @@ class EventsList extends Component {
   }
 
   render() {
-    let sections = [
-      {title: 'אירועים חדשים - פייסבוק', data: this.props.newEvents},
-      {title: 'אירועים פעילים', data: this.props.activeEvents}];
     return (
-      <View style={{paddingTop:20}}>
-        <SectionList
+      <ScrollView style={styles.container}>
+        <EventsListHeader title={'אירועים חדשים - פייסבוק'} />
+        <FlatList
+          data={this.props.newEvents}
           renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
-          renderSectionHeader={({section}) => <EventsListHeader title={section.title} />}
-          sections={sections}/>
-      </View>
+        />
+        <EventsListHeader title={'אירועים פעילים'} />
+        <FlatList
+          scrollEnabled={false}
+          data={this.props.activeEvents}
+          renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
+        />
+      </ScrollView>
     );
   }
 }
@@ -68,3 +77,50 @@ EventsList.propTypes = {
 EventsListItem.propTypes = {
   onPress: PropTypes.func
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    flexDirection: 'column',
+    paddingTop: 20,
+    paddingRight: 8,
+    paddingLeft: 8,
+    paddingBottom: 20,
+    backgroundColor: 'white'
+  },
+  listHeader: {
+    height: 50,
+  },
+  headerTitle: {
+    fontSize: 18,
+    textAlign:'right'
+  },
+  headerRow: {
+    height:30,
+    flexDirection: 'row-reverse'
+  },
+  row: {
+    height:50,
+    flexDirection: 'row-reverse',
+    backgroundColor: 'white'
+  },
+  rowLine: {
+    height: 1,
+    backgroundColor: '#D3D3D3'
+  },
+  columnTime: {
+    width:60,
+    textAlign:'right',
+    paddingLeft:10
+  },
+  columnCase: {
+    width:80,
+    textAlign:'right',
+    paddingLeft:10
+  },
+  columnAddress: {
+    textAlign:'right',
+    paddingLeft:10,
+    flexGrow: 2
+  }
+});
