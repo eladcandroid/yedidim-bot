@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import { signOutUser } from "../actions/dataSourceActions";
 
 
@@ -12,11 +12,12 @@ class ProfileScreen extends Component {
 
   render() {
     return (
-      <View style={{paddingTop: 40}}>
-        <Text style={{textAlign: 'right'}}>{this.props.user.name}</Text>
+      <View style={styles.container}>
+        <Text style={styles.field}>{this.props.user.name}</Text>
         <Button
           onPress={this.props.signOut.bind(this)}
-          title="התנתק"/>
+          title="התנתק"
+        />
       </View>
     );
   }
@@ -42,3 +43,18 @@ ProfileScreen.propTypes = {
   user: PropTypes.object,
   signOut: PropTypes.func
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 40,
+    paddingRight: 20
+  },
+  field: {
+    fontSize: 16,
+    textAlign: 'right',
+    paddingBottom: 20
+  },
+  button: {
+    width: 100
+  }
+});
