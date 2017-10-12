@@ -1,4 +1,4 @@
-const CallStatus = require('./consts').CallStatus;
+const EventStatus = require('./consts').EventStatus;
 
 let db;
 
@@ -8,25 +8,25 @@ module.exports = {
   },
   get: function(psid) {
     return new Promise((resolve) => {
-      db.ref('/calls').orderByChild('psid').equalTo(psid).once('value')
+      db.ref('/events').orderByChild('psid').equalTo(psid).once('value')
         .then(snapshot => {
-          const calls = snapshot.val();
-          console.info('Context (' + psid + ') was retrieved : \n', calls);
-          if (!calls){
+          const events = snapshot.val();
+          console.info('Context (' + psid + ') was retrieved : \n', events);
+          if (!events){
             resolve (undefined);
           }
-          for (const key in calls){
-            if (calls.hasOwnProperty(key)) {
-              let call = calls[key];
-              if (call.status === CallStatus.Draft || call.status === CallStatus.Submitted) {
-                if (call.timestamp < (Date.now() - 60 * 60 * 1000)) {
-                  //if call was made more than 1 hour ago then start again
-                  call.status = CallStatus.Archived;
-                  this.set(call);
+          for (const key in events){
+            if (events.hasOwnProperty(key)) {
+              let event = events[key];
+              if (event.status === EventStatus.Draft || event.status === EventStatus.Submitted) {
+                if (event.timestamp < (Date.now() - 60 * 60 * 1000)) {
+                  //if event was made more than 1 hour ago then start again
+                  event.status = EventStatus.Archived;
+                  this.set(event);
                   resolve(undefined);
                 }
-                call.key = key;
-                resolve(call);
+                event.key = key;
+                resolve(event);
               }
             }
           }
@@ -42,10 +42,10 @@ module.exports = {
   set: function(context) {
     return new Promise((resolve, reject) => {
       if (!context.key) {
-        context.key = db.ref().child('calls').push().key;
+        context.key = db.ref().child('events').push().key;
       }
       context['timestamp'] = Date.now();
-      db.ref('/calls/' + context.key).set(context, err => {
+      db.ref('/events/' + context.key).set(context, err => {
         if (err) {
           console.error('Failed to set context (' + context.psid + ') : \n', + err);
           reject(err);

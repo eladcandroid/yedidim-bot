@@ -4,10 +4,10 @@ const queue = require('async/queue');
 
 const tokens = getTokens(require('./_tokens.json'));
 const flow = require('./flow.json');
-const calls = require('./calls');
+const events = require('./calls');
 const notifications = require('./notifications');
 const geocoder = require('./geocoder');
-const CallStatus = require('./consts').CallStatus;
+const EventStatus = require('./consts').EventStatus;
 
 const sendAPIQueue = queue(callSendAPIAsync);
 
@@ -23,7 +23,7 @@ function getTokens(json) {
 }
 
 const admin = require('./admin').init(tokens.firebaseCert, tokens.firebaseConfig);
-calls.init(admin);
+events.init(admin);
 notifications.init(admin);
 geocoder.init(tokens.maps.apiKey);
 
@@ -72,7 +72,7 @@ function handleMessage(event) {
   console.info('webhook event : \n', event);
   sendTypingMessage(event.sender.id, true);
 
-  calls.get(event.sender.id)
+  events.get(event.sender.id)
     .then(context => {
       if (!context ||
           (event.postback && event.postback.payload === 'get_started'))
@@ -80,10 +80,10 @@ function handleMessage(event) {
         //This is the first message
         sendInitialResponse(event);
       } else if (event.message && event.message.text === 'get started') {
-        //FOR TESTING: Start again even if the user has an active call
+        //FOR TESTING: Start again even if the user has an active event
         if (context) {
-          context.status = CallStatus.Archived;
-          calls.set(context);
+          context.status = EventStatus.Archived;
+          events.set(context);
         }
         sendInitialResponse(event);
       } else {
@@ -103,16 +103,16 @@ function sendInitialResponse(event) {
     psid: event.sender.id,
     lastMessage: 'get_started',
     source: 'fb-bot',
-    status: CallStatus.Draft
+    status: EventStatus.Draft
   };
   getUserProfile(event.sender.id)
     .then(response => {
       context.details = {'caller name': response.first_name + ' ' + response.last_name};
-      calls.set(context);
+      events.set(context);
     })
     .catch(() => {
       //Save without the name
-      calls.set(context);
+      events.set(context);
     });
 }
 
@@ -136,10 +136,10 @@ function sendFollowUpResponse(event, context) {
       }
       sendMessage(senderID, getTemplate(nextQuestion, context));
       if (nextQuestion.submit){
-        context.status = CallStatus.Submitted;
+        context.status = EventStatus.Submitted;
       }
-      calls.set(context);
-      //After updating the call status send notifications
+      events.set(context);
+      //After updating the event status send notifications
       if (nextQuestion.submit) {
         notifications.send(context.details).then(() => {
           //Nothing to do afterwards
