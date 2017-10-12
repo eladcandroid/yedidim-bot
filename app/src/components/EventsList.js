@@ -48,6 +48,7 @@ class EventsList extends Component {
           data={this.props.newEvents}
           renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
         />
+        <View style={styles.rowLine}/>
         <EventsListHeader title={'אירועים פעילים'} />
         <FlatList
           scrollEnabled={false}
