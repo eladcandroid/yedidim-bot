@@ -4,7 +4,7 @@ const queue = require('async/queue');
 
 const tokens = getTokens(require('./_tokens.json'));
 const flow = require('./flow.json');
-const events = require('./calls');
+const events = require('./events');
 const notifications = require('./notifications');
 const geocoder = require('./geocoder');
 const EventStatus = require('./consts').EventStatus;
