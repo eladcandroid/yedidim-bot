@@ -66,7 +66,8 @@ export function storeNotificationToken(token) {
     }
     firebase.database().ref('dispatchers/' + getState().dataSource.user.id).update({
       token,
-      notification: true
+      notification: true,
+      time: new Date()
     }, (err) => {
       if (err) {
         dispatch(setError('Unable to set token. ', err));
@@ -90,7 +91,7 @@ export function signOutUser() {
 export function updateEventStatus(event, status) {
   const updatedEvent = Object.assign({}, event, {status});
   return (dispatch => {
-    firebase.database().ref('calls/' + event.key).set(updatedEvent, (err) => {
+    firebase.database().ref('events/' + event.key).set(updatedEvent, (err) => {
       if (err) {
         dispatch(setError('Failed to update!', err));
       } else {
@@ -146,7 +147,7 @@ function loadUserData(user) {
 
 function loadEvents() {
   return (dispatch => {
-    firebase.database().ref('/calls').once('value')
+    firebase.database().ref('/events').once('value')
       .then((snapshot) => {
         let events = objectToArray(snapshot.val());
         events.sort((c1, c2) => {
@@ -158,12 +159,12 @@ function loadEvents() {
         });
         dispatch(setEvents(events));
         const timestamp = events.length > 0 ? events[0].timestamp + 1 : 0;
-        firebase.database().ref('/calls').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
+        firebase.database().ref('/events').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
           let event = data.val();
           event.key = data.key;
           dispatch(addEvent(event));
         });
-        firebase.database().ref('/calls').on('child_changed', (data) => {
+        firebase.database().ref('/events').on('child_changed', (data) => {
           let event = data.val();
           event.key = data.key;
           dispatch(setEvent(event));
