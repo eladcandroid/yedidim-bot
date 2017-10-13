@@ -24,14 +24,14 @@ module.exports = {
                 tokens.push(dispatcher.token);
               }
             }
-            if (tokens.length > 0) {
-              sendPushNotification(tokens, details)
-                .then(() => {
+          }
+          if (tokens.length > 0) {
+            sendPushNotification(tokens, details)
+              .then(() => {
                 resolve()
               });
-            }
-            resolve();
           }
+          resolve();
         })
         .catch(err => {
           console.error("Failed to retrieve dispatchers : \n", err);
