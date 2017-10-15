@@ -59,7 +59,7 @@ class EventDetails extends Component {
         </View>
         {getEventStatus(event) === EventStatus.Submitted ?
           <View style={styles.buttonsRow}>
-            <Button style={styles.button} onPress={this.sendEvent.bind(this)} title='שלח'/>
+            <Button style={styles.button} onPress={this.sendEvent.bind(this)} title='נשלח'/>
             <Button style={styles.button} onPress={this.copyToClipboard.bind(this)} title='העתק'/>
           </View>
           : getEventStatus(event) === EventStatus.Sent ?
