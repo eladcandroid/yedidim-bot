@@ -1,29 +1,39 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { NavigationActions } from "react-navigation";
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+  container: {
+    flex: 1,
+    backgroundColor: "red",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
 
 class SplashScreen extends Component {
-    static navigationOptions = {
-        title: 'Welcome'
-    };
-    
-    render() { 
-        return (
-            <View style={styles.container}>
-            <Text>Open up App.js to start working on your app!</Text>
-            <Text>Changes you make will automatically reload.</Text>
-            <Text>Shake your phone to open the developer menu.</Text>
-          </View>
-        );
-    }
+  static navigationOptions = {
+    header: null
+  };
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.navigation.dispatch(
+        NavigationActions.reset({
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: "Home" })]
+        })
+      );
+    }, 3000);
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>This is the splash screen</Text>
+      </View>
+    );
+  }
 }
- 
+
 export default SplashScreen;
