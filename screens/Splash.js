@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { NavigationActions } from "react-navigation";
+import styled from 'styled-components/native';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "red",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
+const StyledView = styled.View`
+    flex: 1;
+    background-color: red;
+    align-items: center;
+    justify-content: center;
+`;
 
 class SplashScreen extends Component {
   static navigationOptions = {
@@ -29,9 +28,9 @@ class SplashScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <StyledView>
         <Text>This is the splash screen</Text>
-      </View>
+      </StyledView>
     );
   }
 }
