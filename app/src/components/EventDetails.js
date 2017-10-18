@@ -2,13 +2,18 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, Button, Clipboard, StyleSheet } from 'react-native';
-import { formatEventCase, formatEventTime, getEventStatus, getCopyText } from "../common/utils";
+import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText } from "../common/utils";
 import { EventStatus } from "../constants/consts";
 import { updateEventStatus } from "../actions/dataSourceActions";
 
 class EventDetails extends Component {
-  copyToClipboard() {
-    Clipboard.setString(getCopyText(this.props.event));
+  copyEventDetailsToClipboard() {
+    Clipboard.setString(getEventDetailsText(this.props.event));
+    this.props.goBack();
+  }
+
+  copyUserDetailsToClipboard() {
+    Clipboard.setString(getUserDetailsText(this.props.event));
     this.props.goBack();
   }
 
@@ -59,8 +64,9 @@ class EventDetails extends Component {
         </View>
         {getEventStatus(event) === EventStatus.Submitted ?
           <View style={styles.buttonsRow}>
-            <Button style={styles.button} onPress={this.sendEvent.bind(this)} title='נשלח'/>
-            <Button style={styles.button} onPress={this.copyToClipboard.bind(this)} title='העתק'/>
+            <Button style={styles.button} onPress={this.sendEvent.bind(this)} title='נשלח '/>
+            <Button style={styles.button} onPress={this.copyUserDetailsToClipboard.bind(this)} title='העתק טלפון'/>
+            <Button style={styles.button} onPress={this.copyEventDetailsToClipboard.bind(this)} title='העתק אירוע'/>
           </View>
           : getEventStatus(event) === EventStatus.Sent ?
             <View style={styles.buttonsRow}>
@@ -118,9 +124,9 @@ const styles = StyleSheet.create({
   buttonsRow: {
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
-    paddingTop: 20
+    paddingTop: 20,
   },
   button: {
-    width: 100
+    width: 80
   }
 });

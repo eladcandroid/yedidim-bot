@@ -12,8 +12,12 @@ export const objectToArray = (obj) => {
   return arr;
 };
 
-export const getCopyText = (event) => {
-  return `*שם:* ${event.details['caller name']}\r\n*טלפון:* ${event.details['phone number']}\r\n*בעיה:* ${formatEventCase(event)}\r\n*פרטים:* ${event.details['more']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*כתובת:* ${event.details['address']}`;
+export const getEventDetailsText = (event) => {
+  return `*כתובת:* ${event.details['address']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*בעיה:* ${formatEventCase(event)}\r\n*פרטים:* ${event.details['more']}`;
+};
+
+export const getUserDetailsText = (event) => {
+  return `*טלפון:* ${event.details['phone number']}\r\n *שם:* ${event.details['caller name']}`;
 };
 
 
