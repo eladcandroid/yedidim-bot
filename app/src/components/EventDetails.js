@@ -39,12 +39,12 @@ class EventDetails extends Component {
           : undefined
         }
         <View>
-          <Text style={styles.fieldName}>שם</Text>
-          <Text style={styles.fieldValue}>{event.details['caller name']}</Text>
+          <Text style={styles.fieldName}>עיר</Text>
+          <Text style={styles.fieldValue}>{event.details['city']}</Text>
         </View>
         <View>
-          <Text style={styles.fieldName}>טלפון</Text>
-          <Text style={styles.fieldValue}>{event.details['phone number']}</Text>
+          <Text style={styles.fieldName}>כתובת</Text>
+          <Text style={styles.fieldValue}>{`${event.details['street_name']} ${event.details['street_number']}`}</Text>
         </View>
         <View>
           <Text style={styles.fieldName}>בעיה</Text>
@@ -55,12 +55,16 @@ class EventDetails extends Component {
           <Text style={styles.fieldValue}>{event.details['car type']}</Text>
         </View>
         <View>
-          <Text style={styles.fieldName}>כתובת</Text>
-          <Text style={styles.fieldValue}>{event.details['address']}</Text>
-        </View>
-        <View>
           <Text style={styles.fieldName}>פרטים</Text>
           <Text style={styles.fieldValue}>{event.details['more']}</Text>
+        </View>
+        <View>
+          <Text style={styles.fieldName}>טלפון</Text>
+          <Text style={styles.fieldValue}>{event.details['phone number']}</Text>
+        </View>
+        <View>
+          <Text style={styles.fieldName}>שם</Text>
+          <Text style={styles.fieldValue}>{event.details['caller name']}</Text>
         </View>
         {getEventStatus(event) === EventStatus.Submitted ?
           <View style={styles.buttonsRow}>
@@ -119,7 +123,8 @@ const styles = StyleSheet.create({
     textAlign:'right'
   },
   fieldValue: {
-    textAlign:'right'
+    textAlign:'right',
+    maxHeight: 50
   },
   buttonsRow: {
     flexDirection: 'row-reverse',

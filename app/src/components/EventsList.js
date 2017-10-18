@@ -13,7 +13,7 @@ class EventsListItem extends Component {
         <View style={styles.row}>
           <Text style={styles.columnTime}>{formatEventTime(this.props.event)}</Text>
           <Text style={styles.columnCase}>{formatEventCase(this.props.event)}</Text>
-          <Text style={styles.columnAddress}>{this.props.event.details.address}</Text>
+          <Text style={styles.columnAddress}>{this.props.event.details.city}</Text>
         </View>
       </TouchableHighlight>
     );
@@ -28,7 +28,7 @@ class EventsListHeader extends Component {
         <View style={styles.headerRow}>
           <Text style={styles.columnTime}>זמן</Text>
           <Text style={styles.columnCase}>בעיה</Text>
-          <Text style={styles.columnAddress}>כתובת</Text>
+          <Text style={styles.columnAddress}>עיר</Text>
         </View>
       </View>
     );
@@ -106,16 +106,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   rowLine: {
-    height: 1,
-    backgroundColor: '#D3D3D3'
+    height: 2,
+    backgroundColor: 'black',
+    marginTop: 30
   },
   columnTime: {
-    width:60,
+    width:70,
     textAlign:'right',
     paddingLeft:10
   },
   columnCase: {
-    width:80,
+    width:110,
     textAlign:'right',
     paddingLeft:10
   },
