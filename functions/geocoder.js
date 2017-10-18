@@ -43,5 +43,9 @@ module.exports = {
 
   verify: function(res) {
     return ((res.length === 1 || res[0].extra.confidence > 0.9) && res[0].streetName && res[0].streetNumber && res[0].countryCode === 'IL');
+  },
+
+  toAddress: function(res) {
+    return {city: res[0].city, streetName: res[0].streetName, streetNumber: res[0].streetNumber, formattedAddress: res[0].formattedAddress};
   }
 };

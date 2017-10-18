@@ -178,20 +178,20 @@ function validateResponse(event, lastMessage) {
         const coordinates = {lat: event.message.attachments[0].payload.coordinates.lat, lon: event.message.attachments[0].payload.coordinates.long};
         geocoder.reverse(coordinates)
           .then(res => {
-            resolve({valid: true, location: {coordinates, address: res[0].formattedAddress}});
+            resolve({valid: true, location: {coordinates, address: geocoder.toAddress(res)}});
           })
           .catch(() => {
             resolve({valid: false});
           })
       } else {
         //Get geocoding from address
-        const address = event.message.text;
-        geocoder.geocode(address)
+        const userAddress = event.message.text;
+        geocoder.geocode(userAddress)
           .then(res => {
             if (!geocoder.verify(res)){
               resolve({valid: false});
             }
-            resolve({valid: true, location: {coordinates: {lat: res[0].latitude, lon: res[0].longitude}, address, formattedAddress: res[0].formattedAddress}});
+            resolve({valid: true, location: {coordinates: {lat: res[0].latitude, lon: res[0].longitude}, address: geocoder.toAddress(res), userAddress}});
           })
           .catch(() => {
             resolve({valid: false});
@@ -217,10 +217,13 @@ function setDetailsAndNextMessage(lastMessage, context, response) {
     //In case of next use it otherwise the payload is the next
     context.lastMessage = payload.next ? payload.next : response.payload;
   } else if (lastMessage.validate === 'location') {
-    context.details['address'] = response.location.address;
     context.details['geo'] = response.location.coordinates;
-    if (response.location.formattedAddress) {
-      context.details['full_address'] = response.location.formattedAddress;
+    context.details['address'] = response.location.address.formattedAddress;
+    context.details['city'] = response.location.address.city;
+    context.details['street_name'] = response.location.address.streetName;
+    context.details['street_number'] = response.location.address.streetNumber;
+    if (response.location.userAddress) {
+      context.details['user_address'] = response.location.userAddress;
     }
     context.lastMessage = lastMessage.next;
   } else {
