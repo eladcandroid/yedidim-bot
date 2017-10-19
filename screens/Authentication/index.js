@@ -44,11 +44,15 @@ export default class AuthenticationScreen extends React.Component {
     super();
     this.state = {
       phone: '',
+      code: '',
       authenticated: false
     };
   }
   render() {
-    const { authenticated, phone } = this.state;
+    const { authenticated, phone, code } = this.state;
+
+    const canSubmit = authenticated ? !!code : !!phone;
+
     return (
       <Container>
         <Header>
@@ -77,13 +81,14 @@ export default class AuthenticationScreen extends React.Component {
             </Item>
             {authenticated && (
               <Item>
-                <Input keyboardType="numeric" placeholder="Enter code received" />
+                <Input value={code} onChangeText={(code) => this.setState({ code })} keyboardType="numeric" placeholder="Enter code received" />
               </Item>
             )}
           </Form>
           <ButtonsView>
               <StyledButton
-                success
+                disabled={!canSubmit}
+                success={canSubmit}
                 onPress={() => this.setState({ authenticated: true })}
               >
                 <Text>{authenticated ? 'Verify Code' : 'Send me the code by SMS'}</Text>
