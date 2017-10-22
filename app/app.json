@@ -15,6 +15,18 @@
     },
     "extra": {
       "instance": "production"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "startach",
+            "project": "yedidim",
+            "authToken": "480786f7e02a4b15b0c5bc0416abc510302409d4a0f84547873a47564b2765ab"
+          }
+        }
+      ]
     }
   }
 }
