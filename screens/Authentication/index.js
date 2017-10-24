@@ -54,6 +54,26 @@ export default class AuthenticationScreen extends React.Component {
 
     const canSubmit = authenticated ? !!code : !!phone;
 
+    const patchPostMessageFunction = function() {
+      var originalPostMessage = window.postMessage;
+
+      var patchedPostMessage = function(message, targetOrigin, transfer) {
+        originalPostMessage(message, targetOrigin, transfer);
+      };
+
+      patchedPostMessage.toString = function() {
+        return String(Object.hasOwnProperty).replace(
+          "hasOwnProperty",
+          "postMessage"
+        );
+      };
+
+      window.postMessage = patchedPostMessage;
+    };
+
+    const patchPostMessageJsCode =
+      "(" + String(patchPostMessageFunction) + ")();";
+
     return (
       <Container>
         <Header>
@@ -98,7 +118,8 @@ export default class AuthenticationScreen extends React.Component {
               success={canSubmit}
               onPress={() => {
                 this.setState({ authenticated: true });
-                signIn();
+                this.webview.postMessage(phone);
+                // signIn();
               }}
             >
               <Text>
@@ -110,7 +131,7 @@ export default class AuthenticationScreen extends React.Component {
                 danger
                 onPress={() => {
                   this.setState({ authenticated: false, phone: "" });
-                  signOut();
+                  // signOut();
                 }}
               >
                 <Text>Start Again</Text>
@@ -118,9 +139,13 @@ export default class AuthenticationScreen extends React.Component {
             )}
           </ButtonsView>
           <WebView
+            ref={webview => (this.webview = webview)}
             mixedContentMode="always"
+            injectedJavaScript={patchPostMessageJsCode}
             style={{ height: 500, width: 500 }}
             source={require("./webview.html")}
+            onMessage={event =>
+              console.log(">>>onMessage:", event.nativeEvent.data)}
           />
         </Content>
       </Container>

@@ -30,6 +30,12 @@
     </script>
 
     <script>
+        document.addEventListener("message", function (data) {
+            window.confirmationResult.confirm(data.data);
+        });
+    </script>
+
+    <script>
         jQuery("#sign-in-button").click(function () {
             try {
                 // alert(recaptchaVerifier)
@@ -48,8 +54,9 @@
                         alert(
                             "SMS sent. Prompt user to type the code from the message, then sign the"
                         );
+                        // window.postMessage(confirmationResult.confirm, "*")
                         // user in with confirmationResult.confirm(code).
-                        // window.confirmationResult = confirmationResult;
+                        window.confirmationResult = confirmationResult;
                     })
                     .catch(function (error) {
                         alert(error);
@@ -63,8 +70,6 @@
             } catch (err) {
                 alert(err)
             }
-
-            // window.postMessage(firebase.auth.RecaptchaVerifier, "*")
         })
     </script>
 
