@@ -13,12 +13,35 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 export default function signIn() {
   console.log("signIn!");
-  firebase
-    .auth()
-    .signInWithEmailAndPassword("test@yedidim.org", "testes")
-    .catch(function(err) {
-      console.log("failed to sign in", err);
-    });
+
+  const recaptchaVerifier = new firebase.auth
+    .RecaptchaVerifier("sign-in-button", {
+    size: "invisible",
+    callback: function(response) {
+      // reCAPTCHA solved, allow signInWithPhoneNumber.
+      firebase
+        .auth()
+        .signInWithPhoneNumber("+447951597511", recaptchaVerifier)
+        .then(function(confirmationResult) {
+          console.log(
+            "SMS sent. Prompt user to type the code from the message, then sign the",
+            confirmationResult
+          );
+          // user in with confirmationResult.confirm(code).
+          // window.confirmationResult = confirmationResult;
+        })
+        .catch(function(error) {
+          console.log("Error; SMS not sent", error);
+        });
+    }
+  });
+
+  // firebase
+  //   .auth()
+  //   .signInWithEmailAndPassword("test@yedidim.org", "testes")
+  //   .catch(function(err) {
+  //     console.log("failed to sign in", err);
+  //   });
 }
 
 export function signOut() {
