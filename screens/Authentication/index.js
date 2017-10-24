@@ -17,7 +17,7 @@ import {
   Input,
   Label
 } from "native-base";
-import { View } from "react-native";
+import { View, WebView } from "react-native";
 import styled from "styled-components/native";
 import signIn, { signOut } from "../../api";
 
@@ -117,6 +117,11 @@ export default class AuthenticationScreen extends React.Component {
               </StyledButton>
             )}
           </ButtonsView>
+          <WebView
+            mixedContentMode="always"
+            style={{ height: 500, width: 500 }}
+            source={require("./webview.html")}
+          />
         </Content>
       </Container>
     );
