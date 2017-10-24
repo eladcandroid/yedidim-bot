@@ -19,6 +19,7 @@ import {
 } from "native-base";
 import { View } from "react-native";
 import styled from "styled-components/native";
+import signIn, { signOut } from "../../api";
 
 const IntroText = styled.Text`
   text-align: center;
@@ -43,8 +44,8 @@ export default class AuthenticationScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      phone: '',
-      code: '',
+      phone: "",
+      code: "",
       authenticated: false
     };
   }
@@ -64,7 +65,8 @@ export default class AuthenticationScreen extends React.Component {
         </Header>
         <Content padder>
           <IntroText>
-            Please enter your phone number to receive a code by SMS for authentication so to be able to accept events.
+            Please enter your phone number to receive a code by SMS for
+            authentication so to be able to accept events.
           </IntroText>
           <Form>
             <Item>
@@ -72,34 +74,49 @@ export default class AuthenticationScreen extends React.Component {
                 value={phone}
                 keyboardType="numeric"
                 disabled={authenticated}
-                style={{ 
-                    color: (authenticated ? '#d2d4d8' : 'black') 
+                style={{
+                  color: authenticated ? "#d2d4d8" : "black"
                 }}
-                onChangeText={(phone) => this.setState({ phone })}
+                onChangeText={phone => this.setState({ phone })}
                 placeholder="Phone number"
               />
             </Item>
             {authenticated && (
               <Item>
-                <Input value={code} onChangeText={(code) => this.setState({ code })} keyboardType="numeric" placeholder="Enter code received" />
+                <Input
+                  value={code}
+                  onChangeText={code => this.setState({ code })}
+                  keyboardType="numeric"
+                  placeholder="Enter code received"
+                />
               </Item>
             )}
           </Form>
           <ButtonsView>
+            <StyledButton
+              disabled={!canSubmit}
+              success={canSubmit}
+              onPress={() => {
+                this.setState({ authenticated: true });
+                signIn();
+              }}
+            >
+              <Text>
+                {authenticated ? "Verify Code" : "Send me the code by SMS"}
+              </Text>
+            </StyledButton>
+            {authenticated && (
               <StyledButton
-                disabled={!canSubmit}
-                success={canSubmit}
-                onPress={() => this.setState({ authenticated: true })}
-              >
-                <Text>{authenticated ? 'Verify Code' : 'Send me the code by SMS'}</Text>
-              </StyledButton>
-              {authenticated && <StyledButton
                 danger
-                onPress={() => this.setState({ authenticated: false, phone: '' })}
+                onPress={() => {
+                  this.setState({ authenticated: false, phone: "" });
+                  signOut();
+                }}
               >
                 <Text>Start Again</Text>
-              </StyledButton>}
-            </ButtonsView>
+              </StyledButton>
+            )}
+          </ButtonsView>
         </Content>
       </Container>
     );
