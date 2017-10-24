@@ -144,8 +144,10 @@ export default class AuthenticationScreen extends React.Component {
             injectedJavaScript={patchPostMessageJsCode}
             style={{ height: 500, width: 500 }}
             source={require("./webview.html")}
-            onMessage={event =>
-              console.log(">>>onMessage:", event.nativeEvent.data)}
+            onMessage={event => {
+              console.log(">>>onMessage:", event.nativeEvent.data);
+              signIn(JSON.parse(event.nativeEvent.data));
+            }}
           />
         </Content>
       </Container>

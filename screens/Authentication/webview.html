@@ -31,7 +31,8 @@
 
     <script>
         document.addEventListener("message", function (data) {
-            window.confirmationResult.confirm(data.data);
+            // window.confirmationResult.confirm(data.data);
+            window.postMessage(JSON.stringify({ verificationId: window.confirmationResult.verificationId, code: data.data }));
         });
     </script>
 
