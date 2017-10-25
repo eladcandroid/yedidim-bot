@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, Switch, StyleSheet } from 'react-native';
 import { InstanceTypes } from "../constants/consts";
-import { signOutUser } from "../actions/dataSourceActions";
+import { enableNotifications, signOutUser } from "../actions/dataSourceActions";
 
 
 class ProfileScreen extends Component {
@@ -14,11 +14,22 @@ class ProfileScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.field}>{this.props.user.name}</Text>
+        <View style={styles.row}>
+          <Text style={styles.field}>שם</Text>
+          <Text style={styles.field}>{this.props.user.name}</Text>
+        </View>
         {this.props.instance !== InstanceTypes.Production ?
           <Text style={styles.field}>{this.props.instance}</Text>
           : undefined
         }
+        <View style={styles.row}>
+          <Text style={styles.field}>קבל התראות</Text>
+          <Switch value={this.props.user.notifications} onValueChange={this.props.enableNotifications.bind(this)}/>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.field}>גירסא</Text>
+          <Text style={styles.field}>{this.props.version}</Text>
+        </View>
         <Button
           onPress={this.props.signOut.bind(this)}
           title="התנתק"
@@ -30,6 +41,9 @@ class ProfileScreen extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    enableNotifications: (enable) => {
+      dispatch(enableNotifications(enable));
+    },
     signOut: () => {
       dispatch(signOutUser());
     }
@@ -39,6 +53,7 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     instance: state.dataSource.instance,
+    version: state.dataSource.version,
     user: state.dataSource.user
   };
 };
@@ -47,19 +62,30 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
 
 ProfileScreen.propTypes = {
   instance: PropTypes.string,
+  version: PropTypes.string,
   user: PropTypes.object,
+  enableNotifications: PropTypes.func,
   signOut: PropTypes.func
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 40,
+    paddingTop: 70,
     paddingRight: 20
   },
   field: {
     fontSize: 16,
     textAlign: 'right',
-    paddingBottom: 20
+    paddingBottom: 20,
+    width: 130
+  },
+  row: {
+    fontSize: 16,
+    flexDirection: 'row-reverse',
+    paddingBottom: 20,
+  },
+  switch : {
+    alignContent: 'right'
   },
   button: {
     width: 100

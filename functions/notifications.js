@@ -9,7 +9,7 @@ module.exports = {
   },
   send: function(details) {
     return new Promise((resolve) => {
-      db.ref('/dispatchers').orderByChild('notification').equalTo(true).once('value')
+      db.ref('/dispatchers').orderByChild('notifications').equalTo(true).once('value')
         .then(snapshot => {
           let tokens = [];
           const dispatchers = snapshot.val();

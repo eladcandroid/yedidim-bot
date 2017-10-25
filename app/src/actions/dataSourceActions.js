@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_ERROR } from '../constants/actionTypes';
+import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_NOTIFICATIONS, SET_ERROR } from '../constants/actionTypes';
 import { registerForPushNotifications } from "./notificationsActions";
 import { objectToArray } from "../common/utils";
 
@@ -66,15 +66,36 @@ export function storeNotificationToken(token) {
     }
     firebase.database().ref('dispatchers/' + getState().dataSource.user.id).update({
       token,
-      notification: true,
-      time: new Date()
+      notifications: true,
+      time: new Date(),
+      version: getState().dataSource.version
     }, (err) => {
       if (err) {
         dispatch(setError('Unable to set token. ', err));
       } else {
+        dispatch(setNotifications(true));
         console.log('Token was set', token);
       }
     });
+  });
+}
+
+export function enableNotifications(enable) {
+  return ((dispatch, getState) => {
+    if (enable){
+      dispatch(setNotifications(true));
+      dispatch(registerForPushNotifications());
+    } else {
+      firebase.database().ref('dispatchers/' + getState().dataSource.user.id).update({
+        notifications: false
+      }, (err) => {
+        if (err) {
+          dispatch(setError('Unable to disable notifications. ', err));
+        } else {
+          dispatch(setNotifications(false));
+        }
+      });
+    }
   });
 }
 
@@ -103,9 +124,7 @@ export function updateEventStatus(event, status) {
 
 function handleSignedInUser(user) {
   return (dispatch => {
-    dispatch(setUser(user));
     dispatch(loadUserData(user));
-    dispatch(registerForPushNotifications());
     dispatch(loadEvents());
   });
 }
@@ -119,7 +138,7 @@ function handleSignedOutUser() {
 function deleteNotificationToken(user) {
   return new Promise (resolve => {
     firebase.database().ref('dispatchers/' + user.id).update({
-      notification: false
+      notifications: false
     }, (err) => {
       if (err) {
         console.error('Unable to remove token. ', err);
@@ -137,7 +156,11 @@ function loadUserData(user) {
       .then((snapshot) => {
         const data = snapshot.val();
         user.name = data.name;
+        user.notifications = data.notifications;
         dispatch(setUser(user));
+        if (!data.token){
+          dispatch(registerForPushNotifications());
+        }
       })
       .catch(err => {
         dispatch(setError('Failed to load user', err));
@@ -219,4 +242,11 @@ function addEvent(event){
     type: ADD_EVENT,
     event,
   };
+}
+
+function setNotifications(notifications){
+  return {
+    type: SET_NOTIFICATIONS,
+    notifications
+  }
 }
