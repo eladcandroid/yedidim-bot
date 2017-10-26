@@ -18,10 +18,6 @@ class ProfileScreen extends Component {
           <Text style={styles.field}>שם</Text>
           <Text style={styles.field}>{this.props.user.name}</Text>
         </View>
-        {this.props.instance !== InstanceTypes.Production ?
-          <Text style={styles.field}>{this.props.instance}</Text>
-          : undefined
-        }
         <View style={styles.row}>
           <Text style={styles.field}>קבל התראות</Text>
           <Switch value={this.props.user.notifications} onValueChange={this.props.enableNotifications.bind(this)}/>
@@ -30,6 +26,13 @@ class ProfileScreen extends Component {
           <Text style={styles.field}>גירסא</Text>
           <Text style={styles.field}>{this.props.version}</Text>
         </View>
+        {this.props.instance !== InstanceTypes.Production ?
+          <View style={styles.row}>
+            <Text style={styles.field}>מערכת</Text>
+            <Text style={styles.field}>{this.props.instance}</Text>
+          </View>
+          : undefined
+        }
         <Button
           onPress={this.props.signOut.bind(this)}
           title="התנתק"
