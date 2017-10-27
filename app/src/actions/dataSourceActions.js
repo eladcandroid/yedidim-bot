@@ -158,7 +158,7 @@ function loadUserData(user) {
         user.name = data.name;
         user.notifications = data.notifications;
         dispatch(setUser(user));
-        if (!data.token){
+        if (!data.token || !data.notifications){
           dispatch(registerForPushNotifications());
         }
       })
