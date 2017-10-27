@@ -46,6 +46,6 @@ module.exports = {
   },
 
   toAddress: function(res) {
-    return {city: res[0].city, streetName: res[0].streetName, streetNumber: res[0].streetNumber, formattedAddress: res[0].formattedAddress};
+    return {city: res[0].city, streetName: res[0].streetName, streetNumber: res[0].streetNumber ? res[0].streetNumber : 0, formattedAddress: res[0].formattedAddress};
   }
 };
