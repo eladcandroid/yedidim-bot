@@ -69,7 +69,7 @@ function handleWebHookPostRequest(req, res) {
 }
 
 function handleMessage(event) {
-  console.info('webhook event : \n', event);
+  console.info('webhook event : \n', JSON.stringify(event));
   sendTypingMessage(event.sender.id, true);
 
   events.get(event.sender.id)
