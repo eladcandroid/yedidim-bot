@@ -1,6 +1,6 @@
 {
   "name": "yedidim-fb-bot",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha"

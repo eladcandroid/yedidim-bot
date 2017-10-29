@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 const request = require('request');
 const queue = require('async/queue');
 
+const version = require('./package.json').version;
 const tokens = getTokens(require('./_tokens.json'));
 const flow = require('./flow.json');
 const events = require('./events');
@@ -13,6 +14,9 @@ const sendAPIQueue = queue(callSendAPIAsync);
 
 //Get the tokens according to the instance the functions run on
 function getTokens(json) {
+  if (!functions.config().instance) {
+    return json.sandbox2;
+  }
   if (functions.config().instance.name === 'sandbox') {
     return json.sandbox;
   }
@@ -382,6 +386,9 @@ exports.manage = functions.https.onRequest((req, res) => {
     data.json = {
       'fields': ['get_started']
     };
+  } else if (action === 'get_version') {
+    res.send(version);
+    return;
   } else {
     console.info('Wrong action');
     res.sendStatus(500);
