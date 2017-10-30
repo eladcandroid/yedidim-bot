@@ -51,7 +51,8 @@ export default class AuthenticationScreen extends React.Component {
     let result = await AuthSession.startAsync({
       authUrl:
         `https://yedidim-sandbox-2.firebaseapp.com/?` +
-        `redirect_uri=${encodeURIComponent(redirectUrl)}`
+        `redirect_uri=${encodeURIComponent(redirectUrl)}` +
+        `&language=he`
     });
     this.setState({ result });
   };
