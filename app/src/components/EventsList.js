@@ -48,7 +48,9 @@ class EventsList extends Component {
     return (
       <View style={styles.container}>
         {this.props.allowNew ?
-          <Button style={styles.button} title={'פתיחת אירוע חדש'} onPress={this.addNewEvent.bind(this)}/>
+          <View style={styles.buttonRow}>
+            <Button style={styles.button} title={'פתיחת אירוע חדש'} onPress={this.addNewEvent.bind(this)}/>
+          </View>
           : undefined
         }
         <ScrollView style={styles.scrollContainer}>
@@ -84,7 +86,7 @@ export default connect(mapStateToProps)(EventsList);
 EventsList.propTypes = {
   newEvents: PropTypes.array,
   activeEvents: PropTypes.array,
-  allowNew: PropTypes.boolean
+  allowNew: PropTypes.bool
 };
 
 EventsListItem.propTypes = {
@@ -104,6 +106,12 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     paddingBottom: 20,
     backgroundColor: 'white'
+  },
+  buttonRow: {
+    alignContent: 'center',
+    paddingTop: 20,
+    paddingRight: 40,
+    paddingLeft: 40
   },
   button: {
     width: 150

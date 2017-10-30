@@ -33,10 +33,9 @@ class ProfileScreen extends Component {
           </View>
           : undefined
         }
-        <Button
-          onPress={this.props.signOut.bind(this)}
-          title="התנתק"
-        />
+        <View style={styles.buttonRow}>
+          <Button onPress={this.props.signOut.bind(this)} title="התנתק"/>
+        </View>
       </View>
     );
   }
@@ -83,12 +82,17 @@ const styles = StyleSheet.create({
     width: 130
   },
   row: {
-    fontSize: 16,
     flexDirection: 'row-reverse',
     paddingBottom: 20,
   },
   switch : {
-    alignContent: 'right'
+    alignContent: 'flex-end'
+  },
+  buttonRow: {
+    alignContent: 'center',
+    paddingTop: 20,
+    paddingRight: 40,
+    paddingLeft: 40
   },
   button: {
     width: 100

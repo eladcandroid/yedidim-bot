@@ -183,10 +183,6 @@ class EventDetails extends Component {
           : undefined
         }
         <View>
-          <Text style={styles.fieldName}>עיר</Text>
-          <EventDetailsInputField value={event.details['city']} editable={this.props.editable} onChange={this.updateEvent.bind(this, 'city')}/>
-        </View>
-        <View>
           <Text style={styles.fieldName}>כתובת</Text>
           <EventDetailsInputField value={event.details['address']} editable={this.props.editable} onChange={this.updateEvent.bind(this, 'address')}/>
         </View>
@@ -273,7 +269,7 @@ const styles = StyleSheet.create({
   fieldValueEditable: {
     height: 40,
     textAlign: 'right',
-    borderColor: 'D3D3D3',
+    borderColor: '#D3D3D3',
     borderWidth: 1
   },
   buttonsRow: {
