@@ -44,7 +44,7 @@ class EventDetails extends Component {
         </View>
         <View>
           <Text style={styles.fieldName}>כתובת</Text>
-          <Text style={styles.fieldValue}>{`${event.details['street_name']} ${event.details['street_number']}`}</Text>
+          <Text style={styles.fieldValue}>{event.details['address']}</Text>
         </View>
         <View>
           <Text style={styles.fieldName}>בעיה</Text>

@@ -13,7 +13,7 @@ export const objectToArray = (obj) => {
 };
 
 export const getEventDetailsText = (event) => {
-  return `*כתובת:* ${event.details['address']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*בעיה:* ${formatEventCase(event)}\r\n*פרטים:* ${event.details['more']}`;
+  return `*עיר:* ${event.details['city']}\r\n*כתובת:* ${event.details['address']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*בעיה:* ${formatEventCase(event)}\r\n*פרטים:* ${event.details['more']}`;
 };
 
 export const getUserDetailsText = (event) => {
