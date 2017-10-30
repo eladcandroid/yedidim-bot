@@ -4,6 +4,7 @@ import { Constants } from "expo";
 
 firebase.initializeApp(Config.firebase[Constants.manifest.extra.instance]);
 
+// For debug purposes only
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     console.log("User signed in !", user);
@@ -12,6 +13,15 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
+export function loggedInUser() {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+      unsubscribe();
+      resolve(user);
+    });
+  });
+}
+
 export function signIn(verificationId, code) {
   console.log("signIn!", verificationId, code);
 
@@ -19,15 +29,15 @@ export function signIn(verificationId, code) {
     .auth()
     .signInWithCredential(
       firebase.auth.PhoneAuthProvider.credential(verificationId, code)
-    )
-    .catch(function(err) {
-      console.log("failed to sign in", err);
-    });
+    );
+  //.catch(function(err) {
+  //  console.log("failed to sign in", err);
+  //});
 }
 
 export function signOut() {
   console.log("signOut!");
-  firebase
+  return firebase
     .auth()
     .signOut()
     .catch(function(err) {
