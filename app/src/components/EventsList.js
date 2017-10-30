@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { TouchableHighlight, ScrollView, View, FlatList, Text, StyleSheet } from 'react-native';
+import { TouchableHighlight, ScrollView, View, FlatList, Text, StyleSheet, Button } from 'react-native';
 import { getEventStatus, formatEventCase, formatEventTime } from '../common/utils';
 import { EventSource, EventStatus } from '../constants/consts';
 import EventDetails from './EventDetails';
@@ -40,22 +40,32 @@ class EventsList extends Component {
     this.props.navigation.navigate('EventDetails', {event});
   }
 
+  addNewEvent() {
+    this.props.navigation.navigate('EventDetails', {});
+  }
+
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <EventsListHeader title={'אירועים חדשים - פייסבוק'} />
-        <FlatList
-          data={this.props.newEvents}
-          renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
-        />
-        <View style={styles.rowLine}/>
-        <EventsListHeader title={'אירועים פעילים'} />
-        <FlatList
-          scrollEnabled={false}
-          data={this.props.activeEvents}
-          renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
-        />
-      </ScrollView>
+      <View style={styles.container}>
+        {this.props.allowNew ?
+          <Button style={styles.button} title={'פתיחת אירוע חדש'} onPress={this.addNewEvent.bind(this)}/>
+          : undefined
+        }
+        <ScrollView style={styles.scrollContainer}>
+          <EventsListHeader title={'אירועים חדשים - פייסבוק'} />
+          <FlatList
+            data={this.props.newEvents}
+            renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
+          />
+          <View style={styles.rowLine}/>
+          <EventsListHeader title={'אירועים פעילים'} />
+          <FlatList
+            scrollEnabled={false}
+            data={this.props.activeEvents}
+            renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
+          />
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -65,6 +75,7 @@ const mapStateToProps = (state) => {
   return {
     newEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Submitted && event.source === EventSource.FB_BOT) : [],
     activeEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Sent || getEventStatus(event) === EventStatus.Assigned) : [],
+    allowNew: false
   };
 };
 
@@ -73,6 +84,7 @@ export default connect(mapStateToProps)(EventsList);
 EventsList.propTypes = {
   newEvents: PropTypes.array,
   activeEvents: PropTypes.array,
+  allowNew: PropTypes.boolean
 };
 
 EventsListItem.propTypes = {
@@ -82,12 +94,19 @@ EventsListItem.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex:1,
+    backgroundColor: 'white'
+  },
+  scrollContainer: {
+    flex:1,
     flexDirection: 'column',
     paddingTop: 20,
     paddingRight: 8,
     paddingLeft: 8,
     paddingBottom: 20,
     backgroundColor: 'white'
+  },
+  button: {
+    width: 150
   },
   listHeader: {
     height: 50,

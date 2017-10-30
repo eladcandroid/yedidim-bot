@@ -109,6 +109,19 @@ export function signOutUser() {
   });
 }
 
+export function createEvent(event) {
+  event.key = firebase.database().ref().child('events').push().key;
+  return (dispatch => {
+    firebase.database().ref('events/' + event.key).set(event, (err) => {
+      if (err) {
+        dispatch(setError('Failed to create event!', err));
+      } else {
+        dispatch(setEvent(event));
+      }
+    });
+  });
+}
+
 export function updateEventStatus(event, status) {
   const updatedEvent = Object.assign({}, event, {status});
   return (dispatch => {
