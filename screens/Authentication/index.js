@@ -19,7 +19,7 @@ import {
 } from "native-base";
 import { View, WebView } from "react-native";
 import styled from "styled-components/native";
-import signIn, { signOut } from "../../api";
+import { signIn, signOut } from "../../api";
 import { AuthSession } from "expo";
 
 const IntroText = styled.Text`
@@ -43,18 +43,23 @@ const StyledButton = styled(Button)`
 
 export default class AuthenticationScreen extends React.Component {
   state = {
-    result: null
+    user: null
   };
 
   handleAuthentication = async () => {
-    let redirectUrl = AuthSession.getRedirectUrl();
-    let result = await AuthSession.startAsync({
+    const redirectUrl = AuthSession.getRedirectUrl();
+    const result = await AuthSession.startAsync({
       authUrl:
         `https://yedidim-sandbox-2.firebaseapp.com/?` +
         `redirect_uri=${encodeURIComponent(redirectUrl)}` +
         `&language=he`
     });
-    this.setState({ result });
+
+    const { error, verificationId, code } = result.params;
+
+    if (!error && verificationId && code) {
+      signIn(verificationId, code).then(user => this.setState({ user }));
+    }
   };
 
   render() {
@@ -68,8 +73,8 @@ export default class AuthenticationScreen extends React.Component {
           <Right />
         </Header>
         <Content padder>
-          {this.state.result ? (
-            <Text>{JSON.stringify(this.state.result)}</Text>
+          {this.state.user ? (
+            <Text>{JSON.stringify(this.state.user)}</Text>
           ) : (
             <IntroText>
               You are not authenticated yet. Please authenticate to receive

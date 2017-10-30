@@ -1,7 +1,8 @@
 import * as firebase from "firebase";
 import Config from "../Config.json";
+import { Constants } from "expo";
 
-firebase.initializeApp(Config.firebase);
+firebase.initializeApp(Config.firebase[Constants.manifest.extra.instance]);
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -11,16 +12,13 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-export default function signIn(credentials) {
-  console.log("signIn!", credentials);
+export function signIn(verificationId, code) {
+  console.log("signIn!", verificationId, code);
 
-  firebase
+  return firebase
     .auth()
     .signInWithCredential(
-      firebase.auth.PhoneAuthProvider.credential(
-        credentials.verificationId,
-        credentials.code
-      )
+      firebase.auth.PhoneAuthProvider.credential(verificationId, code)
     )
     .catch(function(err) {
       console.log("failed to sign in", err);
