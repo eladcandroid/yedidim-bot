@@ -17,8 +17,10 @@ import {
   Input,
   Label
 } from "native-base";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
+import { signIn, loggedInUser, signOut } from "../../api";
+import { AuthSession } from "expo";
 
 const IntroText = styled.Text`
   text-align: center;
@@ -40,18 +42,43 @@ const StyledButton = styled(Button)`
 `;
 
 export default class AuthenticationScreen extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      phone: '',
-      code: '',
-      authenticated: false
-    };
-  }
-  render() {
-    const { authenticated, phone, code } = this.state;
+  state = {
+    user: null,
+    loading: true
+  };
 
-    const canSubmit = authenticated ? !!code : !!phone;
+  async componentWillMount() {
+    const user = await loggedInUser();
+    this.setState({ user, loading: false });
+  }
+
+  handleAuthentication = async () => {
+    this.setState({ error: undefined });
+
+    const redirectUrl = AuthSession.getRedirectUrl();
+    const result = await AuthSession.startAsync({
+      authUrl:
+        `https://yedidim-sandbox-2.firebaseapp.com/?` +
+        `redirect_uri=${encodeURIComponent(redirectUrl)}` +
+        `&language=he`
+    });
+
+    const { error, verificationId, code } = result.params;
+
+    if (!error && verificationId && code) {
+      signIn(verificationId, code)
+        .then(user => this.setState({ user }))
+        .catch(error => this.setState({ error }));
+    }
+  };
+
+  handleLogout = async () => {
+    await signOut();
+    this.setState({ user: undefined });
+  };
+
+  render() {
+    const { user, loading, error } = this.state;
 
     return (
       <Container>
@@ -62,45 +89,35 @@ export default class AuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        <Content padder>
-          <IntroText>
-            Please enter your phone number to receive a code by SMS for authentication so to be able to accept events.
-          </IntroText>
-          <Form>
-            <Item>
-              <Input
-                value={phone}
-                keyboardType="numeric"
-                disabled={authenticated}
-                style={{ 
-                    color: (authenticated ? '#d2d4d8' : 'black') 
-                }}
-                onChangeText={(phone) => this.setState({ phone })}
-                placeholder="Phone number"
-              />
-            </Item>
-            {authenticated && (
-              <Item>
-                <Input value={code} onChangeText={(code) => this.setState({ code })} keyboardType="numeric" placeholder="Enter code received" />
-              </Item>
+        {loading ? (
+          <Content padder>
+            <ActivityIndicator />
+            <Text> Please wait, loading... </Text>
+          </Content>
+        ) : (
+          <Content padder>
+            {user ? (
+              <Text>{JSON.stringify(user)}</Text>
+            ) : (
+              <IntroText>
+                You are not authenticated yet. Please authenticate to receive
+                events.
+                {error ? JSON.stringify(error) : null}
+              </IntroText>
             )}
-          </Form>
-          <ButtonsView>
-              <StyledButton
-                disabled={!canSubmit}
-                success={canSubmit}
-                onPress={() => this.setState({ authenticated: true })}
-              >
-                <Text>{authenticated ? 'Verify Code' : 'Send me the code by SMS'}</Text>
-              </StyledButton>
-              {authenticated && <StyledButton
-                danger
-                onPress={() => this.setState({ authenticated: false, phone: '' })}
-              >
-                <Text>Start Again</Text>
-              </StyledButton>}
+            <ButtonsView>
+              {user ? (
+                <StyledButton success onPress={this.handleLogout}>
+                  <Text>Sign out</Text>
+                </StyledButton>
+              ) : (
+                <StyledButton success onPress={this.handleAuthentication}>
+                  <Text>Authenticate me</Text>
+                </StyledButton>
+              )}
             </ButtonsView>
-        </Content>
+          </Content>
+        )}
       </Container>
     );
   }
