@@ -278,9 +278,8 @@ function getButtonsTemplate(message) {
 }
 
 function getQuickRepliesTemplate(message, context){
-  replaceTextVariable(message, context);
   let reply = {
-    text: message.text
+    text: replaceTextVariable(message, context)
   };
   if (message.buttons) {
     reply.quick_replies = [];
@@ -294,16 +293,17 @@ function getQuickRepliesTemplate(message, context){
 }
 
 function getTextTemplate(message, context) {
-  replaceTextVariable(message, context);
   return {
-    text: message.text
+    text: replaceTextVariable(message, context)
   }
 }
 
 function replaceTextVariable(message, context) {
   if (message.variable && context.details) {
-    message.text = message.text.replace(/{variable}/, context.details[message.variable]);
+    console.info("replaceTextVariable: context - " + JSON.stringify(context) + " ; message - " + JSON.stringify(message));
+    return message.text.replace(/{variable}/, context.details[message.variable]);
   }
+  return message.text;
 }
 
 function sendTypingMessage(recipientId, on) {
