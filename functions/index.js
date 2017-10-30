@@ -168,7 +168,7 @@ function validateResponse(event, lastMessage) {
         resolve({valid: false, error: 'select_answer'});
       }
       //Return the selected answer
-      resolve({valid: true, payload: lastMessage.type === 'quick_replies' ? event.message.quick_reply.payload : event.postback.payload})
+      resolve({valid: true, payload: (lastMessage.type === 'quick_replies' && event.message && event.message.quick_reply) ? event.message.quick_reply.payload : event.postback.payload})
     } else if (lastMessage.validate && lastMessage.validate === 'phone') {
       //Validate that this is a valid phone number
       if (!/^(?:0(?!([57]))(?:[23489]))(?:-?\d){7}$|^(0(?=[57])(?:-?\d){9})$/g.test(event.message.text)) {
