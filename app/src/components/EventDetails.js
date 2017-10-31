@@ -1,4 +1,3 @@
-import { Location } from 'expo';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -7,11 +6,12 @@ import { Picker } from 'native-base';
 import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText } from "../common/utils";
 import { EventCases, EventStatus } from "../constants/consts";
 import { createEvent, updateEventStatus } from "../actions/dataSourceActions";
+import { geocodeAddress } from "../actions/geocodingActions";
 
 class EventDetailsInputField extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: undefined};
+    this.state = {value: props.value};
   }
 
   changeValue(value) {
@@ -38,8 +38,6 @@ class EventDetailsInputField extends Component {
 class EventDetails extends Component {
   constructor(props) {
     super(props);
-    //TODO set API key
-    // Expo.Location.setApiKey(apiKey)
     this.state = {address: undefined, geo: undefined, case: 8, carType: undefined, phone: undefined, name: undefined};
   }
 
@@ -75,20 +73,14 @@ class EventDetails extends Component {
       this.setState({error: {message: 'לא הוזנה כתובת', field: 'address'}});
       return false;
     }
-    const locations = await Location.geocodeAsync(this.state.address);
-    console.log(locations);
-    if (locations.length === 0){
+    const location = await geocodeAddress(this.state.address);
+    console.log(location);
+    if (!location){
       this.setState({error: {message: 'כתובת לא חוקית', field: 'address'}});
       return false;
     }
-    const location = locations[0];
-    const address = await Location.reverseGeocodeAsync(location);
-    console.log(address);
-    if (address.length === 0){
-      this.setState({error: {message: 'כתובת לא חוקית', field: 'address'}});
-      return false;
-    }
-    this.setState({geo: {lat: location.latitude, lng: location.longitude}, city: address[0].city, street: address[0].street});
+    this.setState(location);
+    //TODO update address in field
     return true;
   }
 
