@@ -1,4 +1,5 @@
 import dateFormat from 'dateformat';
+import { EventCases } from "../constants/consts";
 
 export const objectToArray = (obj) => {
   let arr = [];
@@ -25,8 +26,7 @@ export const formatEventCase = (event) => {
   if (!event.details.case && event.details.case !== 0){
     return 'לא ידוע';
   }
-  const cases = ['כבלים', 'פנצ\'ר', 'קומפרסור', 'דלת נעולה', 'שמן\\מים\\דלק', 'חילוץ', 'קודנית', 'פנצ\'ר (אין רזרבי)', 'אחר'];
-  return cases[event.details.case];
+  return EventCases[event.details.case];
 };
 
 export const formatEventTime = (event) => {
