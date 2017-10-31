@@ -56,60 +56,66 @@ function handleWebHookGetRequest(req, res){
 
 //All webhook calls are sent in POST
 function handleWebHookPostRequest(req, res) {
+  let promises = [];
   const data = req.body;
   if (data.object === 'page') {
     data.entry.forEach(function(entry) {
       entry.messaging.forEach(function(event) {
-        try {
-          //Handle each message separately
-          handleMessage(event);
-        } catch (err) {
-          console.error('Failed to handle message. Error : \n', err);
-        }
+        //Handle each message separately
+        promises.push(handleMessage(event));
       });
     });
-    res.sendStatus(200);
   }
+  Promise.all(promises)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(200);
+    })
 }
 
 function handleMessage(event) {
-  console.info('webhook event : \n', JSON.stringify(event));
-  sendTypingMessage(event.sender.id, true);
+  return new Promise(resolve => {
+    console.info('webhook event : \n', JSON.stringify(event));
+    sendTypingMessage(event.sender.id, true).then(() => {
 
-  events.get(event.sender.id)
-    .then(context => {
-      if (!context ||
-          (event.postback && event.postback.payload === 'get_started'))
-      {
-        //This is the first message
-        sendInitialResponse(event);
-      } else if (event.message && event.message.text === 'get started') {
-        //FOR TESTING: Start again even if the user has an active event
-        if (context) {
-          context.status = EventStatus.Archived;
-          events.set(context);
-        }
-        sendInitialResponse(event);
-      } else {
-        sendFollowUpResponse(event, context);
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      //fallback
-      sendInitialResponse(event);
+      events.get(event.sender.id)
+        .then(context => {
+          if (!context ||
+            (event.postback && event.postback.payload === 'get_started')) {
+            //This is the first message
+            sendInitialResponse(event).then(() => {resolve()});
+          } else if (event.message && event.message.text === 'get started') {
+            //FOR TESTING: Start again even if the user has an active event
+            if (context) {
+              context.status = EventStatus.Archived;
+              events.set(context);
+            }
+            sendInitialResponse(event).then(() => {resolve()});
+          } else {
+            sendFollowUpResponse(event, context).then(() => {resolve()});
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          //fallback
+          sendInitialResponse(event).then(() => {resolve()});
+        });
     });
+  });
 }
 
 function sendInitialResponse(event) {
-  sendMessage(event.sender.id, getTemplate(flow.messages['get_started']));
+  const sendPromise = sendMessage(event.sender.id, getTemplate(flow.messages['get_started']));
   let context = {
     psid: event.sender.id,
     lastMessage: 'get_started',
     source: 'fb-bot',
     status: EventStatus.Draft
   };
-  getUserProfile(event.sender.id)
+  const profilePromise = getUserProfile(event.sender.id)
     .then(response => {
       context.details = {'caller name': response.first_name + ' ' + response.last_name};
       events.set(context);
@@ -118,42 +124,45 @@ function sendInitialResponse(event) {
       //Save without the name
       events.set(context);
     });
+  return Promise.all([sendPromise, profilePromise]);
 }
 
 function sendFollowUpResponse(event, context) {
-  const lastMessage = flow.messages[context.lastMessage];
-  const senderID = event.sender.id;
-  validateResponse(event, lastMessage)
-    .then(response => {
-      if (response.valid) {
-        setDetailsAndNextMessage(lastMessage, context, response);
-      } else if (!response.final) {
-        //In case of final message resend last message in case of additional messages from user
-        sendMessage(senderID, flow.messages[response.error ? response.error : lastMessage.error]);
-        if (lastMessage.error_next){
-          context.lastMessage = lastMessage.error_next;
+  return new Promise(resolve => {
+    const lastMessage = flow.messages[context.lastMessage];
+    const senderID = event.sender.id;
+    validateResponse(event, lastMessage)
+      .then(response => {
+        let promises = [];
+        if (response.valid) {
+          setDetailsAndNextMessage(lastMessage, context, response);
+        } else if (!response.final) {
+          //In case of final message resend last message in case of additional messages from user
+          promises.push(sendMessage(senderID, flow.messages[response.error ? response.error : lastMessage.error]));
+          if (lastMessage.error_next) {
+            context.lastMessage = lastMessage.error_next;
+          }
         }
-      }
-      const nextQuestion = flow.messages[context.lastMessage];
-      if (nextQuestion.pre && response.valid){
-        sendMessage(senderID, getTextTemplate({text: nextQuestion.pre, variable: nextQuestion.variable}, context));
-      }
-      sendMessage(senderID, getTemplate(nextQuestion, context));
-      if (nextQuestion.submit){
-        context.status = EventStatus.Submitted;
-      }
-      events.set(context);
-      //After updating the event status send notifications
-      if (nextQuestion.submit) {
-        notifications.send(context.details).then(() => {
-          //Nothing to do afterwards
-        });
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      sendTypingMessage(senderID, false);
-    })
+        const nextQuestion = flow.messages[context.lastMessage];
+        if (nextQuestion.pre && response.valid) {
+          promises.push(sendMessage(senderID, getTextTemplate({text: nextQuestion.pre, variable: nextQuestion.variable}, context)));
+        }
+        promises.push(sendMessage(senderID, getTemplate(nextQuestion, context)));
+        if (nextQuestion.submit) {
+          context.status = EventStatus.Submitted;
+        }
+        promises.push(events.set(context));
+        //After updating the event status send notifications
+        if (nextQuestion.submit) {
+          promises.push(notifications.send(context.details));
+        }
+        Promise.all(promises).then(() => {resolve()});
+      })
+      .catch(err => {
+        console.error(err);
+        sendTypingMessage(senderID, false).then(() => {resolve()});
+      })
+  });
 }
 
 function validateResponse(event, lastMessage) {
@@ -307,7 +316,7 @@ function replaceTextVariable(message, context) {
 }
 
 function sendTypingMessage(recipientId, on) {
-  callSendAPI({
+  return callSendAPI({
     recipient: {
       id: recipientId
     },
@@ -322,7 +331,7 @@ function sendMessage(recipientId, message) {
     },
     message
   };
-  callSendAPI(messageData);
+  return callSendAPI(messageData);
 }
 
 function callSendAPIAsync(messageData, callback) {
@@ -336,13 +345,16 @@ function callSendAPIAsync(messageData, callback) {
 }
 
 function callSendAPI(messageData) {
-  sendAPIQueue.push(messageData, ((error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      console.info('Successfully sent message : \n', JSON.stringify(messageData), body);
-    } else {
-      console.error('Unable to send message. : \n', JSON.stringify(messageData), error, body);
-    }
-  }));
+  return new Promise(resolve => {
+    sendAPIQueue.push(messageData, ((error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        console.info('Successfully sent message : \n', JSON.stringify(messageData), body);
+      } else {
+        console.error('Unable to send message. : \n', JSON.stringify(messageData), error, body);
+      }
+      resolve();
+    }));
+  })
 }
 
 function getUserProfile(psid) {
