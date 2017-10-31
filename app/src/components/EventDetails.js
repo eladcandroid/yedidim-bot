@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, TextInput, Button, Clipboard, Alert, StyleSheet } from 'react-native';
+import { Picker } from 'native-base';
 import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText } from "../common/utils";
-import { EventStatus } from "../constants/consts";
+import { EventCases, EventStatus } from "../constants/consts";
 import { createEvent, updateEventStatus } from "../actions/dataSourceActions";
 
 class EventDetailsInputField extends Component {
@@ -39,7 +40,7 @@ class EventDetails extends Component {
     super(props);
     //TODO set API key
     // Expo.Location.setApiKey(apiKey)
-    this.state = {city: undefined, carType: undefined};
+    this.state = {address: undefined, geo: undefined, case: 8, carType: undefined, phone: undefined, name: undefined};
   }
 
   updateEvent(field, value) {
@@ -50,15 +51,16 @@ class EventDetails extends Component {
     if (!this.validateEventData()){
       return;
     }
-    const address = this.state.address.split(' ');
     let event = {
       status: EventStatus.Draft,
       details: {
+        geo: this.state.geo,
+        address: this.state.address,
         city: this.state.city,
-        street_name: address[0],
-        street_number: address[1],
-        'car type': this.state.carType,
+        street_name: this.state.street,
+        street_number: 0,
         more: this.state.more,
+        'car type': this.state.carType,
         'phone number': this.state.phone,
         'caller name': this.state.name,
       }
@@ -69,19 +71,24 @@ class EventDetails extends Component {
   }
 
   async validateAddress() {
-    if (!this.state.city){
-      this.setState({error: {message: 'לא הוזנה עיר', field: 'city'}});
-      return false;
-    }
     if (!this.state.address){
       this.setState({error: {message: 'לא הוזנה כתובת', field: 'address'}});
       return false;
     }
-    const location = await Location.geocodeAsync(this.state.address + ' ' + this.state.city);
-    console.log(location[0]);
-    const address = await Location.reverseGeocodeAsync(location[0]);
+    const locations = await Location.geocodeAsync(this.state.address);
+    console.log(locations);
+    if (locations.length === 0){
+      this.setState({error: {message: 'כתובת לא חוקית', field: 'address'}});
+      return false;
+    }
+    const location = locations[0];
+    const address = await Location.reverseGeocodeAsync(location);
     console.log(address);
-    this.setState({geo: {lat: location[0].latitude, lng: location[0].longitude}});
+    if (address.length === 0){
+      this.setState({error: {message: 'כתובת לא חוקית', field: 'address'}});
+      return false;
+    }
+    this.setState({geo: {lat: location.latitude, lng: location.longitude}, city: address[0].city, street: address[0].street});
     return true;
   }
 
@@ -142,6 +149,23 @@ class EventDetails extends Component {
     this.props.goBack();
   }
 
+  renderEventCasePicker() {
+    return (
+      <Picker
+        iosHeader="בעיה"
+        headerBackButtonText="חזור"
+        mode="dropdown"
+        itemTextStyle={styles.pickerItem}
+        textStyle={styles.pickerItem}
+        selectedValue={this.state.case}
+        onValueChange={(value) => this.setState({case: value})}
+      >
+        {EventCases.map((label, index) => {
+          return (<Picker.Item label={label} value={index} key={index}/>);
+        })}
+      </Picker>
+    )
+  }
   renderButtonsRow(event) {
     const status = getEventStatus(event);
     switch (status) {
@@ -194,7 +218,11 @@ class EventDetails extends Component {
         }
         <View>
           <Text style={styles.fieldName}>בעיה</Text>
-          <EventDetailsInputField value={formatEventCase(event)} editable={this.props.editable}/>
+          {!this.props.editable ?
+            <Text style={styles.fieldValue}>{formatEventCase(event)}</Text>
+            :
+            this.renderEventCasePicker()
+          }
         </View>
         <View>
           <Text style={styles.fieldName}>סוג רכב</Text>
@@ -239,7 +267,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
 export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 
 EventDetails.propTypes = {
@@ -271,6 +298,10 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     borderColor: '#D3D3D3',
     borderWidth: 1
+  },
+  pickerItem: {
+    flex: 1,
+    textAlign: 'right',
   },
   buttonsRow: {
     flexDirection: 'row-reverse',
