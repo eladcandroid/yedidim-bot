@@ -134,27 +134,32 @@ function sendFollowUpResponse(event, context) {
     validateResponse(event, lastMessage)
       .then(response => {
         let promises = [];
+        let sendResponse = false;
         if (response.valid) {
           setDetailsAndNextMessage(lastMessage, context, response);
+          sendResponse = true;
         } else if (!response.final) {
           //In case of final message resend last message in case of additional messages from user
           promises.push(sendMessage(senderID, flow.messages[response.error ? response.error : lastMessage.error]));
           if (lastMessage.error_next) {
             context.lastMessage = lastMessage.error_next;
           }
+          sendResponse = true;
         }
-        const nextQuestion = flow.messages[context.lastMessage];
-        if (nextQuestion.pre && response.valid) {
-          promises.push(sendMessage(senderID, getTextTemplate({text: nextQuestion.pre, variable: nextQuestion.variable}, context)));
-        }
-        promises.push(sendMessage(senderID, getTemplate(nextQuestion, context)));
-        if (nextQuestion.submit) {
-          context.status = EventStatus.Submitted;
-        }
-        promises.push(events.set(context));
-        //After updating the event status send notifications
-        if (nextQuestion.submit) {
-          promises.push(notifications.send(context.details));
+        if (sendResponse) {
+          const nextQuestion = flow.messages[context.lastMessage];
+          if (nextQuestion.pre && response.valid) {
+            promises.push(sendMessage(senderID, getTextTemplate({
+              text: nextQuestion.pre,
+              variable: nextQuestion.variable
+            }, context)));
+          }
+          promises.push(sendMessage(senderID, getTemplate(nextQuestion, context)));
+          if (nextQuestion.submit) {
+            context.status = EventStatus.Submitted;
+            promises.push(notifications.send(context.details));
+          }
+          promises.push(events.set(context));
         }
         Promise.all(promises).then(() => {resolve()});
       })
@@ -309,7 +314,7 @@ function getTextTemplate(message, context) {
 
 function replaceTextVariable(message, context) {
   if (message.variable && context.details) {
-    console.info("replaceTextVariable: context - " + JSON.stringify(context) + " ; message - " + JSON.stringify(message));
+    // console.info("replaceTextVariable: context - " + JSON.stringify(context) + " ; message - " + JSON.stringify(message));
     return message.text.replace(/{variable}/, context.details[message.variable]);
   }
   return message.text;
