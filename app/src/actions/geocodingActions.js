@@ -3,7 +3,7 @@ const MAP_KEY = "AIzaSyA-cT9Okhw7DA97YPLxlAVoFPQDe61VdwA";
 
 export async function geocodeAddress(address) {
   try {
-    let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?key=${MAP_KEY}&address=${address}&language=iw&country=IL`);
+    let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?key=${MAP_KEY}&address=${address}&language=iw&&components=:country=IL`);
     let responseJson = await response.json();
     console.log(responseJson);
     if (responseJson.status !== 'OK'){

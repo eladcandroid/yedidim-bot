@@ -77,7 +77,7 @@ const mapStateToProps = (state) => {
   return {
     newEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Submitted && event.source === EventSource.FB_BOT) : [],
     activeEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Sent || getEventStatus(event) === EventStatus.Assigned) : [],
-    allowNew: false
+    allowNew: true
   };
 };
 
