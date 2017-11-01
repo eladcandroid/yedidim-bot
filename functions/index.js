@@ -27,6 +27,8 @@ function getTokens(json) {
 }
 
 const admin = require('./admin').init(tokens.firebaseCert, tokens.firebaseConfig);
+const dashbot = require('dashbot')(tokens.dashbot.apiKey).facebook;
+
 events.init(admin);
 notifications.init(admin);
 geocoder.init(tokens.maps.apiKey);
@@ -58,6 +60,7 @@ function handleWebHookGetRequest(req, res){
 function handleWebHookPostRequest(req, res) {
   let promises = [];
   const data = req.body;
+  dashbot.logIncoming(data);
   if (data.object === 'page') {
     data.entry.forEach(function(entry) {
       entry.messaging.forEach(function(event) {
@@ -357,6 +360,7 @@ function callSendAPI(messageData) {
       } else {
         console.error('Unable to send message. : \n', JSON.stringify(messageData), error, body);
       }
+      dashbot.logOutgoing(messageData, response.body);
       resolve();
     }));
   })

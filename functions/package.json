@@ -1,12 +1,13 @@
 {
   "name": "yedidim-fb-bot",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha"
   },
   "dependencies": {
     "async": "^2.5.0",
+    "dashbot": "^9.4.0",
     "expo-server-sdk": "^2.3.1",
     "firebase-admin": "^5.4.2",
     "firebase-functions": "^0.7.1",
