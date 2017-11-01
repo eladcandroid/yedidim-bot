@@ -9,27 +9,19 @@ import { createEvent, updateEventStatus } from "../actions/dataSourceActions";
 import { geocodeAddress } from "../actions/geocodingActions";
 
 class EventDetailsInputField extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {value: props.value};
-  }
-
   changeValue(value) {
-    this.setState({value});
-    if (this.props.onChange) {
-      this.props.onChange(value);
-    }
+    this.props.onChange(this.props.field, value);
   }
 
   render() {
     if (!this.props.editable){
       return (
-        <Text style={styles.fieldValue}>{this.props.value}</Text>
+        <Text style={styles.fieldValue}>{this.props.event.details[this.props.field]}</Text>
       );
     }
     return (
       <TextInput style={styles.fieldValueEditable}
-                 value={this.state.value}
+                 value={this.props.state[this.props.field]}
                  onChangeText={(value) => this.changeValue(value)}/>
     );
   }
@@ -38,7 +30,7 @@ class EventDetailsInputField extends Component {
 class EventDetails extends Component {
   constructor(props) {
     super(props);
-    this.state = {address: undefined, geo: undefined, case: 8, carType: undefined, phone: undefined, name: undefined};
+    this.state = {address: undefined, geo: undefined, case: 8, street_number: 0};
   }
 
   updateEvent(field, value) {
@@ -49,20 +41,7 @@ class EventDetails extends Component {
     if (!this.validateEventData()){
       return;
     }
-    let event = {
-      status: EventStatus.Draft,
-      details: {
-        geo: this.state.geo,
-        address: this.state.address,
-        city: this.state.city,
-        street_name: this.state.street,
-        street_number: 0,
-        more: this.state.more,
-        'car type': this.state.carType,
-        'phone number': this.state.phone,
-        'caller name': this.state.name,
-      }
-    };
+    const event = Object.assign({}, this.state, {status: EventStatus.Draft});
     console.log(event);
     // this.props.createEvent(event);
     this.props.goBack();
@@ -89,20 +68,20 @@ class EventDetails extends Component {
       this.setState({error: {message: 'כתובת לא נבדקה', field: 'address'}});
       return false;
     }
-    if (!this.state.carType){
-      this.setState({error: {message: 'לא הוזן סוג הרכב', field: 'carType'}});
+    if (!this.state['car type']){
+      this.setState({error: {message: 'לא הוזן סוג הרכב', field: 'car type'}});
       return false;
     }
-    if (!this.state.phone){
-      this.setState({error: {message: 'לא הוזן מספר טלפון', field: 'phone'}});
+    if (!this.state['phone number']){
+      this.setState({error: {message: 'לא הוזן מספר טלפון', field: 'phone number'}});
       return false;
     }
-    if (!/^(?:0(?!([57]))(?:[23489]))(?:-?\d){7}$|^(0(?=[57])(?:-?\d){9})$/g.test(this.state.phone)) {
-      this.setState({error: {message: 'מספר טלפון לא חוקי', field: 'phone'}});
+    if (!/^(?:0(?!([57]))(?:[23489]))(?:-?\d){7}$|^(0(?=[57])(?:-?\d){9})$/g.test(this.state['phone number'])) {
+      this.setState({error: {message: 'מספר טלפון לא חוקי', field: 'phone number'}});
       return false;
     }
-    if (!this.state.name){
-      this.setState({error: {message: 'לא הוזן שם', field: 'name'}});
+    if (!this.state['caller name']){
+      this.setState({error: {message: 'לא הוזן שם', field: 'caller name'}});
       return false;
     }
     return true;
@@ -188,6 +167,7 @@ class EventDetails extends Component {
 
   render() {
     const event = this.props.event;
+    const editable = this.props.editable;
     return (
       <View style={styles.container}>
         {this.showValidationError()}
@@ -200,7 +180,7 @@ class EventDetails extends Component {
         }
         <View>
           <Text style={styles.fieldName}>כתובת</Text>
-          <EventDetailsInputField value={event.details['address']} editable={this.props.editable} onChange={this.updateEvent.bind(this, 'address')}/>
+          <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
         </View>
         {this.props.editable?
           <View>
@@ -218,19 +198,19 @@ class EventDetails extends Component {
         </View>
         <View>
           <Text style={styles.fieldName}>סוג רכב</Text>
-          <EventDetailsInputField value={event.details['car type']} editable={this.props.editable} onChange={this.updateEvent.bind(this, 'carType')}/>
+          <EventDetailsInputField field='car type' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
         </View>
         <View>
           <Text style={styles.fieldName}>פרטים</Text>
-          <EventDetailsInputField value={event.details['more']} editable={this.props.editable} onChange={this.updateEvent.bind(this, 'more')}/>
+          <EventDetailsInputField field='more' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
         </View>
         <View>
           <Text style={styles.fieldName}>טלפון</Text>
-          <EventDetailsInputField value={event.details['phone number']} editable={this.props.editable} onChange={this.updateEvent.bind(this, 'phone')}/>
+          <EventDetailsInputField field='phone number' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
         </View>
         <View>
           <Text style={styles.fieldName}>שם</Text>
-          <EventDetailsInputField value={event.details['caller name']} editable={this.props.editable} onChange={this.updateEvent.bind(this, 'name')}/>
+          <EventDetailsInputField field='caller name' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
         </View>
         {this.renderButtonsRow(event)}
       </View>
