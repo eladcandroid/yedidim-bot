@@ -59,7 +59,6 @@ class EventDetails extends Component {
       return false;
     }
     this.setState(location);
-    //TODO update address in field
     return true;
   }
 
