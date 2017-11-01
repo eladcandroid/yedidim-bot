@@ -13,20 +13,20 @@ module.exports = {
           const events = snapshot.val();
           console.info('Context (' + psid + ') was retrieved : \n', events);
           if (!events){
-            resolve (undefined);
+            return resolve (undefined);
           }
           for (const key in events){
             if (events.hasOwnProperty(key)) {
               let event = events[key];
-              if (event.status === EventStatus.Draft || event.status === EventStatus.Submitted) {
-                if (event.timestamp < (Date.now() - 60 * 60 * 1000)) {
-                  //if event was made more than 1 hour ago then start again
-                  event.status = EventStatus.Archived;
-                  this.set(event);
-                  resolve(undefined);
-                }
-                event.key = key;
-                resolve(event);
+              const isLatelyUpdated = event.timestamp > (Date.now() - 120 * 60 * 1000);
+              if (isLatelyUpdated) {
+                // Take the event that was updated lately
+                console.info('Found an up to date event ', event);
+                resolve(event)
+              } else if (event.status === EventStatus.Draft) {
+                // delete draft event that is old
+                console.info('Deleting an old event ', event);
+                this.delete(event);
               }
             }
           }
@@ -55,6 +55,14 @@ module.exports = {
           resolve();
         }
       })
+    });
+  },
+  delete: function(context) {
+    return new Promise((resolve) => {
+      if (!context.key) {
+        resolve();
+      }
+      return db.ref('/events/' + context.key).remove();
     });
   }
 };
