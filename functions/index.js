@@ -79,8 +79,8 @@ function handleWebHookPostRequest(req, res) {
 function handleMessage(event) {
   return new Promise(resolve => {
     console.info('webhook event : \n', JSON.stringify(event));
-    sendTypingMessage(event.sender.id, true).then(() => {
-
+    // For now don't send typing message
+    // sendTypingMessage(event.sender.id, true).then(() => {
       events.get(event.sender.id)
         .then(context => {
           if (!context ||
@@ -104,7 +104,7 @@ function handleMessage(event) {
           sendInitialResponse(event).then(() => {resolve()});
         });
     });
-  });
+  // });
 }
 
 function sendInitialResponse(event) {
