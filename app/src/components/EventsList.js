@@ -75,7 +75,7 @@ class EventsList extends Component {
 const mapStateToProps = (state) => {
   const events = state.dataSource.events;
   return {
-    newEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Submitted && event.source === EventSource.FB_BOT) : [],
+    newEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Submitted) : [],
     activeEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Sent || getEventStatus(event) === EventStatus.Assigned) : [],
     allowNew: true
   };

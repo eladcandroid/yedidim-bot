@@ -111,6 +111,7 @@ export function signOutUser() {
 
 export function createEvent(event) {
   event.key = firebase.database().ref().child('events').push().key;
+  event.timestamp = Date.now();
   return (dispatch => {
     firebase.database().ref('events/' + event.key).set(event, (err) => {
       if (err) {

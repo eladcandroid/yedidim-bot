@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { View, Text, TextInput, Button, Clipboard, Alert, StyleSheet } from 'react-native';
 import { Picker } from 'native-base';
 import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText } from "../common/utils";
-import { EventCases, EventStatus } from "../constants/consts";
+import { EventCases, EventStatus, EventSource } from "../constants/consts";
 import { createEvent, updateEventStatus } from "../actions/dataSourceActions";
 import { geocodeAddress } from "../actions/geocodingActions";
 
@@ -41,9 +41,14 @@ class EventDetails extends Component {
     if (!this.validateEventData()){
       return;
     }
-    const event = Object.assign({}, this.state, {status: EventStatus.Draft});
+    const event = {
+      status: EventStatus.Submitted,
+      source: EventSource.App,
+      dispatcher: this.props.user.id,
+      details: Object.assign({}, this.state)
+    };
     console.log(event);
-    // this.props.createEvent(event);
+    this.props.createEvent(event);
     this.props.goBack();
   }
 
@@ -234,7 +239,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const mapStateToProps = (state, ownProps) => {
   return {
     event: ownProps.navigation.state.params.event || {status: EventStatus.Draft, details: {}},
-    editable: !ownProps.navigation.state.params.event
+    editable: !ownProps.navigation.state.params.event,
+    user: state.dataSource.user
   };
 };
 
@@ -242,7 +248,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 
 EventDetails.propTypes = {
   createEvent: PropTypes.func,
-  updateEventStatus: PropTypes.func
+  updateEventStatus: PropTypes.func,
+  goBack: PropTypes.func,
+  user: PropTypes.object
 };
 
 const styles = StyleSheet.create({
