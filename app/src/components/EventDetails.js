@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, Button, Clipboard, Alert, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, TextInput, Button, Clipboard, Alert, StyleSheet } from 'react-native';
 import { Picker } from 'native-base';
 import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText } from "../common/utils";
 import { EventCases, EventStatus, EventSource } from "../constants/consts";
@@ -173,6 +173,7 @@ class EventDetails extends Component {
     const event = this.props.event;
     const editable = this.props.editable;
     return (
+      <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         {this.showValidationError()}
         {event.timestamp ?
@@ -187,7 +188,7 @@ class EventDetails extends Component {
           <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
         </View>
         {this.props.editable?
-          <View style={styles.buttonsRow}>
+          <View style={styles.buttonRow}>
             <Button style={styles.button} onPress={this.validateAddress.bind(this)} title='בדוק כתובת'/>
           </View>
           : undefined
@@ -218,6 +219,7 @@ class EventDetails extends Component {
         </View>
         {this.renderButtonsRow(event)}
       </View>
+      </ScrollView>
     );
   }
 }
@@ -254,6 +256,10 @@ EventDetails.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -281,6 +287,10 @@ const styles = StyleSheet.create({
   pickerItem: {
     flex: 1,
     textAlign: 'right',
+  },
+  buttonRow: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   buttonsRow: {
     flexDirection: 'row-reverse',
