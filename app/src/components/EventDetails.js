@@ -187,7 +187,7 @@ class EventDetails extends Component {
           <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
         </View>
         {this.props.editable?
-          <View>
+          <View style={styles.buttonsRow}>
             <Button style={styles.button} onPress={this.validateAddress.bind(this)} title='בדוק כתובת'/>
           </View>
           : undefined

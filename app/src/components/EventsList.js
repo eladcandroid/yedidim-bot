@@ -54,7 +54,7 @@ class EventsList extends Component {
           : undefined
         }
         <ScrollView style={styles.scrollContainer}>
-          <EventsListHeader title={'אירועים חדשים - פייסבוק'} />
+          <EventsListHeader title={'אירועים חדשים'} />
           <FlatList
             data={this.props.newEvents}
             renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}

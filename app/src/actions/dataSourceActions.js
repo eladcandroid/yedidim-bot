@@ -124,8 +124,9 @@ export function createEvent(event) {
 }
 
 export function updateEventStatus(event, status) {
-  const updatedEvent = Object.assign({}, event, {status});
-  return (dispatch => {
+  return ((dispatch, getState) => {
+    const dispatcher = getState().dataSource.user.id;
+    const updatedEvent = Object.assign({}, event, {status, dispatcher});
     firebase.database().ref('events/' + event.key).set(updatedEvent, (err) => {
       if (err) {
         dispatch(setError('Failed to update!', err));
