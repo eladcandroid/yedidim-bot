@@ -23,6 +23,10 @@ const StyledView = styled.View`
 
 @observer
 class HomeScreen extends Component {
+  async componentDidMount() {
+    this.props.saveNotificationToken()
+  }
+
   render() {
     const { user } = this.props
 
@@ -55,5 +59,6 @@ class HomeScreen extends Component {
 }
 
 export default inject(({ Authentication }) => ({
-  user: Authentication.user
+  user: Authentication.user,
+  saveNotificationToken: Authentication.saveNotificationToken
 }))(HomeScreen)
