@@ -1,5 +1,13 @@
 import Authentication from 'Stores/Authentication'
+import Expo, { Constants } from 'expo'
+import firebase from 'firebase'
+import Config from '../../Config.json'
 
-export default fbApp => ({
+// Initialise firebase
+const fbApp = firebase.initializeApp(
+  Config.firebase[Constants.manifest.extra.instance]
+)
+
+export default () => ({
   Authentication: new Authentication(fbApp)
 })

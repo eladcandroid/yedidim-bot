@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
-import firebase from 'firebase'
 import Main from 'Main'
 import Stores from 'Stores'
-import Expo, { Constants } from 'expo'
+import Expo from 'expo'
 import { Provider } from 'mobx-react/native'
-import Config from './Config.json'
 
-// Initialise firebase
-const fbApp = firebase.initializeApp(
-  Config.firebase[Constants.manifest.extra.instance]
-)
-
-const stores = Stores(fbApp)
+// Initialiase stores
+const stores = Stores()
 
 export default class App extends Component {
   state = {
