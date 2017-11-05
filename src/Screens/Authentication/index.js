@@ -10,10 +10,9 @@ import {
   Left,
   Right
 } from 'native-base'
-import { ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
-import { signIn } from 'API'
+import { inject, observer } from 'mobx-react/native'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -34,7 +33,8 @@ const StyledButton = styled(Button)`
   margin: 0 5px;
 `
 
-export default class AuthenticationScreen extends React.Component {
+@observer
+class AuthenticationScreen extends React.Component {
   handleAuthentication = async () => {
     const redirectUrl = AuthSession.getRedirectUrl()
     const result = await AuthSession.startAsync({
@@ -47,17 +47,12 @@ export default class AuthenticationScreen extends React.Component {
     const { error, verificationId, code } = result.params
 
     if (!error && verificationId && code) {
-      signIn(verificationId, code)
-        .then(() => {
-          /* Redirect to Home Screen */
-        })
-        .catch(errorThrown => this.setState({ error: errorThrown }))
+      this.props.signIn({ verificationId, code }) // No redirection is needed, auth state will change and home will be rendered
+      // .catch(errorThrown => this.setState({ error: errorThrown }))
     }
   }
 
   render() {
-    const { loading, error } = this.state
-
     return (
       <Container>
         <Header>
@@ -67,33 +62,30 @@ export default class AuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        {loading ? (
-          <Content padder>
-            <ActivityIndicator />
-            <Text> Please wait, loading... </Text>
-          </Content>
-        ) : (
-          <Content padder>
-            {error ? (
-              <IntroText>
-                An error has occurred, unable to autheticate. Please Try again
-                later.
-                {JSON.stringify(error)}
-              </IntroText>
-            ) : (
-              <IntroText>
-                You are not authenticated yet. Please authenticate to receive
-                events.
-              </IntroText>
-            )}
-            <ButtonsView>
-              <StyledButton success onPress={this.handleAuthentication}>
-                <Text>Authenticate me</Text>
-              </StyledButton>
-            </ButtonsView>
-          </Content>
-        )}
+        <Content padder>
+          {false ? (
+            <IntroText>
+              An error has occurred, unable to autheticate. Please Try again
+              later.
+              {JSON.stringify({})}
+            </IntroText>
+          ) : (
+            <IntroText>
+              You are not authenticated yet. Please authenticate to receive
+              events.
+            </IntroText>
+          )}
+          <ButtonsView>
+            <StyledButton success onPress={this.handleAuthentication}>
+              <Text>Authenticate me</Text>
+            </StyledButton>
+          </ButtonsView>
+        </Content>
       </Container>
     )
   }
 }
+
+export default inject(stores => ({
+  signIn: stores.store.signIn
+}))(AuthenticationScreen)

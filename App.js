@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
-import Expo, { AppLoading } from 'expo'
-import AuthenticationScreen from 'Screens/Authentication'
+import firebase from 'firebase'
+import Main from 'Main'
+import Store from 'Store'
+import Expo, { Constants } from 'expo'
+import { Provider } from 'mobx-react/native'
+import Config from './Config.json'
 
-// const YedidimApp = StackNavigator({
-//   Splash: { screen: SplashScreen },
-//   Home: { screen: HomeScreen }
-// });
+// Initialise firebase
+const fbApp = firebase.initializeApp(
+  Config.firebase[Constants.manifest.extra.instance]
+)
+
+const store = new Store(fbApp)
 
 export default class App extends Component {
   state = {
@@ -21,11 +27,11 @@ export default class App extends Component {
   }
   render() {
     const { isReady } = this.state
-    if (!isReady) {
-      return <AppLoading />
-    }
-    // TODO Check authentication and redirect accordignally
-    // return <HomeScreen />;
-    return <AuthenticationScreen />
+
+    return (
+      <Provider store={store}>
+        <Main isReady={isReady} />
+      </Provider>
+    )
   }
 }
