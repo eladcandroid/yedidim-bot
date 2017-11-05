@@ -1,5 +1,5 @@
 import Authentication from 'Stores/Authentication'
-import Expo, { Constants } from 'expo'
+import { Constants } from 'expo'
 import firebase from 'firebase'
 import Config from '../../Config.json'
 

@@ -10,6 +10,7 @@ import {
   Left,
   Right
 } from 'native-base'
+import { View, ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
@@ -33,6 +34,13 @@ const StyledButton = styled(Button)`
   margin: 0 5px;
 `
 
+const ErrorText = styled.Text`
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  margin-bottom: 10px;
+`
+
 @observer
 class AuthenticationScreen extends React.Component {
   handleAuthentication = async () => {
@@ -53,6 +61,8 @@ class AuthenticationScreen extends React.Component {
   }
 
   render() {
+    const { authError, isAuthenticating } = this.props
+
     return (
       <Container>
         <Header>
@@ -62,30 +72,42 @@ class AuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        <Content padder>
-          {false ? (
-            <IntroText>
-              An error has occurred, unable to autheticate. Please Try again
-              later.
-              {JSON.stringify({})}
-            </IntroText>
-          ) : (
-            <IntroText>
-              You are not authenticated yet. Please authenticate to receive
-              events.
-            </IntroText>
-          )}
-          <ButtonsView>
-            <StyledButton success onPress={this.handleAuthentication}>
-              <Text>Authenticate me</Text>
-            </StyledButton>
-          </ButtonsView>
-        </Content>
+        {isAuthenticating ? (
+          <Content padder>
+            <IntroText>Please wait, authenticating...</IntroText>
+            <ActivityIndicator size="large" />
+          </Content>
+        ) : (
+          <Content padder>
+            {authError ? (
+              <View>
+                <IntroText>
+                  An error has occurred, unable to authenticate. Please try
+                  again later.
+                </IntroText>
+                <ErrorText>Code: {authError.code}</ErrorText>
+                <ErrorText>Message: {authError.message}</ErrorText>
+              </View>
+            ) : (
+              <IntroText>
+                You are not authenticated yet. Please authenticate to receive
+                events.
+              </IntroText>
+            )}
+            <ButtonsView>
+              <StyledButton success onPress={this.handleAuthentication}>
+                <Text>Authenticate me</Text>
+              </StyledButton>
+            </ButtonsView>
+          </Content>
+        )}
       </Container>
     )
   }
 }
 
 export default inject(({ Authentication }) => ({
-  signIn: Authentication.signIn
+  signIn: Authentication.signIn,
+  authError: Authentication.authError,
+  isAuthenticating: Authentication.isAuthenticating
 }))(AuthenticationScreen)

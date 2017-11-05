@@ -5,6 +5,7 @@ import firebase from 'firebase'
 export default class AuthenticationStore {
   @observable user = null
   @observable isAuthenticating = true
+  @observable authError = null
 
   constructor(fbApp, { watchAuth = true } = {}) {
     this.fbApp = fbApp
@@ -38,8 +39,9 @@ export default class AuthenticationStore {
   }
 
   @action
-  signIn({ verificationId, code }) {
+  signIn = ({ verificationId, code }) => {
     this.isAuthenticating = true
+    this.authError = null
     return firebase
       .auth(this.fbApp)
       .signInWithCredential(
@@ -48,6 +50,11 @@ export default class AuthenticationStore {
       .then(user => {
         this.isAuthenticating = false
         return user
+      })
+      .catch(error => {
+        this.isAuthenticating = false
+        this.authError = error
+        return error
       })
   }
 
