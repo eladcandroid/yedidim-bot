@@ -8,11 +8,8 @@ import AuthenticationScreen from './screens/Authentication'
 // });
 
 export default class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      isReady: false
-    }
+  state = {
+    isReady: false
   }
   async componentWillMount() {
     await Expo.Font.loadAsync({
