@@ -39,27 +39,25 @@ export default class AuthenticationStore {
   }
 
   @action
-  signIn = ({ verificationId, code }) => {
+  signIn = async ({ verificationId, code }) => {
     this.isAuthenticating = true
     this.authError = null
-    return firebase
-      .auth(this.fbApp)
-      .signInWithCredential(
-        firebase.auth.PhoneAuthProvider.credential(verificationId, code)
-      )
-      .then(user => {
-        this.isAuthenticating = false
-        return user
-      })
-      .catch(error => {
-        this.isAuthenticating = false
-        this.authError = error
-        return error
-      })
+
+    try {
+      const user = await firebase
+        .auth(this.fbApp)
+        .signInWithCredential(
+          firebase.auth.PhoneAuthProvider.credential(verificationId, code)
+        )
+
+      this.isAuthenticating = false
+      return user
+    } catch (error) {
+      this.isAuthenticating = false
+      this.authError = error
+      return error
+    }
   }
 
-  @action
-  signOut() {
-    return firebase.auth(this.fbApp).signOut()
-  }
+  @action signOut = async () => firebase.auth(this.fbApp).signOut()
 }
