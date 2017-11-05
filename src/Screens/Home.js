@@ -13,6 +13,7 @@ import {
   Icon,
   Right
 } from 'native-base'
+import { Notifications } from 'expo'
 
 const StyledView = styled.View`
   flex: 1;
@@ -23,8 +24,14 @@ const StyledView = styled.View`
 
 @observer
 class HomeScreen extends Component {
-  async componentDidMount() {
+  componentWillMount() {
     this.props.saveNotificationToken()
+
+    Notifications.addListener(this._handleNotification)
+  }
+
+  _handleNotification = notification => {
+    console.log('!!!NOTIFICATION', JSON.stringify(notification))
   }
 
   render() {
