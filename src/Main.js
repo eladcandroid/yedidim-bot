@@ -21,8 +21,7 @@ class Main extends Component {
   }
 }
 
-export default inject(stores => ({
-  authUser: stores.store.authUser,
-  isAuthenticating: stores.store.isAuthenticating,
-  isAuthenticated: stores.store.isAuthenticated
+export default inject(({ Authentication }) => ({
+  isAuthenticating: Authentication.isAuthenticating,
+  isAuthenticated: Authentication.isAuthenticated
 }))(Main)

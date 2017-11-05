@@ -18,12 +18,12 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { authUser, signOut } = this.props
+    const { user, signOut } = this.props
 
     return (
       <StyledView>
         <Text>There are no events</Text>
-        <Text>You are logged in as: {authUser.phoneNumber}</Text>
+        <Text>You are logged in as: {user.phoneNumber}</Text>
         <Button success onPress={signOut}>
           <Text>Log out</Text>
         </Button>
@@ -32,7 +32,7 @@ class HomeScreen extends Component {
   }
 }
 
-export default inject(stores => ({
-  authUser: stores.store.authUser,
-  signOut: stores.store.signOut
+export default inject(({ Authentication }) => ({
+  user: Authentication.user,
+  signOut: Authentication.signOut
 }))(HomeScreen)

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
 import Main from 'Main'
-import Store from 'Store'
+import Stores from 'Stores'
 import Expo, { Constants } from 'expo'
 import { Provider } from 'mobx-react/native'
 import Config from './Config.json'
@@ -11,7 +11,7 @@ const fbApp = firebase.initializeApp(
   Config.firebase[Constants.manifest.extra.instance]
 )
 
-const store = new Store(fbApp)
+const stores = Stores(fbApp)
 
 export default class App extends Component {
   state = {
@@ -29,7 +29,7 @@ export default class App extends Component {
     const { isReady } = this.state
 
     return (
-      <Provider store={store}>
+      <Provider {...stores}>
         <Main isReady={isReady} />
       </Provider>
     )

@@ -2,7 +2,10 @@ import MobxFirebaseStore from 'mobx-firebase-store'
 import { action, observable, computed } from 'mobx'
 import firebase from 'firebase'
 
-export default class Store {
+export default class AuthenticationStore {
+  @observable user = null
+  @observable isAuthenticating = true
+
   constructor(fbApp, { watchAuth = true } = {}) {
     this.fbApp = fbApp
 
@@ -16,7 +19,7 @@ export default class Store {
     // TODO figure out when unwatchAuth should be called
     if (watchAuth) {
       this.unwatchAuth = firebase.auth(this.fbApp).onAuthStateChanged(user => {
-        this.authUser = user
+        this.user = user
         this.isAuthenticating = false
       })
     }
@@ -28,14 +31,10 @@ export default class Store {
     }
   }
 
-  // observables
-  @observable authUser = null
-  @observable isAuthenticating = true
-
   // Getters
   @computed
   get isAuthenticated() {
-    return !!this.authUser
+    return !!this.user
   }
 
   @action

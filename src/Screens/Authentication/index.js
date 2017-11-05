@@ -86,6 +86,6 @@ class AuthenticationScreen extends React.Component {
   }
 }
 
-export default inject(stores => ({
-  signIn: stores.store.signIn
+export default inject(({ Authentication }) => ({
+  signIn: Authentication.signIn
 }))(AuthenticationScreen)
