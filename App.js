@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import Expo, { AppLoading } from 'expo'
-import AuthenticationScreen from './screens/Authentication'
+import Main from 'Main'
+import Stores from 'Stores'
+import Expo from 'expo'
+import { Provider } from 'mobx-react/native'
 
-// const YedidimApp = StackNavigator({
-//   Splash: { screen: SplashScreen },
-//   Home: { screen: HomeScreen }
-// });
+// Initialiase stores
+const stores = Stores()
 
 export default class App extends Component {
   state = {
@@ -21,11 +21,11 @@ export default class App extends Component {
   }
   render() {
     const { isReady } = this.state
-    if (!isReady) {
-      return <AppLoading />
-    }
-    // TODO Check authentication and redirect accordignally
-    // return <HomeScreen />;
-    return <AuthenticationScreen />
+
+    return (
+      <Provider {...stores}>
+        <Main isReady={isReady} />
+      </Provider>
+    )
   }
 }
