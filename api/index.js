@@ -1,46 +1,46 @@
-import * as firebase from "firebase";
-import Config from "../Config.json";
-import { Constants } from "expo";
+import * as firebase from 'firebase'
+import { Constants } from 'expo'
+import Config from '../Config.json'
 
-firebase.initializeApp(Config.firebase[Constants.manifest.extra.instance]);
+firebase.initializeApp(Config.firebase[Constants.manifest.extra.instance])
 
 // For debug purposes only
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(user => {
   if (user) {
-    console.log("User signed in !", user);
+    // console.log('User signed in !', user)
   } else {
-    console.log("NO user signed in !");
+    // console.log('NO user signed in !')
   }
-});
+})
 
 export function loggedInUser() {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const unsubscribe = firebase.auth().onAuthStateChanged(user => {
-      unsubscribe();
-      resolve(user);
-    });
-  });
+      unsubscribe()
+      resolve(user)
+    })
+  })
 }
 
 export function signIn(verificationId, code) {
-  console.log("signIn!", verificationId, code);
+  // console.log('signIn!', verificationId, code)
 
   return firebase
     .auth()
     .signInWithCredential(
       firebase.auth.PhoneAuthProvider.credential(verificationId, code)
-    );
-  //.catch(function(err) {
+    )
+  // .catch(function(err) {
   //  console.log("failed to sign in", err);
-  //});
+  // });
 }
 
 export function signOut() {
-  console.log("signOut!");
+  // console.log('signOut!')
   return firebase
     .auth()
     .signOut()
-    .catch(function(err) {
-      console.log("failed to sign out", err);
-    });
+    .catch(() => {
+      // console.log('failed to sign out', err)
+    })
 }
