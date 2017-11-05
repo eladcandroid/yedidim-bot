@@ -22,8 +22,9 @@ class HomeScreen extends Component {
 
     return (
       <StyledView>
-        <Text>There are no events</Text>
-        <Text>You are logged in as: {user.phoneNumber}</Text>
+        <Text>
+          Welcome {user.FirstName} {user.LastName}
+        </Text>
         <Button success onPress={signOut}>
           <Text>Log out</Text>
         </Button>
