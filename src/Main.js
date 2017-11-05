@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
 import { AppLoading } from 'expo'
 import AuthenticationScreen from 'Screens/Authentication'
-import HomeScreen from 'Screens/Home'
 import { inject, observer } from 'mobx-react/native'
-
-// const YedidimApp = StackNavigator({
-//   Splash: { screen: SplashScreen },
-//   Home: { screen: HomeScreen }
-// });
+import AuthenticatedRouter from './AuthenticatedRouter'
 
 @observer
 class Main extends Component {
@@ -17,7 +12,7 @@ class Main extends Component {
       return <AppLoading />
     }
 
-    return isAuthenticated ? <HomeScreen /> : <AuthenticationScreen />
+    return isAuthenticated ? <AuthenticatedRouter /> : <AuthenticationScreen />
   }
 }
 

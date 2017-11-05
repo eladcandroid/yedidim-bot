@@ -1,8 +1,18 @@
 import React, { Component } from 'react'
-import { Text } from 'react-native'
-import { Button } from 'native-base'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
+import {
+  Button,
+  Text,
+  Container,
+  Body,
+  Content,
+  Header,
+  Title,
+  Left,
+  Icon,
+  Right
+} from 'native-base'
 
 const StyledView = styled.View`
   flex: 1;
@@ -13,27 +23,37 @@ const StyledView = styled.View`
 
 @observer
 class HomeScreen extends Component {
-  static navigationOptions = {
-    title: 'Home'
-  }
-
   render() {
-    const { user, signOut } = this.props
+    const { user } = this.props
 
     return (
-      <StyledView>
-        <Text>
-          Welcome {user.FirstName} {user.LastName}
-        </Text>
-        <Button success onPress={signOut}>
-          <Text>Log out</Text>
-        </Button>
-      </StyledView>
+      <Container>
+        <Header>
+          <Left />
+          <Body>
+            <Title>Home</Title>
+          </Body>
+          <Right>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate('DrawerOpen')}
+            >
+              <Icon name="menu" />
+            </Button>
+          </Right>
+        </Header>
+        <Content padder>
+          <StyledView>
+            <Text>
+              Welcome {user.FirstName} {user.LastName}
+            </Text>
+          </StyledView>
+        </Content>
+      </Container>
     )
   }
 }
 
 export default inject(({ Authentication }) => ({
-  user: Authentication.user,
-  signOut: Authentication.signOut
+  user: Authentication.user
 }))(HomeScreen)
