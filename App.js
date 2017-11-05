@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Expo, { AppLoading } from 'expo'
-import AuthenticationScreen from './screens/Authentication'
+import AuthenticationScreen from 'Screens/Authentication'
 
 // const YedidimApp = StackNavigator({
 //   Splash: { screen: SplashScreen },

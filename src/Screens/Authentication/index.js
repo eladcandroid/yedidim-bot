@@ -13,7 +13,7 @@ import {
 import { ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
-import { signIn, loggedInUser, signOut } from '../../api'
+import { signIn } from 'API'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -35,19 +35,7 @@ const StyledButton = styled(Button)`
 `
 
 export default class AuthenticationScreen extends React.Component {
-  state = {
-    user: null,
-    loading: true
-  }
-
-  async componentWillMount() {
-    const user = await loggedInUser()
-    this.setState({ user, loading: false })
-  }
-
   handleAuthentication = async () => {
-    this.setState({ error: undefined })
-
     const redirectUrl = AuthSession.getRedirectUrl()
     const result = await AuthSession.startAsync({
       authUrl:
@@ -60,18 +48,15 @@ export default class AuthenticationScreen extends React.Component {
 
     if (!error && verificationId && code) {
       signIn(verificationId, code)
-        .then(user => this.setState({ user }))
+        .then(() => {
+          /* Redirect to Home Screen */
+        })
         .catch(errorThrown => this.setState({ error: errorThrown }))
     }
   }
 
-  handleLogout = async () => {
-    await signOut()
-    this.setState({ user: undefined })
-  }
-
   render() {
-    const { user, loading, error } = this.state
+    const { loading, error } = this.state
 
     return (
       <Container>
@@ -89,25 +74,22 @@ export default class AuthenticationScreen extends React.Component {
           </Content>
         ) : (
           <Content padder>
-            {user ? (
-              <Text>{JSON.stringify(user)}</Text>
+            {error ? (
+              <IntroText>
+                An error has occurred, unable to autheticate. Please Try again
+                later.
+                {JSON.stringify(error)}
+              </IntroText>
             ) : (
               <IntroText>
                 You are not authenticated yet. Please authenticate to receive
                 events.
-                {error ? JSON.stringify(error) : null}
               </IntroText>
             )}
             <ButtonsView>
-              {user ? (
-                <StyledButton success onPress={this.handleLogout}>
-                  <Text>Sign out</Text>
-                </StyledButton>
-              ) : (
-                <StyledButton success onPress={this.handleAuthentication}>
-                  <Text>Authenticate me</Text>
-                </StyledButton>
-              )}
+              <StyledButton success onPress={this.handleAuthentication}>
+                <Text>Authenticate me</Text>
+              </StyledButton>
             </ButtonsView>
           </Content>
         )}
