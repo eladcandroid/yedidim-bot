@@ -10,9 +10,9 @@
     },
     "get_started": {
       "type": "generic",
-      "title": "היי, אני \"בוט\" ידיד",
-      "subtitle": "מטרתי היא לסייע לך ולאפשר למתנדב להגיע אליך בהקדם האפשרי. זקוק/ה לעזרה?",
-      "image_url": "https://firebasestorage.googleapis.com/v0/b/yedidim-production.appspot.com/o/images%2Fyedidim-get-started.jpeg?alt=media&v=2",
+      "title": "היי, אני ידידיה",
+      "subtitle": "אני הבוט של ידידים ומטרתי לאפשר למתנדב להגיע אליך בהקדם האפשרי. זקוק/ה לעזרה?",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/yedidim-production.appspot.com/o/images%2Fyedidim-bot-get-started.jpeg?alt=media&v=3",
       "text": "זקוק/ה לעזרה?",
       "buttons": [
         {"payload": "need_help_yes"},
