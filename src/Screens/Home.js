@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
+import { FormattedMessage } from 'react-intl'
 import {
   Button,
   Container,
@@ -52,9 +53,12 @@ class HomeScreen extends Component {
       <Container>
         <Content padder style={{ backgroundColor: '#fff' }}>
           <StyledView>
-            <H3>
-              Welcome {user.FirstName} {user.LastName}
-            </H3>
+            <FormattedMessage
+              id="welcome"
+              values={{ name: `${user.FirstName} ${user.LastName}` }}
+            >
+              {txt => <H3>{txt}</H3>}
+            </FormattedMessage>
             <Button
               block
               onPress={() => {
