@@ -4,6 +4,7 @@ import HomeScreen from 'Screens/Home'
 // import Profile from "../ProfileScreen/index.js";
 import SideBar from 'Screens/SideBar'
 import { DrawerNavigator } from 'react-navigation'
+import withNotificationManager from 'Components/NotificationManager'
 
 const AuthenticatedRouter = DrawerNavigator(
   {
@@ -17,4 +18,4 @@ const AuthenticatedRouter = DrawerNavigator(
     drawerWidth: 300
   }
 )
-export default AuthenticatedRouter
+export default withNotificationManager(AuthenticatedRouter)
