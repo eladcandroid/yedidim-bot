@@ -1,5 +1,5 @@
 import React from 'react'
-import HomeScreen from 'Screens/Home'
+import HomeNavigator from 'Screens/HomeNavigator'
 // import MainScreenNavigator from "../ChatScreen/index.js";
 // import Profile from "../ProfileScreen/index.js";
 import SideBar from 'Screens/SideBar'
@@ -8,7 +8,7 @@ import withNotificationManager from 'Components/NotificationManager'
 
 const AuthenticatedRouter = DrawerNavigator(
   {
-    Home: { screen: HomeScreen }
+    Home: { screen: HomeNavigator }
     // Chat: { screen: MainScreenNavigator },
     // Profile: { screen: Profile }
   },

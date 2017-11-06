@@ -3,7 +3,6 @@ import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import {
   Button,
-  Text,
   Container,
   Body,
   Content,
@@ -11,14 +10,16 @@ import {
   Title,
   Left,
   Icon,
-  Right
+  Right,
+  Text,
+  H3
 } from 'native-base'
 
 const StyledView = styled.View`
   flex: 1;
-  background-color: #fff;
   align-items: center;
   justify-content: center;
+  margin: 20px 0;
 `
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
@@ -28,30 +29,35 @@ const StyledView = styled.View`
 
 @observer
 class HomeScreen extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    header: (
+      <Header>
+        <Left />
+        <Body>
+          <Title>Home</Title>
+        </Body>
+        <Right>
+          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+            <Icon name="menu" />
+          </Button>
+        </Right>
+      </Header>
+    )
+  })
+
   render() {
     const { user } = this.props
 
     return (
       <Container>
-        <Header>
-          <Left />
-          <Body>
-            <Title>Home</Title>
-          </Body>
-          <Right>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate('DrawerOpen')}
-            >
-              <Icon name="menu" />
-            </Button>
-          </Right>
-        </Header>
-        <Content padder>
+        <Content padder style={{ backgroundColor: '#fff' }}>
           <StyledView>
-            <Text>
+            <H3>
               Welcome {user.FirstName} {user.LastName}
-            </Text>
+            </H3>
+            <Button block onPress={() => {}}>
+              <Text>Open Event</Text>
+            </Button>
           </StyledView>
         </Content>
       </Container>
