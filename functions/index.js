@@ -61,22 +61,29 @@ function handleWebHookPostRequest(req, res) {
   let promises = [];
   const data = req.body;
   dashbot.logIncoming(data);
-  if (data.object === 'page') {
-    data.entry.forEach(function(entry) {
-      entry.messaging.forEach(function(event) {
-        //Handle each message separately
-        promises.push(handleMessage(event));
+  try {
+    if (data.object === 'page') {
+      data.entry.forEach(function (entry) {
+        entry.messaging.forEach(function (event) {
+          //Handle each message separately
+          promises.push(handleMessage(event));
+        });
       });
-    });
+    }
+    Promise.all(promises)
+      .then(() => {
+        res.sendStatus(200);
+      })
+      .catch(err => {
+        console.error(err);
+        res.sendStatus(200);
+      })
+  } catch (err){
+    //Avoid crashing the whole function
+    console.error(err);
+    res.sendStatus(200);
+
   }
-  Promise.all(promises)
-    .then(() => {
-      res.sendStatus(200);
-    })
-    .catch(err => {
-      console.error(err);
-      res.sendStatus(200);
-    })
 }
 
 function handleMessage(event) {
@@ -93,8 +100,7 @@ function handleMessage(event) {
           } else if (event.message && event.message.text === 'get started') {
             //FOR TESTING: Start again even if the user has an active event
             if (context) {
-              context.status = EventStatus.Archived;
-              events.set(context);
+              events.delete(context);
             }
             sendInitialResponse(event).then(() => {resolve()});
           } else {
@@ -143,7 +149,10 @@ function sendFollowUpResponse(event, context) {
           sendResponse = true;
         } else if (!response.final) {
           //In case of final message resend last message in case of additional messages from user
-          promises.push(sendMessage(senderID, flow.messages[response.error ? response.error : lastMessage.error]));
+          const errorMessageId = response.error ? response.error : lastMessage.error;
+          if (errorMessageId) {
+            promises.push(sendMessage(senderID, flow.messages[errorMessageId]));
+          }
           if (lastMessage.error_next) {
             context.lastMessage = lastMessage.error_next;
           }
@@ -220,6 +229,8 @@ function validateResponse(event, lastMessage) {
       }
     } else if (lastMessage.final){
       resolve({valid: false, final: true});
+    } else if (!event.message.text){
+      resolve({valid: false});
     } else {
       resolve({valid: true, text: event.message.text});
     }
