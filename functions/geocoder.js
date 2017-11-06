@@ -31,11 +31,11 @@ module.exports = {
     return new Promise((resolve, reject) => {
       nodeGeocoder.reverse(coordinates)
         .then((res) => {
-          console.info('Reverse coordinates (' + coordinates + ') : \n', res);
+          console.info('Reverse coordinates', JSON.stringify(coordinates), res);
           resolve(res);
         })
         .catch((err) => {
-          console.error('Failed to reverse coordinates (' + coordinates + ') : \n', err);
+          console.error('Failed to reverse coordinates', JSON.stringify(coordinates) , err);
           reject(err);
         });
     });
