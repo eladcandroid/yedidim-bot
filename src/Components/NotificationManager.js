@@ -2,6 +2,7 @@ import React from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { Notifications } from 'expo'
 import { Toast } from 'native-base'
+import { NavigationActions } from 'react-navigation'
 
 const withNotificationManager = WrappedComponent => {
   const Component = class extends React.Component {
@@ -24,7 +25,14 @@ const withNotificationManager = WrappedComponent => {
             buttonText: 'Show',
             type: 'warning',
             // duration: 10000,
-            onClose: () => console.log('TODO Go for the event!', data)
+            onClose: () => {
+              const navigateAction = NavigationActions.navigate({
+                routeName: 'Event',
+                params: data
+              })
+
+              this.props.navigation.dispatch(navigateAction)
+            }
           })
         }
       }
