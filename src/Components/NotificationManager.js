@@ -15,9 +15,12 @@ const withNotificationManager = WrappedComponent => {
     }
 
     navigateToEvent = eventData => {
-      const navigateAction = NavigationActions.navigate({
-        routeName: 'Event',
-        params: eventData
+      const navigateAction = NavigationActions.reset({
+        index: 1,
+        actions: [
+          NavigationActions.navigate({ routeName: 'Home' }),
+          NavigationActions.navigate({ routeName: 'Event', params: eventData })
+        ]
       })
 
       this.props.navigation.dispatch(navigateAction)
