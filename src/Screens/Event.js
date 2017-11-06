@@ -28,41 +28,31 @@ const StyledView = styled.View`
 // TODO On notification, save the event data to event store and sync with firebase?
 
 @observer
-class HomeScreen extends Component {
+class EventScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
-        <Left />
-        <Body>
-          <Title>Home</Title>
-        </Body>
-        <Right>
-          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
-            <Icon name="menu" />
+        <Left>
+          <Button transparent onPress={() => navigation.goBack()}>
+            <Icon name="arrow-back" />
           </Button>
-        </Right>
+        </Left>
+        <Body>
+          <Title>Event</Title>
+        </Body>
+        <Right />
       </Header>
     )
   })
 
   render() {
-    const { user } = this.props
+    const { state: { params: { eventId } } } = this.props.navigation
 
     return (
       <Container>
         <Content padder style={{ backgroundColor: '#fff' }}>
           <StyledView>
-            <H3>
-              Welcome {user.FirstName} {user.LastName}
-            </H3>
-            <Button
-              block
-              onPress={() => {
-                this.props.navigation.navigate('Event', { eventId: 'test123' })
-              }}
-            >
-              <Text>Open Event</Text>
-            </Button>
+            <H3>Event page for {eventId}</H3>
           </StyledView>
         </Content>
       </Container>
@@ -72,4 +62,4 @@ class HomeScreen extends Component {
 
 export default inject(({ Authentication }) => ({
   user: Authentication.user
-}))(HomeScreen)
+}))(EventScreen)

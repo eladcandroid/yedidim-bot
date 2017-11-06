@@ -1,10 +1,11 @@
 import MobxFirebaseStore from 'mobx-firebase-store'
 import { action, observable, computed } from 'mobx'
 import firebase from 'firebase'
+import { Permissions, Notifications } from 'expo'
 
 export default class AuthenticationStore {
+  @observable authUser = null
   @observable user = null
-  @observable userInfo = null
   @observable isAuthenticating = true
   @observable authError = null
 
@@ -23,6 +24,7 @@ export default class AuthenticationStore {
       this.unwatchAuth = firebase
         .auth(this.fbApp)
         .onAuthStateChanged(async authUser => {
+          this.authUser = authUser
           this.user = await this.userInfo(authUser)
           this.isAuthenticating = false
         })
@@ -33,6 +35,33 @@ export default class AuthenticationStore {
     if (this.unwatchAuth) {
       this.unwatchAuth()
     }
+  }
+
+  registerForPushNotificationsAsync = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    )
+    let finalStatus = existingStatus
+
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+      finalStatus = status
+    }
+
+    // Stop here if the user did not grant permissions
+    if (finalStatus !== 'granted') {
+      throw {
+        code: 'Notification not granted',
+        message: 'User did not granted notification permissions'
+      }
+    }
+
+    // Get the token that uniquely identifies this device
+    return Notifications.getExpoPushTokenAsync()
   }
 
   userInfo = async authenticatedUser => {
@@ -64,6 +93,16 @@ export default class AuthenticationStore {
   }
 
   @action
+  saveNotificationToken = async () => {
+    const notificationToken = await this.registerForPushNotificationsAsync()
+
+    return firebase
+      .database(this.fbApp)
+      .ref(`/volunteer/${this.authUser.phoneNumber}`)
+      .update({ notificationToken })
+  }
+
+  @action
   signIn = async ({ verificationId, code }) => {
     this.isAuthenticating = true
     this.authError = null
@@ -75,6 +114,7 @@ export default class AuthenticationStore {
           firebase.auth.PhoneAuthProvider.credential(verificationId, code)
         )
 
+      this.authUser = authUser
       this.user = await this.userInfo(authUser)
       this.isAuthenticating = false
       return this.user
@@ -85,5 +125,10 @@ export default class AuthenticationStore {
     }
   }
 
-  @action signOut = async () => firebase.auth(this.fbApp).signOut()
+  @action
+  signOut = async () => {
+    await firebase.auth(this.fbApp).signOut()
+    this.authUser = null
+    this.user = null
+  }
 }
