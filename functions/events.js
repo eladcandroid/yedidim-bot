@@ -40,21 +40,20 @@ module.exports = {
     });
   },
   set: function(context) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (!context.key) {
         context.key = db.ref().child('events').push().key;
       }
       context['timestamp'] = Date.now();
-      db.ref('/events/' + context.key).set(context, err => {
-        if (err) {
-          console.error('Failed to set context (' + context.psid + ') : \n', + err);
-          reject(err);
-        }
-        else {
+      db.ref('/events/' + context.key).set(context)
+        .then (() => {
           console.info('Context (' + context.psid + ') was set : \n', context);
           resolve();
-        }
-      })
+        })
+        .catch(err => {
+          console.error('Failed to set context (' + context.psid + ') : \n', + err);
+          resolve();
+        })
     });
   },
   delete: function(context) {
