@@ -1,5 +1,5 @@
-import React from 'react'
 import { StackNavigator } from 'react-navigation'
+import withNotificationManager from 'Components/NotificationManager'
 import Home from './Home'
 import Event from './Event'
 
@@ -8,4 +8,4 @@ const HomeNavigator = StackNavigator({
   Event: { screen: Event }
 })
 
-export default HomeNavigator
+export default withNotificationManager(HomeNavigator)

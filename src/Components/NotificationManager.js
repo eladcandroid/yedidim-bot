@@ -39,9 +39,13 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />
+      const { saveNotificationToken, ...other } = this.props
+      return <WrappedComponent {...other} />
     }
   }
+
+  // As described at https://github.com/react-community/react-navigation/issues/90
+  Component.router = WrappedComponent.router
 
   return inject(({ Authentication }) => ({
     saveNotificationToken: Authentication.saveNotificationToken
