@@ -14,6 +14,15 @@ const withNotificationManager = WrappedComponent => {
       Notifications.addListener(this.handleNotification)
     }
 
+    navigateToEvent = eventData => {
+      const navigateAction = NavigationActions.navigate({
+        routeName: 'Event',
+        params: eventData
+      })
+
+      this.props.navigation.dispatch(navigateAction)
+    }
+
     handleNotification = ({ origin, data, remote }) => {
       if (remote) {
         // Only listen to remote notifications
@@ -25,15 +34,11 @@ const withNotificationManager = WrappedComponent => {
             buttonText: 'Show',
             type: 'warning',
             // duration: 10000,
-            onClose: () => {
-              const navigateAction = NavigationActions.navigate({
-                routeName: 'Event',
-                params: data
-              })
-
-              this.props.navigation.dispatch(navigateAction)
-            }
+            onClose: () => this.navigateToEvent(data)
           })
+        } else {
+          // Origin is selected: comes from notification while in foreground
+          this.navigateToEvent(data)
         }
       }
     }
