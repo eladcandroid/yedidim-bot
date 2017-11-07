@@ -219,6 +219,7 @@ function validateResponse(event, lastMessage) {
         geocoder.geocode(userAddress)
           .then(res => {
             if (!geocoder.verify(res)){
+              console.log('Invalid geocode address', res);
               resolve({valid: false});
             }
             resolve({valid: true, location: {coordinates: {lat: res[0].latitude, lon: res[0].longitude}, address: geocoder.toAddress(res), userAddress}});
