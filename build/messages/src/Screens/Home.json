@@ -1,0 +1,10 @@
+[
+  {
+    "id": "Home.welcome",
+    "defaultMessage": "Welcome {name}"
+  },
+  {
+    "id": "Home.openevent",
+    "defaultMessage": "Open Event"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "en": {
+    "Home.welcome": "Welcome {name}",
+    "Home.openevent": "Open Event"
+  },
+  "he": {
+    "Home.welcome": "ברוך הבא {name}",
+    "Home.openevent": "לפתוח אירוע"
+  }
+}

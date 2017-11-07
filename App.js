@@ -5,9 +5,11 @@ import Expo from 'expo'
 import { Provider } from 'mobx-react/native'
 import { addLocaleData, IntlProvider } from 'react-intl'
 import en from 'react-intl/locale-data/en'
+import he from 'react-intl/locale-data/he'
+import localeData from './build/locales/data.json'
 
 // Add locales
-addLocaleData([...en])
+addLocaleData([...en, ...he])
 
 // Initialiase stores
 const stores = Stores()
@@ -27,8 +29,10 @@ export default class App extends Component {
   render() {
     const { isReady } = this.state
 
+    const language = 'he'
+
     return (
-      <IntlProvider locale="en" messages={{ welcome: 'Welcome {name}' }}>
+      <IntlProvider locale={language} messages={localeData[language]}>
         <Provider {...stores}>
           <Main isReady={isReady} />
         </Provider>

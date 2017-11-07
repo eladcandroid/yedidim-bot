@@ -54,7 +54,8 @@ class HomeScreen extends Component {
         <Content padder style={{ backgroundColor: '#fff' }}>
           <StyledView>
             <FormattedMessage
-              id="welcome"
+              id="Home.welcome"
+              defaultMessage="Welcome {name}"
               values={{ name: `${user.FirstName} ${user.LastName}` }}
             >
               {txt => <H3>{txt}</H3>}
@@ -65,7 +66,9 @@ class HomeScreen extends Component {
                 this.props.navigation.navigate('Event', { eventId: 'test123' })
               }}
             >
-              <Text>Open Event</Text>
+              <FormattedMessage id="Home.openevent" defaultMessage="Open Event">
+                {txt => <Text>{txt}</Text>}
+              </FormattedMessage>
             </Button>
           </StyledView>
         </Content>
