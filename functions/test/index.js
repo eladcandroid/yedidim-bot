@@ -87,7 +87,7 @@ describe('Geocoding', () => {
     adminInitStub.restore();
   });
 
-  it('Should return 200 in case of a crash', () => {
+  it('Should geocode', () => {
     const req = {
       body: {
         "object":"page",
@@ -116,11 +116,6 @@ describe('Geocoding', () => {
     const res = {
       status: ((code) => {
         assert.equal(code, 200);
-        return ({
-          send: (text => {
-            assert.equal(text, 'hub.challenge');
-          })
-        });
       })
     };
 
