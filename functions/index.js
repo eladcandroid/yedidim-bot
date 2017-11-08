@@ -82,7 +82,6 @@ function handleWebHookPostRequest(req, res) {
     //Avoid crashing the whole function
     console.error(err);
     res.sendStatus(200);
-
   }
 }
 
