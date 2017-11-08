@@ -48,10 +48,10 @@ module.exports = {
             osmGeocoder.reverse(coordinates)
               .then((res) => {
                 console.info('Reverse coordinates w/ OSM', JSON.stringify(coordinates), res);
-                if (!res[0].city || !res[0].streetName){
+                if (!res[0].city){
                   reject();
                 } else {
-                  res[0].formattedAddress = res[0].streetName + (res[0].streetNumber ? (' ' + res[0].streetNumber) : '') + ', ' + res[0].city;
+                  res[0].formattedAddress = (res[0].streetName ? (res[0].streetName + (res[0].streetNumber ? (' ' + res[0].streetNumber) : '') + ', ') : '') + res[0].city;
                   resolve(res);
                 }
               })
@@ -81,6 +81,6 @@ module.exports = {
   },
 
   toAddress: function(res) {
-    return {city: res[0].city, streetName: res[0].streetName, streetNumber: res[0].streetNumber ? res[0].streetNumber : 0, formattedAddress: res[0].formattedAddress};
+    return {city: res[0].city, streetName: res[0].streetName ? res[0].streetName : '', streetNumber: res[0].streetNumber ? res[0].streetNumber : 0, formattedAddress: res[0].formattedAddress};
   }
 };
