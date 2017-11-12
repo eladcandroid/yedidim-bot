@@ -14,16 +14,11 @@ import {
   Right,
   Text,
   H2,
-  H3,
   Card,
   CardItem,
-  Thumbnail,
-  Form,
-  Item,
-  Label,
-  Input
+  Thumbnail
 } from 'native-base'
-import { Image, View } from 'react-native'
+import { MapView } from 'expo'
 
 const InfoItem = styled.View`
   margin: 10px 0;
@@ -68,7 +63,12 @@ class EventScreen extends Component {
           <Card style={{ flex: 0 }}>
             <CardItem>
               <Left>
-                <Thumbnail source={{ uri: 'Image URL' }} />
+                <Thumbnail
+                  source={{
+                    uri:
+                      'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
+                  }}
+                />
                 <Body>
                   <H2>Tire Puncture</H2>
                   <Text note>10 minutes ago</Text>
@@ -77,6 +77,22 @@ class EventScreen extends Component {
             </CardItem>
             <CardItem>
               <Body>
+                <MapView
+                  style={{ height: 200, width: '100%', flex: 1 }}
+                  region={{
+                    latitude: 32.0801258,
+                    longitude: 34.7898816,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421
+                  }}
+                  showsMyLocationButton
+                >
+                  <MapView.Marker
+                    coordinate={{ latitude: 32.0801258, longitude: 34.7898816 }}
+                    title="Alan Rubin"
+                    description="Tire Puncture"
+                  />
+                </MapView>
                 <InfoItem>
                   <BoldText>Description:</BoldText>
                   <Text>All tires without air pressure</Text>
