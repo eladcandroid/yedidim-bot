@@ -81,6 +81,15 @@ module.exports = {
   },
 
   toAddress: function(res) {
-    return {city: res[0].city, streetName: res[0].streetName ? res[0].streetName : '', streetNumber: res[0].streetNumber ? res[0].streetNumber : 0, formattedAddress: res[0].formattedAddress};
+    let city = res[0].city;
+    if (!city) {
+      if (res[0].administrativeLevels && res[0].administrativeLevels.level2long){
+        city = res[0].administrativeLevels.level2long;
+      } else {
+        city = '';
+      }
+    }
+
+    return {city, streetName: res[0].streetName ? res[0].streetName : '', streetNumber: res[0].streetNumber ? res[0].streetNumber : 0, formattedAddress: res[0].formattedAddress};
   }
 };
