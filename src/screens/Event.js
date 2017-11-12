@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
+
 import {
   Button,
   Container,
@@ -12,14 +13,25 @@ import {
   Icon,
   Right,
   Text,
-  H3
+  H2,
+  H3,
+  Card,
+  CardItem,
+  Thumbnail,
+  Form,
+  Item,
+  Label,
+  Input
 } from 'native-base'
+import { Image, View } from 'react-native'
 
-const StyledView = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
+const InfoItem = styled.View`
+  margin: 10px 0;
+`
+
+const BoldText = styled.Text`
+  font-weight: bold;
+  font-size: 16px;
 `
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
@@ -38,7 +50,7 @@ class EventScreen extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Event</Title>
+          <Title>Event Details</Title>
         </Body>
         <Right />
       </Header>
@@ -53,9 +65,71 @@ class EventScreen extends Component {
     return (
       <Container>
         <Content padder style={{ backgroundColor: '#fff' }}>
-          <StyledView>
-            <H3>Event page for {event.caller}</H3>
-          </StyledView>
+          <Card style={{ flex: 0 }}>
+            <CardItem>
+              <Left>
+                <Thumbnail source={{ uri: 'Image URL' }} />
+                <Body>
+                  <H2>Tire Puncture</H2>
+                  <Text note>10 minutes ago</Text>
+                </Body>
+              </Left>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <InfoItem>
+                  <BoldText>Description:</BoldText>
+                  <Text>All tires without air pressure</Text>
+                </InfoItem>
+                <InfoItem>
+                  <BoldText>Location:</BoldText>
+                  <Text>Tsofiah Street 1, Kedumim</Text>
+                </InfoItem>
+                <InfoItem>
+                  <BoldText>Name:</BoldText>
+                  <Text>Alan Rubin</Text>
+                </InfoItem>
+                <InfoItem>
+                  <BoldText>Phone:</BoldText>
+                  <Text>0547344452</Text>
+                </InfoItem>
+                <InfoItem>
+                  <BoldText>Car type:</BoldText>
+                  <Text>Citroen C4</Text>
+                </InfoItem>
+              </Body>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Button block info>
+                  <Icon name="md-map" />
+                  <Text>Navigate to location</Text>
+                </Button>
+              </Body>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Button block success>
+                  <Icon name="md-call" />
+                  <Text>Call Person</Text>
+                </Button>
+              </Body>
+            </CardItem>
+            <CardItem>
+              <Left>
+                <Button danger>
+                  <Icon name="md-close-circle" />
+                  <Text>Ignore</Text>
+                </Button>
+              </Left>
+              <Right>
+                <Button success>
+                  <Icon name="md-checkmark-circle" />
+                  <Text>Accept</Text>
+                </Button>
+              </Right>
+            </CardItem>
+          </Card>
         </Content>
       </Container>
     )
