@@ -7,9 +7,6 @@ import { NavigationActions } from 'react-navigation'
 const withNotificationManager = WrappedComponent => {
   const Component = class extends React.Component {
     componentWillMount() {
-      // Save notification token when application mounts
-      this.props.saveNotificationToken()
-
       // Handle Notification received
       Notifications.addListener(this.handleNotification)
     }
@@ -55,9 +52,7 @@ const withNotificationManager = WrappedComponent => {
   // As described at https://github.com/react-community/react-navigation/issues/90
   Component.router = WrappedComponent.router
 
-  return inject(({ Authentication }) => ({
-    saveNotificationToken: Authentication.saveNotificationToken
-  }))(observer(Component))
+  return Component
 }
 
 export default withNotificationManager

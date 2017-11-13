@@ -22,27 +22,32 @@ const AuthenticationStore = types
     }
   }))
   .actions(self => {
+    function onUserChanged({ userAuth, userInfo }) {
+      if (!userAuth) {
+        // Not authenticated
+        self.currentUser = null
+      } else {
+        console.log('>>>> Authenticated Changed!', userAuth, userInfo)
+        self.currentUser = User.create({
+          guid: userAuth.phoneNumber,
+          name: `${userInfo.FirstName} ${userInfo.LastName}`,
+          phone: userInfo.MobilePhone
+        })
+      }
+
+      self.isLoading = false
+    }
+
+    function onError(error) {
+      console.log('>>>>', error)
+      self.error = error
+      self.isLoading = false
+    }
+
     function afterCreate() {
       self.unwatchAuth = api.onAuthenticationChanged(
-        ({ userAuth, userInfo }) => {
-          if (!userAuth) {
-            // Not authenticated
-            self.currentUser = null
-          } else {
-            console.log('>>>> Authenticated Changed!', userAuth, userInfo)
-            self.currentUser = User.create({
-              guid: 1111,
-              name: 'Alan',
-              phone: '21232343'
-            })
-          }
-
-          self.isLoading = false
-        },
-        error => {
-          self.error = error
-          self.isLoading = false
-        }
+        self.onUserChanged,
+        self.onError
       )
     }
 
@@ -81,7 +86,9 @@ const AuthenticationStore = types
       afterCreate,
       beforeDestroy,
       signIn,
-      signOut
+      signOut,
+      onUserChanged,
+      onError
     }
   })
 
