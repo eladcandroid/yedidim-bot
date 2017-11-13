@@ -1,8 +1,8 @@
 import React from 'react'
-import HomeNavigator from 'Screens/HomeNavigator'
+import HomeNavigator from 'screens/HomeNavigator'
 // import MainScreenNavigator from "../ChatScreen/index.js";
 // import Profile from "../ProfileScreen/index.js";
-import SideBar from 'Screens/SideBar'
+import SideBar from 'screens/SideBar'
 import { DrawerNavigator } from 'react-navigation'
 
 const AuthenticatedRouter = DrawerNavigator(

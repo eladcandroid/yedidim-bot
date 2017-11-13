@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Main from 'Main'
-import Stores from 'Stores'
+import Stores from 'stores'
 import Expo from 'expo'
 import { Provider } from 'mobx-react/native'
 import { addLocaleData, IntlProvider } from 'react-intl'

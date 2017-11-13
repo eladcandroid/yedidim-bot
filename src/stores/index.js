@@ -1,4 +1,4 @@
-import Authentication from 'Stores/Authentication'
+import Authentication from 'stores/Authentication'
 import { Constants } from 'expo'
 import firebase from 'firebase'
 import Config from '../../Config.json'

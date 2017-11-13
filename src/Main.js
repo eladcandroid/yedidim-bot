@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { AppLoading } from 'expo'
-import AuthenticationScreen from 'Screens/Authentication'
+import AuthenticationScreen from 'screens/Authentication'
 import { inject, observer } from 'mobx-react/native'
 import { Root } from 'native-base'
 import AuthenticatedRouter from './AuthenticatedRouter'
