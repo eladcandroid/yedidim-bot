@@ -61,7 +61,7 @@ class AuthenticationScreen extends React.Component {
   }
 
   render() {
-    const { authError, isAuthenticating } = this.props
+    const { authError, isLoading } = this.props
 
     return (
       <Container>
@@ -72,7 +72,7 @@ class AuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        {isAuthenticating ? (
+        {isLoading ? (
           <Content padder>
             <IntroText>Please wait, authenticating...</IntroText>
             <ActivityIndicator size="large" />
@@ -85,8 +85,7 @@ class AuthenticationScreen extends React.Component {
                   An error has occurred, unable to authenticate. Please try
                   again later.
                 </IntroText>
-                <ErrorText>Code: {authError.code}</ErrorText>
-                <ErrorText>Message: {authError.message}</ErrorText>
+                <ErrorText>Code: {authError}</ErrorText>
               </View>
             ) : (
               <IntroText>
@@ -106,8 +105,8 @@ class AuthenticationScreen extends React.Component {
   }
 }
 
-export default inject(({ Authentication }) => ({
-  signIn: Authentication.signIn,
-  authError: Authentication.authError,
-  isAuthenticating: Authentication.isAuthenticating
+export default inject(({ stores }) => ({
+  signIn: stores.authStore.signIn,
+  authError: stores.authStore.error,
+  isLoading: stores.authStore.isLoading
 }))(AuthenticationScreen)

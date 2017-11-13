@@ -18,7 +18,8 @@
         "specialLink": ["hrefLeft", "hrefRight"],
         "aspects": ["noHref", "invalidHref", "preferButton"]
       }
-    ]
+    ],
+    "no-param-reassign": ["error", { "props": false }]
   },
   "globals": {
     "SyntheticEvent": true,

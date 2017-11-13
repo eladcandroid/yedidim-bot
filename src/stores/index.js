@@ -1,13 +1,9 @@
-import Authentication from 'stores/Authentication'
-import { Constants } from 'expo'
-import firebase from 'firebase'
-import Config from '../../Config.json'
+import RootStore from './Root'
+import './firebase'
 
-// Initialise firebase
-const fbApp = firebase.initializeApp(
-  Config.firebase[Constants.manifest.extra.instance]
-)
+const createRootStore = snapshot =>
+  RootStore.create(snapshot || {}, {
+    logger: m => console.log(m), // eslint-disable-line
+  })
 
-export default () => ({
-  Authentication: new Authentication(fbApp)
-})
+export default createRootStore

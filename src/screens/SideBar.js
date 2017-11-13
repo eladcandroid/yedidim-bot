@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react/native'
 // import styled from 'styled-components/native'
 import Logo from './logo.png'
 
-const SideBar = ({ signOut, user: { FirstName, LastName, MobilePhone } }) => (
+const SideBar = ({ signOut, currentUser: { name, phone } }) => (
   <Container>
     <Content>
       <Image
@@ -24,7 +24,7 @@ const SideBar = ({ signOut, user: { FirstName, LastName, MobilePhone } }) => (
       <List style={{ marginTop: 20 }}>
         <ListItem>
           <Text>
-            {FirstName} {LastName} {MobilePhone && `(${MobilePhone})`}
+            {name} {phone && `(${phone})`}
           </Text>
         </ListItem>
         <ListItem button onPress={signOut}>
@@ -35,7 +35,7 @@ const SideBar = ({ signOut, user: { FirstName, LastName, MobilePhone } }) => (
   </Container>
 )
 
-export default inject(({ Authentication }) => ({
-  signOut: Authentication.signOut,
-  user: Authentication.user
+export default inject(({ stores }) => ({
+  signOut: stores.authStore.signOut,
+  currentUser: stores.authStore.currentUser
 }))(observer(SideBar))

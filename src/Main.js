@@ -8,8 +8,8 @@ import AuthenticatedRouter from './AuthenticatedRouter'
 @observer
 class Main extends Component {
   render() {
-    const { isReady, isAuthenticated, isAuthenticating } = this.props
-    if (!isReady || isAuthenticating) {
+    const { isReady, isAuthenticated, isLoading } = this.props
+    if (!isReady || isLoading) {
       return <AppLoading />
     }
 
@@ -21,7 +21,7 @@ class Main extends Component {
   }
 }
 
-export default inject(({ Authentication }) => ({
-  isAuthenticating: Authentication.isAuthenticating,
-  isAuthenticated: Authentication.isAuthenticated
+export default inject(({ stores }) => ({
+  isLoading: stores.authStore.isLoading,
+  isAuthenticated: stores.authStore.isAuthenticated
 }))(Main)

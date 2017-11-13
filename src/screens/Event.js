@@ -60,6 +60,6 @@ class EventScreen extends Component {
   }
 }
 
-export default inject(({ Authentication }) => ({
-  user: Authentication.user
+export default inject(({ stores }) => ({
+  currentUser: stores.authStore.currentUser
 }))(EventScreen)
