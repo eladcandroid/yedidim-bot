@@ -6,8 +6,8 @@ const mkdirp = require('mkdirp')
 const globSync = glob.sync
 const mkdirpSync = mkdirp.sync
 
-const filePattern = './build/messages/**/*.json'
-const outputDir = './build/locales/'
+const filePattern = './i18n/messages/**/*.json'
+const outputDir = './i18n/locales/'
 
 // Aggregates the default messages that were extracted from the example app's
 // React components via the React Intl Babel plugin. An error will be thrown if
@@ -31,6 +31,6 @@ mkdirpSync(outputDir)
 
 // Write the messages to this directory
 fs.writeFileSync(
-  `${outputDir}data.json`,
-  `{ "en": ${JSON.stringify(defaultMessages, null, 2)} }`
+  `${outputDir}en.json`,
+  JSON.stringify(defaultMessages, null, 2)
 )

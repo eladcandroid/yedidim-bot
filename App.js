@@ -6,7 +6,13 @@ import { Provider } from 'mobx-react/native'
 import { addLocaleData, IntlProvider } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import he from 'react-intl/locale-data/he'
-import localeData from './build/locales/data.json'
+import enLocaleData from './i18n/locales/en.json'
+import heLocaleData from './i18n/locales/he.json'
+
+const localeData = {
+  en: enLocaleData,
+  he: heLocaleData
+}
 
 // Add locales
 addLocaleData([...en, ...he])
@@ -29,7 +35,7 @@ export default class App extends Component {
   render() {
     const { isReady } = this.state
 
-    const language = 'he'
+    const language = 'en'
 
     return (
       <IntlProvider locale={language} messages={localeData[language]}>
