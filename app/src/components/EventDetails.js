@@ -206,57 +206,57 @@ class EventDetails extends Component {
     const editable = this.props.editable;
     return (
       <KeyboardAwareScrollViewComponent>
-      <View style={styles.container}>
-        {this.showValidationError()}
-        {event.timestamp ?
+        <View style={styles.container}>
+          {this.showValidationError()}
+          {event.timestamp ?
+            <View>
+              <Text style={styles.fieldName}>זמן</Text>
+              <Text style={styles.fieldValue}>{formatEventTime(event)}</Text>
+            </View>
+            : undefined
+          }
           <View>
-            <Text style={styles.fieldName}>זמן</Text>
-            <Text style={styles.fieldValue}>{formatEventTime(event)}</Text>
+            <Text style={styles.fieldName}>כתובת</Text>
+            {editable ?
+              <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
+              :
+              <TouchableHighlight onPress={this.openAddressInMaps.bind(this)}>
+                <Text style={styles.addressFieldValue}>{event.details.address}</Text>
+              </TouchableHighlight>
+            }
           </View>
-          : undefined
-        }
-        <View>
-          <Text style={styles.fieldName}>כתובת</Text>
           {editable ?
-            <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
-            :
-            <TouchableHighlight onPress={this.openAddressInMaps.bind(this)}>
-              <Text style={styles.addressFieldValue}>{event.details.address}</Text>
-            </TouchableHighlight>
+            <View style={styles.buttonRow}>
+              <Button style={styles.button} onPress={this.validateAddress.bind(this)} title='בדוק כתובת' disabled={!this.state.needToValidateAddress}/>
+            </View>
+            : undefined
           }
-        </View>
-        {editable ?
-          <View style={styles.buttonRow}>
-            <Button style={styles.button} onPress={this.validateAddress.bind(this)} title='בדוק כתובת' disabled={!this.state.needToValidateAddress}/>
+          <View>
+            <Text style={styles.fieldName}>בעיה</Text>
+            {!editable ?
+              <Text style={styles.fieldValue}>{formatEventCase(event)}</Text>
+              :
+              this.renderEventCasePicker()
+            }
           </View>
-          : undefined
-        }
-        <View>
-          <Text style={styles.fieldName}>בעיה</Text>
-          {!editable ?
-            <Text style={styles.fieldValue}>{formatEventCase(event)}</Text>
-            :
-            this.renderEventCasePicker()
-          }
+          <View>
+            <Text style={styles.fieldName}>סוג רכב</Text>
+            <EventDetailsInputField field='car type' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
+          </View>
+          <View>
+            <Text style={styles.fieldName}>פרטים</Text>
+            <EventDetailsInputField field='more' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
+          </View>
+          <View>
+            <Text style={styles.fieldName}>טלפון</Text>
+            <EventDetailsInputField field='phone number' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
+          </View>
+          <View>
+            <Text style={styles.fieldName}>שם</Text>
+            <EventDetailsInputField field='caller name' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
+          </View>
+          {this.renderButtonsRow(event)}
         </View>
-        <View>
-          <Text style={styles.fieldName}>סוג רכב</Text>
-          <EventDetailsInputField field='car type' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
-        </View>
-        <View>
-          <Text style={styles.fieldName}>פרטים</Text>
-          <EventDetailsInputField field='more' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
-        </View>
-        <View>
-          <Text style={styles.fieldName}>טלפון</Text>
-          <EventDetailsInputField field='phone number' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
-        </View>
-        <View>
-          <Text style={styles.fieldName}>שם</Text>
-          <EventDetailsInputField field='caller name' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
-        </View>
-        {this.renderButtonsRow(event)}
-      </View>
       </KeyboardAwareScrollViewComponent>
     );
   }
