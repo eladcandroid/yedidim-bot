@@ -14,16 +14,29 @@ export async function geocodeAddress(address) {
       return undefined;
     }
     const addressComponents = results[0].address_components;
-    //TODO map components by the name
+    if (!addressComponents || addressComponents.length === 0){
+      return undefined;
+    }
+    const street_number = getAddressComponent(addressComponents, 'street_number');
+    const street_name = getAddressComponent(addressComponents, 'route') || getAddressComponent(addressComponents, 'neighborhood');
+    const city = getAddressComponent(addressComponents, 'locality');
+    if (!city || !street_name){
+      return undefined;
+    }
     return {
       address: results[0].formatted_address,
       geo: results[0].geometry.location,
-      street_number: addressComponents[0].long_name,
-      street_name: addressComponents[1].long_name,
-      city: addressComponents[2].long_name
+      street_number: street_number ? street_number : 0,
+      street_name: street_name,
+      city: city
     };
   } catch(error) {
     console.error(error);
     return undefined;
   }
+}
+
+function getAddressComponent(addressComponents, field) {
+  const component = addressComponents.find(comp => comp.types.includes(field));
+  return component ? component.long_name : undefined;
 }

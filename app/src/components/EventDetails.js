@@ -52,10 +52,13 @@ class KeyboardAwareScrollViewComponent extends React.Component {
 class EventDetails extends Component {
   constructor(props) {
     super(props);
-    this.state = {address: undefined, geo: undefined, case: 8, street_number: 0};
+    this.state = {address: undefined, geo: undefined, case: 8, street_number: 0, needToValidateAddress: false};
   }
 
   updateEvent(field, value) {
+    if (field === 'address'){
+      this.setState({geo: undefined, needToValidateAddress: true});
+    }
     this.setState({[field]: value});
   }
 
@@ -79,10 +82,11 @@ class EventDetails extends Component {
       this.setState({error: {message: 'לא הוזנה כתובת', field: 'address'}});
       return false;
     }
+    this.setState({needToValidateAddress: false});
     const location = await geocodeAddress(this.state.address);
     console.log(location);
     if (!location){
-      this.setState({error: {message: 'כתובת לא חוקית', field: 'address'}});
+      this.setState({error: {message: 'כתובת לא חוקית', field: 'address', needToValidateAddress: true}});
       return false;
     }
     this.setState(location);
@@ -223,7 +227,7 @@ class EventDetails extends Component {
         </View>
         {editable ?
           <View style={styles.buttonRow}>
-            <Button style={styles.button} onPress={this.validateAddress.bind(this)} title='בדוק כתובת'/>
+            <Button style={styles.button} onPress={this.validateAddress.bind(this)} title='בדוק כתובת' disabled={!this.state.needToValidateAddress}/>
           </View>
           : undefined
         }
