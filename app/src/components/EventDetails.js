@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text, TextInput, Button, Clipboard, Alert, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, TextInput, Button, Clipboard, Alert, TouchableHighlight, Linking, StyleSheet } from 'react-native';
 import { Picker } from 'native-base';
-import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText } from "../common/utils";
+import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
 import { EventCases, EventStatus, EventSource } from "../constants/consts";
 import { createEvent, updateEventStatus } from "../actions/dataSourceActions";
 import { geocodeAddress } from "../actions/geocodingActions";
@@ -104,6 +104,11 @@ class EventDetails extends Component {
     )
 
   }
+
+  openAddressInMaps() {
+    Linking.openURL(getGoogleMapsUrl(this.props.event));
+  }
+
   copyEventDetailsToClipboard() {
     Clipboard.setString(getEventDetailsText(this.props.event));
     this.props.goBack();
@@ -141,6 +146,7 @@ class EventDetails extends Component {
       </Picker>
     )
   }
+
   renderButtonsRow(event) {
     const status = getEventStatus(event);
     switch (status) {
@@ -185,9 +191,15 @@ class EventDetails extends Component {
         }
         <View>
           <Text style={styles.fieldName}>כתובת</Text>
-          <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
+          {editable ?
+            <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
+            :
+            <TouchableHighlight onPress={this.openAddressInMaps.bind(this)}>
+              <Text style={styles.addressFieldValue}>{event.details.address}</Text>
+            </TouchableHighlight>
+          }
         </View>
-        {this.props.editable?
+        {editable ?
           <View style={styles.buttonRow}>
             <Button style={styles.button} onPress={this.validateAddress.bind(this)} title='בדוק כתובת'/>
           </View>
@@ -195,7 +207,7 @@ class EventDetails extends Component {
         }
         <View>
           <Text style={styles.fieldName}>בעיה</Text>
-          {!this.props.editable ?
+          {!editable ?
             <Text style={styles.fieldValue}>{formatEventCase(event)}</Text>
             :
             this.renderEventCasePicker()
@@ -277,6 +289,12 @@ const styles = StyleSheet.create({
   fieldValue: {
     textAlign:'right',
     maxHeight: 50
+  },
+  addressFieldValue: {
+    textAlign:'right',
+    maxHeight: 50,
+    backgroundColor: 'white',
+    textDecorationLine: 'underline'
   },
   fieldValueEditable: {
     height: 40,
