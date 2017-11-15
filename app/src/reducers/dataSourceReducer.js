@@ -27,6 +27,13 @@ export function dataSourceReducer(state = {}, action) {
     case ADD_EVENT: {
       let events = Object.assign([], state.events);
       events.push(action.event);
+      events.sort((c1, c2) => {
+        if (c1.timestamp > c2.timestamp)
+          return -1;
+        if (c1.timestamp < c2.timestamp)
+          return 1;
+        return 0;
+      });
       return Object.assign({}, state, {events});
     }
     case SET_NOTIFICATIONS: {

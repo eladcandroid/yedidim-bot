@@ -48,7 +48,7 @@ export function checkUserAuth() {
 }
 
 export function signIn(id, phone, onError) {
-  return (dispatch => {
+  return (() => {
     const email = id + '@yedidim.org';
     firebase.auth().signInWithEmailAndPassword(email, phone)
       .catch(function (err) {
@@ -116,8 +116,6 @@ export function createEvent(event) {
     firebase.database().ref('events/' + event.key).set(event, (err) => {
       if (err) {
         dispatch(setError('Failed to create event!', err));
-      } else {
-        dispatch(setEvent(event));
       }
     });
   });
