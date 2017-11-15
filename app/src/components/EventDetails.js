@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text, TextInput, Button, Clipboard, Alert, TouchableHighlight, Linking, StyleSheet } from 'react-native';
+import { Platform, KeyboardAvoidingView, ScrollView, View, Text, TextInput, Button, Clipboard, Alert, TouchableHighlight, Linking, StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Picker } from 'native-base';
 import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
 import { EventCases, EventStatus, EventSource } from "../constants/consts";
@@ -24,6 +25,27 @@ class EventDetailsInputField extends Component {
                  value={this.props.state[this.props.field]}
                  onChangeText={(value) => this.changeValue(value)}/>
     );
+  }
+}
+
+class KeyboardAwareScrollViewComponent extends React.Component {
+
+  render() {
+    if (Platform.OS === 'ios') {
+      return (
+        <KeyboardAwareScrollView {...this.props} style={styles.scrollContainer}>
+          {this.props.children}
+        </KeyboardAwareScrollView>
+      )
+    }
+
+    return (
+      <KeyboardAvoidingView {...this.props} style={styles.scrollContainer} behavior="padding" keyboardVerticalOffset={100}>
+        <ScrollView>
+          {this.props.children}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    )
   }
 }
 
@@ -179,7 +201,7 @@ class EventDetails extends Component {
     const event = this.props.event;
     const editable = this.props.editable;
     return (
-      <ScrollView style={styles.scrollContainer}>
+      <KeyboardAwareScrollViewComponent>
       <View style={styles.container}>
         {this.showValidationError()}
         {event.timestamp ?
@@ -231,7 +253,7 @@ class EventDetails extends Component {
         </View>
         {this.renderButtonsRow(event)}
       </View>
-      </ScrollView>
+      </KeyboardAwareScrollViewComponent>
     );
   }
 }
