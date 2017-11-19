@@ -25,6 +25,10 @@ const withNotificationManager = WrappedComponent => {
 
     handleNotification = ({ origin, data, remote }) => {
       if (remote) {
+        // Add event to store
+        const { eventId } = data
+        this.props.addEvent(eventId)
+
         // Only listen to remote notifications
         if (origin === 'received') {
           // The app if foregrounded
@@ -44,7 +48,7 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const { saveNotificationToken, ...other } = this.props
+      const { saveNotificationToken, addEvent, ...other } = this.props
       return <WrappedComponent {...other} />
     }
   }
@@ -52,7 +56,9 @@ const withNotificationManager = WrappedComponent => {
   // As described at https://github.com/react-community/react-navigation/issues/90
   Component.router = WrappedComponent.router
 
-  return Component
+  return inject(({ stores }) => ({
+    addEvent: stores.eventStore.addEvent
+  }))(observer(Component))
 }
 
 export default withNotificationManager

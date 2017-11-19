@@ -88,3 +88,12 @@ export async function signIn({ verificationId, code }) {
 export async function signOut() {
   return firebase.auth().signOut()
 }
+
+export function subscribeToEvent(eventKey, onChangeCallback) {
+  return firebase
+    .database()
+    .ref(`events/${eventKey}`)
+    .on('value', snapshot => {
+      onChangeCallback(snapshot.val())
+    })
+}
