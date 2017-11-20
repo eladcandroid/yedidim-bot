@@ -13,14 +13,19 @@ import {
   Icon,
   Right,
   Text,
-  H3
+  H3,
+  List,
+  ListItem,
+  Thumbnail
 } from 'native-base'
 
 const StyledView = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  margin: 20px 0;
+  padding: 15px 0;
+  border-bottom-width: 1px;
+  border-bottom-color: #ccc;
 `
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
@@ -35,7 +40,9 @@ class HomeScreen extends Component {
       <Header>
         <Left />
         <Body>
-          <Title>Home</Title>
+          <FormattedMessage id="Home.title" defaultMessage="Home">
+            {txt => <Title>{txt}</Title>}
+          </FormattedMessage>
         </Body>
         <Right>
           <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
@@ -51,7 +58,7 @@ class HomeScreen extends Component {
 
     return (
       <Container>
-        <Content padder style={{ backgroundColor: '#fff' }}>
+        <Content style={{ backgroundColor: '#fff' }}>
           <StyledView>
             <FormattedMessage
               id="Home.welcome"
@@ -60,17 +67,28 @@ class HomeScreen extends Component {
             >
               {txt => <H3>{txt}</H3>}
             </FormattedMessage>
-            <Button
-              block
-              onPress={() => {
-                this.props.navigation.navigate('Event', { eventId: 'test123' })
-              }}
-            >
-              <FormattedMessage id="Home.openevent" defaultMessage="Open Event">
-                {txt => <Text>{txt}</Text>}
-              </FormattedMessage>
-            </Button>
           </StyledView>
+          <List>
+            <ListItem avatar>
+              <Left>
+                <Thumbnail
+                  source={{
+                    uri:
+                      'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
+                  }}
+                />
+              </Left>
+              <Body>
+                <Text>Kumar Pratik</Text>
+                <Text note>
+                  Doing what you like will always keep you happy . .
+                </Text>
+              </Body>
+              <Right>
+                <Text note>3:43 pm</Text>
+              </Right>
+            </ListItem>
+          </List>
         </Content>
       </Container>
     )
