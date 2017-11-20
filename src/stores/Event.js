@@ -10,7 +10,7 @@ export const Event = types
     address: types.maybe(types.string),
     caller: types.maybe(types.string),
     carType: types.maybe(types.string),
-    type: types.maybe(types.number),
+    type: types.maybe(types.number), // case in FB
     city: types.maybe(types.string),
     fullAddress: types.maybe(types.string),
     lat: types.maybe(types.number),

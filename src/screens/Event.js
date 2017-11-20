@@ -53,9 +53,19 @@ class EventScreen extends Component {
   })
 
   render() {
-    const { state: { params: { eventId } } } = this.props.navigation
-
-    const event = this.props.findById(eventId)
+    const { navigation, findById } = this.props
+    const { state: { params: { eventId } } } = navigation
+    const {
+      type,
+      timestamp,
+      lat,
+      lon,
+      caller,
+      more,
+      fullAddress,
+      phone,
+      carType
+    } = findById(eventId)
 
     return (
       <Container>
@@ -70,8 +80,8 @@ class EventScreen extends Component {
                   }}
                 />
                 <Body>
-                  <H2>Tire Puncture</H2>
-                  <Text note>10 minutes ago</Text>
+                  <H2>{`${type}`}</H2>
+                  <Text note>{`10 minutes ago - ${timestamp}`}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -80,38 +90,38 @@ class EventScreen extends Component {
                 <MapView
                   style={{ height: 200, width: '100%', flex: 1 }}
                   region={{
-                    latitude: 32.0801258,
-                    longitude: 34.7898816,
+                    latitude: lat,
+                    longitude: lon,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421
                   }}
                   showsMyLocationButton
                 >
                   <MapView.Marker
-                    coordinate={{ latitude: 32.0801258, longitude: 34.7898816 }}
-                    title="Alan Rubin"
-                    description="Tire Puncture"
+                    coordinate={{ latitude: lat, longitude: lon }}
+                    title={caller}
+                    description={more}
                   />
                 </MapView>
                 <InfoItem>
                   <BoldText>Description:</BoldText>
-                  <Text>All tires without air pressure</Text>
+                  <Text>{more}</Text>
                 </InfoItem>
                 <InfoItem>
                   <BoldText>Location:</BoldText>
-                  <Text>Tsofiah Street 1, Kedumim</Text>
+                  <Text>{fullAddress}</Text>
                 </InfoItem>
                 <InfoItem>
                   <BoldText>Name:</BoldText>
-                  <Text>Alan Rubin</Text>
+                  <Text>{caller}</Text>
                 </InfoItem>
                 <InfoItem>
                   <BoldText>Phone:</BoldText>
-                  <Text>0547344452</Text>
+                  <Text>{phone}</Text>
                 </InfoItem>
                 <InfoItem>
                   <BoldText>Car type:</BoldText>
-                  <Text>Citroen C4</Text>
+                  <Text>{carType}</Text>
                 </InfoItem>
               </Body>
             </CardItem>
