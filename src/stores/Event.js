@@ -49,6 +49,12 @@ const EventStore = types
   .views(self => ({
     findById(eventId) {
       return self.events.get(eventId)
+    },
+    get allEvents() {
+      return self.events.values()
+    },
+    get hasEvents() {
+      return self.events.size > 0
     }
   }))
   .actions(self => ({

@@ -28,6 +28,13 @@ const StyledView = styled.View`
   border-bottom-color: #ccc;
 `
 
+const MessageView = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 0;
+`
+
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
 // TODO Remove token after user logout
@@ -54,7 +61,7 @@ class HomeScreen extends Component {
   })
 
   render() {
-    const { currentUser } = this.props
+    const { currentUser, hasEvents, allEvents } = this.props
 
     return (
       <Container>
@@ -68,27 +75,38 @@ class HomeScreen extends Component {
               {txt => <H3>{txt}</H3>}
             </FormattedMessage>
           </StyledView>
-          <List>
-            <ListItem avatar>
-              <Left>
-                <Thumbnail
-                  source={{
-                    uri:
-                      'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
-                  }}
-                />
-              </Left>
-              <Body>
-                <Text>Kumar Pratik</Text>
-                <Text note>
-                  Doing what you like will always keep you happy . .
-                </Text>
-              </Body>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </ListItem>
-          </List>
+          {hasEvents ? (
+            <List>
+              <ListItem avatar>
+                <Left>
+                  <Thumbnail
+                    source={{
+                      uri:
+                        'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
+                    }}
+                  />
+                </Left>
+                <Body>
+                  <Text>Kumar Pratik</Text>
+                  <Text note>
+                    Doing what you like will always keep you happy . .
+                  </Text>
+                </Body>
+                <Right>
+                  <Text note>3:43 pm</Text>
+                </Right>
+              </ListItem>
+            </List>
+          ) : (
+            <MessageView>
+              <FormattedMessage
+                id="Home.noevents"
+                defaultMessage="Sorry, no events were found"
+              >
+                {txt => <Text>{txt}</Text>}
+              </FormattedMessage>
+            </MessageView>
+          )}
         </Content>
       </Container>
     )
@@ -96,5 +114,7 @@ class HomeScreen extends Component {
 }
 
 export default inject(({ stores }) => ({
-  currentUser: stores.authStore.currentUser
+  currentUser: stores.authStore.currentUser,
+  hasEvents: stores.eventStore.hasEvents,
+  allEvents: stores.eventStore.allEvents
 }))(HomeScreen)
