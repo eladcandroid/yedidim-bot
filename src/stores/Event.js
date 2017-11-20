@@ -10,7 +10,7 @@ export const Event = types
     address: types.maybe(types.string),
     caller: types.maybe(types.string),
     carType: types.maybe(types.string),
-    type: types.maybe(types.string),
+    type: types.maybe(types.number),
     city: types.maybe(types.string),
     fullAddress: types.maybe(types.string),
     lat: types.maybe(types.number),
@@ -18,14 +18,14 @@ export const Event = types
     more: types.maybe(types.string),
     phone: types.maybe(types.string),
     streetName: types.maybe(types.string),
-    streetNumber: types.maybe(types.string),
+    streetNumber: types.maybe(types.number),
     isLoading: true
   })
   .actions(self => ({
     onEventUpdated: eventData => {
       // console.log('subscribed to event triggered', eventData)
       // Update properties
-      self.caller = eventData['caller name']
+      Object.assign(self, eventData)
       // Not loading anymore (if it was loading)
       self.isLoading = false
     },
@@ -46,6 +46,11 @@ const EventStore = types
   .model('EventStore', {
     events: types.map(Event)
   })
+  .views(self => ({
+    findById(eventId) {
+      return self.events.get(eventId)
+    }
+  }))
   .actions(self => ({
     addEvent: eventId => {
       self.events.put(
