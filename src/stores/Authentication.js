@@ -27,7 +27,7 @@ const AuthenticationStore = types
         // Not authenticated
         self.currentUser = null
       } else {
-        console.log('>>>> Authenticated Changed!', userAuth, userInfo)
+        // console.log('>>>> Authenticated Changed!', userAuth, userInfo)
         self.currentUser = User.create({
           guid: userAuth.phoneNumber,
           name: `${userInfo.FirstName} ${userInfo.LastName}`,
@@ -39,7 +39,7 @@ const AuthenticationStore = types
     }
 
     function onError(error) {
-      console.log('>>>>', error)
+      // console.log('>>>>', error)
       self.error = error
       self.isLoading = false
     }
@@ -64,7 +64,7 @@ const AuthenticationStore = types
           verificationId,
           code
         })
-        console.log('Logged In!', userAuth, userInfo)
+        // console.log('Logged In!', userAuth, userInfo)
       } catch (error) {
         this.error = error
       }
@@ -76,7 +76,7 @@ const AuthenticationStore = types
 
       try {
         yield api.signOut()
-        console.log('Logged Out!')
+        // console.log('Logged Out!')
       } catch (error) {
         this.error = error
       }
