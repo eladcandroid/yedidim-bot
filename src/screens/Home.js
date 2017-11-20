@@ -40,6 +40,30 @@ const MessageView = styled.View`
 // TODO Remove token after user logout
 // TODO On notification, save the event data to event store and sync with firebase?
 
+const EventItem = observer(({ onPress, event }) => (
+  <ListItem
+    avatar
+    onPress={() => {
+      onPress(event.guid)
+    }}
+  >
+    <Left>
+      <Thumbnail
+        source={{
+          uri: 'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
+        }}
+      />
+    </Left>
+    <Body>
+      <Text>{event.caller}</Text>
+      <Text note>{event.more}</Text>
+    </Body>
+    <Right>
+      <Text note>11:22pm</Text>
+    </Right>
+  </ListItem>
+))
+
 @observer
 class HomeScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -60,13 +84,17 @@ class HomeScreen extends Component {
     )
   })
 
+  handleEventItemPress = eventId => {
+    this.props.navigation.navigate('Event', { eventId })
+  }
+
   render() {
     const { currentUser, hasEvents, allEvents } = this.props
 
     return (
       <Container>
         <Content style={{ backgroundColor: '#fff' }}>
-          <StyledView>
+          {/* <StyledView>
             <FormattedMessage
               id="Home.welcome"
               defaultMessage="Welcome {name}"
@@ -74,29 +102,14 @@ class HomeScreen extends Component {
             >
               {txt => <H3>{txt}</H3>}
             </FormattedMessage>
-          </StyledView>
+          </StyledView> */}
           {hasEvents ? (
-            <List>
-              <ListItem avatar>
-                <Left>
-                  <Thumbnail
-                    source={{
-                      uri:
-                        'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
-                    }}
-                  />
-                </Left>
-                <Body>
-                  <Text>Kumar Pratik</Text>
-                  <Text note>
-                    Doing what you like will always keep you happy . .
-                  </Text>
-                </Body>
-                <Right>
-                  <Text note>3:43 pm</Text>
-                </Right>
-              </ListItem>
-            </List>
+            <List
+              dataArray={allEvents}
+              renderRow={event => (
+                <EventItem event={event} onPress={this.handleEventItemPress} />
+              )}
+            />
           ) : (
             <MessageView>
               <FormattedMessage
