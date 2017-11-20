@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Main from 'Main'
-import Stores from 'Stores'
 import Expo from 'expo'
+import createRootStore from 'stores'
 import { Provider } from 'mobx-react/native'
 import { addLocaleData, IntlProvider } from 'react-intl'
 import en from 'react-intl/locale-data/en'
@@ -18,7 +18,7 @@ const localeData = {
 addLocaleData([...en, ...he])
 
 // Initialiase stores
-const stores = Stores()
+const stores = createRootStore()
 
 export default class App extends Component {
   state = {
@@ -39,7 +39,7 @@ export default class App extends Component {
 
     return (
       <IntlProvider locale={language} messages={localeData[language]}>
-        <Provider {...stores}>
+        <Provider stores={stores}>
           <Main isReady={isReady} />
         </Provider>
       </IntlProvider>

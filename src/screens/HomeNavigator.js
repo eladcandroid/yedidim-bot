@@ -1,5 +1,5 @@
 import { StackNavigator } from 'react-navigation'
-import withNotificationManager from 'Components/NotificationManager'
+import withNotificationManager from 'components/NotificationManager'
 import Home from './Home'
 import Event from './Event'
 

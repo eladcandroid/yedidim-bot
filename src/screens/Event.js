@@ -48,11 +48,13 @@ class EventScreen extends Component {
   render() {
     const { state: { params: { eventId } } } = this.props.navigation
 
+    const event = this.props.findById(eventId)
+
     return (
       <Container>
         <Content padder style={{ backgroundColor: '#fff' }}>
           <StyledView>
-            <H3>Event page for {eventId}</H3>
+            <H3>Event page for {event.caller}</H3>
           </StyledView>
         </Content>
       </Container>
@@ -60,6 +62,7 @@ class EventScreen extends Component {
   }
 }
 
-export default inject(({ Authentication }) => ({
-  user: Authentication.user
+export default inject(({ stores }) => ({
+  currentUser: stores.authStore.currentUser,
+  findById: stores.eventStore.findById
 }))(EventScreen)

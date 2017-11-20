@@ -47,7 +47,7 @@ class HomeScreen extends Component {
   })
 
   render() {
-    const { user } = this.props
+    const { currentUser } = this.props
 
     return (
       <Container>
@@ -56,7 +56,7 @@ class HomeScreen extends Component {
             <FormattedMessage
               id="Home.welcome"
               defaultMessage="Welcome {name}"
-              values={{ name: `${user.FirstName} ${user.LastName}` }}
+              values={{ name: `${currentUser.name}` }}
             >
               {txt => <H3>{txt}</H3>}
             </FormattedMessage>
@@ -77,6 +77,6 @@ class HomeScreen extends Component {
   }
 }
 
-export default inject(({ Authentication }) => ({
-  user: Authentication.user
+export default inject(({ stores }) => ({
+  currentUser: stores.authStore.currentUser
 }))(HomeScreen)
