@@ -89,11 +89,29 @@ export async function signOut() {
   return firebase.auth().signOut()
 }
 
+const snapshotToJSON = snapshot => ({
+  guid: snapshot.key,
+  status: snapshot.status,
+  timestamp: snapshot.timestamp,
+  address: snapshot.details.address,
+  caller: snapshot.details['caller name'],
+  carType: snapshot.details['car type'],
+  type: snapshot.details.case,
+  city: snapshot.details.city,
+  fullAddress: snapshot.details.full_address,
+  lat: snapshot.details.geo.lat,
+  lon: snapshot.details.geo.lon,
+  more: snapshot.details.more,
+  phone: snapshot.details['phone number'],
+  streetName: snapshot.details.street_name,
+  streetNumber: snapshot.details.street_number
+})
+
 export function subscribeToEvent(eventKey, onChangeCallback) {
   return firebase
     .database()
     .ref(`events/${eventKey}`)
     .on('value', snapshot => {
-      onChangeCallback(snapshot.val())
+      onChangeCallback(snapshotToJSON(snapshot.val()))
     })
 }

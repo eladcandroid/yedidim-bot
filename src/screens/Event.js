@@ -48,8 +48,6 @@ class EventScreen extends Component {
   render() {
     const { state: { params: { eventId } } } = this.props.navigation
 
-    console.log('Events!', this.props.events)
-
     return (
       <Container>
         <Content padder style={{ backgroundColor: '#fff' }}>

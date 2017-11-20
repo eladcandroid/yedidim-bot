@@ -22,15 +22,18 @@ export const Event = types
     isLoading: true
   })
   .actions(self => ({
+    onEventUpdated: eventData => {
+      // console.log('subscribed to event triggered', eventData)
+      // Update properties
+      self.caller = eventData['caller name']
+      // Not loading anymore (if it was loading)
+      self.isLoading = false
+    },
     afterCreate: () => {
-      console.log('onAfterCreate added by notification', self.guid)
+      // console.log('onAfterCreate added by notification', self.guid)
       self.unwatchAuth = api.subscribeToEvent(self.guid, eventData => {
         runInAction(() => {
-          console.log('subscribed to event triggered', eventData)
-          // Update properties
-          self.caller = eventData['caller name']
-          // Not loading anymore (if it was loading)
-          self.isLoading = false
+          self.onEventUpdated(eventData)
         })
       })
     },
