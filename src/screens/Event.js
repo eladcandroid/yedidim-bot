@@ -11,6 +11,9 @@ import {
   Title,
   Left,
   Icon,
+  Grid,
+  Col,
+  Row,
   Right,
   Text,
   H2,
@@ -21,7 +24,7 @@ import {
 import { MapView } from 'expo'
 
 const InfoItem = styled.View`
-  margin: 10px 0;
+  margin: 10px 10px;
 `
 
 const BoldText = styled.Text`
@@ -69,26 +72,30 @@ class EventScreen extends Component {
 
     return (
       <Container>
-        <Content padder style={{ backgroundColor: '#fff' }}>
-          <Card style={{ flex: 0 }}>
-            <CardItem>
-              <Left>
-                <Thumbnail
-                  source={{
-                    uri:
-                      'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
-                  }}
-                />
-                <Body>
+        <Content style={{ backgroundColor: '#fff' }}>
+          <Grid>
+            <Row>
+              <Col size={1}>
+                <InfoItem>
+                  <Thumbnail
+                    source={{
+                      uri:
+                        'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
+                    }}
+                  />
+                </InfoItem>
+              </Col>
+              <Col size={3}>
+                <InfoItem>
                   <H2>{`${type}`}</H2>
                   <Text note>{`10 minutes ago - ${timestamp}`}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem>
-              <Body>
+                </InfoItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <MapView
-                  style={{ height: 200, width: '100%', flex: 1 }}
+                  style={{ height: 200, flex: 1 }}
                   region={{
                     latitude: lat,
                     longitude: lon,
@@ -103,59 +110,83 @@ class EventScreen extends Component {
                     description={more}
                   />
                 </MapView>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <InfoItem>
                   <BoldText>Description:</BoldText>
                   <Text>{more}</Text>
                 </InfoItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <InfoItem>
                   <BoldText>Location:</BoldText>
                   <Text>{fullAddress}</Text>
                 </InfoItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <InfoItem>
                   <BoldText>Name:</BoldText>
                   <Text>{caller}</Text>
                 </InfoItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <InfoItem>
                   <BoldText>Phone:</BoldText>
                   <Text>{phone}</Text>
                 </InfoItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <InfoItem>
                   <BoldText>Car type:</BoldText>
                   <Text>{carType}</Text>
                 </InfoItem>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Button block info>
-                  <Icon name="md-map" />
-                  <Text>Navigate to location</Text>
-                </Button>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Button block success>
-                  <Icon name="md-call" />
-                  <Text>Call Person</Text>
-                </Button>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Left>
-                <Button danger>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <InfoItem>
+                  <Button block info>
+                    <Icon name="md-map" />
+                    <Text>Navigate to location</Text>
+                  </Button>
+                </InfoItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <InfoItem>
+                  <Button block success>
+                    <Icon name="md-call" />
+                    <Text>Call Person</Text>
+                  </Button>
+                </InfoItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button full large block danger>
                   <Icon name="md-close-circle" />
                   <Text>Ignore</Text>
                 </Button>
-              </Left>
-              <Right>
-                <Button success>
+              </Col>
+              <Col>
+                <Button full large block success>
                   <Icon name="md-checkmark-circle" />
                   <Text>Accept</Text>
                 </Button>
-              </Right>
-            </CardItem>
-          </Card>
+              </Col>
+            </Row>
+          </Grid>
         </Content>
       </Container>
     )
