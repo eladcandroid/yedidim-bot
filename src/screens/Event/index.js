@@ -17,11 +17,10 @@ import {
   Right,
   Text,
   H2,
-  Card,
-  CardItem,
   Thumbnail
 } from 'native-base'
 import { MapView } from 'expo'
+import TextFieldRow from './TextFieldRow'
 
 const InfoItem = styled.View`
   margin: 10px 10px;
@@ -30,6 +29,7 @@ const InfoItem = styled.View`
 const BoldText = styled.Text`
   font-weight: bold;
   font-size: 16px;
+  padding: 0 10px;
 `
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
@@ -112,14 +112,7 @@ class EventScreen extends Component {
                 </MapView>
               </Col>
             </Row>
-            <Row>
-              <Col>
-                <InfoItem>
-                  <BoldText>Description:</BoldText>
-                  <Text>{more}</Text>
-                </InfoItem>
-              </Col>
-            </Row>
+            <TextFieldRow label="תיאור" value={more} />
             <Row>
               <Col>
                 <InfoItem>
