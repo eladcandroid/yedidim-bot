@@ -59,11 +59,14 @@ const EventStore = types
   }))
   .actions(self => ({
     addEvent: eventId => {
-      self.events.put(
-        Event.create({
-          guid: eventId
-        })
-      )
+      // If no event was added, add new to store
+      if (!self.events.get(eventId)) {
+        self.events.put(
+          Event.create({
+            guid: eventId
+          })
+        )
+      }
     }
   }))
 export default EventStore
