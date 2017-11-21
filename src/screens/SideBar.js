@@ -1,11 +1,15 @@
 import React from 'react'
 import { Text, Container, List, ListItem, Content } from 'native-base'
-import { Image } from 'react-native'
+import { Image, AsyncStorage } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 // import styled from 'styled-components/native'
 import Logo from './logo.png'
 
-const SideBar = ({ signOut, currentUser: { name, phone } }) => (
+const SideBar = ({
+  signOut,
+  currentUser: { name, phone },
+  addEventFromNotification
+}) => (
   <Container>
     <Content>
       <Image
@@ -30,6 +34,26 @@ const SideBar = ({ signOut, currentUser: { name, phone } }) => (
         <ListItem button onPress={signOut}>
           <Text>Sign out</Text>
         </ListItem>
+        <ListItem
+          button
+          onPress={() => {
+            addEventFromNotification('-KwEbiayp9GQvqFESoFl')
+          }}
+        >
+          <Text>DEBUG: New Event AsyncStorage</Text>
+        </ListItem>
+        <ListItem
+          button
+          onPress={() =>
+            AsyncStorage.setItem(
+              '@YedidimNative:events',
+              JSON.stringify({})
+            ).then(() => {
+              console.log('Cleared events on AsyncStorage')
+            })}
+        >
+          <Text>DEBUG: Clear AsyncStorage</Text>
+        </ListItem>
       </List>
     </Content>
   </Container>
@@ -37,5 +61,6 @@ const SideBar = ({ signOut, currentUser: { name, phone } }) => (
 
 export default inject(({ stores }) => ({
   signOut: stores.authStore.signOut,
-  currentUser: stores.authStore.currentUser
+  currentUser: stores.authStore.currentUser,
+  addEventFromNotification: stores.eventStore.addEventFromNotification
 }))(observer(SideBar))
