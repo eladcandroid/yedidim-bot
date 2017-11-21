@@ -141,11 +141,16 @@ class EventScreen extends Component {
             <Row>
               <Col>
                 <MarginView>
-                  <Button block info>
+                  <Button
+                    block
+                    info
+                    onPress={() =>
+                      Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
+                  >
                     <Icon name="md-map" />
                     <FormattedMessage
                       id="Event.button.navigate"
-                      defaultMessage="Navigate to location"
+                      defaultMessage="Navigate with Waze"
                     >
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
