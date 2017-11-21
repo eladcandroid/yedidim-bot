@@ -16,16 +16,17 @@ const MainText = styled.Text`
   text-align: right;
 `
 
-const TextFieldRow = ({ label, value }) => (
-  <Row>
-    <Col>
-      <InfoItem>
-        <MainText>
-          <BoldText>{label}:</BoldText> <Text>{value}</Text>
-        </MainText>
-      </InfoItem>
-    </Col>
-  </Row>
-)
+const TextFieldRow = ({ label, value }) =>
+  value ? (
+    <Row>
+      <Col>
+        <InfoItem>
+          <MainText>
+            <BoldText>{label}:</BoldText> <Text>{value}</Text>
+          </MainText>
+        </InfoItem>
+      </Col>
+    </Row>
+  ) : null
 
 export default TextFieldRow

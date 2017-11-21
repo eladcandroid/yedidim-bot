@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
+import { FormattedMessage, FormattedRelative } from 'react-intl'
 
 import {
   Button,
@@ -22,14 +23,16 @@ import {
 import { MapView } from 'expo'
 import TextFieldRow from './TextFieldRow'
 
-const InfoItem = styled.View`
+const MarginView = styled.View`
   margin: 10px 10px;
 `
 
-const BoldText = styled.Text`
-  font-weight: bold;
-  font-size: 16px;
-  padding: 0 10px;
+const RightText = styled(Text)`
+  text-align: right;
+`
+
+const RightH2 = styled(H2)`
+  text-align: right;
 `
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
@@ -48,7 +51,9 @@ class EventScreen extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Event Details</Title>
+          <FormattedMessage id="Event.title" defaultMessage="Event">
+            {txt => <Title>{txt}</Title>}
+          </FormattedMessage>
         </Body>
         <Right />
       </Header>
@@ -59,7 +64,8 @@ class EventScreen extends Component {
     const { navigation, findById } = this.props
     const { state: { params: { eventId } } } = navigation
     const {
-      type,
+      eventType,
+      eventTypeImage,
       timestamp,
       lat,
       lon,
@@ -75,21 +81,22 @@ class EventScreen extends Component {
         <Content style={{ backgroundColor: '#fff' }}>
           <Grid>
             <Row>
+              <Col size={3}>
+                <MarginView>
+                  <RightH2>{`${eventType}`}</RightH2>
+                  <FormattedRelative value={timestamp}>
+                    {relative => <RightText note>{relative}</RightText>}
+                  </FormattedRelative>
+                </MarginView>
+              </Col>
               <Col size={1}>
-                <InfoItem>
+                <MarginView>
                   <Thumbnail
                     source={{
-                      uri:
-                        'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
+                      uri: eventTypeImage
                     }}
                   />
-                </InfoItem>
-              </Col>
-              <Col size={3}>
-                <InfoItem>
-                  <H2>{`${type}`}</H2>
-                  <Text note>{`10 minutes ago - ${timestamp}`}</Text>
-                </InfoItem>
+                </MarginView>
               </Col>
             </Row>
             <Row>
@@ -112,70 +119,75 @@ class EventScreen extends Component {
                 </MapView>
               </Col>
             </Row>
-            <TextFieldRow label="תיאור" value={more} />
+            <FormattedMessage
+              id="Event.description"
+              defaultMessage="Description"
+            >
+              {label => <TextFieldRow label={label} value={more} />}
+            </FormattedMessage>
+            <FormattedMessage id="Event.location" defaultMessage="Location">
+              {label => <TextFieldRow label={label} value={fullAddress} />}
+            </FormattedMessage>
+            <FormattedMessage id="Event.caller" defaultMessage="Name">
+              {label => <TextFieldRow label={label} value={caller} />}
+            </FormattedMessage>
+            <FormattedMessage id="Event.phone" defaultMessage="Phone">
+              {label => <TextFieldRow label={label} value={phone} />}
+            </FormattedMessage>
+            <FormattedMessage id="Event.carType" defaultMessage="Car type">
+              {label => <TextFieldRow label={label} value={carType} />}
+            </FormattedMessage>
             <Row>
               <Col>
-                <InfoItem>
-                  <BoldText>Location:</BoldText>
-                  <Text>{fullAddress}</Text>
-                </InfoItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <InfoItem>
-                  <BoldText>Name:</BoldText>
-                  <Text>{caller}</Text>
-                </InfoItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <InfoItem>
-                  <BoldText>Phone:</BoldText>
-                  <Text>{phone}</Text>
-                </InfoItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <InfoItem>
-                  <BoldText>Car type:</BoldText>
-                  <Text>{carType}</Text>
-                </InfoItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <InfoItem>
+                <MarginView>
                   <Button block info>
                     <Icon name="md-map" />
-                    <Text>Navigate to location</Text>
+                    <FormattedMessage
+                      id="Event.button.navigate"
+                      defaultMessage="Navigate to location"
+                    >
+                      {txt => <Text>{txt}</Text>}
+                    </FormattedMessage>
                   </Button>
-                </InfoItem>
+                </MarginView>
               </Col>
             </Row>
             <Row>
               <Col>
-                <InfoItem>
+                <MarginView>
                   <Button block success>
                     <Icon name="md-call" />
-                    <Text>Call Person</Text>
+                    <FormattedMessage
+                      id="Event.button.callPerson"
+                      defaultMessage="Call Person"
+                    >
+                      {txt => <Text>{txt}</Text>}
+                    </FormattedMessage>
                   </Button>
-                </InfoItem>
+                </MarginView>
               </Col>
             </Row>
             <Row>
               <Col>
                 <Button full large block danger>
                   <Icon name="md-close-circle" />
-                  <Text>Ignore</Text>
+                  <FormattedMessage
+                    id="Event.button.ignore"
+                    defaultMessage="Ignore"
+                  >
+                    {txt => <Text>{txt}</Text>}
+                  </FormattedMessage>
                 </Button>
               </Col>
               <Col>
                 <Button full large block success>
                   <Icon name="md-checkmark-circle" />
-                  <Text>Accept</Text>
+                  <FormattedMessage
+                    id="Event.button.accept"
+                    defaultMessage="Accept"
+                  >
+                    {txt => <Text>{txt}</Text>}
+                  </FormattedMessage>
                 </Button>
               </Col>
             </Row>
