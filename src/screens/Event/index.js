@@ -172,7 +172,7 @@ class EventScreen extends Component {
                 </MarginView>
               </Col>
             </Row>
-            <Row>
+            <Row style={{ marginTop: 10 }}>
               <Col>
                 <Button full large block danger>
                   <Icon name="md-close-circle" />
