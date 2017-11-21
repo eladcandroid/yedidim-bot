@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
+import { Linking } from 'react-native'
 
 import {
   Button,
@@ -155,7 +156,11 @@ class EventScreen extends Component {
             <Row>
               <Col>
                 <MarginView>
-                  <Button block success>
+                  <Button
+                    block
+                    success
+                    onPress={() => Linking.openURL(`tel:${phone}`)}
+                  >
                     <Icon name="md-call" />
                     <FormattedMessage
                       id="Event.button.callPerson"
