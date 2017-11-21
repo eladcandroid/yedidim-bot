@@ -84,7 +84,7 @@ class EventScreen extends Component {
             <Row>
               <Col size={3}>
                 <MarginView>
-                  <RightH2>{`${eventType}`}</RightH2>
+                  <RightH2>{eventType}</RightH2>
                   <FormattedRelative value={timestamp}>
                     {relative => <RightText note>{relative}</RightText>}
                   </FormattedRelative>

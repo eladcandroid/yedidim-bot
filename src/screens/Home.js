@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, FormattedRelative } from 'react-intl'
 import {
   Button,
   Container,
@@ -13,20 +13,10 @@ import {
   Icon,
   Right,
   Text,
-  H3,
   List,
   ListItem,
   Thumbnail
 } from 'native-base'
-
-const StyledView = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 15px 0;
-  border-bottom-width: 1px;
-  border-bottom-color: #ccc;
-`
 
 const MessageView = styled.View`
   flex: 1;
@@ -40,29 +30,38 @@ const MessageView = styled.View`
 // TODO Remove token after user logout
 // TODO On notification, save the event data to event store and sync with firebase?
 
-const EventItem = observer(({ onPress, event }) => (
-  <ListItem
-    avatar
-    onPress={() => {
-      onPress(event.guid)
-    }}
-  >
-    <Left>
-      <Thumbnail
-        source={{
-          uri: 'https://static.pakwheels.com/2016/05/tyre-repair-kit.jpg'
-        }}
-      />
-    </Left>
-    <Body>
-      <Text>{event.caller}</Text>
-      <Text note>{event.more}</Text>
-    </Body>
-    <Right>
-      <Text note>11:22pm</Text>
-    </Right>
-  </ListItem>
-))
+const EventItem = observer(
+  ({
+    onPress,
+    event: { guid, eventTypeImage, caller, more, timestamp, eventType }
+  }) => (
+    <ListItem
+      avatar
+      onPress={() => {
+        onPress(guid)
+      }}
+    >
+      <Left>
+        <Thumbnail
+          source={{
+            uri: eventTypeImage
+          }}
+        />
+      </Left>
+      <Body>
+        <Text>
+          {eventType} : {caller}
+        </Text>
+        <Text note>{more}</Text>
+      </Body>
+      <Right>
+        <FormattedRelative value={timestamp}>
+          {relative => <Text note>{relative}</Text>}
+        </FormattedRelative>
+      </Right>
+    </ListItem>
+  )
+)
 
 @observer
 class HomeScreen extends Component {
@@ -89,20 +88,11 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { currentUser, hasEvents, allEvents } = this.props
+    const { hasEvents, allEvents } = this.props
 
     return (
       <Container>
         <Content style={{ backgroundColor: '#fff' }}>
-          {/* <StyledView>
-            <FormattedMessage
-              id="Home.welcome"
-              defaultMessage="Welcome {name}"
-              values={{ name: `${currentUser.name}` }}
-            >
-              {txt => <H3>{txt}</H3>}
-            </FormattedMessage>
-          </StyledView> */}
           {hasEvents ? (
             <List
               dataArray={allEvents}
@@ -127,7 +117,6 @@ class HomeScreen extends Component {
 }
 
 export default inject(({ stores }) => ({
-  currentUser: stores.authStore.currentUser,
   hasEvents: stores.eventStore.hasEvents,
   allEvents: stores.eventStore.allEvents
 }))(HomeScreen)
