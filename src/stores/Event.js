@@ -1,7 +1,7 @@
 import { types } from 'mobx-state-tree'
 import { runInAction } from 'mobx'
-import { AsyncStorage } from 'react-native'
 import * as api from './api'
+import * as storage from './storage'
 
 export const Event = types
   .model('Event', {
@@ -60,16 +60,8 @@ const EventStore = types
   }))
   .actions(self => ({
     afterCreate: async () => {
-      const serialEvents = await AsyncStorage.getItem('@YedidimNative:events')
-      if (!serialEvents) {
-        // Set initial value
-        await AsyncStorage.setItem('@YedidimNative:events', JSON.stringify({}))
-      } else {
-        // Reload events after app restart
-        Object.keys(JSON.parse(serialEvents)).forEach(eventId =>
-          self.addEvent(eventId)
-        )
-      }
+      const eventIds = await storage.eventIds()
+      eventIds.forEach(eventId => self.addEvent(eventId))
     },
     addEvent: eventId => {
       // If no event was added, add new to store
@@ -83,9 +75,7 @@ const EventStore = types
     },
     addEventFromNotification: eventId => {
       // Add event to async store for restoring on app restart
-      const newEvent = {}
-      newEvent[eventId] = true
-      AsyncStorage.mergeItem('@YedidimNative:events', JSON.stringify(newEvent))
+      storage.addEventId(eventId)
 
       self.addEvent(eventId)
     }

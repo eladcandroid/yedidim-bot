@@ -1,10 +1,11 @@
 import React from 'react'
 import { Text, Container, List, ListItem, Content } from 'native-base'
-import { Image, AsyncStorage } from 'react-native'
+import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { Constants } from 'expo'
 // import styled from 'styled-components/native'
 import Logo from './logo.png'
+import { clear } from '../stores/storage'
 
 const isDevMode = () => Constants.manifest.extra.mode === 'development'
 
@@ -48,16 +49,7 @@ const SideBar = ({
           </ListItem>
         )}
         {isDevMode() && (
-          <ListItem
-            button
-            onPress={() =>
-              AsyncStorage.setItem(
-                '@YedidimNative:events',
-                JSON.stringify({})
-              ).then(() => {
-                console.log('Cleared events on AsyncStorage')
-              })}
-          >
+          <ListItem button onPress={clear}>
             <Text>DEBUG: Clear AsyncStorage</Text>
           </ListItem>
         )}
