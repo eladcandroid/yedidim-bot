@@ -20,16 +20,25 @@ addLocaleData([...en, ...he])
 @observer
 class I18nApp extends Component {
   componentWillMount() {
-    if (!I18nManager.isRTL) {
-      I18nManager.allowRTL(true)
-      I18nManager.forceRTL(true)
+    // Reload app if RTL mode has changed
+    this.updateRTL(this.props.isRTL)
+  }
+
+  componentWillUpdate = nextProps => {
+    this.updateRTL(nextProps.isRTL)
+  }
+
+  updateRTL = nextIsRTL => {
+    // Reload app if RTL mode has changed
+    if (I18nManager.isRTL !== nextIsRTL) {
+      I18nManager.allowRTL(nextIsRTL)
+      I18nManager.forceRTL(nextIsRTL)
       Util.reload()
     }
   }
 
   render() {
-    const { isReady } = this.props
-    const language = 'en'
+    const { isReady, language } = this.props
 
     return (
       <IntlProvider locale={language} messages={localeData[language]}>
@@ -40,6 +49,6 @@ class I18nApp extends Component {
 }
 
 export default inject(({ stores }) => ({
-  isLoading: stores.authStore.isLoading,
-  isAuthenticated: stores.authStore.isAuthenticated
+  language: stores.language,
+  isRTL: stores.isRTL
 }))(I18nApp)

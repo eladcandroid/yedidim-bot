@@ -1,4 +1,14 @@
 {
-  "Home.welcome": "Welcome {name}",
-  "Home.openevent": "Open Event"
+  "Event.description": "Description",
+  "Event.location": "Location",
+  "Event.caller": "Name",
+  "Event.phone": "Phone",
+  "Event.carType": "Car type",
+  "Event.button.navigate": "Navigate with Waze",
+  "Event.button.callPerson": "Call Person",
+  "Event.button.ignore": "Ignore",
+  "Event.button.accept": "Accept",
+  "Event.title": "Event",
+  "Home.noevents": "Sorry, no events were found",
+  "Home.title": "Home"
 }

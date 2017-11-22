@@ -1,4 +1,14 @@
 {
-  "Home.welcome": "ברוך הבא {name}",
-  "Home.openevent": "פתח אירוע"
+  "Event.description": "תיאור",
+  "Event.location": "מקום",
+  "Event.caller": "שם",
+  "Event.phone": "טלפון",
+  "Event.carType": "סוג רכב",
+  "Event.button.navigate": "נווט עם Waze",
+  "Event.button.callPerson": "להתקשר",
+  "Event.button.ignore": "להתעלם",
+  "Event.button.accept": "לקבל",
+  "Event.title": "ארוע",
+  "Home.noevents": "מצטערים, לא נמצאו אירועים",
+  "Home.title": "ראשי"
 }

@@ -12,7 +12,9 @@ const isDevMode = () => Constants.manifest.extra.mode === 'development'
 const SideBar = ({
   signOut,
   currentUser: { name, phone },
-  addEventFromNotification
+  addEventFromNotification,
+  nextLanguage,
+  toggleLanguage
 }) => (
   <Container>
     <Content>
@@ -34,6 +36,14 @@ const SideBar = ({
           <Text>
             {name} {phone && `(${phone})`}
           </Text>
+        </ListItem>
+        <ListItem
+          button
+          onPress={async () => {
+            await toggleLanguage()
+          }}
+        >
+          <Text>{nextLanguage}</Text>
         </ListItem>
         <ListItem button onPress={signOut}>
           <Text>Sign out</Text>
@@ -61,5 +71,7 @@ const SideBar = ({
 export default inject(({ stores }) => ({
   signOut: stores.authStore.signOut,
   currentUser: stores.authStore.currentUser,
-  addEventFromNotification: stores.eventStore.addEventFromNotification
+  addEventFromNotification: stores.eventStore.addEventFromNotification,
+  nextLanguage: stores.nextLanguage,
+  toggleLanguage: stores.toggleLanguage
 }))(observer(SideBar))

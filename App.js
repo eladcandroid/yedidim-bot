@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import Expo from 'expo'
 import createRootStore from 'stores'
-import { Provider } from 'mobx-react/native'
+import { Provider, observer } from 'mobx-react/native'
 import I18nMain from './src/I18nApp'
 
-// Initialiase stores
-const stores = createRootStore()
-
+@observer
 export default class App extends Component {
   state = {
     isReady: false
@@ -18,14 +16,21 @@ export default class App extends Component {
       Ionicons: require('native-base/Fonts/Ionicons.ttf'), // eslint-disable-line
     })
 
-    this.setState({ isReady: true })
+    // Initialiase stores
+    const stores = await createRootStore()
+
+    this.setState({ isReady: true, stores })
   }
   render() {
-    const { isReady } = this.state
+    const { isReady, stores } = this.state
+
+    if (!isReady || !stores || stores.authStore.isLoading) {
+      return <Expo.AppLoading />
+    }
 
     return (
       <Provider stores={stores}>
-        <I18nMain isReady={isReady} />
+        <I18nMain />
       </Provider>
     )
   }
