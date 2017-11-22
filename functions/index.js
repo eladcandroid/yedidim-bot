@@ -88,8 +88,11 @@ function handleWebHookPostRequest(req, res) {
 function handleMessage(event) {
   return new Promise(resolve => {
     console.info('webhook event : \n', JSON.stringify(event));
-    // For now don't send typing message
-    // sendTypingMessage(event.sender.id, true).then(() => {
+    //Check if the bot should respond
+    if (!checkIsActive()){
+      console.info('Bot is not active');
+      sendNotActiveResponse(event).then(() => {resolve()});
+    } else {
       events.get(event.sender.id)
         .then(context => {
           if (!context ||
@@ -111,8 +114,21 @@ function handleMessage(event) {
           //fallback
           sendInitialResponse(event).then(() => {resolve()});
         });
-    });
-  // });
+    }
+  });
+}
+
+function checkIsActive() {
+  //The Bot is not active from Friday at 15:00 until Saturday at 19:00
+  const date = new Date();
+  const day = date.getUTCDay();
+  const hours = date.getUTCHours();
+
+  return !((day === 5 && hours > 13) || (day === 6 && hours < 17))
+}
+
+function sendNotActiveResponse(event) {
+  return sendMessage(event.sender.id, getTemplate(flow.messages['general']));
 }
 
 function sendInitialResponse(event) {
