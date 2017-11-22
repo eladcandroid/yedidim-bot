@@ -52,6 +52,9 @@ export const Event = types
     },
     get eventTypeImage() {
       return EventImages[self.type]
+    },
+    get isAwaitingAssignment() {
+      return self.status === 'sent' || self.status === 'submitted'
     }
   }))
   .actions(self => ({

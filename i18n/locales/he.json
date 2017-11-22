@@ -6,8 +6,8 @@
   "Event.carType": "סוג רכב",
   "Event.button.navigate": "נווט עם Waze",
   "Event.button.callPerson": "להתקשר",
-  "Event.button.ignore": "להתעלם",
-  "Event.button.accept": "לקבל",
+  "Event.button.ignore": "מחק ארוע",
+  "Event.button.accept": "קח ארוע",
   "Event.title": "ארוע",
   "Home.noevents": "מצטערים, לא נמצאו אירועים",
   "Home.title": "ראשי"

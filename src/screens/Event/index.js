@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Linking, I18nManager } from 'react-native'
+import { Linking, I18nManager, View } from 'react-native'
 
 import {
   Button,
@@ -67,12 +67,16 @@ class EventScreen extends Component {
       more,
       fullAddress,
       phone,
-      carType
+      carType,
+      isAwaitingAssignment
     } = findById(eventId)
+
+    // If event is awaiting assignment, viewMode should be true
+    const viewMode = isAwaitingAssignment
 
     return (
       <Container>
-        <Content style={{ backgroundColor: '#fff' }}>
+        <Content style={{ flex: 1, backgroundColor: '#fff' }}>
           <Grid>
             <Row>
               <Col size={1}>
@@ -122,15 +126,21 @@ class EventScreen extends Component {
             <FormattedMessage id="Event.location" defaultMessage="Location">
               {label => <TextFieldRow label={label} value={fullAddress} />}
             </FormattedMessage>
-            <FormattedMessage id="Event.caller" defaultMessage="Name">
-              {label => <TextFieldRow label={label} value={caller} />}
-            </FormattedMessage>
-            <FormattedMessage id="Event.phone" defaultMessage="Phone">
-              {label => <TextFieldRow label={label} value={phone} />}
-            </FormattedMessage>
-            <FormattedMessage id="Event.carType" defaultMessage="Car type">
-              {label => <TextFieldRow label={label} value={carType} />}
-            </FormattedMessage>
+            {!viewMode && (
+              <FormattedMessage id="Event.caller" defaultMessage="Name">
+                {label => <TextFieldRow label={label} value={caller} />}
+              </FormattedMessage>
+            )}
+            {!viewMode && (
+              <FormattedMessage id="Event.phone" defaultMessage="Phone">
+                {label => <TextFieldRow label={label} value={phone} />}
+              </FormattedMessage>
+            )}
+            {!viewMode && (
+              <FormattedMessage id="Event.carType" defaultMessage="Car type">
+                {label => <TextFieldRow label={label} value={carType} />}
+              </FormattedMessage>
+            )}
             <Row>
               <Col>
                 <MarginView>
@@ -151,37 +161,32 @@ class EventScreen extends Component {
                 </MarginView>
               </Col>
             </Row>
-            <Row>
-              <Col>
-                <MarginView>
-                  <Button
-                    block
-                    success
-                    onPress={() => Linking.openURL(`tel:${phone}`)}
-                  >
-                    <FormattedMessage
-                      id="Event.button.callPerson"
-                      defaultMessage="Call Person"
+            {!viewMode && (
+              <Row>
+                <Col>
+                  <MarginView>
+                    <Button
+                      block
+                      success
+                      onPress={() => Linking.openURL(`tel:${phone}`)}
                     >
-                      {txt => <Text>{txt}</Text>}
-                    </FormattedMessage>
-                    <Icon name="md-call" />
-                  </Button>
-                </MarginView>
-              </Col>
-            </Row>
+                      <FormattedMessage
+                        id="Event.button.callPerson"
+                        defaultMessage="Call Person"
+                      >
+                        {txt => <Text>{txt}</Text>}
+                      </FormattedMessage>
+                      <Icon name="md-call" />
+                    </Button>
+                  </MarginView>
+                </Col>
+              </Row>
+            )}
+          </Grid>
+        </Content>
+        <View style={{ height: 70, backgroundColor: '#fff' }}>
+          <Grid>
             <Row style={{ marginTop: 10 }}>
-              <Col>
-                <Button full large block danger>
-                  <FormattedMessage
-                    id="Event.button.ignore"
-                    defaultMessage="Ignore"
-                  >
-                    {txt => <Text>{txt}</Text>}
-                  </FormattedMessage>
-                  <Icon name="md-close-circle" />
-                </Button>
-              </Col>
               <Col>
                 <Button full large block success>
                   <FormattedMessage
@@ -193,9 +198,20 @@ class EventScreen extends Component {
                   <Icon name="md-checkmark-circle" />
                 </Button>
               </Col>
+              <Col>
+                <Button full large block danger>
+                  <FormattedMessage
+                    id="Event.button.ignore"
+                    defaultMessage="Ignore"
+                  >
+                    {txt => <Text>{txt}</Text>}
+                  </FormattedMessage>
+                  <Icon name="md-close-circle" />
+                </Button>
+              </Col>
             </Row>
           </Grid>
-        </Content>
+        </View>
       </Container>
     )
   }
