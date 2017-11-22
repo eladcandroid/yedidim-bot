@@ -38,5 +38,5 @@ export const getEventStatus = (event) => {
 };
 
 export const getGoogleMapsUrl = (event) => {
-  return 'https://www.google.com/maps/search/?api=1&query=' + event.details.geo.lat + ',' + event.details.geo.lng;
+  return 'https://www.google.com/maps/search/?api=1&query=' + event.details.geo.lat + ',' + event.details.geo.lon;
 };
