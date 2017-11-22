@@ -17,6 +17,7 @@ import {
   ListItem,
   Thumbnail
 } from 'native-base'
+import AlignedText from '../components/AlignedText'
 
 const MessageView = styled.View`
   flex: 1;
@@ -49,14 +50,14 @@ const EventItem = observer(
         />
       </Left>
       <Body>
-        <Text>
+        <AlignedText>
           {eventType} : {caller}
-        </Text>
-        <Text note>{more}</Text>
+        </AlignedText>
+        <AlignedText note>{more}</AlignedText>
       </Body>
       <Right>
         <FormattedRelative value={timestamp}>
-          {relative => <Text note>{relative}</Text>}
+          {relative => <AlignedText note>{relative}</AlignedText>}
         </FormattedRelative>
       </Right>
     </ListItem>

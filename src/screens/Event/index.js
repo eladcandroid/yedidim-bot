@@ -23,6 +23,7 @@ import {
 } from 'native-base'
 import { MapView } from 'expo'
 import TextFieldRow from './TextFieldRow'
+import AlignedText from '../../components/AlignedText'
 
 const MarginView = styled.View`
   margin: 10px 10px;
@@ -87,11 +88,7 @@ class EventScreen extends Component {
                 <MarginView>
                   <H2 style={{ textAlign: 'left' }}>{eventType}</H2>
                   <FormattedRelative value={timestamp}>
-                    {relative => (
-                      <Text style={{ textAlign: 'left' }} note>
-                        {relative}
-                      </Text>
-                    )}
+                    {relative => <AlignedText note>{relative}</AlignedText>}
                   </FormattedRelative>
                 </MarginView>
               </Col>

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { Col, Row, Text } from 'native-base'
+import AlignedText from '../../components/AlignedText'
 
 const InfoItem = styled.View`
   margin: 10px 10px;
@@ -12,18 +13,14 @@ const BoldText = styled.Text`
   padding: 0 10px;
 `
 
-const MainText = styled.Text`
-  text-align: right;
-`
-
 const TextFieldRow = ({ label, value }) =>
   value ? (
     <Row>
       <Col>
         <InfoItem>
-          <Text>
+          <AlignedText>
             <BoldText>{label}:</BoldText> <Text>{value}</Text>
-          </Text>
+          </AlignedText>
         </InfoItem>
       </Col>
     </Row>
