@@ -20,6 +20,12 @@ export async function addEventId(eventId) {
   return AsyncStorage.mergeItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvent))
 }
 
+export async function removeEventId(eventId) {
+  const events = JSON.parse(await AsyncStorage.getItem(EVENTS_STORAGE_KEY))
+  delete events[eventId]
+  return AsyncStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(events))
+}
+
 export async function clear() {
   return AsyncStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify({}))
 }

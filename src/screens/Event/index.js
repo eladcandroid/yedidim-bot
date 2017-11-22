@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
-import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Linking, I18nManager, View } from 'react-native'
+import {
+  FormattedMessage,
+  FormattedRelative,
+  injectIntl,
+  defineMessages
+} from 'react-intl'
+import { Linking, I18nManager, View, Alert } from 'react-native'
 
 import {
   Button,
@@ -29,6 +34,25 @@ const MarginView = styled.View`
   margin: 10px 10px;
 `
 
+const alertIgnoreMsgs = defineMessages({
+  title: {
+    id: 'Event.alert.ignore.title',
+    defaultMessage: 'Ignore Event'
+  },
+  text: {
+    id: 'Event.alert.ignore.text',
+    defaultMessage: "I'm not interested in accepting the event"
+  },
+  buttonConfirm: {
+    id: 'Event.alert.ignore.confirm',
+    defaultMessage: 'Confirm'
+  },
+  buttonCancel: {
+    id: 'Event.alert.ignore.cancel',
+    defaultMessage: 'Cancel'
+  }
+})
+
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
 // TODO Remove token after user logout
@@ -54,10 +78,38 @@ class EventScreen extends Component {
     )
   })
 
+  handleIgnoreEvent = () => {
+    const { intl, removeEvent, navigation } = this.props
+    const { state: { params: { eventId } } } = navigation
+
+    Alert.alert(
+      intl.formatMessage(alertIgnoreMsgs.title),
+      intl.formatMessage(alertIgnoreMsgs.text),
+      [
+        {
+          text: intl.formatMessage(alertIgnoreMsgs.buttonConfirm),
+          onPress: () => {
+            // Ignore Event
+            removeEvent(eventId)
+            // Navigate back
+            navigation.goBack()
+          }
+        },
+        {
+          text: intl.formatMessage(alertIgnoreMsgs.buttonCancel),
+          style: 'cancel'
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
   render() {
     const { navigation, findById } = this.props
     const { state: { params: { eventId } } } = navigation
+    const event = findById(eventId) || {}
     const {
+      guid,
       eventType,
       eventTypeImage,
       timestamp,
@@ -69,7 +121,11 @@ class EventScreen extends Component {
       phone,
       carType,
       isAwaitingAssignment
-    } = findById(eventId)
+    } = event
+
+    if (!guid) {
+      return null
+    }
 
     // If event is awaiting assignment, viewMode should be true
     const viewMode = isAwaitingAssignment
@@ -199,7 +255,13 @@ class EventScreen extends Component {
                 </Button>
               </Col>
               <Col>
-                <Button full large block danger>
+                <Button
+                  full
+                  large
+                  block
+                  danger
+                  onPress={this.handleIgnoreEvent}
+                >
                   <FormattedMessage
                     id="Event.button.ignore"
                     defaultMessage="Ignore"
@@ -219,5 +281,6 @@ class EventScreen extends Component {
 
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser,
-  findById: stores.eventStore.findById
-}))(EventScreen)
+  findById: stores.eventStore.findById,
+  removeEvent: stores.eventStore.removeEvent
+}))(injectIntl(EventScreen))

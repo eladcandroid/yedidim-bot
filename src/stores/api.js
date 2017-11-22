@@ -112,6 +112,8 @@ export function subscribeToEvent(eventKey, onChangeCallback) {
     .database()
     .ref(`events/${eventKey}`)
     .on('value', snapshot => {
-      onChangeCallback(snapshotToJSON(snapshot.val()))
+      if (snapshot) {
+        onChangeCallback(snapshotToJSON(snapshot.val()))
+      }
     })
 }

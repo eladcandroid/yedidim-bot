@@ -1,4 +1,4 @@
-import { types } from 'mobx-state-tree'
+import { types, destroy, flow } from 'mobx-state-tree'
 import { runInAction } from 'mobx'
 import * as api from './api'
 import * as storage from './storage'
@@ -108,6 +108,10 @@ const EventStore = types
         )
       }
     },
+    removeEvent: flow(function* removeEvent(eventId) {
+      destroy(self.events.get(eventId))
+      yield storage.removeEventId(eventId)
+    }),
     addEventFromNotification: eventId => {
       // Add event to async store for restoring on app restart
       storage.addEventId(eventId)
