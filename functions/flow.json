@@ -36,8 +36,9 @@
     },
     "problem_type": {
       "type": "quick_replies",
-      "text": "{variable}, אנא בחר\\י את סוג התקלה ברכב",
+      "text": "אנא בחר\\י את סוג התקלה ברכב",
       "variable": "caller name",
+      "pre": "{variable}, כעת אבקש ממך לענות על מס' שאלות על מנת שאוכל להעביר את המידע למתנדב שיסייע לך",
       "field": "case",
       "buttons": [
         {"payload": "problem_fuel"},
@@ -117,7 +118,7 @@
   "payloads": {
     "need_help_yes": {
       "title": "כן, בבקשה",
-      "next": "confirm_name"
+      "next": "problem_type"
     },
     "need_help_no": {
       "title": "לא, תודה",
