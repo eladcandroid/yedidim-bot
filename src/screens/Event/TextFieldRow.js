@@ -21,9 +21,9 @@ const TextFieldRow = ({ label, value }) =>
     <Row>
       <Col>
         <InfoItem>
-          <MainText>
+          <Text>
             <BoldText>{label}:</BoldText> <Text>{value}</Text>
-          </MainText>
+          </Text>
         </InfoItem>
       </Col>
     </Row>

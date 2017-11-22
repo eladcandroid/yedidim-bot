@@ -8,6 +8,7 @@ import en from 'react-intl/locale-data/en'
 import he from 'react-intl/locale-data/he'
 import enLocaleData from './i18n/locales/en.json'
 import heLocaleData from './i18n/locales/he.json'
+import { I18nManager } from 'react-native'
 
 const localeData = {
   en: enLocaleData,
@@ -30,6 +31,13 @@ export default class App extends Component {
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'), // eslint-disable-line
       Ionicons: require('native-base/Fonts/Ionicons.ttf'), // eslint-disable-line
     })
+
+    if (!I18nManager.isRTL) {
+      I18nManager.allowRTL(true)
+      I18nManager.forceRTL(true)
+      Expo.Util.reload()
+    }
+
     this.setState({ isReady: true })
   }
   render() {

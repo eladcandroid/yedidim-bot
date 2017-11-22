@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Linking } from 'react-native'
+import { Linking, I18nManager } from 'react-native'
 
 import {
   Button,
@@ -28,14 +28,6 @@ const MarginView = styled.View`
   margin: 10px 10px;
 `
 
-const RightText = styled(Text)`
-  text-align: right;
-`
-
-const RightH2 = styled(H2)`
-  text-align: right;
-`
-
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
 // TODO Remove token after user logout
@@ -48,7 +40,7 @@ class EventScreen extends Component {
       <Header>
         <Left>
           <Button transparent onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" />
+            <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
           </Button>
         </Left>
         <Body>
@@ -82,14 +74,6 @@ class EventScreen extends Component {
         <Content style={{ backgroundColor: '#fff' }}>
           <Grid>
             <Row>
-              <Col size={3}>
-                <MarginView>
-                  <RightH2>{eventType}</RightH2>
-                  <FormattedRelative value={timestamp}>
-                    {relative => <RightText note>{relative}</RightText>}
-                  </FormattedRelative>
-                </MarginView>
-              </Col>
               <Col size={1}>
                 <MarginView>
                   <Thumbnail
@@ -97,6 +81,18 @@ class EventScreen extends Component {
                       uri: eventTypeImage
                     }}
                   />
+                </MarginView>
+              </Col>
+              <Col size={3}>
+                <MarginView>
+                  <H2 style={{ textAlign: 'left' }}>{eventType}</H2>
+                  <FormattedRelative value={timestamp}>
+                    {relative => (
+                      <Text style={{ textAlign: 'left' }} note>
+                        {relative}
+                      </Text>
+                    )}
+                  </FormattedRelative>
                 </MarginView>
               </Col>
             </Row>
@@ -147,13 +143,13 @@ class EventScreen extends Component {
                     onPress={() =>
                       Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
                   >
-                    <Icon name="md-map" />
                     <FormattedMessage
                       id="Event.button.navigate"
                       defaultMessage="Navigate with Waze"
                     >
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
+                    <Icon name="md-map" />
                   </Button>
                 </MarginView>
               </Col>
@@ -166,13 +162,13 @@ class EventScreen extends Component {
                     success
                     onPress={() => Linking.openURL(`tel:${phone}`)}
                   >
-                    <Icon name="md-call" />
                     <FormattedMessage
                       id="Event.button.callPerson"
                       defaultMessage="Call Person"
                     >
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
+                    <Icon name="md-call" />
                   </Button>
                 </MarginView>
               </Col>
@@ -180,24 +176,24 @@ class EventScreen extends Component {
             <Row style={{ marginTop: 10 }}>
               <Col>
                 <Button full large block danger>
-                  <Icon name="md-close-circle" />
                   <FormattedMessage
                     id="Event.button.ignore"
                     defaultMessage="Ignore"
                   >
                     {txt => <Text>{txt}</Text>}
                   </FormattedMessage>
+                  <Icon name="md-close-circle" />
                 </Button>
               </Col>
               <Col>
                 <Button full large block success>
-                  <Icon name="md-checkmark-circle" />
                   <FormattedMessage
                     id="Event.button.accept"
                     defaultMessage="Accept"
                   >
                     {txt => <Text>{txt}</Text>}
                   </FormattedMessage>
+                  <Icon name="md-checkmark-circle" />
                 </Button>
               </Col>
             </Row>

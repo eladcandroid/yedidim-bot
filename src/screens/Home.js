@@ -68,17 +68,17 @@ class HomeScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
-        <Left />
+        <Left>
+          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+            <Icon name="menu" />
+          </Button>
+        </Left>
         <Body>
           <FormattedMessage id="Home.title" defaultMessage="Home">
             {txt => <Title>{txt}</Title>}
           </FormattedMessage>
         </Body>
-        <Right>
-          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
-            <Icon name="menu" />
-          </Button>
-        </Right>
+        <Right />
       </Header>
     )
   })
