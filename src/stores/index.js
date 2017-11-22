@@ -4,7 +4,7 @@ import { getLanguage } from './storage'
 
 const createRootStore = async () => {
   const language = await getLanguage()
-  console.log('LANGUAGE', language)
+  // console.log('LANGUAGE', language)
   return RootStore.create(
     {
       language
