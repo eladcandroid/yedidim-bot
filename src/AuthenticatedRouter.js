@@ -13,7 +13,6 @@ const AuthenticatedRouter = DrawerNavigator(
   },
   {
     contentComponent: props => <SideBar {...props} />,
-    drawerPosition: 'right',
     drawerWidth: 300
   }
 )

@@ -1,14 +1,32 @@
-import { types } from 'mobx-state-tree'
+import { types, flow } from 'mobx-state-tree'
 import AuthenticationStore from './Authentication'
 import EventStore from './Event'
+import { setLanguage } from './storage'
 
-const RootStore = types.model('RootStore', {
-  authStore: types.optional(AuthenticationStore, {
-    user: null
-  }),
-  eventStore: types.optional(EventStore, {
-    events: {}
+const RootStore = types
+  .model('RootStore', {
+    authStore: types.optional(AuthenticationStore, {
+      user: null
+    }),
+    eventStore: types.optional(EventStore, {
+      events: {}
+    }),
+    language: 'en'
   })
-})
+  .views(self => ({
+    get nextLanguage() {
+      return self.language === 'en' ? 'עברית' : 'English'
+    },
+    get isRTL() {
+      return self.language !== 'en'
+    }
+  }))
+  .actions(self => ({
+    toggleLanguage: flow(function* toggleLanguage() {
+      const newLanguage = self.language === 'en' ? 'he' : 'en'
+      yield setLanguage(newLanguage)
+      self.language = newLanguage
+    })
+  }))
 
 export default RootStore

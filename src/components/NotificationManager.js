@@ -27,7 +27,7 @@ const withNotificationManager = WrappedComponent => {
       if (remote) {
         // Add event to store
         const { eventId } = data
-        this.props.addEvent(eventId)
+        this.props.addEventFromNotification(eventId)
 
         // Only listen to remote notifications
         if (origin === 'received') {
@@ -48,7 +48,11 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const { saveNotificationToken, addEvent, ...other } = this.props
+      const {
+        saveNotificationToken,
+        addEventFromNotification,
+        ...other
+      } = this.props
       return <WrappedComponent {...other} />
     }
   }
@@ -57,7 +61,7 @@ const withNotificationManager = WrappedComponent => {
   Component.router = WrappedComponent.router
 
   return inject(({ stores }) => ({
-    addEvent: stores.eventStore.addEvent
+    addEventFromNotification: stores.eventStore.addEventFromNotification
   }))(observer(Component))
 }
 

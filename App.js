@@ -1,25 +1,10 @@
 import React, { Component } from 'react'
-import Main from 'Main'
 import Expo from 'expo'
 import createRootStore from 'stores'
-import { Provider } from 'mobx-react/native'
-import { addLocaleData, IntlProvider } from 'react-intl'
-import en from 'react-intl/locale-data/en'
-import he from 'react-intl/locale-data/he'
-import enLocaleData from './i18n/locales/en.json'
-import heLocaleData from './i18n/locales/he.json'
+import { Provider, observer } from 'mobx-react/native'
+import I18nMain from './src/I18nApp'
 
-const localeData = {
-  en: enLocaleData,
-  he: heLocaleData
-}
-
-// Add locales
-addLocaleData([...en, ...he])
-
-// Initialiase stores
-const stores = createRootStore()
-
+@observer
 export default class App extends Component {
   state = {
     isReady: false
@@ -30,19 +15,23 @@ export default class App extends Component {
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'), // eslint-disable-line
       Ionicons: require('native-base/Fonts/Ionicons.ttf'), // eslint-disable-line
     })
-    this.setState({ isReady: true })
+
+    // Initialiase stores
+    const stores = await createRootStore()
+
+    this.setState({ isReady: true, stores })
   }
   render() {
-    const { isReady } = this.state
+    const { isReady, stores } = this.state
 
-    const language = 'en'
+    if (!isReady || !stores || stores.authStore.isLoading) {
+      return <Expo.AppLoading />
+    }
 
     return (
-      <IntlProvider locale={language} messages={localeData[language]}>
-        <Provider stores={stores}>
-          <Main isReady={isReady} />
-        </Provider>
-      </IntlProvider>
+      <Provider stores={stores}>
+        <I18nMain />
+      </Provider>
     )
   }
 }
