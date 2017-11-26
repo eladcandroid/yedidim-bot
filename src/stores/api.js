@@ -47,12 +47,12 @@ async function loadUserInfo(userAuth) {
 }
 
 async function updateUserNotificationToken(userAuth) {
-  const notificationToken = await registerForPushNotificationsAsync()
+  const NotificationToken = await registerForPushNotificationsAsync()
 
   return firebase
     .database()
     .ref(`/volunteer/${userAuth.phoneNumber}`)
-    .update({ notificationToken })
+    .update({ NotificationToken })
 }
 
 export function onAuthenticationChanged(onAuthenticationCallback, onError) {
