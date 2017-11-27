@@ -102,10 +102,10 @@ const EventStore = types
     }
 
     return {
-      afterCreate: async () => {
-        const eventIds = await storage.eventIds()
+      afterCreate: flow(function* afterCreate() {
+        const eventIds = yield storage.eventIds()
         eventIds.forEach(eventId => addEvent(eventId))
-      },
+      }),
       removeEvent: flow(function* removeEvent(eventId) {
         destroy(self.events.get(eventId))
         yield storage.removeEventId(eventId)
