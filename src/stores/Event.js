@@ -67,11 +67,7 @@ export const Event = types
     },
     afterCreate: () => {
       // console.log('onAfterCreate added by notification', self.guid)
-      self.unwatchAuth = api.subscribeToEvent(self.guid, eventData => {
-        runInAction(() => {
-          self.onEventUpdated(eventData)
-        })
-      })
+      self.unwatchAuth = api.subscribeToEvent(self.guid, self.onEventUpdated)
     },
     beforeDestroy: () => {
       self.unwatchAuth()
@@ -93,12 +89,8 @@ const EventStore = types
       return self.events.size > 0
     }
   }))
-  .actions(self => ({
-    afterCreate: async () => {
-      const eventIds = await storage.eventIds()
-      eventIds.forEach(eventId => self.addEvent(eventId))
-    },
-    addEvent: eventId => {
+  .actions(self => {
+    function addEvent(eventId) {
       // If no event was added, add new to store
       if (!self.events.get(eventId)) {
         self.events.put(
@@ -107,16 +99,23 @@ const EventStore = types
           })
         )
       }
-    },
-    removeEvent: flow(function* removeEvent(eventId) {
-      destroy(self.events.get(eventId))
-      yield storage.removeEventId(eventId)
-    }),
-    addEventFromNotification: eventId => {
-      // Add event to async store for restoring on app restart
-      storage.addEventId(eventId)
-
-      self.addEvent(eventId)
     }
-  }))
+
+    return {
+      afterCreate: async () => {
+        const eventIds = await storage.eventIds()
+        eventIds.forEach(eventId => addEvent(eventId))
+      },
+      removeEvent: flow(function* removeEvent(eventId) {
+        destroy(self.events.get(eventId))
+        yield storage.removeEventId(eventId)
+      }),
+      addEventFromNotification: eventId => {
+        // Add event to async store for restoring on app restart
+        storage.addEventId(eventId)
+
+        addEvent(eventId)
+      }
+    }
+  })
 export default EventStore
