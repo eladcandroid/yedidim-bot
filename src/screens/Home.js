@@ -17,8 +17,8 @@ import {
   ListItem,
   Thumbnail
 } from 'native-base'
-import AlignedText from '../components/AlignedText'
 import { ActivityIndicator } from 'react-native'
+import AlignedText from '../components/AlignedText'
 
 const MessageView = styled.View`
   flex: 1;
@@ -35,15 +35,7 @@ const MessageView = styled.View`
 const EventItem = observer(
   ({
     onPress,
-    event: {
-      guid,
-      eventTypeImage,
-      caller,
-      more,
-      timestamp,
-      eventType,
-      isLoading
-    }
+    event: { guid, eventTypeImage, city, more, timestamp, eventType, isLoading }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -77,7 +69,7 @@ const EventItem = observer(
         </Left>
         <Body>
           <AlignedText>
-            {eventType} : {caller}
+            {eventType} - {city}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
         </Body>
