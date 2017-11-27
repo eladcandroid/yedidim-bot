@@ -5,7 +5,6 @@ import { inject, observer } from 'mobx-react/native'
 import { Constants } from 'expo'
 // import styled from 'styled-components/native'
 import Logo from './logo.png'
-import { clear } from '../stores/storage'
 
 const isDevMode = () => Constants.manifest.extra.mode === 'development'
 
@@ -13,6 +12,7 @@ const SideBar = ({
   signOut,
   currentUser: { name, phone },
   addEventFromNotification,
+  removeEvent,
   nextLanguage,
   toggleLanguage
 }) => (
@@ -59,8 +59,13 @@ const SideBar = ({
           </ListItem>
         )}
         {isDevMode() && (
-          <ListItem button onPress={clear}>
-            <Text>DEBUG: Clear AsyncStorage</Text>
+          <ListItem
+            button
+            onPress={() => {
+              removeEvent('-KwEbiayp9GQvqFESoFl')
+            }}
+          >
+            <Text>DEBUG: Remove Sample Event</Text>
           </ListItem>
         )}
       </List>
@@ -72,6 +77,7 @@ export default inject(({ stores }) => ({
   signOut: stores.authStore.signOut,
   currentUser: stores.authStore.currentUser,
   addEventFromNotification: stores.eventStore.addEventFromNotification,
+  removeEvent: stores.eventStore.removeEvent,
   nextLanguage: stores.nextLanguage,
   toggleLanguage: stores.toggleLanguage
 }))(observer(SideBar))
