@@ -89,7 +89,7 @@ export async function signOut() {
   return firebase.auth().signOut()
 }
 
-const snapshotToJSON = snapshot => ({
+const eventSnapshotToJSON = snapshot => ({
   guid: snapshot.key,
   status: snapshot.status,
   timestamp: snapshot.timestamp,
@@ -113,7 +113,53 @@ export function subscribeToEvent(eventKey, onChangeCallback) {
     .ref(`events/${eventKey}`)
     .on('value', snapshot => {
       if (snapshot) {
-        onChangeCallback(snapshotToJSON(snapshot.val()))
+        onChangeCallback(eventSnapshotToJSON(snapshot.val()))
       }
     })
 }
+
+export async function acceptEvent(eventKey, userKey) {
+  const { committed } = await firebase
+    .database()
+    .ref(`events/${eventKey}`)
+    .transaction(eventData => {
+      const { status } = eventData
+      if (status === 'submitted' || status === 'sent') {
+        // Assign event to user
+        return {
+          ...eventData,
+          status: 'assigned',
+          assignedTo: userKey
+        }
+      }
+      // Event is taken, return undefined
+      return undefined
+    })
+
+  if (!committed) {
+    throw { code: 'event-taken' }
+  }
+
+  // Event was took successful, update volunteer side, don't need transactions
+  return firebase
+    .database()
+    .ref(`volunteer/${userKey}`)
+    .update({
+      EventKey: eventKey,
+      Status: 'busy'
+    })
+}
+
+// export async function cancelEvent(eventKey, userKey, feedback) {
+//   // Update event, then user
+//   await firebase
+//     .database()
+//     .ref(`events/${eventKey}`)
+//     .update({
+//       status: 'completed',
+//       feedback
+//     })
+
+// }
+
+// export async function finaliseEvent(eventKey, feedback) {}

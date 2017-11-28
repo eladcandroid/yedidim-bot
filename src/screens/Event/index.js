@@ -53,6 +53,25 @@ const alertIgnoreMsgs = defineMessages({
   }
 })
 
+const alertAcceptMsgs = defineMessages({
+  title: {
+    id: 'Event.alert.accept.title',
+    defaultMessage: 'Accept Event'
+  },
+  text: {
+    id: 'Event.alert.accept.text',
+    defaultMessage: 'I want to take care of the event'
+  },
+  buttonConfirm: {
+    id: 'Event.alert.accept.confirm',
+    defaultMessage: 'Confirm'
+  },
+  buttonCancel: {
+    id: 'Event.alert.accept.cancel',
+    defaultMessage: 'Cancel'
+  }
+})
+
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
 // TODO Remove token after user logout
@@ -97,6 +116,31 @@ class EventScreen extends Component {
         },
         {
           text: intl.formatMessage(alertIgnoreMsgs.buttonCancel),
+          style: 'cancel'
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
+  handleAcceptEvent = () => {
+    const { intl, navigation, findById } = this.props
+    const { state: { params: { eventId } } } = navigation
+    const event = findById(eventId)
+
+    Alert.alert(
+      intl.formatMessage(alertAcceptMsgs.title),
+      intl.formatMessage(alertAcceptMsgs.text),
+      [
+        {
+          text: intl.formatMessage(alertAcceptMsgs.buttonConfirm),
+          onPress: () => {
+            // Accept Event
+            event.accept()
+          }
+        },
+        {
+          text: intl.formatMessage(alertAcceptMsgs.buttonCancel),
           style: 'cancel'
         }
       ],
@@ -244,7 +288,13 @@ class EventScreen extends Component {
           <Grid>
             <Row style={{ marginTop: 10 }}>
               <Col>
-                <Button full large block success>
+                <Button
+                  full
+                  large
+                  block
+                  success
+                  onPress={this.handleAcceptEvent}
+                >
                   <FormattedMessage
                     id="Event.button.accept"
                     defaultMessage="Accept"

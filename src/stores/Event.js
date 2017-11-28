@@ -1,5 +1,4 @@
-import { types, destroy, flow } from 'mobx-state-tree'
-import { runInAction } from 'mobx'
+import { types, destroy, flow, getRoot } from 'mobx-state-tree'
 import * as api from './api'
 import * as storage from './storage'
 
@@ -71,7 +70,12 @@ export const Event = types
     },
     beforeDestroy: () => {
       self.unwatchAuth()
-    }
+    },
+    accept: flow(function* accept() {
+      // Retrieve current logged user id
+      const currentUserId = getRoot(self).authStore.currentUser.guid
+      return yield api.acceptEvent(self.guid, currentUserId)
+    })
   }))
 
 const EventStore = types
