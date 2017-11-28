@@ -82,8 +82,7 @@ class EventScreen extends Component {
   })
 
   handleIgnoreEvent = () => {
-    const { intl, removeEvent, navigation } = this.props
-    const { state: { params: { eventId } } } = navigation
+    const { intl, removeEvent, event, navigation } = this.props
 
     Alert.alert(
       intl.formatMessage(alertIgnoreMsgs.title),
@@ -93,7 +92,7 @@ class EventScreen extends Component {
           text: intl.formatMessage(alertIgnoreMsgs.buttonConfirm),
           onPress: () => {
             // Ignore Event
-            removeEvent(eventId)
+            removeEvent(event.guid)
             // Navigate back
             navigation.goBack()
           }
@@ -108,9 +107,7 @@ class EventScreen extends Component {
   }
 
   handleAcceptEvent = () => {
-    const { intl, navigation, findById } = this.props
-    const { state: { params: { eventId } } } = navigation
-    const event = findById(eventId)
+    const { event, intl } = this.props
 
     Alert.alert(
       intl.formatMessage(alertAcceptMsgs.title),
@@ -133,12 +130,17 @@ class EventScreen extends Component {
   }
 
   render() {
-    const { navigation, findById } = this.props
-    const { state: { params: { eventId } } } = navigation
-    const event = findById(eventId)
+    const { event } = this.props
 
     if (!event || !event.guid) {
-      return null
+      return (
+        <FormattedMessage
+          id="Event.error.notfound"
+          defaultMessage="Sorry, unable to find event details. Please contact administrator."
+        >
+          {txt => <Text>{txt}</Text>}
+        </FormattedMessage>
+      )
     }
 
     return (
@@ -174,7 +176,9 @@ class EventScreen extends Component {
   }
 }
 
-export default inject(({ stores }) => ({
-  findById: stores.eventStore.findById,
-  removeEvent: stores.eventStore.removeEvent
-}))(injectIntl(EventScreen))
+export default inject(
+  ({ stores }, { navigation: { state: { params: { eventId } } } }) => ({
+    event: stores.eventStore.findById(eventId),
+    removeEvent: stores.eventStore.removeEvent
+  })
+)(injectIntl(EventScreen))
