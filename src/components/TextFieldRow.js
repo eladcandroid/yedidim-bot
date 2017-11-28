@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { Col, Row, Text } from 'native-base'
-import AlignedText from '../../components/AlignedText'
+import AlignedText from './AlignedText'
 
 const InfoItem = styled.View`
   margin: 10px 10px;
