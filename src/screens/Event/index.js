@@ -41,6 +41,31 @@ const ignore = {
   }
 }
 
+const cancel = {
+  modalMsgs: defineMessages({
+    title: {
+      id: 'Event.alert.cancel.title',
+      defaultMessage: 'Cancel Event'
+    },
+    text: {
+      id: 'Event.alert.cancel.text',
+      defaultMessage: "I don't want to take care of the event anymore"
+    },
+    confirm: {
+      id: 'Event.alert.cancel.confirm',
+      defaultMessage: 'Confirm'
+    },
+    cancel: {
+      id: 'Event.alert.cancel.cancel',
+      defaultMessage: 'Cancel'
+    }
+  }),
+  buttonMsgs: {
+    id: 'Event.button.cancel',
+    defaultMessage: 'Cancel'
+  }
+}
+
 const accept = {
   modalMsgs: defineMessages({
     title: {
@@ -63,6 +88,31 @@ const accept = {
   buttonMsgs: {
     id: 'Event.button.accept',
     defaultMessage: 'Accept'
+  }
+}
+
+const finalise = {
+  modalMsgs: defineMessages({
+    title: {
+      id: 'Event.alert.finalise.title',
+      defaultMessage: 'Finalise Event'
+    },
+    text: {
+      id: 'Event.alert.finalise.text',
+      defaultMessage: 'I have finished taking care of the event'
+    },
+    confirm: {
+      id: 'Event.alert.finalise.confirm',
+      defaultMessage: 'Confirm'
+    },
+    cancel: {
+      id: 'Event.alert.finalise.cancel',
+      defaultMessage: 'Cancel'
+    }
+  }),
+  buttonMsgs: {
+    id: 'Event.button.finalise',
+    defaultMessage: 'Finalise'
   }
 }
 
@@ -96,7 +146,7 @@ class EventScreen extends Component {
   componentWillMount() {
     const { navigation, event } = this.props
     const { setParams, state: { params: { isAssigned } } } = navigation
-    if (event.isAssigned !== isAssigned) {
+    if (event && event.isAssigned !== isAssigned) {
       setParams({ isAssigned: event.isAssigned })
     }
   }
@@ -105,13 +155,14 @@ class EventScreen extends Component {
     const { navigation } = this.props
     const { event } = nextProps
     const { setParams, state: { params: { isAssigned } } } = navigation
-    if (event.isAssigned !== isAssigned) {
+    if (event && event.isAssigned !== isAssigned) {
       setParams({ isAssigned: event.isAssigned })
     }
   }
 
   render() {
     const { event, navigation, removeEvent } = this.props
+    const { isAssigned } = event || {}
 
     if (!event || !event.guid) {
       return (
@@ -124,26 +175,36 @@ class EventScreen extends Component {
       )
     }
 
+    const okBtn = {
+      ...(isAssigned ? finalise : accept),
+      onPress: isAssigned
+        ? () => {
+            // Finalise Event, navigate to Feedback screen
+            // TODO
+          }
+        : () => {
+            // Accept Event
+            event.accept()
+          }
+    }
+
+    const cancelBtn = {
+      ...(isAssigned ? cancel : ignore),
+      onPress: isAssigned
+        ? () => {
+            // TODO Navigate to feedback screen to explain
+          }
+        : () => {
+            // Ignore Event
+            removeEvent(event.guid)
+            // Navigate back
+            navigation.goBack()
+          }
+    }
+
     return (
       <EventDetails event={event}>
-        <ButtonsConfirmationBar
-          ok={{
-            ...accept,
-            onPress: () => {
-              // Accept Event
-              event.accept()
-            }
-          }}
-          cancel={{
-            ...ignore,
-            onPress: () => {
-              // Ignore Event
-              removeEvent(event.guid)
-              // Navigate back
-              navigation.goBack()
-            }
-          }}
-        />
+        <ButtonsConfirmationBar ok={okBtn} cancel={cancelBtn} />
       </EventDetails>
     )
   }
@@ -155,7 +216,7 @@ export default inject(
     return {
       // Return isAssigned because we need mobx to refresh the view
       //  if it changes
-      isAssigned: event.isAssigned,
+      isAssigned: event && event.isAssigned,
       event,
       removeEvent: stores.eventStore.removeEvent
     }
