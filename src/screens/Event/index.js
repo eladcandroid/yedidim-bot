@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react/native'
-import { FormattedMessage, injectIntl, defineMessages } from 'react-intl'
-import { I18nManager, Alert } from 'react-native'
+import { FormattedMessage, defineMessages } from 'react-intl'
+import { I18nManager } from 'react-native'
 
 import {
   Button,
@@ -10,51 +10,61 @@ import {
   Title,
   Left,
   Icon,
-  Grid,
-  Col,
-  Row,
   Right,
   Text
 } from 'native-base'
 import EventDetails from '../../components/EventDetails'
+import ButtonsConfirmationBar from '../../components/ButtonsConfirmationBar'
 
-const alertIgnoreMsgs = defineMessages({
-  title: {
-    id: 'Event.alert.ignore.title',
-    defaultMessage: 'Ignore Event'
-  },
-  text: {
-    id: 'Event.alert.ignore.text',
-    defaultMessage: "I'm not interested in accepting the event"
-  },
-  buttonConfirm: {
-    id: 'Event.alert.ignore.confirm',
-    defaultMessage: 'Confirm'
-  },
-  buttonCancel: {
-    id: 'Event.alert.ignore.cancel',
-    defaultMessage: 'Cancel'
+const ignore = {
+  modalMsgs: defineMessages({
+    title: {
+      id: 'Event.alert.ignore.title',
+      defaultMessage: 'Ignore Event'
+    },
+    text: {
+      id: 'Event.alert.ignore.text',
+      defaultMessage: "I'm not interested in accepting the event"
+    },
+    confirm: {
+      id: 'Event.alert.ignore.confirm',
+      defaultMessage: 'Confirm'
+    },
+    cancel: {
+      id: 'Event.alert.ignore.cancel',
+      defaultMessage: 'Cancel'
+    }
+  }),
+  buttonMsgs: {
+    id: 'Event.button.ignore',
+    defaultMessage: 'Ignore'
   }
-})
+}
 
-const alertAcceptMsgs = defineMessages({
-  title: {
-    id: 'Event.alert.accept.title',
-    defaultMessage: 'Accept Event'
-  },
-  text: {
-    id: 'Event.alert.accept.text',
-    defaultMessage: 'I want to take care of the event'
-  },
-  buttonConfirm: {
-    id: 'Event.alert.accept.confirm',
-    defaultMessage: 'Confirm'
-  },
-  buttonCancel: {
-    id: 'Event.alert.accept.cancel',
-    defaultMessage: 'Cancel'
+const accept = {
+  modalMsgs: defineMessages({
+    title: {
+      id: 'Event.alert.accept.title',
+      defaultMessage: 'Accept Event'
+    },
+    text: {
+      id: 'Event.alert.accept.text',
+      defaultMessage: 'I want to take care of the event'
+    },
+    confirm: {
+      id: 'Event.alert.accept.confirm',
+      defaultMessage: 'Confirm'
+    },
+    cancel: {
+      id: 'Event.alert.accept.cancel',
+      defaultMessage: 'Cancel'
+    }
+  }),
+  buttonMsgs: {
+    id: 'Event.button.accept',
+    defaultMessage: 'Accept'
   }
-})
+}
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
@@ -81,56 +91,8 @@ class EventScreen extends Component {
     )
   })
 
-  handleIgnoreEvent = () => {
-    const { intl, removeEvent, event, navigation } = this.props
-
-    Alert.alert(
-      intl.formatMessage(alertIgnoreMsgs.title),
-      intl.formatMessage(alertIgnoreMsgs.text),
-      [
-        {
-          text: intl.formatMessage(alertIgnoreMsgs.buttonConfirm),
-          onPress: () => {
-            // Ignore Event
-            removeEvent(event.guid)
-            // Navigate back
-            navigation.goBack()
-          }
-        },
-        {
-          text: intl.formatMessage(alertIgnoreMsgs.buttonCancel),
-          style: 'cancel'
-        }
-      ],
-      { cancelable: false }
-    )
-  }
-
-  handleAcceptEvent = () => {
-    const { event, intl } = this.props
-
-    Alert.alert(
-      intl.formatMessage(alertAcceptMsgs.title),
-      intl.formatMessage(alertAcceptMsgs.text),
-      [
-        {
-          text: intl.formatMessage(alertAcceptMsgs.buttonConfirm),
-          onPress: () => {
-            // Accept Event
-            event.accept()
-          }
-        },
-        {
-          text: intl.formatMessage(alertAcceptMsgs.buttonCancel),
-          style: 'cancel'
-        }
-      ],
-      { cancelable: false }
-    )
-  }
-
   render() {
-    const { event } = this.props
+    const { event, navigation, removeEvent } = this.props
 
     if (!event || !event.guid) {
       return (
@@ -145,32 +107,24 @@ class EventScreen extends Component {
 
     return (
       <EventDetails event={event}>
-        <Grid>
-          <Row style={{ marginTop: 10 }}>
-            <Col>
-              <Button full large block success onPress={this.handleAcceptEvent}>
-                <FormattedMessage
-                  id="Event.button.accept"
-                  defaultMessage="Accept"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-                <Icon name="md-checkmark-circle" />
-              </Button>
-            </Col>
-            <Col>
-              <Button full large block danger onPress={this.handleIgnoreEvent}>
-                <FormattedMessage
-                  id="Event.button.ignore"
-                  defaultMessage="Ignore"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-                <Icon name="md-close-circle" />
-              </Button>
-            </Col>
-          </Row>
-        </Grid>
+        <ButtonsConfirmationBar
+          ok={{
+            ...accept,
+            onPress: () => {
+              // Accept Event
+              event.accept()
+            }
+          }}
+          cancel={{
+            ...ignore,
+            onPress: () => {
+              // Ignore Event
+              removeEvent(event.guid)
+              // Navigate back
+              navigation.goBack()
+            }
+          }}
+        />
       </EventDetails>
     )
   }
@@ -181,4 +135,4 @@ export default inject(
     event: stores.eventStore.findById(eventId),
     removeEvent: stores.eventStore.removeEvent
   })
-)(injectIntl(EventScreen))
+)(EventScreen)
