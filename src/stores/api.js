@@ -92,6 +92,7 @@ export async function signOut() {
 const eventSnapshotToJSON = snapshot => ({
   guid: snapshot.key,
   status: snapshot.status,
+  assignedTo: snapshot.assignedTo,
   timestamp: snapshot.timestamp,
   address: snapshot.details.address,
   caller: snapshot.details['caller name'],

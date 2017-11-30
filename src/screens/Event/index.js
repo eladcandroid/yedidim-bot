@@ -77,9 +77,11 @@ class EventScreen extends Component {
     header: (
       <Header>
         <Left>
-          <Button transparent onPress={() => navigation.goBack()}>
-            <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
-          </Button>
+          {!navigation.state.params.isAssigned && (
+            <Button transparent onPress={() => navigation.goBack()}>
+              <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
+            </Button>
+          )}
         </Left>
         <Body>
           <FormattedMessage id="Event.title" defaultMessage="Event">
@@ -90,6 +92,23 @@ class EventScreen extends Component {
       </Header>
     )
   })
+
+  componentWillMount() {
+    const { navigation, event } = this.props
+    const { setParams, state: { params: { isAssigned } } } = navigation
+    if (event.isAssigned !== isAssigned) {
+      setParams({ isAssigned: event.isAssigned })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { navigation } = this.props
+    const { event } = nextProps
+    const { setParams, state: { params: { isAssigned } } } = navigation
+    if (event.isAssigned !== isAssigned) {
+      setParams({ isAssigned: event.isAssigned })
+    }
+  }
 
   render() {
     const { event, navigation, removeEvent } = this.props
@@ -131,8 +150,14 @@ class EventScreen extends Component {
 }
 
 export default inject(
-  ({ stores }, { navigation: { state: { params: { eventId } } } }) => ({
-    event: stores.eventStore.findById(eventId),
-    removeEvent: stores.eventStore.removeEvent
-  })
+  ({ stores }, { navigation: { state: { params: { eventId } } } }) => {
+    const event = stores.eventStore.findById(eventId)
+    return {
+      // Return isAssigned because we need mobx to refresh the view
+      //  if it changes
+      isAssigned: event.isAssigned,
+      event,
+      removeEvent: stores.eventStore.removeEvent
+    }
+  }
 )(EventScreen)

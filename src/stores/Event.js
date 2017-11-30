@@ -30,6 +30,7 @@ export const Event = types
   .model('Event', {
     guid: types.identifier(),
     status: types.maybe(types.string),
+    assignedTo: types.maybe(types.string),
     timestamp: types.maybe(types.Date),
     address: types.maybe(types.string),
     caller: types.maybe(types.string),
@@ -56,7 +57,10 @@ export const Event = types
       return self.status === 'sent' || self.status === 'submitted'
     },
     get isAssigned() {
-      return self.status === 'assigned'
+      return (
+        self.status === 'assigned' &&
+        self.assignedTo === getRoot(self).authStore.currentUser.guid
+      )
     }
   }))
   .actions(self => ({
