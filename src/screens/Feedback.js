@@ -58,11 +58,12 @@ export class FeedbackScreen extends Component {
   }
 
   onActionBtnPress = async () => {
-    const { event, navigation } = this.props
-    const { state: { params: { action } } } = navigation
+    const { event, navigation, removeEvent } = this.props
+    const { state: { params: { action, eventId } } } = navigation
 
     // Execute action then navigate back to home (resetting state)
     await event[action](this.state.feedback)
+    await removeEvent(eventId)
     navigation.dispatch(
       NavigationActions.reset({
         index: 0,
@@ -183,6 +184,7 @@ export class FeedbackScreen extends Component {
 export default inject(
   ({ stores }, { navigation: { state: { params: { eventId } } } }) => ({
     event: stores.eventStore.findById(eventId),
+    removeEvent: stores.eventStore.removeEvent,
     name: stores.authStore.currentUser.name
   })
 )(FeedbackScreen)
