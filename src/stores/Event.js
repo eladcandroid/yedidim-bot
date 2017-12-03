@@ -82,6 +82,16 @@ export const Event = types
       // Retrieve current logged user id
       const currentUserId = getRoot(self).authStore.currentUser.guid
       return yield api.acceptEvent(self.guid, currentUserId)
+    }),
+    finalise: flow(function* finalise(feedback) {
+      // Retrieve current logged user id
+      const currentUserId = getRoot(self).authStore.currentUser.guid
+      return yield api.finaliseEvent(self.guid, currentUserId, feedback)
+    }),
+    unaccept: flow(function* unaccept(feedback) {
+      // Retrieve current logged user id
+      const currentUserId = getRoot(self).authStore.currentUser.guid
+      return yield api.unacceptEvent(self.guid, currentUserId, feedback)
     })
   }))
 

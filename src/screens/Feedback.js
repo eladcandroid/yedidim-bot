@@ -3,6 +3,7 @@ import styled from 'styled-components/native'
 import { FormattedMessage } from 'react-intl'
 import { I18nManager, View } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
+import { NavigationActions } from 'react-navigation'
 
 import {
   Button,
@@ -54,6 +55,20 @@ export class FeedbackScreen extends Component {
 
   onFeedbackChange = feedback => {
     this.setState({ feedback })
+  }
+
+  onActionBtnPress = async () => {
+    const { event, navigation } = this.props
+    const { state: { params: { action } } } = navigation
+
+    // Execute action then navigate back to home (resetting state)
+    await event[action](this.state.feedback)
+    navigation.dispatch(
+      NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Home' })]
+      })
+    )
   }
 
   render() {
@@ -137,6 +152,7 @@ export class FeedbackScreen extends Component {
                   success={finaliseFeedback}
                   danger={!finaliseFeedback}
                   disabled={!feedback}
+                  onPress={this.onActionBtnPress}
                 >
                   {finaliseFeedback ? (
                     <FormattedMessage

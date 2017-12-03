@@ -146,21 +146,38 @@ export async function acceptEvent(eventKey, userKey) {
     .database()
     .ref(`volunteer/${userKey}`)
     .update({
-      EventKey: eventKey,
-      Status: 'busy'
+      EventKey: eventKey
     })
 }
 
-// export async function cancelEvent(eventKey, userKey, feedback) {
-//   // Update event, then user
-//   await firebase
-//     .database()
-//     .ref(`events/${eventKey}`)
-//     .update({
-//       status: 'completed',
-//       feedback
-//     })
+export async function finaliseEvent(eventKey, userKey, feedback) {
+  // Update event to completed and make user free again
+  const updates = {
+    [`events/${eventKey}/status`]: 'completed',
+    [`events/${eventKey}/feedback`]: feedback,
+    [`volunteer/${userKey}/EventKey`]: null
+  }
 
-// }
+  return firebase
+    .database()
+    .ref()
+    .update(updates)
+}
 
-// export async function finaliseEvent(eventKey, feedback) {}
+export async function unacceptEvent(eventKey, userKey, feedback) {
+  // Update event to submitted, feedback and make user free again
+  const updates = {
+    [`events/${eventKey}/status`]: 'submitted',
+    [`events/${eventKey}/assignedTo`]: null,
+    [`events/${eventKey}/unaccepted`]: {
+      feedback,
+      userKey
+    },
+    [`volunteer/${userKey}/EventKey`]: null
+  }
+
+  return firebase
+    .database()
+    .ref()
+    .update(updates)
+}

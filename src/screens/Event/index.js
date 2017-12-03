@@ -207,7 +207,7 @@ class EventScreen extends Component {
             // Navigate to feedback screen to explain why cancelling
             navigation.navigate('Feedback', {
               eventId: event.guid,
-              action: 'cancel'
+              action: 'unaccept'
             })
           }
         : () => {
