@@ -189,7 +189,10 @@ class EventScreen extends Component {
       onPress: isAssigned
         ? () => {
             // Finalise Event, navigate to Feedback screen
-            // TODO
+            navigation.navigate('Feedback', {
+              eventId: event.guid,
+              action: 'finalize'
+            })
           }
         : () => {
             // Accept Event
@@ -201,7 +204,11 @@ class EventScreen extends Component {
       ...(isAssigned ? cancel : ignore),
       onPress: isAssigned
         ? () => {
-            // TODO Navigate to feedback screen to explain
+            // Navigate to feedback screen to explain why cancelling
+            navigation.navigate('Feedback', {
+              eventId: event.guid,
+              action: 'cancel'
+            })
           }
         : () => {
             // Ignore Event
