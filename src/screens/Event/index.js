@@ -134,9 +134,18 @@ class EventScreen extends Component {
           )}
         </Left>
         <Body>
-          <FormattedMessage id="Event.title" defaultMessage="Event">
-            {txt => <Title>{txt}</Title>}
-          </FormattedMessage>
+          {navigation.state.params.isAssigned ? (
+            <FormattedMessage
+              id="Event.title.active"
+              defaultMessage="Active event"
+            >
+              {txt => <Title>{txt}</Title>}
+            </FormattedMessage>
+          ) : (
+            <FormattedMessage id="Event.title.inactive" defaultMessage="Event">
+              {txt => <Title>{txt}</Title>}
+            </FormattedMessage>
+          )}
         </Body>
         <Right />
       </Header>
