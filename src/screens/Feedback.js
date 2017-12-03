@@ -55,7 +55,11 @@ export class Feedback extends Component {
   }
 
   render() {
+    const { navigation: { state: { params: { action } } } } = this.props
     const { feedback } = this.state
+    const finaliseFeedback = action === 'finalise'
+
+    console.log(this.props)
 
     return (
       <Container>
@@ -79,12 +83,21 @@ export class Feedback extends Component {
             <Row>
               <Col>
                 <MarginView>
-                  <FormattedMessage
-                    id="Feedback.action"
-                    defaultMessage="Please write down a short feedback about the event before finalising it."
-                  >
-                    {txt => <AlignedText>{txt}</AlignedText>}
-                  </FormattedMessage>
+                  {finaliseFeedback ? (
+                    <FormattedMessage
+                      id="Feedback.action.finalise"
+                      defaultMessage="Please write down a short feedback about the event before finalising it."
+                    >
+                      {txt => <AlignedText>{txt}</AlignedText>}
+                    </FormattedMessage>
+                  ) : (
+                    <FormattedMessage
+                      id="Feedback.action.cancel"
+                      defaultMessage="Please write down a short feedback about the event and why you decided to cancel it."
+                    >
+                      {txt => <AlignedText>{txt}</AlignedText>}
+                    </FormattedMessage>
+                  )}
                 </MarginView>
               </Col>
             </Row>
@@ -94,7 +107,7 @@ export class Feedback extends Component {
                   <Item regular>
                     <FormattedMessage
                       id="Feedback.input"
-                      defaultMessage="Enter your feedback"
+                      defaultMessage="Enter your feedback (required)"
                     >
                       {txt => (
                         <Input
@@ -117,13 +130,29 @@ export class Feedback extends Component {
           <Grid>
             <Row style={{ marginTop: 10 }}>
               <Col>
-                <Button full large block success disabled={!feedback}>
-                  <FormattedMessage
-                    id="Feedback.button"
-                    defaultMessage="Confirm & Send"
-                  >
-                    {txt => <Text>{txt}</Text>}
-                  </FormattedMessage>
+                <Button
+                  full
+                  large
+                  block
+                  success={finaliseFeedback}
+                  danger={!finaliseFeedback}
+                  disabled={!feedback}
+                >
+                  {finaliseFeedback ? (
+                    <FormattedMessage
+                      id="Feedback.button.finalise"
+                      defaultMessage="Finalise Event & Send"
+                    >
+                      {txt => <Text>{txt}</Text>}
+                    </FormattedMessage>
+                  ) : (
+                    <FormattedMessage
+                      id="Feedback.button.cancel"
+                      defaultMessage="Cancel Event & Send"
+                    >
+                      {txt => <Text>{txt}</Text>}
+                    </FormattedMessage>
+                  )}
                   <Icon name="md-checkmark-circle" />
                 </Button>
               </Col>

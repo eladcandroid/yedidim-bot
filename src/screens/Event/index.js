@@ -191,7 +191,7 @@ class EventScreen extends Component {
             // Finalise Event, navigate to Feedback screen
             navigation.navigate('Feedback', {
               eventId: event.guid,
-              action: 'finalize'
+              action: 'finalise'
             })
           }
         : () => {
