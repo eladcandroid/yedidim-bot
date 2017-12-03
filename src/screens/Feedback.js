@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
-import { FormattedMessage, defineMessages } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { I18nManager, View } from 'react-native'
+import { inject, observer } from 'mobx-react/native'
 
 import {
   Button,
@@ -27,7 +28,8 @@ const MarginView = styled.View`
   margin: 10px 10px;
 `
 
-export class Feedback extends Component {
+@observer
+export class FeedbackScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
@@ -55,11 +57,9 @@ export class Feedback extends Component {
   }
 
   render() {
-    const { navigation: { state: { params: { action } } } } = this.props
+    const { name, navigation: { state: { params: { action } } } } = this.props
     const { feedback } = this.state
     const finaliseFeedback = action === 'finalise'
-
-    console.log(this.props)
 
     return (
       <Container>
@@ -72,7 +72,7 @@ export class Feedback extends Component {
                     id="Feedback.description"
                     defaultMessage="{name}, thank you for taking care of the event."
                     values={{
-                      name: 'Alan Rubin'
+                      name
                     }}
                   >
                     {txt => <AlignedText>{txt}</AlignedText>}
@@ -164,4 +164,9 @@ export class Feedback extends Component {
   }
 }
 
-export default Feedback
+export default inject(
+  ({ stores }, { navigation: { state: { params: { eventId } } } }) => ({
+    event: stores.eventStore.findById(eventId),
+    name: stores.authStore.currentUser.name
+  })
+)(FeedbackScreen)
