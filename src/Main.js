@@ -24,6 +24,7 @@ class Main extends Component {
 
 export default inject(({ stores }) => ({
   isAuthenticated: stores.authStore.isAuthenticated,
-  toggleMute: stores.authStore.currentUser.toggleMute,
-  isMuted: stores.authStore.currentUser.isMuted
+  toggleMute:
+    stores.authStore.currentUser && stores.authStore.currentUser.toggleMute,
+  isMuted: stores.authStore.currentUser && stores.authStore.currentUser.isMuted
 }))(injectIntl(Main))

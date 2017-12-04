@@ -60,7 +60,7 @@ const AuthenticationStore = types
     }
 
     function onError(error) {
-      // console.log('>>>>', error)
+      console.log('onError', error) // TODO Throw ?
       self.error = error
       self.isLoading = false
     }
