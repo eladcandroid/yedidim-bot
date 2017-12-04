@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, defineMessages } from 'react-intl'
 import { I18nManager, View } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { NavigationActions } from 'react-navigation'
@@ -20,7 +20,8 @@ import {
   Col,
   Row,
   Item,
-  Input
+  Input,
+  Toast
 } from 'native-base'
 
 import AlignedText from '../components/AlignedText'
@@ -28,6 +29,29 @@ import AlignedText from '../components/AlignedText'
 const MarginView = styled.View`
   margin: 10px 10px;
 `
+
+const toastMsgs = {
+  finalise: defineMessages({
+    text: {
+      id: 'Feedback.toast.finalise.text',
+      defaultMessage: 'Event was finalised'
+    },
+    buttonText: {
+      id: 'Feedback.toast.finalise.buttonText',
+      defaultMessage: 'OK'
+    }
+  }),
+  unaccept: defineMessages({
+    text: {
+      id: 'Feedback.toast.unaccept.text',
+      defaultMessage: 'Event was cancelled'
+    },
+    buttonText: {
+      id: 'Feedback.toast.unaccept.buttonText',
+      defaultMessage: 'OK'
+    }
+  })
+}
 
 @observer
 export class FeedbackScreen extends Component {
@@ -58,21 +82,32 @@ export class FeedbackScreen extends Component {
   }
 
   onActionBtnPress = async () => {
-    const { event, navigation, removeEvent } = this.props
+    const { event, navigation, removeEvent, screenProps: { intl } } = this.props
     const { state: { params: { action, eventId } } } = navigation
 
-    // Execute action then navigate back to home (resetting state)
+    // Execute action on event
     await event[action](this.state.feedback)
+    // Remove event from list of events
     await removeEvent(eventId)
+    // Navigate to home (resetting state)
     navigation.dispatch(
       NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: 'Home' })]
       })
     )
+    // Show toast
+    Toast.show({
+      text: intl.formatMessage(toastMsgs[action].text),
+      position: 'bottom',
+      type: action === 'finalise' ? 'success' : 'danger',
+      buttonText: intl.formatMessage(toastMsgs[action].buttonText),
+      duration: 5000
+    })
   }
 
   render() {
+    console.log(this.props.screenProps)
     const { name, navigation: { state: { params: { action } } } } = this.props
     const { feedback } = this.state
     const finaliseFeedback = action === 'finalise'
