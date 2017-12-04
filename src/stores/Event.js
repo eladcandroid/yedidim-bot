@@ -1,6 +1,6 @@
 import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
-import * as api from './api'
-import * as storage from './storage'
+import * as api from '../io/api'
+import * as storage from '../io/storage'
 
 const EventCases = [
   'כבלים',

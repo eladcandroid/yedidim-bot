@@ -1,7 +1,7 @@
 import { types, flow } from 'mobx-state-tree'
 import AuthenticationStore from './Authentication'
 import EventStore from './Event'
-import { setLanguage } from './storage'
+import { setLanguage } from '../io/storage'
 
 const RootStore = types
   .model('RootStore', {

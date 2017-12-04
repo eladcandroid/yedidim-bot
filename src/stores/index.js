@@ -1,6 +1,6 @@
 import RootStore from './Root'
-import './firebase'
-import { getLanguage } from './storage'
+import '../io/firebase'
+import { getLanguage } from '../io/storage'
 
 const createRootStore = async () => {
   const language = await getLanguage()

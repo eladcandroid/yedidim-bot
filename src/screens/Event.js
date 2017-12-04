@@ -13,8 +13,8 @@ import {
   Right,
   Text
 } from 'native-base'
-import EventDetails from '../../components/EventDetails'
-import ButtonsConfirmationBar from '../../components/ButtonsConfirmationBar'
+import EventDetails from '../components/EventDetails'
+import ButtonsConfirmationBar from '../components/ButtonsConfirmationBar'
 
 const ignore = {
   modalMsgs: defineMessages({

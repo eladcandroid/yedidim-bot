@@ -3,7 +3,7 @@ import AuthenticationScreen from 'screens/Authentication'
 import { inject, observer } from 'mobx-react/native'
 import { Root } from 'native-base'
 import { injectIntl } from 'react-intl'
-import AuthenticatedRouter from './AuthenticatedRouter'
+import AuthenticatedDrawer from 'layouts/AuthenticatedDrawer'
 
 @observer
 class Main extends Component {
@@ -13,7 +13,7 @@ class Main extends Component {
     return (
       <Root>
         {isAuthenticated ? (
-          <AuthenticatedRouter screenProps={{ intl }} />
+          <AuthenticatedDrawer screenProps={{ intl }} />
         ) : (
           <AuthenticationScreen />
         )}
