@@ -65,18 +65,16 @@ export const Event = types
   }))
   .actions(self => ({
     onEventUpdated: eventData => {
-      // console.log('subscribed to event triggered', eventData)
       // Update properties
       Object.assign(self, eventData)
       // Not loading anymore (if it was loading)
       self.isLoading = false
     },
     afterCreate: () => {
-      // console.log('onAfterCreate added by notification', self.guid)
-      self.unwatchAuth = api.subscribeToEvent(self.guid, self.onEventUpdated)
+      self.unsubscribeId = api.subscribeToEvent(self.guid, self.onEventUpdated)
     },
     beforeDestroy: () => {
-      self.unwatchAuth()
+      api.unsubscribeToEvent(self.guid, self.unsubscribeId)
     },
     accept: flow(function* accept() {
       // Retrieve current logged user id

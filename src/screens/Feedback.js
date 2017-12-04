@@ -107,7 +107,6 @@ export class FeedbackScreen extends Component {
   }
 
   render() {
-    console.log(this.props.screenProps)
     const { name, navigation: { state: { params: { action } } } } = this.props
     const { feedback } = this.state
     const finaliseFeedback = action === 'finalise'

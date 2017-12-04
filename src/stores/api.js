@@ -109,14 +109,26 @@ const eventSnapshotToJSON = snapshot => ({
 })
 
 export function subscribeToEvent(eventKey, onChangeCallback) {
-  return firebase
+  const callback = snapshot => {
+    if (snapshot) {
+      onChangeCallback(eventSnapshotToJSON(snapshot.val()))
+    }
+  }
+
+  firebase
     .database()
     .ref(`events/${eventKey}`)
-    .on('value', snapshot => {
-      if (snapshot) {
-        onChangeCallback(eventSnapshotToJSON(snapshot.val()))
-      }
-    })
+    .on('value', callback)
+
+  // Return callback used which the id for unsubscribing
+  return callback
+}
+
+export function unsubscribeToEvent(eventKey, callback) {
+  firebase
+    .database()
+    .ref(`events/${eventKey}`)
+    .off('value', callback)
 }
 
 export async function acceptEvent(eventKey, userKey) {
