@@ -1,5 +1,5 @@
 import { types, getParent, flow } from 'mobx-state-tree'
-import * as api from './api'
+import * as api from '../io/api'
 
 export const User = types.model('User', {
   guid: types.identifier(),
@@ -60,7 +60,8 @@ const AuthenticationStore = types
       this.error = null
 
       try {
-        const { userAuth, userInfo } = yield api.signIn({
+        // const { userAuth, userInfo } = yield api.signIn({
+        yield api.signIn({
           verificationId,
           code
         })

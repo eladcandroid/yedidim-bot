@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Expo from 'expo'
 import createRootStore from 'stores'
 import { Provider, observer } from 'mobx-react/native'
-import I18nMain from './src/I18nApp'
+import I18nApp from './src/I18nApp'
 
 @observer
 export default class App extends Component {
@@ -30,7 +30,7 @@ export default class App extends Component {
 
     return (
       <Provider stores={stores}>
-        <I18nMain />
+        <I18nApp />
       </Provider>
     )
   }

@@ -47,12 +47,12 @@ async function loadUserInfo(userAuth) {
 }
 
 async function updateUserNotificationToken(userAuth) {
-  const notificationToken = await registerForPushNotificationsAsync()
+  const NotificationToken = await registerForPushNotificationsAsync()
 
   return firebase
     .database()
     .ref(`/volunteer/${userAuth.phoneNumber}`)
-    .update({ notificationToken })
+    .update({ NotificationToken })
 }
 
 export function onAuthenticationChanged(onAuthenticationCallback, onError) {
@@ -89,9 +89,10 @@ export async function signOut() {
   return firebase.auth().signOut()
 }
 
-const snapshotToJSON = snapshot => ({
+const eventSnapshotToJSON = snapshot => ({
   guid: snapshot.key,
   status: snapshot.status,
+  assignedTo: snapshot.assignedTo,
   timestamp: snapshot.timestamp,
   address: snapshot.details.address,
   caller: snapshot.details['caller name'],
@@ -108,10 +109,87 @@ const snapshotToJSON = snapshot => ({
 })
 
 export function subscribeToEvent(eventKey, onChangeCallback) {
-  return firebase
+  const callback = snapshot => {
+    if (snapshot) {
+      onChangeCallback(eventSnapshotToJSON(snapshot.val()))
+    }
+  }
+
+  firebase
     .database()
     .ref(`events/${eventKey}`)
-    .on('value', snapshot => {
-      onChangeCallback(snapshotToJSON(snapshot.val()))
+    .on('value', callback)
+
+  // Return callback used which the id for unsubscribing
+  return callback
+}
+
+export function unsubscribeToEvent(eventKey, callback) {
+  firebase
+    .database()
+    .ref(`events/${eventKey}`)
+    .off('value', callback)
+}
+
+export async function acceptEvent(eventKey, userKey) {
+  const { committed } = await firebase
+    .database()
+    .ref(`events/${eventKey}`)
+    .transaction(eventData => {
+      const { status } = eventData
+      if (status === 'submitted' || status === 'sent') {
+        // Assign event to user
+        return {
+          ...eventData,
+          status: 'assigned',
+          assignedTo: userKey
+        }
+      }
+      // Event is taken, return undefined
+      return undefined
     })
+
+  if (!committed) {
+    throw { code: 'event-taken' }
+  }
+
+  // Event was took successful, update volunteer side, don't need transactions
+  return firebase
+    .database()
+    .ref(`volunteer/${userKey}`)
+    .update({
+      EventKey: eventKey
+    })
+}
+
+export async function finaliseEvent(eventKey, userKey, feedback) {
+  // Update event to completed and make user free again
+  const updates = {
+    [`events/${eventKey}/status`]: 'completed',
+    [`events/${eventKey}/feedback`]: feedback,
+    [`volunteer/${userKey}/EventKey`]: null
+  }
+
+  return firebase
+    .database()
+    .ref()
+    .update(updates)
+}
+
+export async function unacceptEvent(eventKey, userKey, feedback) {
+  // Update event to submitted, feedback and make user free again
+  const updates = {
+    [`events/${eventKey}/status`]: 'submitted',
+    [`events/${eventKey}/assignedTo`]: null,
+    [`events/${eventKey}/unaccepted`]: {
+      feedback,
+      userKey
+    },
+    [`volunteer/${userKey}/EventKey`]: null
+  }
+
+  return firebase
+    .database()
+    .ref()
+    .update(updates)
 }

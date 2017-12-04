@@ -17,6 +17,7 @@ import {
   ListItem,
   Thumbnail
 } from 'native-base'
+import { ActivityIndicator } from 'react-native'
 import AlignedText from '../components/AlignedText'
 
 const MessageView = styled.View`
@@ -34,34 +35,51 @@ const MessageView = styled.View`
 const EventItem = observer(
   ({
     onPress,
-    event: { guid, eventTypeImage, caller, more, timestamp, eventType }
-  }) => (
-    <ListItem
-      avatar
-      onPress={() => {
-        onPress(guid)
-      }}
-    >
-      <Left>
-        <Thumbnail
-          source={{
-            uri: eventTypeImage
-          }}
-        />
-      </Left>
-      <Body>
-        <AlignedText>
-          {eventType} : {caller}
-        </AlignedText>
-        <AlignedText note>{more}</AlignedText>
-      </Body>
-      <Right>
-        <FormattedRelative value={timestamp}>
-          {relative => <AlignedText note>{relative}</AlignedText>}
-        </FormattedRelative>
-      </Right>
-    </ListItem>
-  )
+    event: { guid, eventTypeImage, city, more, timestamp, eventType, isLoading }
+  }) =>
+    isLoading ? (
+      <ListItem avatar>
+        <Left>
+          <ActivityIndicator size="large" />
+        </Left>
+        <Body>
+          <FormattedMessage
+            id="Home.event.loadingTitle"
+            defaultMessage="Please wait, loading new event"
+          >
+            {txt => <AlignedText>{txt}</AlignedText>}
+          </FormattedMessage>
+          <AlignedText note />
+        </Body>
+        <Right />
+      </ListItem>
+    ) : (
+      <ListItem
+        avatar
+        onPress={() => {
+          onPress(guid)
+        }}
+      >
+        <Left>
+          <Thumbnail
+            source={{
+              uri: eventTypeImage
+            }}
+          />
+        </Left>
+        <Body>
+          <AlignedText>
+            {eventType} - {city}
+          </AlignedText>
+          <AlignedText note>{more}</AlignedText>
+        </Body>
+        <Right>
+          <FormattedRelative value={timestamp}>
+            {relative => <AlignedText note>{relative}</AlignedText>}
+          </FormattedRelative>
+        </Right>
+      </ListItem>
+    )
 )
 
 @observer

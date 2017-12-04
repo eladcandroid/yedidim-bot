@@ -1,7 +1,6 @@
-import { types } from 'mobx-state-tree'
-import { runInAction } from 'mobx'
-import * as api from './api'
-import * as storage from './storage'
+import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
+import * as api from '../io/api'
+import * as storage from '../io/storage'
 
 const EventCases = [
   'כבלים',
@@ -31,6 +30,7 @@ export const Event = types
   .model('Event', {
     guid: types.identifier(),
     status: types.maybe(types.string),
+    assignedTo: types.maybe(types.string),
     timestamp: types.maybe(types.Date),
     address: types.maybe(types.string),
     caller: types.maybe(types.string),
@@ -53,29 +53,47 @@ export const Event = types
     get eventTypeImage() {
       return EventImages[self.type]
     },
-    get isAwaitingAssignment() {
+    get isReadyForAssignment() {
       return self.status === 'sent' || self.status === 'submitted'
+    },
+    get isAssigned() {
+      return (
+        self.status === 'assigned' &&
+        self.assignedTo === getRoot(self).authStore.currentUser.guid
+      )
     }
   }))
   .actions(self => ({
     onEventUpdated: eventData => {
-      // console.log('subscribed to event triggered', eventData)
       // Update properties
       Object.assign(self, eventData)
       // Not loading anymore (if it was loading)
       self.isLoading = false
     },
     afterCreate: () => {
-      // console.log('onAfterCreate added by notification', self.guid)
-      self.unwatchAuth = api.subscribeToEvent(self.guid, eventData => {
-        runInAction(() => {
-          self.onEventUpdated(eventData)
-        })
-      })
+      self.unsubscribeId = api.subscribeToEvent(self.guid, self.onEventUpdated)
     },
     beforeDestroy: () => {
-      self.unwatchAuth()
-    }
+      api.unsubscribeToEvent(self.guid, self.unsubscribeId)
+    },
+    remove: () => {
+      getParent(self, 2).removeEvent(self.guid)
+    },
+    accept: flow(function* accept() {
+      // Retrieve current logged user id
+      const currentUserId = getRoot(self).authStore.currentUser.guid
+      return yield api.acceptEvent(self.guid, currentUserId)
+    }),
+    finalise: flow(function* finalise(feedback) {
+      // Retrieve current logged user id
+      const currentUserId = getRoot(self).authStore.currentUser.guid
+      return yield api.finaliseEvent(self.guid, currentUserId, feedback)
+    }),
+    unaccept: flow(function* unaccept(feedback) {
+      // Retrieve current logged user id
+      const currentUserId = getRoot(self).authStore.currentUser.guid
+      return yield api.unacceptEvent(self.guid, currentUserId, feedback)
+    })
   }))
 
 const EventStore = types
@@ -93,12 +111,8 @@ const EventStore = types
       return self.events.size > 0
     }
   }))
-  .actions(self => ({
-    afterCreate: async () => {
-      const eventIds = await storage.eventIds()
-      eventIds.forEach(eventId => self.addEvent(eventId))
-    },
-    addEvent: eventId => {
+  .actions(self => {
+    function addEvent(eventId) {
       // If no event was added, add new to store
       if (!self.events.get(eventId)) {
         self.events.put(
@@ -107,12 +121,23 @@ const EventStore = types
           })
         )
       }
-    },
-    addEventFromNotification: eventId => {
-      // Add event to async store for restoring on app restart
-      storage.addEventId(eventId)
-
-      self.addEvent(eventId)
     }
-  }))
+
+    return {
+      afterCreate: flow(function* afterCreate() {
+        const eventIds = yield storage.eventIds()
+        eventIds.forEach(eventId => addEvent(eventId))
+      }),
+      removeEvent: flow(function* removeEvent(eventId) {
+        destroy(self.events.get(eventId))
+        yield storage.removeEventId(eventId)
+      }),
+      addEventFromNotification: eventId => {
+        // Add event to async store for restoring on app restart
+        storage.addEventId(eventId)
+
+        addEvent(eventId)
+      }
+    }
+  })
 export default EventStore
