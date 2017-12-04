@@ -1,11 +1,31 @@
 import { types, getParent, flow } from 'mobx-state-tree'
 import * as api from '../io/api'
 
-export const User = types.model('User', {
-  guid: types.identifier(),
-  name: types.string,
-  phone: types.string
-})
+export const User = types
+  .model('User', {
+    guid: types.identifier(),
+    name: types.string,
+    phone: types.string,
+    muted: types.maybe(types.Date)
+  })
+  .views(self => ({
+    get isMuted() {
+      // is muted if muted exists and is less then 24 hours from now
+      return !!(
+        self.muted &&
+        self.muted.getTime() > new Date().getTime() - 24 * 3600 * 1000
+      )
+    }
+  }))
+  .actions(self => ({
+    toggleMute: flow(function* toggleMute() {
+      // if it is muted, then unmuted (remove field) or set new timestamp for now
+      self.muted = self.isMuted ? null : new Date()
+      yield api.updateUser(self.guid, {
+        Muted: self.muted ? self.muted.getTime() : null
+      })
+    })
+  }))
 
 const AuthenticationStore = types
   .model('AuthenticationStore', {
@@ -31,7 +51,8 @@ const AuthenticationStore = types
         self.currentUser = User.create({
           guid: userAuth.phoneNumber,
           name: `${userInfo.FirstName} ${userInfo.LastName}`,
-          phone: userInfo.MobilePhone
+          phone: userInfo.MobilePhone,
+          muted: userInfo.Muted
         })
       }
 

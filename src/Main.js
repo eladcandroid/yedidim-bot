@@ -8,12 +8,12 @@ import AuthenticatedDrawer from 'layouts/AuthenticatedDrawer'
 @observer
 class Main extends Component {
   render() {
-    const { isAuthenticated, intl } = this.props
+    const { isAuthenticated, ...screenProps } = this.props
 
     return (
       <Root>
         {isAuthenticated ? (
-          <AuthenticatedDrawer screenProps={{ intl }} />
+          <AuthenticatedDrawer screenProps={screenProps} />
         ) : (
           <AuthenticationScreen />
         )}
@@ -23,5 +23,7 @@ class Main extends Component {
 }
 
 export default inject(({ stores }) => ({
-  isAuthenticated: stores.authStore.isAuthenticated
+  isAuthenticated: stores.authStore.isAuthenticated,
+  toggleMute: stores.authStore.currentUser.toggleMute,
+  isMuted: stores.authStore.currentUser.isMuted
 }))(injectIntl(Main))

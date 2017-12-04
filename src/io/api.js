@@ -28,6 +28,13 @@ async function registerForPushNotificationsAsync() {
   return Notifications.getExpoPushTokenAsync()
 }
 
+export async function updateUser(userKey, properties) {
+  return firebase
+    .database()
+    .ref(`/volunteer/${userKey}`)
+    .update(properties)
+}
+
 async function loadUserInfo(userAuth) {
   if (!userAuth) {
     return undefined
