@@ -1,4 +1,4 @@
-import { types, destroy, flow, getRoot } from 'mobx-state-tree'
+import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
 import * as api from './api'
 import * as storage from './storage'
 
@@ -75,6 +75,9 @@ export const Event = types
     },
     beforeDestroy: () => {
       api.unsubscribeToEvent(self.guid, self.unsubscribeId)
+    },
+    remove: () => {
+      getParent(self, 2).removeEvent(self.guid)
     },
     accept: flow(function* accept() {
       // Retrieve current logged user id

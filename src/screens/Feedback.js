@@ -82,13 +82,13 @@ export class FeedbackScreen extends Component {
   }
 
   onActionBtnPress = async () => {
-    const { event, navigation, removeEvent, screenProps: { intl } } = this.props
-    const { state: { params: { action, eventId } } } = navigation
+    const { event, navigation, screenProps: { intl } } = this.props
+    const { state: { params: { action } } } = navigation
 
     // Execute action on event
     await event[action](this.state.feedback)
     // Remove event from list of events
-    await removeEvent(eventId)
+    await event.remove()
     // Navigate to home (resetting state)
     navigation.dispatch(
       NavigationActions.reset({
@@ -218,7 +218,6 @@ export class FeedbackScreen extends Component {
 export default inject(
   ({ stores }, { navigation: { state: { params: { eventId } } } }) => ({
     event: stores.eventStore.findById(eventId),
-    removeEvent: stores.eventStore.removeEvent,
     name: stores.authStore.currentUser.name
   })
 )(FeedbackScreen)

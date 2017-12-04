@@ -170,7 +170,7 @@ class EventScreen extends Component {
   }
 
   render() {
-    const { event, navigation, removeEvent } = this.props
+    const { event, navigation } = this.props
     const { isAssigned } = event || {}
 
     if (!event || !event.guid) {
@@ -212,7 +212,7 @@ class EventScreen extends Component {
           }
         : () => {
             // Ignore Event
-            removeEvent(event.guid)
+            event.remove()
             // Navigate back
             navigation.goBack()
           }
@@ -233,8 +233,7 @@ export default inject(
       // Return isAssigned because we need mobx to refresh the view
       //  if it changes
       isAssigned: event && event.isAssigned,
-      event,
-      removeEvent: stores.eventStore.removeEvent
+      event
     }
   }
 )(EventScreen)
