@@ -14,6 +14,7 @@ import { View, ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
+import { FormattedMessage } from 'react-intl'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -68,34 +69,53 @@ class AuthenticationScreen extends React.Component {
         <Header>
           <Left />
           <Body>
-            <Title>Authentication</Title>
+            <FormattedMessage
+              id="Authentication.title"
+              defaultMessage="Authentication"
+            >
+              {txt => <Title>{txt}</Title>}
+            </FormattedMessage>
           </Body>
           <Right />
         </Header>
         {isLoading ? (
           <Content padder>
-            <IntroText>Please wait, authenticating...</IntroText>
+            <FormattedMessage
+              id="Authentication.waiting"
+              defaultMessage="Please wait, authenticating..."
+            >
+              {txt => <IntroText>{txt}</IntroText>}
+            </FormattedMessage>
             <ActivityIndicator size="large" />
           </Content>
         ) : (
           <Content padder>
             {authError ? (
               <View>
-                <IntroText>
-                  An error has occurred, unable to authenticate. Please try
-                  again later.
-                </IntroText>
-                <ErrorText>Code: {authError}</ErrorText>
+                <FormattedMessage
+                  id="Authentication.error"
+                  defaultMessage="An error has occurred, unable to authenticate. Please try again later."
+                >
+                  {txt => <IntroText>{txt}</IntroText>}
+                </FormattedMessage>
+                <ErrorText>Error Code: {authError}</ErrorText>
               </View>
             ) : (
-              <IntroText>
-                You are not authenticated yet. Please authenticate to receive
-                events.
-              </IntroText>
+              <FormattedMessage
+                id="Authentication.notauthenticated"
+                defaultMessage="You are not authenticated yet. Please authenticate to receive events."
+              >
+                {txt => <IntroText>{txt}</IntroText>}
+              </FormattedMessage>
             )}
             <ButtonsView>
               <StyledButton success onPress={this.handleAuthentication}>
-                <Text>Authenticate me</Text>
+                <FormattedMessage
+                  id="Authentication.button"
+                  defaultMessage="Authenticate me"
+                >
+                  {txt => <Text>{txt}</Text>}
+                </FormattedMessage>
               </StyledButton>
             </ButtonsView>
           </Content>
