@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_NOTIFICATIONS, SET_ERROR } from '../constants/actionTypes';
 import { registerForPushNotifications } from "./notificationsActions";
-import { objectToArray } from "../common/utils";
+import { objectToArray, getInstance } from "../common/utils";
 
 const firebaseConfig = {
   sandbox: {
@@ -31,7 +31,7 @@ const firebaseConfig = {
 
 };
 
-firebase.initializeApp(firebaseConfig[Expo.Constants.manifest.extra.instance]);
+firebase.initializeApp(firebaseConfig[getInstance()]);
 
 export function checkUserAuth() {
   return (dispatch => {
@@ -182,7 +182,7 @@ function loadUserData(user) {
 }
 
 function loadEvents() {
-  return (dispatch => {
+  return ((dispatch, getState) => {
     firebase.database().ref('/events').once('value')
       .then((snapshot) => {
         let events = objectToArray(snapshot.val());
@@ -196,9 +196,12 @@ function loadEvents() {
         dispatch(setEvents(events));
         const timestamp = events.length > 0 ? events[0].timestamp + 1 : 0;
         firebase.database().ref('/events').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
-          let event = data.val();
-          event.key = data.key;
-          dispatch(addEvent(event));
+          //In case the event already exists ignore it
+          if (!getState().dataSource.events.find(event => event.key === data.key)) {
+            let event = data.val();
+            event.key = data.key;
+            dispatch(addEvent(event));
+          }
         });
         firebase.database().ref('/events').on('child_changed', (data) => {
           let event = data.val();
