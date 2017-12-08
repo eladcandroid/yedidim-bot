@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { TouchableHighlight, ScrollView, View, FlatList, Text, StyleSheet, Button } from 'react-native';
 import { getEventStatus, formatEventCase, formatEventTime } from '../common/utils';
-import { EventSource, EventStatus } from '../constants/consts';
+import { EventStatus } from '../constants/consts';
 import EventDetails from './EventDetails';
 
 class EventsListItem extends Component {
@@ -37,7 +37,7 @@ class EventsListHeader extends Component {
 
 class EventsList extends Component {
   openEventDetails(event) {
-    this.props.navigation.navigate('EventDetails', {event});
+    this.props.navigation.navigate('EventDetails', {key: event.key});
   }
 
   addNewEvent() {

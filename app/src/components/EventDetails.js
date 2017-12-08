@@ -166,8 +166,8 @@ class EventDetails extends Component {
         selectedValue={this.state.case}
         onValueChange={(value) => this.setState({case: value})}
       >
-        {EventCases.map((label, index) => {
-          return (<Picker.Item label={label} value={index} key={index}/>);
+        {EventCases.map((eventCase) => {
+          return (<Picker.Item label={eventCase.label} value={eventCase.case} key={eventCase.case}/>);
         })}
       </Picker>
     )
@@ -277,9 +277,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const event = state.dataSource.events ? state.dataSource.events.find(event => event.key === ownProps.navigation.state.params.key) : undefined;
   return {
-    event: ownProps.navigation.state.params.event || {status: EventStatus.Draft, details: {}},
-    editable: !ownProps.navigation.state.params.event,
+    event: event || {status: EventStatus.Draft, details: {}},
+    editable: !ownProps.navigation.state.params.key,
     user: state.dataSource.user
   };
 };
