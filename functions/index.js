@@ -172,6 +172,10 @@ function sendFollowUpResponse(event, context) {
             context.lastMessage = lastMessage.error_next;
           }
           sendResponse = true;
+        } else if (response.text){
+          //Last message - capture the extra data
+          context.details.more = context.details.more + " ; " + response.text;
+          promises.push(events.set(context));
         }
         if (sendResponse) {
           const nextQuestion = flow.messages[context.lastMessage];
@@ -244,7 +248,7 @@ function validateResponse(event, lastMessage) {
           });
       }
     } else if (lastMessage.final){
-      resolve({valid: false, final: true});
+      resolve({valid: false, final: true, text: event.message.text});
     } else if (!event.message.text){
       resolve({valid: false});
     } else {
