@@ -3,8 +3,8 @@
     "name": "ידידים - מוקדן",
     "description": "ידידים - מוקדן",
     "slug": "dispatcher",
-    "sdkVersion": "22.0.0",
-    "version": "0.4.6",
+    "sdkVersion": "23.0.0",
+    "version": "0.5.0",
     "orientation": "portrait",
     "icon": "./assets/icons/app-icon.png",
     "loading": {
@@ -14,7 +14,7 @@
       "supportsTablet": false
     },
     "extra": {
-      "instance": "production"
+      "_instance": "sandbox2"
     },
     "hooks": {
       "postPublish": [
