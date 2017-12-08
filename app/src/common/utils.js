@@ -1,6 +1,12 @@
 import dateFormat from 'dateformat';
 import { EventCases } from "../constants/consts";
 
+export const getInstance = () => {
+  return (Expo.Constants.manifest.extra && Expo.Constants.manifest.extra.instance) ?
+    Expo.Constants.manifest.extra.instance :
+      Expo.Constants.manifest.releaseChannel ? Expo.Constants.manifest.releaseChannel : 'production';
+};
+
 export const objectToArray = (obj) => {
   let arr = [];
   for (const key in obj){
@@ -23,10 +29,8 @@ export const getUserDetailsText = (event) => {
 
 
 export const formatEventCase = (event) => {
-  if (!event.details.case && event.details.case !== 0){
-    return 'לא ידוע';
-  }
-  return EventCases[event.details.case];
+  const eventCase = EventCases.find(eventCase => eventCase.case === event.details.case);
+  return eventCase && eventCase.label ? eventCase.label : 'לא ידוע';
 };
 
 export const formatEventTime = (event) => {

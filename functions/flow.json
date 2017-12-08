@@ -41,9 +41,10 @@
       "pre": "{variable}, כעת אבקש ממך לענות על מס' שאלות על מנת שאוכל להעביר את המידע למתנדב שיסייע לך",
       "field": "case",
       "buttons": [
-        {"payload": "problem_fuel"},
-        {"payload": "problem_flat_tire"},
         {"payload": "problem_battery"},
+        {"payload": "problem_flat_tire"},
+        {"payload": "problem_car_locked"},
+        {"payload": "problem_fuel"},
         {"payload": "problem_rescue"},
         {"payload": "problem_code"},
         {"payload": "problem_other"}
@@ -112,7 +113,7 @@
     "confirm_request": {
       "final": true,
       "submit": true,
-      "text": "קריאתך התקבלה בהצלחה. מוקדן \"ידידים\" יצור איתך קשר בדקות הקרובות..."
+      "text": "קריאתך התקבלה בהצלחה. מוקדן \"ידידים\" יצור איתך קשר בדקות הקרובות. אנא הוספ\\י כל מידע שיכול לעזור למתנדב"
     }
   },
   "payloads": {
@@ -160,6 +161,11 @@
     "problem_other": {
       "title": "אחר",
       "case": 8,
+      "next": "more_details"
+    },
+    "problem_car_locked": {
+      "title": "הרכב ננעל",
+      "case": 9,
       "next": "more_details"
     }
   }
