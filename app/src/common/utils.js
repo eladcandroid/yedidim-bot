@@ -4,7 +4,7 @@ import { EventCases } from "../constants/consts";
 export const getInstance = () => {
   return (Expo.Constants.manifest.extra && Expo.Constants.manifest.extra.instance) ?
     Expo.Constants.manifest.extra.instance :
-      Expo.Constants.manifest.releaseChannel ? Expo.Constants.manifest.releaseChannel : 'production';
+      !Expo.Constants.manifest.releaseChannel || Expo.Constants.manifest.releaseChannel === 'default' ? 'production' : Expo.Constants.manifest.releaseChannel;
 };
 
 export const objectToArray = (obj) => {
