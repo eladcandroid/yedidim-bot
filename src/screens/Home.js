@@ -84,7 +84,10 @@ const EventItem = observer(
 
 @observer
 class HomeScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({
+    navigation,
+    screenProps: { toggleMute, isMuted }
+  }) => ({
     header: (
       <Header>
         <Left>
@@ -97,7 +100,14 @@ class HomeScreen extends Component {
             {txt => <Title>{txt}</Title>}
           </FormattedMessage>
         </Body>
-        <Right />
+        <Right>
+          <Button transparent onPress={toggleMute}>
+            <Icon
+              style={isMuted ? { color: 'red' } : {}}
+              name={`ios-notifications${isMuted ? '-off' : ''}`}
+            />
+          </Button>
+        </Right>
       </Header>
     )
   })
@@ -136,6 +146,7 @@ class HomeScreen extends Component {
 }
 
 export default inject(({ stores }) => ({
+  currentUser: stores.authStore.currentUser,
   hasEvents: stores.eventStore.hasEvents,
   allEvents: stores.eventStore.allEvents
 }))(HomeScreen)

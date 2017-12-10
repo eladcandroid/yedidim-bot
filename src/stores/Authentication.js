@@ -1,11 +1,30 @@
 import { types, getParent, flow } from 'mobx-state-tree'
 import * as api from '../io/api'
 
-export const User = types.model('User', {
-  guid: types.identifier(),
-  name: types.string,
-  phone: types.string
-})
+export const User = types
+  .model('User', {
+    guid: types.identifier(),
+    name: types.string,
+    phone: types.string,
+    muted: types.maybe(types.Date)
+  })
+  .views(self => ({
+    get isMuted() {
+      // is muted if muted exists and is less then 24 hours from now
+      return !!(
+        self.muted &&
+        self.muted.getTime() > new Date().getTime() - 24 * 3600 * 1000
+      )
+    }
+  }))
+  .actions(self => ({
+    toggleMute: flow(function* toggleMute() {
+      // if it is muted, then unmuted (remove field) or set new timestamp for now
+      yield api.updateUser(self.guid, {
+        Muted: self.isMuted ? null : new Date().getTime()
+      })
+    })
+  }))
 
 const AuthenticationStore = types
   .model('AuthenticationStore', {
@@ -22,24 +41,19 @@ const AuthenticationStore = types
     }
   }))
   .actions(self => {
-    function onUserChanged({ userAuth, userInfo }) {
-      if (!userAuth) {
+    function onUserChanged(userInfo) {
+      if (!userInfo) {
         // Not authenticated
         self.currentUser = null
       } else {
-        // console.log('>>>> Authenticated Changed!', userAuth, userInfo)
-        self.currentUser = User.create({
-          guid: userAuth.phoneNumber,
-          name: `${userInfo.FirstName} ${userInfo.LastName}`,
-          phone: userInfo.MobilePhone
-        })
+        self.currentUser = User.create(userInfo)
       }
 
       self.isLoading = false
     }
 
     function onError(error) {
-      // console.log('>>>>', error)
+      console.log('onError', error) // TODO Throw ?
       self.error = error
       self.isLoading = false
     }
