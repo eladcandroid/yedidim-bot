@@ -35,22 +35,35 @@ export async function updateUser(userKey, properties) {
     .update(properties)
 }
 
-async function loadUserInfo(userAuth) {
-  if (!userAuth) {
-    return undefined
+// Store subscription so to be able to unsubscribe on logoff
+let currentUserInfoSubscription
+
+async function subscribeToUserInfo(
+  userAuth,
+  onChangeCallback,
+  onErrorCallback
+) {
+  if (!userAuth || !userAuth.phoneNumber) {
+    // No user authenticated yet, return undefined
+    onChangeCallback()
+  } else {
+    // User authenticated, subscribe to get updated details
+    const callback = snapshot => {
+      if (snapshot && snapshot.val()) {
+        onChangeCallback({ guid: userAuth.phoneNumber, ...snapshot.val() })
+      } else {
+        onErrorCallback('volunteer-not-registered')
+      }
+    }
+
+    firebase
+      .database()
+      .ref(`volunteer/${userAuth.phoneNumber}`)
+      .on('value', callback)
+
+    // Return callback used which the id for unsubscribing
+    currentUserInfoSubscription = { callback, userKey: userAuth.phoneNumber }
   }
-
-  const snapshot = await firebase
-    .database()
-    .ref(`/volunteer/${userAuth.phoneNumber}`)
-    .once('value')
-
-  if (snapshot.val()) {
-    return snapshot.val()
-  }
-
-  /* eslint no-throw-literal: "off" */
-  throw 'volunteer-not-registered'
 }
 
 async function updateUserNotificationToken(userAuth) {
@@ -62,14 +75,9 @@ async function updateUserNotificationToken(userAuth) {
     .update({ NotificationToken })
 }
 
-export function onAuthenticationChanged(onAuthenticationCallback, onError) {
+export function onAuthenticationChanged(onAuthentication, onError) {
   return firebase.auth().onAuthStateChanged(async userAuth => {
-    try {
-      const userInfo = await loadUserInfo(userAuth)
-      onAuthenticationCallback({ userInfo, userAuth })
-    } catch (e) {
-      onError(e)
-    }
+    subscribeToUserInfo(userAuth, onAuthentication, onError)
   })
 }
 
@@ -84,15 +92,18 @@ export async function signIn({ verificationId, code }) {
     // Update notification token after sign in
     await updateUserNotificationToken(userAuth)
 
-    const userInfo = await loadUserInfo(userAuth)
-
-    return { userInfo, userAuth }
+    // Should have been subscribed to currentUserInfo already (check onAuthenticationChanged)
   } catch (error) {
     throw error.code
   }
 }
 
 export async function signOut() {
+  const { callback, userKey } = currentUserInfoSubscription
+  await firebase
+    .database()
+    .ref(`volunteer/${userKey}`)
+    .off('value', callback)
   return firebase.auth().signOut()
 }
 

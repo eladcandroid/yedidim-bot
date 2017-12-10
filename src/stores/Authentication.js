@@ -20,9 +20,8 @@ export const User = types
   .actions(self => ({
     toggleMute: flow(function* toggleMute() {
       // if it is muted, then unmuted (remove field) or set new timestamp for now
-      self.muted = self.isMuted ? null : new Date()
       yield api.updateUser(self.guid, {
-        Muted: self.muted ? self.muted.getTime() : null
+        Muted: self.isMuted ? null : new Date().getTime()
       })
     })
   }))
@@ -42,14 +41,14 @@ const AuthenticationStore = types
     }
   }))
   .actions(self => {
-    function onUserChanged({ userAuth, userInfo }) {
-      if (!userAuth) {
+    function onUserChanged(userInfo) {
+      if (!userInfo) {
         // Not authenticated
         self.currentUser = null
       } else {
         // console.log('>>>> Authenticated Changed!', userAuth, userInfo)
         self.currentUser = User.create({
-          guid: userAuth.phoneNumber,
+          guid: userInfo.guid,
           name: `${userInfo.FirstName} ${userInfo.LastName}`,
           phone: userInfo.MobilePhone,
           muted: userInfo.Muted
