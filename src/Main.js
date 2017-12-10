@@ -32,7 +32,7 @@ const mute = {
 class Main extends Component {
   componentDidUpdate(prevProps) {
     const { isMuted, intl } = this.props
-    if (isMuted !== prevProps.isMuted) {
+    if (typeof isMuted === 'boolean' && isMuted !== prevProps.isMuted) {
       // Muted value was changed, show toast
       Toast.show({
         text: intl.formatMessage(mute[isMuted].text),
