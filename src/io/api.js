@@ -35,6 +35,12 @@ export async function updateUser(userKey, properties) {
     .update(properties)
 }
 
+const userSnapshotToJSON = snapshot => ({
+  name: `${snapshot.FirstName} ${snapshot.LastName}`,
+  phone: snapshot.MobilePhone,
+  muted: snapshot.Muted
+})
+
 // Store subscription so to be able to unsubscribe on logoff
 let currentUserInfoSubscription
 
@@ -50,7 +56,10 @@ async function subscribeToUserInfo(
     // User authenticated, subscribe to get updated details
     const callback = snapshot => {
       if (snapshot && snapshot.val()) {
-        onChangeCallback({ guid: userAuth.phoneNumber, ...snapshot.val() })
+        onChangeCallback({
+          guid: userAuth.phoneNumber,
+          ...userSnapshotToJSON(snapshot.val())
+        })
       } else {
         onErrorCallback('volunteer-not-registered')
       }

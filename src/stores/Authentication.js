@@ -46,13 +46,7 @@ const AuthenticationStore = types
         // Not authenticated
         self.currentUser = null
       } else {
-        // console.log('>>>> Authenticated Changed!', userAuth, userInfo)
-        self.currentUser = User.create({
-          guid: userInfo.guid,
-          name: `${userInfo.FirstName} ${userInfo.LastName}`,
-          phone: userInfo.MobilePhone,
-          muted: userInfo.Muted
-        })
+        self.currentUser = User.create(userInfo)
       }
 
       self.isLoading = false
