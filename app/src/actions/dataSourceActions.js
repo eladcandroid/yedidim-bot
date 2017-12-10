@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_NOTIFICATIONS, SET_ERROR } from '../constants/actionTypes';
+import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_NOTIFICATIONS, SET_ERROR, SET_LATEST_VERSION } from '../constants/actionTypes';
 import { registerForPushNotifications } from "./notificationsActions";
 import { objectToArray, getInstance } from "../common/utils";
 
@@ -137,6 +137,7 @@ export function updateEventStatus(event, status) {
 
 function handleSignedInUser(user) {
   return (dispatch => {
+    dispatch(checkVersion());
     dispatch(loadUserData(user));
     dispatch(loadEvents());
   });
@@ -160,6 +161,15 @@ function deleteNotificationToken(user) {
       }
       resolve();
     });
+  });
+}
+
+function checkVersion() {
+  return ((dispatch) => {
+    firebase.database().ref('/settings/dispatcherApp/version').on('value', (snapshot) => {
+        const version = snapshot.val();
+        dispatch(setLatestVersion(version));
+      });
   });
 }
 
@@ -264,5 +274,12 @@ function setNotifications(notifications){
   return {
     type: SET_NOTIFICATIONS,
     notifications
+  }
+}
+
+function setLatestVersion(version) {
+  return {
+    type: SET_LATEST_VERSION,
+    version
   }
 }
