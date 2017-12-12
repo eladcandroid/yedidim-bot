@@ -137,7 +137,7 @@ const eventSnapshotToJSON = snapshot => ({
 
 export function subscribeToEvent(eventKey, onChangeCallback) {
   const callback = snapshot => {
-    if (snapshot) {
+    if (snapshot && snapshot.val()) {
       onChangeCallback(eventSnapshotToJSON(snapshot.val()))
     }
   }
