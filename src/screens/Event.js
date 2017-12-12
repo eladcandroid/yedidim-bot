@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, defineMessages } from 'react-intl'
-import { I18nManager } from 'react-native'
+import { I18nManager, Alert } from 'react-native'
 
 import {
   Button,
@@ -15,6 +15,7 @@ import {
 } from 'native-base'
 import EventDetails from '../components/EventDetails'
 import ButtonsConfirmationBar from '../components/ButtonsConfirmationBar'
+import TakenEventButtons from '../components/TakenEventButtons'
 
 const ignore = {
   modalMsgs: defineMessages({
@@ -116,6 +117,38 @@ const finalise = {
   }
 }
 
+const eventTakenMsgs = defineMessages({
+  title: {
+    id: 'Event.alert.taken.title',
+    defaultMessage: 'Event taken already'
+  },
+  text: {
+    id: 'Event.alert.taken.text',
+    defaultMessage:
+      'Sorry, this event was already accepted by another volunteer. Thank you for your time!'
+  },
+  confirm: {
+    id: 'Event.alert.taken.confirm',
+    defaultMessage: 'Ok'
+  }
+})
+
+const eventTakeErrorMsgs = defineMessages({
+  title: {
+    id: 'Event.alert.takeError.title',
+    defaultMessage: 'Error Accepting Event'
+  },
+  text: {
+    id: 'Event.alert.takeError.text',
+    defaultMessage:
+      'Sorry, unable to accept this event. Please try again, if error persists please contact administrator'
+  },
+  confirm: {
+    id: 'Event.alert.takeError.confirm',
+    defaultMessage: 'Ok'
+  }
+})
+
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
 // TODO Remove token after user logout
@@ -169,9 +202,23 @@ class EventScreen extends Component {
     }
   }
 
-  render() {
+  handleRemoveEvent = () => {
     const { event, navigation } = this.props
-    const { isAssigned } = event || {}
+
+    // Ignore Event
+    event.remove()
+    // Navigate back
+    navigation.goBack()
+  }
+
+  render() {
+    const {
+      event,
+      navigation,
+      screenProps: { intl },
+      isAssigned,
+      isTaken
+    } = this.props
 
     if (!event || !event.guid) {
       return (
@@ -196,7 +243,34 @@ class EventScreen extends Component {
           }
         : () => {
             // Accept Event
-            event.accept()
+            event.accept().catch(({ code }) => {
+              if (code === 'event-taken') {
+                // Event was taken already, show alert message
+                Alert.alert(
+                  intl.formatMessage(eventTakenMsgs.title),
+                  intl.formatMessage(eventTakenMsgs.text),
+                  [
+                    {
+                      text: intl.formatMessage(eventTakenMsgs.confirm),
+                      onPress: this.handleRemoveEvent
+                    }
+                  ],
+                  { cancelable: false }
+                )
+              } else {
+                // Error taking event (TODO Have a store for errors and use that in all scenarios?)
+                Alert.alert(
+                  intl.formatMessage(eventTakeErrorMsgs.title),
+                  intl.formatMessage(eventTakeErrorMsgs.text),
+                  [
+                    {
+                      text: intl.formatMessage(eventTakeErrorMsgs.confirm)
+                    }
+                  ],
+                  { cancelable: false }
+                )
+              }
+            })
           }
     }
 
@@ -210,17 +284,16 @@ class EventScreen extends Component {
               action: 'unaccept'
             })
           }
-        : () => {
-            // Ignore Event
-            event.remove()
-            // Navigate back
-            navigation.goBack()
-          }
+        : this.handleRemoveEvent
     }
 
     return (
       <EventDetails event={event}>
-        <ButtonsConfirmationBar ok={okBtn} cancel={cancelBtn} />
+        {isTaken ? (
+          <TakenEventButtons onPress={this.handleRemoveEvent} />
+        ) : (
+          <ButtonsConfirmationBar ok={okBtn} cancel={cancelBtn} />
+        )}
       </EventDetails>
     )
   }
@@ -233,6 +306,7 @@ export default inject(
       // Return isAssigned because we need mobx to refresh the view
       //  if it changes
       isAssigned: event && event.isAssigned,
+      isTaken: event && event.isTaken,
       event
     }
   }

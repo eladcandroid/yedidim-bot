@@ -61,6 +61,13 @@ export const Event = types
         self.status === 'assigned' &&
         self.assignedTo === getRoot(self).authStore.currentUser.guid
       )
+    },
+    get isTaken() {
+      return (
+        (self.status === 'assigned' &&
+          self.assignedTo !== getRoot(self).authStore.currentUser.guid) ||
+        self.status === 'completed'
+      )
     }
   }))
   .actions(self => ({

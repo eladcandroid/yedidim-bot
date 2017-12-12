@@ -35,7 +35,16 @@ const MessageView = styled.View`
 const EventItem = observer(
   ({
     onPress,
-    event: { guid, eventTypeImage, city, more, timestamp, eventType, isLoading }
+    event: {
+      guid,
+      eventTypeImage,
+      city,
+      more,
+      timestamp,
+      eventType,
+      isLoading,
+      isTaken
+    }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -77,6 +86,24 @@ const EventItem = observer(
           <FormattedRelative value={timestamp}>
             {relative => <AlignedText note>{relative}</AlignedText>}
           </FormattedRelative>
+          {isTaken && (
+            <FormattedMessage id="Home.event.taken" defaultMessage="TAKEN">
+              {txt => (
+                <AlignedText
+                  note
+                  style={{
+                    padding: 3,
+                    marginTop: 3,
+                    backgroundColor: 'red',
+                    color: 'white',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {txt}
+                </AlignedText>
+              )}
+            </FormattedMessage>
+          )}
         </Right>
       </ListItem>
     )
