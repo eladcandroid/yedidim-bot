@@ -1,5 +1,5 @@
 curl -H "Content-Type: application/json" -X POST https://exp.host/--/api/v2/push/send -d '{
-  "to": "ExponentPushToken[60WOiaJXd-g9UMxQ_M0oKc]",
+  "to": "ExponentPushToken[DAyFb2B-_O7uI6uwzRhI5f]",
   "title":"אירוע חדש",
   "data": {
       "eventId": "-KwEbiayp9GQvqFESoFl"

@@ -24,6 +24,11 @@ const withNotificationManager = WrappedComponent => {
     }
 
     handleNotification = ({ origin, data, remote }) => {
+      // If no data was sent, ignore notification
+      if (!data || !data.eventId) {
+        return
+      }
+
       if (remote) {
         // Add event to store
         const { eventId } = data
