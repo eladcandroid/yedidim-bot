@@ -15,6 +15,7 @@ import {
 } from 'native-base'
 import EventDetails from '../components/EventDetails'
 import ButtonsConfirmationBar from '../components/ButtonsConfirmationBar'
+import TakenEventButtons from '../components/TakenEventButtons'
 
 const ignore = {
   modalMsgs: defineMessages({
@@ -201,9 +202,23 @@ class EventScreen extends Component {
     }
   }
 
+  handleRemoveEvent = () => {
+    const { event, navigation } = this.props
+
+    // Ignore Event
+    event.remove()
+    // Navigate back
+    navigation.goBack()
+  }
+
   render() {
-    const { event, navigation, screenProps: { intl } } = this.props
-    const { isAssigned } = event || {}
+    const {
+      event,
+      navigation,
+      screenProps: { intl },
+      isAssigned,
+      isTaken
+    } = this.props
 
     if (!event || !event.guid) {
       return (
@@ -237,12 +252,7 @@ class EventScreen extends Component {
                   [
                     {
                       text: intl.formatMessage(eventTakenMsgs.confirm),
-                      onPress: () => {
-                        // Ignore Event
-                        event.remove()
-                        // Navigate back
-                        navigation.goBack()
-                      }
+                      onPress: this.handleRemoveEvent
                     }
                   ],
                   { cancelable: false }
@@ -274,17 +284,16 @@ class EventScreen extends Component {
               action: 'unaccept'
             })
           }
-        : () => {
-            // Ignore Event
-            event.remove()
-            // Navigate back
-            navigation.goBack()
-          }
+        : this.handleRemoveEvent
     }
 
     return (
       <EventDetails event={event}>
-        <ButtonsConfirmationBar ok={okBtn} cancel={cancelBtn} />
+        {isTaken ? (
+          <TakenEventButtons onPress={this.handleRemoveEvent} />
+        ) : (
+          <ButtonsConfirmationBar ok={okBtn} cancel={cancelBtn} />
+        )}
       </EventDetails>
     )
   }
@@ -297,6 +306,7 @@ export default inject(
       // Return isAssigned because we need mobx to refresh the view
       //  if it changes
       isAssigned: event && event.isAssigned,
+      isTaken: event && event.isTaken,
       event
     }
   }
