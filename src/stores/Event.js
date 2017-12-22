@@ -47,6 +47,9 @@ export const Event = types
     isLoading: true
   })
   .views(self => ({
+    get store() {
+      return getParent(self, 2)
+    },
     get eventType() {
       return EventCases[self.type]
     },
@@ -84,28 +87,46 @@ export const Event = types
       api.unsubscribeToEvent(self.guid, self.unsubscribeId)
     },
     remove: () => {
-      getParent(self, 2).removeEvent(self.guid)
+      self.store.removeEvent(self.guid)
     },
     accept: flow(function* accept() {
       // Retrieve current logged user id
+      self.store.setLoading(true)
       const currentUserId = getRoot(self).authStore.currentUser.guid
-      return yield api.acceptEvent(self.guid, currentUserId)
+      const results = yield api.acceptEvent(self.guid, currentUserId)
+      self.store.setLoading(false)
+      return results
     }),
     finalise: flow(function* finalise(feedback) {
       // Retrieve current logged user id
+      self.store.setLoading(true)
       const currentUserId = getRoot(self).authStore.currentUser.guid
-      return yield api.finaliseEvent(self.guid, currentUserId, feedback)
+      const results = yield api.finaliseEvent(
+        self.guid,
+        currentUserId,
+        feedback
+      )
+      self.store.setLoading(false)
+      return results
     }),
     unaccept: flow(function* unaccept(feedback) {
       // Retrieve current logged user id
+      self.store.setLoading(true)
       const currentUserId = getRoot(self).authStore.currentUser.guid
-      return yield api.unacceptEvent(self.guid, currentUserId, feedback)
+      const results = yield api.unacceptEvent(
+        self.guid,
+        currentUserId,
+        feedback
+      )
+      self.store.setLoading(false)
+      return results
     })
   }))
 
 const EventStore = types
   .model('EventStore', {
-    events: types.map(Event)
+    events: types.map(Event),
+    isLoading: false
   })
   .views(self => ({
     findById(eventId) {
@@ -144,6 +165,9 @@ const EventStore = types
         storage.addEventId(eventId)
 
         addEvent(eventId)
+      },
+      setLoading: isLoading => {
+        self.isLoading = isLoading
       }
     }
   })

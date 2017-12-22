@@ -70,30 +70,34 @@ const AuthenticationStore = types
     }
 
     const signIn = flow(function* signIn({ verificationId, code }) {
-      this.isLoading = true
-      this.error = null
-
+      self.isLoading = true
+      self.error = null
+      console.log('SIGNIN', self.isLoading)
       try {
         // const { userAuth, userInfo } = yield api.signIn({
         yield api.signIn({
           verificationId,
           code
         })
+        self.isLoading = false
         // console.log('Logged In!', userAuth, userInfo)
       } catch (error) {
-        this.error = error
+        console.log('ERROR', error)
+        self.error = error
+        self.isLoading = false
       }
     })
 
     const signOut = flow(function* signOut() {
-      this.isLoading = true
-      this.error = null
+      self.isLoading = true
+      self.error = null
 
       try {
         yield api.signOut()
-        // console.log('Logged Out!')
+        self.isLoading = false
       } catch (error) {
-        this.error = error
+        self.error = error
+        self.isLoading = false
       }
     })
 
