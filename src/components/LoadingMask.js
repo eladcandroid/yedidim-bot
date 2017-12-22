@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import { Text } from 'native-base'
+import { FormattedMessage } from 'react-intl'
 
 const LoadingMask = () => (
   <View
@@ -27,9 +28,18 @@ const LoadingMask = () => (
         borderRadius: 10
       }}
     >
-      <Text style={{ color: '#000', textAlign: 'center', paddingBottom: 30 }}>
-        Please wait, loading information...
-      </Text>
+      <FormattedMessage
+        id="LoadingMask.text"
+        defaultMessage="Please wait, loading information..."
+      >
+        {txt => (
+          <Text
+            style={{ color: '#000', textAlign: 'center', paddingBottom: 30 }}
+          >
+            {txt}
+          </Text>
+        )}
+      </FormattedMessage>
       <ActivityIndicator size="large" color="#000" />
     </View>
   </View>
