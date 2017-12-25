@@ -1,5 +1,4 @@
 node_modules/
 .expo/
 npm-debug.*
-Config.json
 i18n/messages
