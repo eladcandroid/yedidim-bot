@@ -28,7 +28,8 @@ export const User = types
 
 const AuthenticationStore = types
   .model('AuthenticationStore', {
-    isLoading: true,
+    isInitializing: true,
+    isLoading: false,
     currentUser: types.maybe(types.reference(User)),
     error: types.maybe(types.string)
   })
@@ -49,13 +50,13 @@ const AuthenticationStore = types
         self.currentUser = User.create(userInfo)
       }
 
-      self.isLoading = false
+      self.isInitializing = false
     }
 
     function onError(error) {
       console.log('onError', error) // TODO Throw ?
       self.error = error
-      self.isLoading = false
+      self.isInitializing = false
     }
 
     function afterCreate() {

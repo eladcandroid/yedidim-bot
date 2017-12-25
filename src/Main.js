@@ -52,8 +52,6 @@ class Main extends Component {
   render() {
     const { isAuthenticated, isLoading, ...screenProps } = this.props
 
-    console.log('>>>ISLOADING', isLoading)
-
     return (
       <Root>
         {isAuthenticated ? (
