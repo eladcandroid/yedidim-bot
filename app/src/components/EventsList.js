@@ -1,39 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { TouchableHighlight, ScrollView, View, FlatList, Text, StyleSheet, Button } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button } from 'react-native';
+import { Grid, Row, Col } from 'native-base';
 import { getEventStatus, formatEventCase, formatEventTime } from '../common/utils';
 import { EventStatus } from '../constants/consts';
 import EventDetails from './EventDetails';
 
-class EventsListItem extends Component {
-  render() {
-    return (
-      <TouchableHighlight onPress={this.props.onPress.bind(this)}>
-        <View style={styles.row}>
-          <Text style={styles.columnTime}>{formatEventTime(this.props.event)}</Text>
-          <Text style={styles.columnCase}>{formatEventCase(this.props.event)}</Text>
-          <Text style={styles.columnAddress}>{this.props.event.details.city}</Text>
-        </View>
-      </TouchableHighlight>
-    );
-  }
-}
-
-class EventsListHeader extends Component {
-  render() {
-    return (
-      <View style={styles.listHeader}>
-        <Text style={styles.headerTitle}>{this.props.title}</Text>
-        <View style={styles.headerRow}>
-          <Text style={styles.columnTime}>זמן</Text>
-          <Text style={styles.columnCase}>בעיה</Text>
-          <Text style={styles.columnAddress}>עיר</Text>
-        </View>
-      </View>
-    );
-  }
-}
 
 class EventsList extends Component {
   openEventDetails(event) {
@@ -42,6 +15,40 @@ class EventsList extends Component {
 
   addNewEvent() {
     this.props.navigation.navigate('EventDetails', {});
+  }
+
+  renderGrid(events) {
+    return (
+      <Grid>
+        <Col>
+          <Text style={styles.headerText}>עיר</Text>
+          {events.map(event => this.renderRow(event, 0))}
+        </Col>
+        <Col>
+          <Text style={styles.headerText}>בעיה</Text>
+          {events.map(event => this.renderRow(event, 1))}
+        </Col>
+        <Col>
+          <Text style={styles.headerText}>זמן</Text>
+          {events.map(event => this.renderRow(event, 2))}
+        </Col>
+      </Grid>
+    )
+  }
+
+  renderRow(event, colNum) {
+    return (
+      <Row style={styles.headerRow} onPress={this.openEventDetails.bind(this, event)} key={event.key + '_' + colNum}>
+          {
+            colNum === 2 ?
+              <Text style={styles.cellText}>{formatEventTime(event)}</Text>
+            : colNum === 1 ?
+              <Text style={styles.cellText}>{formatEventCase(event)}</Text>
+            :
+              <Text style={styles.cellText}>{event.details.city}</Text>
+          }
+      </Row>
+    );
   }
 
   render() {
@@ -54,18 +61,13 @@ class EventsList extends Component {
           : undefined
         }
         <ScrollView style={styles.scrollContainer}>
-          <EventsListHeader title={'אירועים חדשים'} />
-          <FlatList
-            data={this.props.newEvents}
-            renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
-          />
+          <Text style={styles.headerTitle}>אירועים חדשים</Text>
+          {this.renderGrid(this.props.newEvents)}
+
           <View style={styles.rowLine}/>
-          <EventsListHeader title={'אירועים פעילים'} />
-          <FlatList
-            scrollEnabled={false}
-            data={this.props.activeEvents}
-            renderItem={({item}) => <EventsListItem event={item} onPress={this.openEventDetails.bind(this, item)}/>}
-          />
+
+          <Text style={styles.headerTitle}>אירועים פעילים</Text>
+          {this.renderGrid(this.props.newEvents)}
         </ScrollView>
       </View>
     );
@@ -89,10 +91,6 @@ EventsList.propTypes = {
   allowNew: PropTypes.bool
 };
 
-EventsListItem.propTypes = {
-  onPress: PropTypes.func
-};
-
 const styles = StyleSheet.create({
   container: {
     flex:1,
@@ -101,7 +99,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex:1,
     flexDirection: 'column',
-    paddingTop: 20,
     paddingRight: 8,
     paddingLeft: 8,
     paddingBottom: 20,
@@ -116,11 +113,22 @@ const styles = StyleSheet.create({
   button: {
     width: 150
   },
-  listHeader: {
-    height: 50,
-  },
   headerTitle: {
+    fontSize: 22,
+    fontWeight: '500',
+    textAlign:'right',
+    paddingBottom: 10,
+    paddingTop: 10
+  },
+  headerText: {
+    height: 30,
     fontSize: 18,
+    fontWeight: '500',
+    textAlign:'right'
+  },
+  cellText: {
+    height: 50,
+    fontSize: 14,
     textAlign:'right'
   },
   headerRow: {
@@ -129,27 +137,10 @@ const styles = StyleSheet.create({
   },
   row: {
     height:50,
-    flexDirection: 'row-reverse',
-    backgroundColor: 'white'
   },
   rowLine: {
     height: 2,
     backgroundColor: 'black',
-    marginTop: 30
-  },
-  columnTime: {
-    width:70,
-    textAlign:'right',
-    paddingLeft:10
-  },
-  columnCase: {
-    width:110,
-    textAlign:'right',
-    paddingLeft:10
-  },
-  columnAddress: {
-    textAlign:'right',
-    paddingLeft:10,
-    flexGrow: 2
+    marginTop: 10
   }
 });
