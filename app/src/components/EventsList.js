@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text, StyleSheet, Button } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Button, Image } from 'react-native';
 import { Grid, Row, Col } from 'native-base';
 import { getEventStatus, formatEventCase, formatEventTime } from '../common/utils';
-import { EventStatus } from '../constants/consts';
+import { EventSource, EventStatus } from '../constants/consts';
 import EventDetails from './EventDetails';
 
 
@@ -20,9 +20,13 @@ class EventsList extends Component {
   renderGrid(events) {
     return (
       <Grid>
+        <Col style={{width:30}}>
+          <Text style={styles.headerText}/>
+          {events.map(event => this.renderRow(event, 3))}
+        </Col>
         <Col>
           <Text style={styles.headerText}>עיר</Text>
-          {events.map(event => this.renderRow(event, 0))}
+          {events.map(event => this.renderRow(event, 2))}
         </Col>
         <Col>
           <Text style={styles.headerText}>בעיה</Text>
@@ -30,7 +34,7 @@ class EventsList extends Component {
         </Col>
         <Col>
           <Text style={styles.headerText}>זמן</Text>
-          {events.map(event => this.renderRow(event, 2))}
+          {events.map(event => this.renderRow(event, 0))}
         </Col>
       </Grid>
     )
@@ -40,12 +44,15 @@ class EventsList extends Component {
     return (
       <Row style={styles.headerRow} onPress={this.openEventDetails.bind(this, event)} key={event.key + '_' + colNum}>
           {
-            colNum === 2 ?
+            colNum === 0 ?
               <Text style={styles.cellText}>{formatEventTime(event)}</Text>
             : colNum === 1 ?
               <Text style={styles.cellText}>{formatEventCase(event)}</Text>
-            :
+            : colNum === 2 ?
               <Text style={styles.cellText}>{event.details.city}</Text>
+            : event.source === EventSource.FB_BOT ?
+              <Image style={styles.fbImage} source={require('../../assets/icons/bot-icon.png')}/>
+            : <Text style={styles.cellText}/>
           }
       </Row>
     );
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign:'right'
   },
   cellText: {
-    height: 50,
+    height: 30,
     fontSize: 14,
     textAlign:'right'
   },
@@ -142,5 +149,12 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: 'black',
     marginTop: 10
+  },
+  colImage: {
+    width:30
+  },
+  fbImage: {
+    width: 20,
+    height: 20
   }
 });
