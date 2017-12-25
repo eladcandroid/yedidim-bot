@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text, StyleSheet, Button, Image } from 'react-native';
-import { Grid, Row, Col } from 'native-base';
+import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
+import { Grid, Row, Col, Button } from 'native-base';
 import { getEventStatus, formatEventCase, formatEventTime } from '../common/utils';
 import { EventSource, EventStatus } from '../constants/consts';
 import EventDetails from './EventDetails';
@@ -63,7 +63,9 @@ class EventsList extends Component {
       <View style={styles.container}>
         {this.props.allowNew ?
           <View style={styles.buttonRow}>
-            <Button style={styles.button} title={'פתיחת אירוע חדש'} onPress={this.addNewEvent.bind(this)}/>
+            <Button style={styles.button} onPress={this.addNewEvent.bind(this)}>
+              <Text style={styles.buttonText}>פתיחת אירוע חדש</Text>
+            </Button>
           </View>
           : undefined
         }
@@ -112,13 +114,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   buttonRow: {
-    alignContent: 'center',
+    justifyContent: 'center',
     paddingTop: 20,
     paddingRight: 40,
     paddingLeft: 40
   },
   button: {
-    width: 150
+    width: 150,
+    alignSelf:'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    alignSelf:'center'
   },
   headerTitle: {
     fontSize: 22,
