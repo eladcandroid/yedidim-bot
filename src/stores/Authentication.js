@@ -28,7 +28,8 @@ export const User = types
 
 const AuthenticationStore = types
   .model('AuthenticationStore', {
-    isLoading: true,
+    isInitializing: true,
+    isLoading: false,
     currentUser: types.maybe(types.reference(User)),
     error: types.maybe(types.string)
   })
@@ -49,13 +50,13 @@ const AuthenticationStore = types
         self.currentUser = User.create(userInfo)
       }
 
-      self.isLoading = false
+      self.isInitializing = false
     }
 
     function onError(error) {
       console.log('onError', error) // TODO Throw ?
       self.error = error
-      self.isLoading = false
+      self.isInitializing = false
     }
 
     function afterCreate() {
@@ -70,30 +71,35 @@ const AuthenticationStore = types
     }
 
     const signIn = flow(function* signIn({ verificationId, code }) {
-      this.isLoading = true
-      this.error = null
-
+      self.isLoading = true
+      self.error = null
+      console.log('SIGNIN', self.isLoading)
       try {
         // const { userAuth, userInfo } = yield api.signIn({
         yield api.signIn({
           verificationId,
           code
         })
+        self.isLoading = false
         // console.log('Logged In!', userAuth, userInfo)
       } catch (error) {
-        this.error = error
+        console.log('ERROR', error)
+        self.error = error
+        self.isLoading = false
       }
     })
 
     const signOut = flow(function* signOut() {
-      this.isLoading = true
-      this.error = null
+      self.isLoading = true
+      self.error = null
 
       try {
         yield api.signOut()
-        // console.log('Logged Out!')
+        self.root.eventStore.removeAllEvents()
+        self.isLoading = false
       } catch (error) {
-        this.error = error
+        self.error = error
+        self.isLoading = false
       }
     })
 

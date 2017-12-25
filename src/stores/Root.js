@@ -19,6 +19,9 @@ const RootStore = types
     },
     get isRTL() {
       return self.language !== 'en'
+    },
+    get isLoading() {
+      return self.authStore.isLoading || self.eventStore.isLoading
     }
   }))
   .actions(self => ({

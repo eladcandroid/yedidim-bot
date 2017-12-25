@@ -13,7 +13,7 @@ export default class App extends Component {
     await Expo.Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'), // eslint-disable-line
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'), // eslint-disable-line
-      Ionicons: require('native-base/Fonts/Ionicons.ttf'), // eslint-disable-line
+      Ionicons: require('native-base/Fonts/Ionicons.ttf') // eslint-disable-line
     })
 
     // Initialiase stores
@@ -24,7 +24,7 @@ export default class App extends Component {
   render() {
     const { isReady, stores } = this.state
 
-    if (!isReady || !stores || stores.authStore.isLoading) {
+    if (!isReady || !stores || stores.authStore.isInitializing) {
       return <Expo.AppLoading />
     }
 

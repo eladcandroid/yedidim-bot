@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react/native'
 import { Root, Toast } from 'native-base'
 import { injectIntl, defineMessages } from 'react-intl'
 import AuthenticatedDrawer from 'layouts/AuthenticatedDrawer'
+import LoadingMask from 'components/LoadingMask'
 
 const mute = {
   [true]: defineMessages({
@@ -32,7 +33,11 @@ const mute = {
 class Main extends Component {
   componentDidUpdate(prevProps) {
     const { isMuted, intl } = this.props
-    if (typeof isMuted === 'boolean' && isMuted !== prevProps.isMuted) {
+    if (
+      typeof isMuted === 'boolean' &&
+      typeof prevProps.isMuted === 'boolean' &&
+      isMuted !== prevProps.isMuted
+    ) {
       // Muted value was changed, show toast
       Toast.show({
         text: intl.formatMessage(mute[isMuted].text),
@@ -45,7 +50,7 @@ class Main extends Component {
   }
 
   render() {
-    const { isAuthenticated, ...screenProps } = this.props
+    const { isAuthenticated, isLoading, ...screenProps } = this.props
 
     return (
       <Root>
@@ -54,6 +59,7 @@ class Main extends Component {
         ) : (
           <AuthenticationScreen />
         )}
+        {isLoading && <LoadingMask />}
       </Root>
     )
   }
@@ -63,5 +69,6 @@ export default inject(({ stores }) => ({
   isAuthenticated: stores.authStore.isAuthenticated,
   toggleMute:
     stores.authStore.currentUser && stores.authStore.currentUser.toggleMute,
-  isMuted: stores.authStore.currentUser && stores.authStore.currentUser.isMuted
+  isMuted: stores.authStore.currentUser && stores.authStore.currentUser.isMuted,
+  isLoading: stores.isLoading
 }))(injectIntl(Main))

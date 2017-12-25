@@ -38,11 +38,11 @@ class I18nApp extends Component {
   }
 
   render() {
-    const { isReady, language } = this.props
+    const { language } = this.props
 
     return (
       <IntlProvider locale={language} messages={localeData[language]}>
-        <Main isReady={isReady} />
+        <Main />
       </IntlProvider>
     )
   }
