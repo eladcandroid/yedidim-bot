@@ -95,6 +95,7 @@ const AuthenticationStore = types
 
       try {
         yield api.signOut()
+        self.root.eventStore.removeAllEvents()
         self.isLoading = false
       } catch (error) {
         self.error = error

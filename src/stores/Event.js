@@ -160,6 +160,11 @@ const EventStore = types
         destroy(self.events.get(eventId))
         yield storage.removeEventId(eventId)
       }),
+      removeAllEvents: () => {
+        self.events.values().forEach(event => {
+          self.removeEvent(event.guid)
+        })
+      },
       addEventFromNotification: eventId => {
         // Add event to async store for restoring on app restart
         storage.addEventId(eventId)
