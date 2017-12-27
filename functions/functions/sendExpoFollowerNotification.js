@@ -44,7 +44,7 @@ exports.handleUpdateEvent = (event, admin) => {
 
 		console.log(dataToSend);
 
-		var options = {
+		let options = {
 			method: 'POST',
 			uri: 'https://exp.host/--/api/v2/push/send',
 			body: dataToSend,
