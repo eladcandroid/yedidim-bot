@@ -76,7 +76,7 @@ class EventsList extends Component {
           <View style={styles.rowLine}/>
 
           <Text style={styles.headerTitle}>אירועים פעילים</Text>
-          {this.renderGrid(this.props.newEvents)}
+          {this.renderGrid(this.props.activeEvents)}
         </ScrollView>
       </View>
     );
