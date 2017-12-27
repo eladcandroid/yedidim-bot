@@ -23,9 +23,10 @@ export async function geocodeAddress(address) {
     if (!city || !street_name){
       return undefined;
     }
+    const location = results[0].geometry.location;
     return {
       address: results[0].formatted_address,
-      geo: results[0].geometry.location,
+      geo: {lat: location.lat, lon: location.lng},
       street_number: street_number ? street_number : 0,
       street_name: street_name,
       city: city
