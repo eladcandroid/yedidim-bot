@@ -51,7 +51,7 @@ class EventsList extends Component {
             : colNum === 2 ?
               <Text style={styles.cellText}>{event.details.city}</Text>
             : event.source === EventSource.FB_BOT ?
-              <Image style={styles.fbImage} source={require('../../assets/icons/bot-icon.png')}/>
+              <Image style={styles.fbImage} source={require('../../assets/images/bot-icon.png')}/>
             : <Text style={styles.cellText}/>
           }
       </Row>
