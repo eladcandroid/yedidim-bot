@@ -1,11 +1,11 @@
-exports.handle = (req,res,admin) => {
+exports.handleHttp = (req,res,admin) => {
     console.log('call takeEvent',req.body, req.body.eventId, req.body.volunteerId, '/events/' + req.body.eventId);
 
     if(!req.body.eventId || !req.body.volunteerId){
         return res.status(404).send({message : "can't find volunteer or event"});
     }
 
-    var promise = admin.database().ref('/events/' + req.body.eventId).once('value');
+    let promise = admin.database().ref('/events/' + req.body.eventId).once('value');
 
     return Promise.resolve(promise).then(t => {
 

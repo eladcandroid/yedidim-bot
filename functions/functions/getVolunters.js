@@ -1,10 +1,10 @@
 let GeoFire = require('geofire');
 
-exports.handle = (req, res,admin) => {
+exports.handleHttp = (req, res,admin) => {
     let geoFire = new GeoFire(admin.database().ref('/geolocations'));
     console.log('call getVolunters', req.body.latitude, req.body.longtitude, req.body.callId);
 
-    var geoQuery = geoFire.query({
+    let geoQuery = geoFire.query({
         center: [req.body.latitude, req.body.longtitude],
         radius: 3000
       });

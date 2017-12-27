@@ -12,6 +12,13 @@ const EventStatus = require('./consts').EventStatus;
 
 const sendAPIQueue = queue(callSendAPIAsync);
 
+let setLocation = require('./functions/setLocation');
+let getVolunters = require('./functions/getVolunters');
+let takeEvent = require('./functions/takeEvent');
+let sendFollowerNotification = require('./functions/sentFollowerNotification');
+let sendExpoFollowerNotification = require('./functions/sendExpoFollowerNotification');
+let onUserCreateTrigger = require('./functions/onUserCreateTrigger');
+
 //Get the tokens according to the instance the functions run on
 function getTokens(json) {
   if (!functions.config().instance) {
@@ -454,4 +461,28 @@ exports.manage = functions.https.onRequest((req, res) => {
     }
   });
   res.sendStatus(200);
+});
+
+exports.onUserCreateTrigger = functions.database.ref('/volunteer/{id}').onWrite(event => {
+  onUserCreateTrigger.handleTrigger(event, admin);
+});
+
+exports.setLocation = functions.https.onRequest((req, res) => {
+  return setLocation.handle(req, res, admin);
+});
+
+exports.getVolunters = functions.https.onRequest((req, res) => {
+  return getVolunters.handle(req, res, admin);
+});
+
+exports.takeEvent = functions.https.onRequest((req, res) => {
+  return takeEvent.handle(req, res, admin);
+});
+
+exports.sendFollowerNotification = functions.database.ref('/events/{eventId}').onUpdate(event => {
+  sendFollowerNotification.handle(event, admin);
+});
+
+exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}').onUpdate(event => {
+  sendExpoFollowerNotification.handle(event,admin);
 });

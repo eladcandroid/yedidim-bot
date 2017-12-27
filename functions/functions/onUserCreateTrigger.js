@@ -1,6 +1,5 @@
-exports.handle = (event, admin) => {
+exports.handleTrigger = (event, admin) => {
 	if (event.data.previous.exists()) {
-		console.log('already exists');
 		return;
 	}
 

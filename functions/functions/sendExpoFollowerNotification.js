@@ -1,9 +1,10 @@
-var rp = require('request-promise');
+// TODO: use expo sdk
+const rp = require('request-promise');
 
-exports.handle = (event, admin) => {
-	var eventData = event.data.val();
-	var previousValue = event.data.previous.val();
-	console.log('old is ' + previousValue.status + ' new is ' + eventData.status);
+exports.handleUpdateEvent = (event, admin) => {
+	let eventData = event.data.val();
+	let previousValue = event.data.previous.val();
+	console.log('old is ' + previousValue.status + ' new is ' + eventData.status, 'event data ', eventData);
 	console.log(eventData);
 
 	if (eventData.status != 'sent' || previousValue.status == 'sent') {
@@ -30,9 +31,9 @@ exports.handle = (event, admin) => {
 
 		console.log(tokens.val());
 		// Listing all tokens.
-		var tokenData = tokens.val();
+		let tokenData = tokens.val();
 		const dataToSend = Object.keys(tokenData).map(function(t) {
-			var objectToSend = {};
+			let objectToSend = {};
 			objectToSend.to = tokenData[t].NotificationToken;
 			objectToSend.data = { key: eventData.key };
 			objectToSend.title = 'yedidim title';

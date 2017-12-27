@@ -2,3 +2,5 @@ node_modules
 .idea/
 /functions/_tokens.json
 /webApp/dist/
+./npm-debug.log
+/functions/npm-debug.log

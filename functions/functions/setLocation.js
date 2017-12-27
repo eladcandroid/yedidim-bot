@@ -9,7 +9,7 @@ let addLocation = (key, location) => {
     });
 }
 
-exports.handle = (req, res, admin) => {
+exports.handleHttp = (req, res, admin) => {
     let geoFire = new GeoFire(admin.database().ref('/geolocations'));
     console.log('Update GeoFire', req.body.latitude, req.body.longtitude, req.body.id);
     return addLocation(req.body.id, [parseFloat(req.body.latitude), parseFloat(req.body.longtitude)])

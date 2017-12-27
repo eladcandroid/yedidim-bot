@@ -1,8 +1,7 @@
-exports.handle = (event,admin) => {
-	var eventData = event.data.val();
-	var previousValue = event.data.previous.val();
-	console.log('old is' + previousValue.status + ' new is ' + eventData.status);
-	console.log(eventData);
+exports.handleUpdateEvent = (event,admin) => {
+	let eventData = event.data.val();
+	let previousValue = event.data.previous.val();
+	console.log('old is' + previousValue.status + ' new is ' + eventData.status, 'data is', eventData);
 
 	if (eventData.status != 'sent' || previousValue.status == 'sent') {
 		console.log('block');
@@ -36,7 +35,7 @@ exports.handle = (event,admin) => {
 
 		console.log(tokens.val());
 		// Listing all tokens.
-		var tokenData = tokens.val();
+		let tokenData = tokens.val();
 		const tokensToSend = Object.keys(tokenData).map(function(t) {
 			return tokenData[t].FCMToken;
 		});
