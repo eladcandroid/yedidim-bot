@@ -4,11 +4,11 @@
     "description": "ידידים - מוקדן",
     "slug": "dispatcher",
     "sdkVersion": "23.0.0",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "orientation": "portrait",
-    "icon": "./assets/icons/app-icon.png",
-    "loading": {
-      "icon": "./assets/icons/loading-icon.png"
+    "icon": "./assets/images/app-icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png"
     },
     "ios": {
       "supportsTablet": false
