@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Platform, KeyboardAvoidingView, ScrollView, View, Text, TextInput, Button, Clipboard, Alert, TouchableHighlight, Linking, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Picker } from 'native-base';
-import { formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
+import { getTextStyle, formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
 import { EventCases, EventStatus, EventSource } from "../constants/consts";
 import { createEvent, updateEventStatus } from "../actions/dataSourceActions";
 import { geocodeAddress } from "../actions/geocodingActions";
@@ -17,7 +17,7 @@ class EventDetailsInputField extends Component {
   render() {
     if (!this.props.editable){
       return (
-        <Text style={styles.fieldValue}>{this.props.event.details[this.props.field]}</Text>
+        <Text style={getTextStyle(styles.fieldValue)}>{this.props.event.details[this.props.field]}</Text>
       );
     }
     return (
@@ -161,8 +161,8 @@ class EventDetails extends Component {
         iosHeader="בעיה"
         headerBackButtonText="חזור"
         mode="dropdown"
-        itemTextStyle={styles.pickerItem}
-        textStyle={styles.pickerItem}
+        itemTextStyle={getTextStyle(styles.pickerItem)}
+        textStyle={getTextStyle(styles.pickerItem)}
         selectedValue={this.state.case}
         onValueChange={(value) => this.setState({case: value})}
       >
@@ -210,18 +210,18 @@ class EventDetails extends Component {
           {this.showValidationError()}
           {event.timestamp ?
             <View>
-              <Text style={styles.fieldName}>זמן</Text>
-              <Text style={styles.fieldValue}>{formatEventTime(event)}</Text>
+              <Text style={getTextStyle(styles.fieldName)}>זמן</Text>
+              <Text style={getTextStyle(styles.fieldValue)}>{formatEventTime(event)}</Text>
             </View>
             : undefined
           }
           <View>
-            <Text style={styles.fieldName}>כתובת</Text>
+            <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
             {editable ?
               <EventDetailsInputField field='address' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
               :
               <TouchableHighlight onPress={this.openAddressInMaps.bind(this)}>
-                <Text style={styles.addressFieldValue}>{event.details.address}</Text>
+                <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
               </TouchableHighlight>
             }
           </View>
@@ -232,27 +232,27 @@ class EventDetails extends Component {
             : undefined
           }
           <View>
-            <Text style={styles.fieldName}>בעיה</Text>
+            <Text style={getTextStyle(styles.fieldName)}>בעיה</Text>
             {!editable ?
-              <Text style={styles.fieldValue}>{formatEventCase(event)}</Text>
+              <Text style={getTextStyle(styles.fieldValue)}>{formatEventCase(event)}</Text>
               :
               this.renderEventCasePicker()
             }
           </View>
           <View>
-            <Text style={styles.fieldName}>סוג רכב</Text>
+            <Text style={getTextStyle(styles.fieldName)}>סוג רכב</Text>
             <EventDetailsInputField field='car type' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
           </View>
           <View>
-            <Text style={styles.fieldName}>פרטים</Text>
+            <Text style={getTextStyle(styles.fieldName)}>פרטים</Text>
             <EventDetailsInputField field='more' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
           </View>
           <View>
-            <Text style={styles.fieldName}>טלפון</Text>
+            <Text style={getTextStyle(styles.fieldName)}>טלפון</Text>
             <EventDetailsInputField field='phone number' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
           </View>
           <View>
-            <Text style={styles.fieldName}>שם</Text>
+            <Text style={getTextStyle(styles.fieldName)}>שם</Text>
             <EventDetailsInputField field='caller name' event={event} state={this.state} editable={editable} onChange={this.updateEvent.bind(this)}/>
           </View>
           {this.renderButtonsRow(event)}
@@ -311,27 +311,22 @@ const styles = StyleSheet.create({
   },
   fieldName: {
     fontWeight: 'bold',
-    textAlign:'right'
   },
   fieldValue: {
-    textAlign:'right',
     maxHeight: 50
   },
   addressFieldValue: {
-    textAlign:'right',
     maxHeight: 50,
     backgroundColor: 'white',
     textDecorationLine: 'underline'
   },
   fieldValueEditable: {
     height: 40,
-    textAlign: 'right',
     borderColor: '#D3D3D3',
     borderWidth: 1
   },
   pickerItem: {
     flex: 1,
-    textAlign: 'right',
   },
   buttonRow: {
     flexDirection: 'row-reverse',
