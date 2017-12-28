@@ -1,5 +1,6 @@
 import dateFormat from 'dateformat';
 import { EventCases } from "../constants/consts";
+import { I18nManager } from "react-native";
 
 export const getInstance = () => {
   return (Expo.Constants.manifest.extra && Expo.Constants.manifest.extra.instance) ?
@@ -17,6 +18,10 @@ export const objectToArray = (obj) => {
     }
   }
   return arr;
+};
+
+export const  getTextStyle = (style) => {
+  return [style, I18nManager.isRTL ? {textAlign: 'left'} : {textAlign:'right'}]
 };
 
 export const getEventDetailsText = (event) => {
