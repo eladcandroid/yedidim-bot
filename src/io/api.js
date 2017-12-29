@@ -126,13 +126,10 @@ const eventSnapshotToJSON = snapshot => ({
   carType: snapshot.details['car type'],
   type: snapshot.details.case,
   city: snapshot.details.city,
-  fullAddress: snapshot.details.address,
   lat: snapshot.details.geo.lat,
-  lon: snapshot.details.geo.lng,
+  lon: snapshot.details.geo.lon,
   more: snapshot.details.more,
-  phone: snapshot.details['phone number'],
-  streetName: snapshot.details.street_name,
-  streetNumber: snapshot.details.street_number
+  phone: snapshot.details['phone number']
 })
 
 export function subscribeToEvent(eventKey, onChangeCallback) {

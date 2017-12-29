@@ -32,7 +32,7 @@ const EventDetails = ({
     lon,
     caller,
     more,
-    fullAddress,
+    address,
     phone,
     carType,
     isAssigned
@@ -85,7 +85,7 @@ const EventDetails = ({
           {label => <TextFieldRow label={label} value={more} />}
         </FormattedMessage>
         <FormattedMessage id="Event.location" defaultMessage="Location">
-          {label => <TextFieldRow label={label} value={fullAddress} />}
+          {label => <TextFieldRow label={label} value={address} />}
         </FormattedMessage>
         {isAssigned && (
           <FormattedMessage id="Event.caller" defaultMessage="Name">

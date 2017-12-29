@@ -29,21 +29,18 @@ const EventImages = [
 export const Event = types
   .model('Event', {
     id: types.identifier(),
-    status: types.maybe(types.string),
-    assignedTo: types.maybe(types.string),
-    timestamp: types.maybe(types.Date),
     address: types.maybe(types.string),
     caller: types.maybe(types.string),
     carType: types.maybe(types.string),
     type: types.maybe(types.number), // case in FB
     city: types.maybe(types.string),
-    fullAddress: types.maybe(types.string),
     lat: types.maybe(types.number),
     lon: types.maybe(types.number),
     more: types.maybe(types.string),
     phone: types.maybe(types.string),
-    streetName: types.maybe(types.string),
-    streetNumber: types.maybe(types.number),
+    status: types.maybe(types.string),
+    assignedTo: types.maybe(types.string),
+    timestamp: types.maybe(types.Date),
     isLoading: true
   })
   .views(self => ({
