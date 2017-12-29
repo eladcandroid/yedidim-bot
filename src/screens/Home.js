@@ -18,6 +18,8 @@ import {
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator } from 'react-native'
+import { eventTypeMessage, eventTypeImg } from 'const'
+
 import AlignedText from '../components/AlignedText'
 
 const MessageView = styled.View`
@@ -35,16 +37,7 @@ const MessageView = styled.View`
 const EventItem = observer(
   ({
     onPress,
-    event: {
-      id,
-      eventTypeImage,
-      city,
-      more,
-      timestamp,
-      eventType,
-      isLoading,
-      isTaken
-    }
+    event: { id, type, city, more, timestamp, isLoading, isTaken }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -70,16 +63,16 @@ const EventItem = observer(
         }}
       >
         <Left>
-          <Thumbnail
-            source={{
-              uri: eventTypeImage
-            }}
-          />
+          <Thumbnail source={eventTypeImg(type)} />
         </Left>
         <Body>
-          <AlignedText>
-            {eventType} - {city}
-          </AlignedText>
+          <FormattedMessage {...eventTypeMessage(type)}>
+            {eventTypeTxt => (
+              <AlignedText>
+                {eventTypeTxt} - {city}
+              </AlignedText>
+            )}
+          </FormattedMessage>
           <AlignedText note>{more}</AlignedText>
         </Body>
         <Right>
