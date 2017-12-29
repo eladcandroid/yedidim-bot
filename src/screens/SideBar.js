@@ -2,11 +2,11 @@ import React from 'react'
 import { Text, Container, List, ListItem, Content } from 'native-base'
 import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
-import { Constants } from 'expo'
+import { environment } from 'config'
 // import styled from 'styled-components/native'
 import Logo from './logo.png'
 
-const isDevMode = () => Constants.manifest.extra.mode === 'development'
+const isDevMode = () => environment() === 'development'
 
 const SideBar = ({
   signOut,
