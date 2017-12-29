@@ -2,7 +2,7 @@
   "expo": {
     "name": "ידידים מתנדבים",
     "slug": "yedidim-volunteers",
-    "sdkVersion": "23.0.0",
+    "sdkVersion": "24.0.0",
     "loading": {
       "icon": "./assets/icons/splash.png",
       "backgroundColor": "#104362"
