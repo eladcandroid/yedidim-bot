@@ -1,6 +1,7 @@
 import { StackNavigator } from 'react-navigation';
 import EventsList from "./EventsList";
 import EventDetails from './EventDetails';
+import EventDetailsEditor from './EventDetailsEditor';
 
 const EventsScreen = StackNavigator({
   EventList: {
@@ -15,6 +16,12 @@ const EventsScreen = StackNavigator({
       title: 'פרטים',
     }
   },
+  EventDetailsEditor: {
+    screen: EventDetailsEditor,
+    navigationOptions: {
+      title: 'אירוע חדש',
+    }
+  }
 });
 
 export default EventsScreen;

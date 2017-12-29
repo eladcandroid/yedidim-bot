@@ -5,7 +5,6 @@ import { ScrollView, View, Text, StyleSheet, Image, I18nManager } from 'react-na
 import { Grid, Row, Col, Button } from 'native-base';
 import { getEventStatus, formatEventCase, formatEventTime, getTextStyle } from '../common/utils';
 import { EventSource, EventStatus } from '../constants/consts';
-import EventDetails from './EventDetails';
 
 class EventsList extends Component {
   openEventDetails(event) {
@@ -13,7 +12,7 @@ class EventsList extends Component {
   }
 
   addNewEvent() {
-    this.props.navigation.navigate('EventDetails', {});
+    this.props.navigation.navigate('EventDetailsEditor', {});
   }
 
   renderGrid(events) {
