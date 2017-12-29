@@ -225,19 +225,6 @@ const styles = StyleSheet.create({
   fieldName: {
     flex: 1
   },
-  fieldValue: {
-    maxHeight: 50
-  },
-  addressFieldValue: {
-    maxHeight: 50,
-    backgroundColor: 'white',
-    textDecorationLine: 'underline'
-  },
-  fieldValueEditable: {
-    height: 40,
-    borderColor: '#D3D3D3',
-    borderWidth: 1
-  },
   pickerLabel: {
     paddingRight: 20
   },
