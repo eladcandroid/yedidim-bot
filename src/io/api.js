@@ -57,7 +57,7 @@ async function subscribeToUserInfo(
     const callback = snapshot => {
       if (snapshot && snapshot.val()) {
         onChangeCallback({
-          guid: userAuth.phoneNumber,
+          id: userAuth.phoneNumber,
           ...userSnapshotToJSON(snapshot.val())
         })
       } else {
@@ -117,7 +117,7 @@ export async function signOut() {
 }
 
 const eventSnapshotToJSON = snapshot => ({
-  guid: snapshot.key,
+  id: snapshot.key,
   status: snapshot.status,
   assignedTo: snapshot.assignedTo,
   timestamp: snapshot.timestamp,

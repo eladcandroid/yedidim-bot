@@ -3,7 +3,7 @@ import * as api from '../io/api'
 
 export const User = types
   .model('User', {
-    guid: types.identifier(),
+    id: types.identifier(),
     name: types.string,
     phone: types.string,
     muted: types.maybe(types.Date)
@@ -20,7 +20,7 @@ export const User = types
   .actions(self => ({
     toggleMute: flow(function* toggleMute() {
       // if it is muted, then unmuted (remove field) or set new timestamp for now
-      yield api.updateUser(self.guid, {
+      yield api.updateUser(self.id, {
         Muted: self.isMuted ? null : new Date().getTime()
       })
     })

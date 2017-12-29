@@ -36,7 +36,7 @@ const EventItem = observer(
   ({
     onPress,
     event: {
-      guid,
+      id,
       eventTypeImage,
       city,
       more,
@@ -66,7 +66,7 @@ const EventItem = observer(
       <ListItem
         avatar
         onPress={() => {
-          onPress(guid)
+          onPress(id)
         }}
       >
         <Left>

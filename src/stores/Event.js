@@ -28,7 +28,7 @@ const EventImages = [
 
 export const Event = types
   .model('Event', {
-    guid: types.identifier(),
+    id: types.identifier(),
     status: types.maybe(types.string),
     assignedTo: types.maybe(types.string),
     timestamp: types.maybe(types.Date),
@@ -62,13 +62,13 @@ export const Event = types
     get isAssigned() {
       return (
         self.status === 'assigned' &&
-        self.assignedTo === getRoot(self).authStore.currentUser.guid
+        self.assignedTo === getRoot(self).authStore.currentUser.id
       )
     },
     get isTaken() {
       return (
         (self.status === 'assigned' &&
-          self.assignedTo !== getRoot(self).authStore.currentUser.guid) ||
+          self.assignedTo !== getRoot(self).authStore.currentUser.id) ||
         self.status === 'completed'
       )
     }
@@ -81,43 +81,35 @@ export const Event = types
       self.isLoading = false
     },
     afterCreate: () => {
-      self.unsubscribeId = api.subscribeToEvent(self.guid, self.onEventUpdated)
+      self.unsubscribeId = api.subscribeToEvent(self.id, self.onEventUpdated)
     },
     beforeDestroy: () => {
-      api.unsubscribeToEvent(self.guid, self.unsubscribeId)
+      api.unsubscribeToEvent(self.id, self.unsubscribeId)
     },
     remove: () => {
-      self.store.removeEvent(self.guid)
+      self.store.removeEvent(self.id)
     },
     accept: flow(function* accept() {
       // Retrieve current logged user id
       self.store.setLoading(true)
-      const currentUserId = getRoot(self).authStore.currentUser.guid
-      const results = yield api.acceptEvent(self.guid, currentUserId)
+      const currentUserId = getRoot(self).authStore.currentUser.id
+      const results = yield api.acceptEvent(self.id, currentUserId)
       self.store.setLoading(false)
       return results
     }),
     finalise: flow(function* finalise(feedback) {
       // Retrieve current logged user id
       self.store.setLoading(true)
-      const currentUserId = getRoot(self).authStore.currentUser.guid
-      const results = yield api.finaliseEvent(
-        self.guid,
-        currentUserId,
-        feedback
-      )
+      const currentUserId = getRoot(self).authStore.currentUser.id
+      const results = yield api.finaliseEvent(self.id, currentUserId, feedback)
       self.store.setLoading(false)
       return results
     }),
     unaccept: flow(function* unaccept(feedback) {
       // Retrieve current logged user id
       self.store.setLoading(true)
-      const currentUserId = getRoot(self).authStore.currentUser.guid
-      const results = yield api.unacceptEvent(
-        self.guid,
-        currentUserId,
-        feedback
-      )
+      const currentUserId = getRoot(self).authStore.currentUser.id
+      const results = yield api.unacceptEvent(self.id, currentUserId, feedback)
       self.store.setLoading(false)
       return results
     })
@@ -145,7 +137,7 @@ const EventStore = types
       if (!self.events.get(eventId)) {
         self.events.put(
           Event.create({
-            guid: eventId
+            id: eventId
           })
         )
       }
@@ -162,7 +154,7 @@ const EventStore = types
       }),
       removeAllEvents: () => {
         self.events.values().forEach(event => {
-          self.removeEvent(event.guid)
+          self.removeEvent(event.id)
         })
       },
       addEventFromNotification: eventId => {

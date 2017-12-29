@@ -220,7 +220,7 @@ class EventScreen extends Component {
       isTaken
     } = this.props
 
-    if (!event || !event.guid) {
+    if (!event || !event.id) {
       return (
         <FormattedMessage
           id="Event.error.notfound"
@@ -237,7 +237,7 @@ class EventScreen extends Component {
         ? () => {
             // Finalise Event, navigate to Feedback screen
             navigation.navigate('Feedback', {
-              eventId: event.guid,
+              eventId: event.id,
               action: 'finalise'
             })
           }
@@ -280,7 +280,7 @@ class EventScreen extends Component {
         ? () => {
             // Navigate to feedback screen to explain why cancelling
             navigation.navigate('Feedback', {
-              eventId: event.guid,
+              eventId: event.id,
               action: 'unaccept'
             })
           }
