@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, Button, Switch, StyleSheet } from 'react-native';
+import { View, Text, Button, Switch, StyleSheet, I18nManager } from 'react-native';
 import { InstanceTypes } from "../constants/consts";
 import { enableNotifications, signOutUser } from "../actions/dataSourceActions";
+import {getTextStyle} from "../common/utils";
 
 
 class ProfileScreen extends Component {
@@ -14,22 +15,22 @@ class ProfileScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.row}>
-          <Text style={styles.field}>שם</Text>
-          <Text style={styles.field}>{this.props.user.name}</Text>
+        <View style={[styles.row, I18nManager.isRTL ? {flexDirection: 'row'} : {flexDirection: 'row-reverse'}]}>
+          <Text style={getTextStyle(styles.field)}>שם</Text>
+          <Text style={getTextStyle(styles.field)}>{this.props.user.name}</Text>
         </View>
-        <View style={styles.row}>
-          <Text style={styles.field}>קבל התראות</Text>
+        <View style={[styles.row, I18nManager.isRTL ? {flexDirection: 'row'} : {flexDirection: 'row-reverse'}]}>
+          <Text style={getTextStyle(styles.field)}>קבל התראות</Text>
           <Switch value={this.props.user.notifications} onValueChange={this.props.enableNotifications.bind(this)}/>
         </View>
-        <View style={styles.row}>
-          <Text style={styles.field}>גירסא</Text>
-          <Text style={styles.field}>{this.props.version}</Text>
+        <View style={[styles.row, I18nManager.isRTL ? {flexDirection: 'row'} : {flexDirection: 'row-reverse'}]}>
+          <Text style={getTextStyle(styles.field)}>גירסא</Text>
+          <Text style={getTextStyle(styles.field)}>{this.props.version}</Text>
         </View>
         {this.props.instance !== InstanceTypes.Production ?
-          <View style={styles.row}>
-            <Text style={styles.field}>מערכת</Text>
-            <Text style={styles.field}>{this.props.instance}</Text>
+          <View style={[styles.row, I18nManager.isRTL ? {flexDirection: 'row'} : {flexDirection: 'row-reverse'}]}>
+            <Text style={getTextStyle(styles.field)}>מערכת</Text>
+            <Text style={getTextStyle(styles.field)}>{this.props.instance}</Text>
           </View>
           : undefined
         }
@@ -77,12 +78,10 @@ const styles = StyleSheet.create({
   },
   field: {
     fontSize: 16,
-    textAlign: 'right',
     paddingBottom: 20,
     width: 130
   },
   row: {
-    flexDirection: 'row-reverse',
     paddingBottom: 20,
   },
   switch : {

@@ -35,7 +35,7 @@ class EventDetails extends Component {
   renderButtonsRow(event) {
     const status = getEventStatus(event);
     return (
-      <View style={[styles.buttonsRow, I18nManager.isRTL ? {flexDirection: 'row-reverse'} : undefined] }>
+      <View style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
         <Button style={styles.button} onPress={this.copyEventDetailsToClipboard.bind(this)}><Text style={styles.buttonText}>העתק אירוע</Text></Button>
         <Button style={styles.button} onPress={this.copyUserDetailsToClipboard.bind(this)}><Text style={styles.buttonText}>העתק טלפון</Text></Button>
         {status === EventStatus.Submitted ?
