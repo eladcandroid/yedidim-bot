@@ -7,10 +7,6 @@
       "icon": "./assets/icons/splash.png",
       "backgroundColor": "#104362"
     },
-    "scheme": "yddmva",
-    "extra": {
-      "instance": "sandbox2",
-      "mode": "development"
-    }
+    "scheme": "yddmva"
   }
 }
