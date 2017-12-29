@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, I18nManager } from 'react-native';
+import { Form, Item, Label, Input, Button } from 'native-base';
 import { signIn } from "../actions/dataSourceActions";
 
 
@@ -30,29 +31,31 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <Form style={styles.container}>
         <Text style={styles.header}>כניסה</Text>
-        <Text>מספר מוקדן</Text>
-        <TextInput style={styles.input}
-                   editable = {true}
-                   onChangeText={(text) => this.setState({id: text, error: undefined})}
-                   maxLength={3}
-                   value={this.state.id}/>
-        <Text>מספר טלפון</Text>
-        <TextInput style={styles.input}
-                   editable = {true}
-                   onChangeText={(text) => this.setState({phone: text, error: undefined})}
-                   maxLength={10}
-                   value={this.state.phone}/>
+        <Item fixedLabel style={styles.item}>
+          <Label style={I18nManager.isRTL ? undefined: {textAlign: 'right'}}>מספר מוקדן</Label>
+          <Input
+            maxLength={3}
+            value={this.state.id}
+            onChangeText={(text) => this.setState({id: text, error: undefined})}/>
+        </Item>
+        <Item fixedLabel style={styles.item}>
+          <Label style={I18nManager.isRTL ? undefined: {textAlign: 'right'}}>מספר טלפון</Label>
+          <Input
+            maxLength={10}
+            value={this.state.phone}
+            onChangeText={(text) => this.setState({phone: text, error: undefined})}/>
+        </Item>
         <View style={styles.button}>
-          <Button
+          <Button full style={styles.button}
             disabled={this.state.signingIn}
-            onPress={this.onSignIn.bind(this)}
-            title="התחבר"
-          />
+            onPress={this.onSignIn.bind(this)}>
+            <Text style={styles.buttonText}>התחבר</Text>
+          </Button>
           <Text style={styles.error}>{this.state.error ? this.state.error : ''}</Text>
         </View>
-      </View>
+      </Form>
     );
   }
 }
@@ -74,9 +77,7 @@ LoginScreen.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    paddingTop: 80,
     marginRight: 20,
     marginLeft: 20
   },
@@ -86,15 +87,16 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     textAlign: 'center'
   },
-  input: {
-    height: 40,
-    alignSelf: 'stretch',
-    borderColor: '#D3D3D3',
-    borderWidth: 1
+  item: {
+    flexDirection: 'row-reverse',
   },
   button: {
-    paddingTop: 60,
-    alignSelf: 'stretch'
+    paddingTop: 30,
+    justifyContent: 'center'
+  },
+  buttonText: {
+    color: 'white',
+    alignSelf:'center'
   },
   error: {
     paddingTop: 40,
