@@ -4,7 +4,15 @@ import createRootStore from 'stores'
 import { Image } from 'react-native'
 import { Provider, observer } from 'mobx-react/native'
 import { eventTypeImg } from 'const'
+import Sentry from 'sentry-expo'
 import I18nApp from './src/I18nApp'
+
+// Remove this once Sentry is correctly setup.
+Sentry.enableInExpoDevelopment = true
+
+Sentry.config(
+  'https://dbb23c2a63e64571b8e6e7d665ab2472:5360c3f353e44e16a4d0f2eb1a288329@sentry.io/263712'
+).install()
 
 function cacheImages(images) {
   return images.map(image => {

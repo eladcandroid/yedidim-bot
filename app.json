@@ -3,10 +3,28 @@
     "name": "ידידים מתנדבים",
     "slug": "yedidim-volunteers",
     "sdkVersion": "24.0.0",
-    "loading": {
-      "icon": "./assets/icons/splash.png",
-      "backgroundColor": "#104362"
+    "splash": {
+      "resizeMode": "cover",
+      "image": "./assets/icons/splash.png",
+      "backgroundColor": "#000000"
     },
-    "scheme": "yddmva"
+    "icon": "./assets/icons/icon.png",
+    "notification": {
+      "icon": "./assets/notification/icon.png"
+    },
+    "scheme": "yddmva",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "startach-oq",
+            "project": "yedidim-volunteer",
+            "authToken":
+              "d033f2fb7e3d45cb851c2690b64ace24780e376bb0d64e93a1cb54e0f76388de"
+          }
+        }
+      ]
+    }
   }
 }
