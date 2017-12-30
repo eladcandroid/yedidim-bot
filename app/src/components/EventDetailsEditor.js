@@ -51,6 +51,7 @@ class EventDetailsEditor extends Component {
     }
     let details = Object.assign({}, this.state);
     delete details['needToValidateAddress'];
+    delete details['error'];
     const event = {
       status: EventStatus.Sent,
       source: EventSource.App,
