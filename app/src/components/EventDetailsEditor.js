@@ -50,14 +50,13 @@ class EventDetailsEditor extends Component {
       return;
     }
     let details = Object.assign({}, this.state);
-    details.needToValidateAddress = undefined;
+    delete details['needToValidateAddress'];
     const event = {
       status: EventStatus.Sent,
       source: EventSource.App,
       dispatcher: this.props.user.id,
       details
     };
-    console.log(event);
     this.props.createEvent(event);
     this.props.navigate(ScreenType.EventsList);
   }
