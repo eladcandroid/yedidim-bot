@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, defineMessages } from 'react-intl'
-import { I18nManager, Alert } from 'react-native'
+import { I18nManager, Alert, View, ActivityIndicator } from 'react-native'
 
 import {
   Button,
@@ -150,9 +150,7 @@ const eventTakeErrorMsgs = defineMessages({
 })
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
-// TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
 // TODO Remove token after user logout
-// TODO On notification, save the event data to event store and sync with firebase?
 
 @observer
 class EventScreen extends Component {
@@ -285,6 +283,27 @@ class EventScreen extends Component {
             })
           }
         : this.handleRemoveEvent
+    }
+
+    if (event.isLoading) {
+      return (
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          <ActivityIndicator
+            style={{ marginTop: 20, marginBottom: 20 }}
+            size="large"
+          />
+          <FormattedMessage
+            id="Event.details.waiting"
+            defaultMessage="Please wait, loading event..."
+          >
+            {txt => (
+              <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                {txt}
+              </Text>
+            )}
+          </FormattedMessage>
+        </View>
+      )
     }
 
     return (

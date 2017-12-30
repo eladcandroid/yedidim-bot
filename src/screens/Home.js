@@ -47,7 +47,7 @@ const EventItem = observer(
         <Body>
           <FormattedMessage
             id="Home.event.loadingTitle"
-            defaultMessage="Please wait, loading new event"
+            defaultMessage="Please wait, loading event..."
           >
             {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>

@@ -1,18 +1,18 @@
 import { defineMessages } from 'react-intl'
 
 const types = defineMessages({
-  0: { id: 'cables', defaultMessage: 'Cables' },
-  1: { id: 'puncture', defaultMessage: 'Puncture' },
-  2: { id: 'compressor', defaultMessage: 'Compressor' },
-  3: { id: 'lockedDoor', defaultMessage: 'Locked door' },
-  4: { id: 'liquids', defaultMessage: 'Gas/Water/Oil' },
-  5: { id: 'rescue', defaultMessage: 'Rescue' },
-  6: { id: 'transponder', defaultMessage: 'Transponder' },
+  0: { id: 'Event.type.cables', defaultMessage: 'Cables' },
+  1: { id: 'Event.type.puncture', defaultMessage: 'Puncture' },
+  2: { id: 'Event.type.compressor', defaultMessage: 'Compressor' },
+  3: { id: 'Event.type.lockedDoor', defaultMessage: 'Locked door' },
+  4: { id: 'Event.type.liquids', defaultMessage: 'Gas/Water/Oil' },
+  5: { id: 'Event.type.rescue', defaultMessage: 'Rescue' },
+  6: { id: 'Event.type.transponder', defaultMessage: 'Transponder' },
   7: {
-    id: 'puncture-no-replacement',
+    id: 'Event.type.puncture-no-replacement',
     defaultMessage: 'Puncture w/o replacement'
   },
-  8: { id: 'other', defaultMessage: 'Other' }
+  8: { id: 'Event.type.other', defaultMessage: 'Other' }
 })
 
 /* eslint-disable global-require */
