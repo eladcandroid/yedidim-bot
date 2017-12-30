@@ -6,7 +6,7 @@
     "splash": {
       "resizeMode": "cover",
       "image": "./assets/icons/splash.png",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#ffffff"
     },
     "icon": "./assets/icons/icon.png",
     "notification": {
