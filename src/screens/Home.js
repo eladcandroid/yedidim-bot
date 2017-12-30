@@ -19,6 +19,7 @@ import {
 } from 'native-base'
 import { ActivityIndicator } from 'react-native'
 import { eventTypeMessage, eventTypeImg } from 'const'
+import debounce from 'lodash.debounce'
 
 import AlignedText from '../components/AlignedText'
 
@@ -132,9 +133,13 @@ class HomeScreen extends Component {
     )
   })
 
-  handleEventItemPress = eventId => {
-    this.props.navigation.navigate('Event', { eventId })
-  }
+  handleEventItemPress = debounce(
+    eventId => {
+      this.props.navigation.navigate('Event', { eventId })
+    },
+    1000,
+    { leading: true, trailing: false }
+  )
 
   render() {
     const { hasEvents, allEvents } = this.props
