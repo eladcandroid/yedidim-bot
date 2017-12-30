@@ -4,14 +4,9 @@ import { connect } from 'react-redux';
 import { View, Text, Button, Switch, StyleSheet, I18nManager } from 'react-native';
 import { InstanceTypes } from "../constants/consts";
 import { enableNotifications, signOutUser } from "../actions/dataSourceActions";
-import {getTextStyle} from "../common/utils";
-
+import { getTextStyle } from "../common/utils";
 
 class ProfileScreen extends Component {
-  static navigationOptions = {
-    title: 'משתמש',
-  };
-
   render() {
     return (
       <View style={styles.container}>

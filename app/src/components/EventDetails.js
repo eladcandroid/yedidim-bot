@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ScrollView, View, Text, Clipboard, TouchableHighlight, Linking, StyleSheet, I18nManager } from 'react-native';
 import { Button } from 'native-base';
 import { getTextStyle, formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
-import { EventStatus } from "../constants/consts";
+import { EventStatus, ScreenType } from "../constants/consts";
 import { updateEventStatus } from "../actions/dataSourceActions";
 
 class EventDetails extends Component {
@@ -14,22 +14,22 @@ class EventDetails extends Component {
 
   copyEventDetailsToClipboard() {
     Clipboard.setString(getEventDetailsText(this.props.event));
-    this.props.goBack();
+    this.props.navigate(ScreenType.EventsList);
   }
 
   copyUserDetailsToClipboard() {
     Clipboard.setString(getUserDetailsText(this.props.event));
-    this.props.goBack();
+    this.props.navigate(ScreenType.EventsList);
   }
 
   sendEvent() {
-    this.props.updateEventStatus(this.props.event, EventStatus.Sent);
-    this.props.goBack();
+    this.props.updateEventStatus(this.props.event, EventStatus.Assigned);
+    this.props.navigate(ScreenType.EventsList);
   }
 
   completeEvent() {
     this.props.updateEventStatus(this.props.event, EventStatus.Completed);
-    this.props.goBack();
+    this.props.navigate(ScreenType.EventsList);
   }
 
   renderButtonsRow(event) {
@@ -75,19 +75,16 @@ class EventDetails extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     updateEventStatus: (event, status) => {
       dispatch(updateEventStatus(event, status));
-    },
-    goBack: () => {
-      ownProps.navigation.goBack();
     }
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const event = state.dataSource.events ? state.dataSource.events.find(event => event.key === ownProps.navigation.state.params.key) : undefined;
+  const event = state.dataSource.events ? state.dataSource.events.find(event => event.key === ownProps.params.key) : undefined;
   return {
     event: event || {status: EventStatus.Draft, details: {}},
     user: state.dataSource.user
@@ -98,7 +95,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 
 EventDetails.propTypes = {
   updateEventStatus: PropTypes.func,
-  goBack: PropTypes.func,
   user: PropTypes.object
 };
 
@@ -111,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    paddingTop: 20,
+    paddingTop: 10,
     paddingRight: 8,
     paddingBottom: 10,
     paddingLeft: 8,

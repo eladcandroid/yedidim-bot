@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import { ScrollView, View, Text, StyleSheet, Image, I18nManager } from 'react-native';
 import { Grid, Row, Col, Button } from 'native-base';
 import { getEventStatus, formatEventCase, formatEventTime, getTextStyle } from '../common/utils';
-import { EventSource, EventStatus } from '../constants/consts';
+import { EventSource, EventStatus, ScreenType } from '../constants/consts';
 
 class EventsList extends Component {
   openEventDetails(event) {
-    this.props.navigation.navigate('EventDetails', {key: event.key});
+    this.props.navigate(ScreenType.EventDetails, {key: event.key});
   }
 
   addNewEvent() {
-    this.props.navigation.navigate('EventDetailsEditor', {});
+    this.props.navigate(ScreenType.EventDetailsEditor);
   }
 
   renderGrid(events) {
@@ -65,14 +65,11 @@ class EventsList extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.props.allowNew ?
-          <View style={styles.buttonRow}>
-            <Button style={styles.button} onPress={this.addNewEvent.bind(this)}>
-              <Text style={styles.buttonText}>פתיחת אירוע חדש</Text>
-            </Button>
-          </View>
-          : undefined
-        }
+        <View style={styles.buttonRow}>
+          <Button style={styles.button} onPress={this.addNewEvent.bind(this)}>
+            <Text style={styles.buttonText}>פתיחת אירוע חדש</Text>
+          </Button>
+        </View>
         <ScrollView style={styles.scrollContainer}>
           <Text style={getTextStyle(styles.headerTitle)}>אירועים חדשים</Text>
           {this.renderGrid(this.props.newEvents)}
@@ -90,9 +87,8 @@ class EventsList extends Component {
 const mapStateToProps = (state) => {
   const events = state.dataSource.events;
   return {
-    newEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Submitted) : [],
-    activeEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Sent || getEventStatus(event) === EventStatus.Assigned) : [],
-    allowNew: true
+    newEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Submitted || getEventStatus(event) === EventStatus.Sent) : [],
+    activeEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Assigned) : []
   };
 };
 
@@ -101,7 +97,7 @@ export default connect(mapStateToProps)(EventsList);
 EventsList.propTypes = {
   newEvents: PropTypes.array,
   activeEvents: PropTypes.array,
-  allowNew: PropTypes.bool
+  navigate: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({

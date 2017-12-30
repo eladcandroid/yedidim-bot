@@ -13,3 +13,10 @@ export const EventCases = [
   {case:7, label:'פנצ\'ר (אין רזרבי)'},
   {case:8, label:'אחר'}
   ];
+
+export const ScreenType = {
+  EventsList: 'EventsList',
+  EventDetails: 'EventDetails',
+  EventDetailsEditor: 'EventDetailsEditor',
+  ProfileScreen: 'ProfileScreen'
+};

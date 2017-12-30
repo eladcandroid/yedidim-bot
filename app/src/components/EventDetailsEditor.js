@@ -5,7 +5,7 @@ import { Platform, KeyboardAvoidingView, ScrollView, View, Text, Alert, StyleShe
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Picker, Form, Item, Label, Input, Button } from 'native-base';
 import { getTextStyle } from "../common/utils";
-import { EventCases, EventStatus, EventSource } from "../constants/consts";
+import { EventCases, EventStatus, EventSource, ScreenType } from "../constants/consts";
 import { createEvent } from "../actions/dataSourceActions";
 import { geocodeAddress } from "../actions/geocodingActions";
 
@@ -52,14 +52,14 @@ class EventDetailsEditor extends Component {
     let details = Object.assign({}, this.state);
     details.needToValidateAddress = undefined;
     const event = {
-      status: EventStatus.Submitted,
+      status: EventStatus.Sent,
       source: EventSource.App,
       dispatcher: this.props.user.id,
       details
     };
     console.log(event);
     this.props.createEvent(event);
-    this.props.goBack();
+    this.props.navigate(ScreenType.EventsList);
   }
 
   async validateAddress() {
@@ -176,22 +176,17 @@ class EventDetailsEditor extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     createEvent: (event) => {
       dispatch(createEvent(event));
-    },
-    goBack: () => {
-      ownProps.navigation.goBack();
     }
   };
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const event = state.dataSource.events ? state.dataSource.events.find(event => event.key === ownProps.navigation.state.params.key) : undefined;
+const mapStateToProps = (state) => {
   return {
-    event: event || {status: EventStatus.Draft, details: {}},
-    editable: !ownProps.navigation.state.params.key,
+    event: {status: EventStatus.Draft, details: {}},
     user: state.dataSource.user
   };
 };
@@ -200,7 +195,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetailsEditor);
 
 EventDetailsEditor.propTypes = {
   createEvent: PropTypes.func,
-  goBack: PropTypes.func,
   user: PropTypes.object
 };
 
