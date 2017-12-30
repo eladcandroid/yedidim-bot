@@ -6,7 +6,7 @@ import HomeScreen from "../components/HomeScreen";
 import { getInstance } from "../common/utils";
 
 Sentry.config('https://757d9938f3b64f20a85d536879e30e33@sentry.io/233665').install();
-Sentry.setTagsContext({"environment": getInstance()});
+Sentry.setTagsContext({'environment': getInstance(), 'version': Expo.Constants.manifest.version});
 
 const store = configureStore;
 
