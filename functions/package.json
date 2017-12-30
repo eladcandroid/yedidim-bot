@@ -1,26 +1,26 @@
 {
   "name": "yedidim-fb-bot",
-  "version": "0.4.7",
+  "version": "0.5.0",
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "deploy" : "firebase deploy --only functions:getVolunters,functions:onUserCreateTrigger,functions:sendExpoFollowerNotification,functions:sendFollowerNotification,functions:setLocation,functions:takeEvent"
+    "deploy": "firebase deploy --only functions:getVolunters,functions:onUserCreateTrigger,functions:sendExpoFollowerNotification,functions:sendFollowerNotification,functions:setLocation,functions:takeEvent"
   },
   "dependencies": {
-    "async": "^2.5.0",
-    "dashbot": "^9.4.0",
+    "async": "^2.6.0",
+    "dashbot": "^9.4.1",
     "expo-server-sdk": "^2.3.3",
-    "firebase-admin": "^5.4.3",
-    "firebase-functions": "^0.7.3",
-    "node-geocoder": "^3.21.0",
+    "firebase": "^4.8.1",
+    "firebase-admin": "^5.6.0",
+    "firebase-functions": "^0.7.5",
+    "geofire": "^4.1.2",
+    "node-geocoder": "^3.21.1",
     "request": "^2.83.0",
-    "request-promise": "^4.2.2",
-    "geofire": "^4.1.2"
+    "request-promise": "^4.2.2"
   },
-
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^3.5.3",
-    "sinon": "^4.1.2"
+    "sinon": "^4.1.3"
   }
 }

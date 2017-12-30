@@ -1,4 +1,4 @@
-let GeoFire = require('geofire');
+const GeoFire = require('geofire');
 
 exports.handleHttp = (req, res,admin) => {
     let geoFire = new GeoFire(admin.database().ref('/geolocations'));

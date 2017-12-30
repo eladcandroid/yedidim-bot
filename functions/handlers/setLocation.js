@@ -7,7 +7,7 @@ let addLocation = (key, location) => {
     }).catch(error => {
         console.log(error);
     });
-}
+};
 
 exports.handleHttp = (req, res, admin) => {
     let geoFire = new GeoFire(admin.database().ref('/geolocations'));

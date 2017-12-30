@@ -7,7 +7,7 @@ exports.handleUpdateEvent = (event, admin) => {
 	console.log('old is ' + previousValue.status + ' new is ' + eventData.status, 'event data ', eventData);
 	console.log(eventData);
 
-	if (eventData.status != 'sent' || previousValue.status == 'sent') {
+	if (eventData.status !== 'sent' || previousValue.status === 'sent') {
 		console.log('block',eventData.status,previousValue.status);
 		return;
 	}

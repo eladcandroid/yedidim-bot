@@ -24,7 +24,7 @@ exports.handleHttp = (req,res,admin) => {
         }
         else {
              admin.database().ref('/events/' + req.body.eventId + '/assignedTo')
-            .set(req.body.volunteerId)
+            .set(req.body.volunteerId);
 
             admin
             .database()
@@ -33,4 +33,4 @@ exports.handleHttp = (req,res,admin) => {
             .then(res.status(200).send({message : 'OK!'}));
         }
     })
-}
+};
