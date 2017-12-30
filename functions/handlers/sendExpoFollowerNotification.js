@@ -3,14 +3,8 @@ const rp = require('request-promise');
 
 exports.handleUpdateEvent = (event, admin) => {
 	let eventData = event.data.val();
-	let previousValue = event.data.previous.val();
-	console.log('old is ' + previousValue.status + ' new is ' + eventData.status, 'event data ', eventData);
+	console.log(' new is ' + eventData.status, 'event data ', eventData);
 	console.log(eventData);
-
-	if (eventData.status !== 'sent' || previousValue.status === 'sent') {
-		console.log('block',eventData.status,previousValue.status);
-		return;
-	}
 
 	// Get the list of device notification tokens.
 	const getDeviceTokensPromise = admin

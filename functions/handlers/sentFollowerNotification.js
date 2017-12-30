@@ -1,12 +1,6 @@
 exports.handleUpdateEvent = (event,admin) => {
 	let eventData = event.data.val();
-	let previousValue = event.data.previous.val();
-	console.log('old is' + previousValue.status + ' new is ' + eventData.status, 'data is', eventData);
-
-	if (eventData.status !== 'sent' || previousValue.status === 'sent') {
-		console.log('block');
-		return;
-	}
+	console.log(' new is ' + eventData.status, 'data is', eventData);
 
 	// Get the list of device notification tokens.
 	const getDeviceTokensPromise = admin
