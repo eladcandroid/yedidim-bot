@@ -31,14 +31,11 @@ const firebaseInfo = {
 }
 
 // If releaseChannel is not set, then application is not published, then use development
-// If releaseChannel is set, application is published, use it (default means no releaseChannel defined which is production)
+// If releaseChannel is set, application is published, use it if it is a valid channel (default means no releaseChannel defined which is production)
 export const environment = () => {
-  if (!Constants.manifest.releaseChannel) {
-    return 'development'
-  }
-  return Constants.manifest.releaseChannel === 'default'
-    ? 'production'
-    : Constants.manifest.releaseChannel
+  const channel = Constants.manifest.releaseChannel || 'development'
+
+  return !/(test|development|production)/.test(channel) ? 'production' : channel
 }
 
 export const firebaseCredentials = () => firebaseInfo[environment()]
