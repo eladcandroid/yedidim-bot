@@ -8,7 +8,8 @@ import {
   Header,
   Title,
   Left,
-  Right
+  Right,
+  Icon
 } from 'native-base'
 import { View, ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
@@ -89,7 +90,7 @@ class AuthenticationScreen extends React.Component {
             <ActivityIndicator size="large" />
           </Content>
         ) : (
-          <Content padder>
+          <Content>
             {authError ? (
               <View>
                 <FormattedMessage
@@ -109,7 +110,14 @@ class AuthenticationScreen extends React.Component {
               </FormattedMessage>
             )}
             <ButtonsView>
-              <StyledButton success onPress={this.handleAuthentication}>
+              <StyledButton
+                iconLeft
+                full
+                large
+                block
+                onPress={this.handleAuthentication}
+              >
+                <Icon style={{ fontSize: 40 }} name="ios-person" />
                 <FormattedMessage
                   id="Authentication.button"
                   defaultMessage="Authenticate me"
