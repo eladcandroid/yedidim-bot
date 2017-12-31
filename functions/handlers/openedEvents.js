@@ -13,14 +13,25 @@ exports.handleHttp = (req, res, admin) => {
     .equalTo('sent')
     .once('value');
 
-    return Promise.all([sendEvents, draftEvents]).then(values =>{
-        console.log(values);
-        let sentData = values[0].val();
-        let draftData = values[1].val();
-        console.log(sentData);
-        console.log(draftData);
-        let allData = sentData.concat(draftData);
-        console.log(addData);
-        res.send(allData);
+    return Promise.all([sentEvents, draftEvents]).then(values =>{
+       // console.log(values);
+       let sentData = convertToArray(values[0].val());
+       let draftData = convertToArray(values[1].val());
+       let allData = sentData.concat(draftData);
+       res.send(allData);
     })
 }
+
+function convertToArray(firebaseCollection){
+    let res = [];
+
+    let keys = Object.keys(firebaseCollection);
+
+    for(i=0;i<keys.length;i++){
+        let k = keys[i];
+        res.push(firebaseCollection[k]);
+    }
+    
+    return res;
+}
+

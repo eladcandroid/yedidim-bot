@@ -8,7 +8,7 @@ const takeEvent = require('./handlers/takeEvent');
 const sendFollowerNotification = require('./handlers/sentFollowerNotification');
 const sendExpoFollowerNotification = require('./handlers/sendExpoFollowerNotification');
 const onUserCreateTrigger = require('./handlers/onUserCreateTrigger');
-const openedEvents = require('./functions/openedEvents');
+const openedEvents = require('./handlers/openedEvents');
 
 const tokens = getTokens(require('./_tokens.json'));
 
