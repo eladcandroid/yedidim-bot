@@ -22,9 +22,12 @@
   "Home.alert.unmute.text": "Notifications are now active",
   "Authentication.title": "Authentication",
   "Authentication.waiting": "Please wait, authenticating...",
-  "Authentication.error": "An error has occurred, unable to authenticate. Please try again later.",
-  "Authentication.notauthenticated": "You are not authenticated yet. Please authenticate to receive events.",
+  "Authentication.error":
+    "An error has occurred, unable to authenticate. Please try again later.",
+  "Authentication.notauthenticated":
+    "You are not authenticated yet. Please authenticate to receive events.",
   "Authentication.button": "Authenticate me",
+  "Authentication.signout": "Sign out",
   "Event.alert.ignore.title": "Ignore Event",
   "Event.alert.ignore.text": "I'm not interested in accepting the event",
   "Event.alert.ignore.confirm": "Confirm",
@@ -42,12 +45,15 @@
   "Event.alert.finalise.confirm": "Confirm",
   "Event.alert.finalise.cancel": "Cancel",
   "Event.alert.taken.title": "Event taken already",
-  "Event.alert.taken.text": "Sorry, this event was already accepted by another volunteer. Thank you for your time!",
+  "Event.alert.taken.text":
+    "Sorry, this event was already accepted by another volunteer. Thank you for your time!",
   "Event.alert.taken.confirm": "Ok",
   "Event.alert.takeError.title": "Error Accepting Event",
-  "Event.alert.takeError.text": "Sorry, unable to accept this event. Please try again, if error persists please contact administrator",
+  "Event.alert.takeError.text":
+    "Sorry, unable to accept this event. Please try again, if error persists please contact administrator",
   "Event.alert.takeError.confirm": "Ok",
-  "Event.error.notfound": "Sorry, unable to find event details. Please contact administrator.",
+  "Event.error.notfound":
+    "Sorry, unable to find event details. Please contact administrator.",
   "Event.details.waiting": "Please wait, loading event...",
   "Event.title.active": "Active event",
   "Event.title.inactive": "Event",
@@ -56,8 +62,10 @@
   "Feedback.toast.unaccept.text": "Event was cancelled",
   "Feedback.toast.unaccept.buttonText": "OK",
   "Feedback.description": "{name}, thank you for taking care of the event.",
-  "Feedback.action.finalise": "Please write down a short feedback about the event before finalising it.",
-  "Feedback.action.cancel": "Please write down a short feedback about the event and why you decided to cancel it.",
+  "Feedback.action.finalise":
+    "Please write down a short feedback about the event before finalising it.",
+  "Feedback.action.cancel":
+    "Please write down a short feedback about the event and why you decided to cancel it.",
   "Feedback.input": "Enter your feedback (required)",
   "Feedback.button.finalise": "Finalise Event & Send",
   "Feedback.button.cancel": "Cancel Event & Send",

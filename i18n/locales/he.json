@@ -22,9 +22,11 @@
   "Home.alert.unmute.text": "ההודעות פעילות כעת",
   "Authentication.title": "אימות",
   "Authentication.waiting": "המתן, מאמת ...",
-  "Authentication.error": "אירעה שגיאה, לא ניתן לאמת. בבקשה נסה שוב מאוחר יותר.",
+  "Authentication.error":
+    "אירעה שגיאה, לא ניתן לאמת. בבקשה נסה שוב מאוחר יותר.",
   "Authentication.notauthenticated": "עדיין אינך מאומת. אמת כדי לקבל אירועים.",
   "Authentication.button": "ללא שם: לאמת אותי",
+  "Authentication.signout": "התנתק",
   "Event.alert.ignore.title": "התעלם מהאירוע",
   "Event.alert.ignore.text": "אני לא מעוניין לקחת את האירוע",
   "Event.alert.ignore.confirm": "אישור",
@@ -42,12 +44,15 @@
   "Event.alert.finalise.confirm": "סיימתי את האירוע",
   "Event.alert.finalise.cancel": "חזור למסך הקודם",
   "Event.alert.taken.title": "האירוע כבר נלקח",
-  "Event.alert.taken.text": "מצטערים, האירוע כבר התקבל על ידי מתנדב אחר. חזק ואמץ על רצונך לסייע!",
+  "Event.alert.taken.text":
+    "מצטערים, האירוע כבר התקבל על ידי מתנדב אחר. חזק ואמץ על רצונך לסייע!",
   "Event.alert.taken.confirm": "אישור",
   "Event.alert.takeError.title": "שגיאה בקבלת האירוע",
-  "Event.alert.takeError.text": "מצטערים, לא ניתן לקבל אירוע זה. נסה שוב, אם השגיאה נמשכת פנה למנהל המערכת",
+  "Event.alert.takeError.text":
+    "מצטערים, לא ניתן לקבל אירוע זה. נסה שוב, אם השגיאה נמשכת פנה למנהל המערכת",
   "Event.alert.takeError.confirm": "אישור",
-  "Event.error.notfound": "מצטערים, אין אפשרות למצוא את פרטי האירוע. פנה למנהל המערכת.",
+  "Event.error.notfound":
+    "מצטערים, אין אפשרות למצוא את פרטי האירוע. פנה למנהל המערכת.",
   "Event.details.waiting": "המתן, טוען את האירוע ...",
   "Event.title.active": "אירוע פעיל",
   "Event.title.inactive": "מִקרֶה",
@@ -57,7 +62,8 @@
   "Feedback.toast.unaccept.buttonText": "אישור",
   "Feedback.description": "{name}, תודה על הטיפול באירוע.",
   "Feedback.action.finalise": "רשום משוב קצר על האירוע לפני השלמתו.",
-  "Feedback.action.cancel": "אנא רשמו משוב קצר על האירוע ומדוע החלטתם להפסיק ולטפל בו.",
+  "Feedback.action.cancel":
+    "אנא רשמו משוב קצר על האירוע ומדוע החלטתם להפסיק ולטפל בו.",
   "Feedback.input": "הזן את המשוב שלך (חובה)",
   "Feedback.button.finalise": "סיים אירוע ושלח",
   "Feedback.button.cancel": "חזרה למסך הקודם",

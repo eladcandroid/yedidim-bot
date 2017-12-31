@@ -3,6 +3,7 @@ import { Text, Container, List, ListItem, Content } from 'native-base'
 import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { environment } from 'config'
+import { FormattedMessage } from 'react-intl'
 // import styled from 'styled-components/native'
 import Logo from './logo.png'
 
@@ -21,9 +22,9 @@ const SideBar = ({
       <Image
         source={Logo}
         style={{
-          height: 100,
+          height: 200,
           width: 260,
-          marginTop: 20,
+          marginTop: 40,
           marginLeft: 20,
           marginRight: 20,
           justifyContent: 'center',
@@ -46,7 +47,12 @@ const SideBar = ({
           <Text>{nextLanguage}</Text>
         </ListItem>
         <ListItem button onPress={signOut}>
-          <Text>Sign out</Text>
+          <FormattedMessage
+            id="Authentication.signout"
+            defaultMessage="Sign out"
+          >
+            {txt => <Text>{txt}</Text>}
+          </FormattedMessage>
         </ListItem>
         {isDevMode() && (
           <ListItem
