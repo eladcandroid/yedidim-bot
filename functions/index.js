@@ -8,6 +8,7 @@ const takeEvent = require('./handlers/takeEvent');
 const sendFollowerNotification = require('./handlers/sentFollowerNotification');
 const sendExpoFollowerNotification = require('./handlers/sendExpoFollowerNotification');
 const onUserCreateTrigger = require('./handlers/onUserCreateTrigger');
+const openedEvents = require('./functions/openedEvents');
 
 const tokens = getTokens(require('./_tokens.json'));
 
@@ -68,4 +69,8 @@ exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}
   if (!isProduction) {
     sendExpoFollowerNotification.handleUpdateEvent(event, admin);
   }
+});
+
+exports.getOpenedEvents = functions.https.onRequest((req, res) => {
+  return openedEvents.handleHttp(req, res, admin);
 });
