@@ -1,6 +1,6 @@
 {
   "name": "yedidim-volunteer",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "private": true,
   "devDependencies": {
     "babel-eslint": "^8.0.1",
@@ -30,7 +30,10 @@
     "ios": "react-native-scripts ios",
     "test": "node node_modules/jest/bin/jest.js --watch",
     "lint": "eslint --ext .js .",
-    "flow": "flow"
+    "flow": "flow",
+    "publish:development": "exp publish --release-channel development",
+    "publish:test": "exp publish --release-channel development",
+    "publish:production": "exp publish --release-channel production"
   },
   "jest": {
     "preset": "jest-expo"

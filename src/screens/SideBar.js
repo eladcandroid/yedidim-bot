@@ -1,4 +1,5 @@
 import React from 'react'
+import { Constants } from 'expo'
 import { Text, Container, List, ListItem, Content } from 'native-base'
 import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
@@ -53,6 +54,9 @@ const SideBar = ({
           >
             {txt => <Text>{txt}</Text>}
           </FormattedMessage>
+        </ListItem>
+        <ListItem>
+          <Text>v{Constants.manifest.version}</Text>
         </ListItem>
         {isDevMode() && (
           <ListItem
