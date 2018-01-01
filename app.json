@@ -25,6 +25,9 @@
           }
         }
       ]
+    },
+    "extra": {
+      "AmplitudeAPI": "2e1ccff4946b3318c47b05aeaaf7db16"
     }
   }
 }

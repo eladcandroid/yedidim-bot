@@ -1,6 +1,7 @@
 import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
-import * as api from '../io/api'
-import * as storage from '../io/storage'
+import * as api from 'io/api'
+import * as storage from 'io/storage'
+import { trackEvent } from 'io/analytics'
 
 export const Event = types
   .model('Event', {
@@ -54,6 +55,9 @@ export const Event = types
       api.unsubscribeToEvent(self.id, self.unsubscribeId)
     },
     remove: () => {
+      trackEvent('IgnoreEvent', {
+        eventId: self.id
+      })
       self.store.removeEvent(self.id)
     },
     accept: flow(function* accept() {
@@ -62,6 +66,9 @@ export const Event = types
       const currentUserId = getRoot(self).authStore.currentUser.id
       const results = yield api.acceptEvent(self.id, currentUserId)
       self.store.setLoading(false)
+      trackEvent('AcceptEvent', {
+        eventId: self.id
+      })
       return results
     }),
     finalise: flow(function* finalise(feedback) {
@@ -70,6 +77,9 @@ export const Event = types
       const currentUserId = getRoot(self).authStore.currentUser.id
       const results = yield api.finaliseEvent(self.id, currentUserId, feedback)
       self.store.setLoading(false)
+      trackEvent('FinaliseEvent', {
+        eventId: self.id
+      })
       return results
     }),
     unaccept: flow(function* unaccept(feedback) {
@@ -78,6 +88,9 @@ export const Event = types
       const currentUserId = getRoot(self).authStore.currentUser.id
       const results = yield api.unacceptEvent(self.id, currentUserId, feedback)
       self.store.setLoading(false)
+      trackEvent('UnacceptEvent', {
+        eventId: self.id
+      })
       return results
     })
   }))
@@ -129,6 +142,10 @@ const EventStore = types
         storage.addEventId(eventId)
 
         addEvent(eventId)
+
+        trackEvent('EventNotificationReceived', {
+          eventId
+        })
       },
       setLoading: isLoading => {
         self.isLoading = isLoading

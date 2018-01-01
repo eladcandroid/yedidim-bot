@@ -1,5 +1,6 @@
 import { types, getParent, flow } from 'mobx-state-tree'
-import * as api from '../io/api'
+import * as api from 'io/api'
+import { trackUserLogin, trackEvent } from 'io/analytics'
 
 export const User = types
   .model('User', {
@@ -20,8 +21,12 @@ export const User = types
   .actions(self => ({
     toggleMute: flow(function* toggleMute() {
       // if it is muted, then unmuted (remove field) or set new timestamp for now
+      const newMute = self.isMuted ? null : new Date().getTime()
+
+      trackEvent('ToggleMute', { mute: !!newMute })
+
       yield api.updateUser(self.id, {
-        Muted: self.isMuted ? null : new Date().getTime()
+        Muted: newMute
       })
     })
   }))
@@ -50,6 +55,8 @@ const AuthenticationStore = types
         self.currentUser = User.create(userInfo)
       }
 
+      trackUserLogin(self.currentUser && self.currentUser.id)
+
       self.isInitializing = false
     }
 
@@ -71,25 +78,26 @@ const AuthenticationStore = types
     }
 
     const signIn = flow(function* signIn({ verificationId, code }) {
+      trackEvent('SignIn')
       self.isLoading = true
       self.error = null
-      console.log('SIGNIN', self.isLoading)
+
       try {
-        // const { userAuth, userInfo } = yield api.signIn({
         yield api.signIn({
           verificationId,
           code
         })
         self.isLoading = false
-        // console.log('Logged In!', userAuth, userInfo)
+        trackEvent('SignInSuccess')
       } catch (error) {
-        console.log('ERROR', error)
         self.error = error
         self.isLoading = false
+        trackEvent('SignInError', { error })
       }
     })
 
     const signOut = flow(function* signOut() {
+      trackEvent('SignOut')
       self.isLoading = true
       self.error = null
 
@@ -97,7 +105,9 @@ const AuthenticationStore = types
         yield api.signOut()
         self.root.eventStore.removeAllEvents()
         self.isLoading = false
+        trackEvent('SignOutSuccess')
       } catch (error) {
+        trackEvent('SignOutError', { error })
         self.error = error
         self.isLoading = false
       }

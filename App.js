@@ -5,6 +5,7 @@ import { Image } from 'react-native'
 import { Provider, observer } from 'mobx-react/native'
 import { eventTypeImg } from 'const'
 import Sentry from 'sentry-expo'
+import { initAnalyticsTracking } from 'io/analytics'
 import I18nApp from './src/I18nApp'
 
 // Remove this once Sentry is correctly setup.
@@ -30,6 +31,8 @@ export default class App extends Component {
   }
 
   async componentWillMount() {
+    initAnalyticsTracking()
+
     await this.loadAssetsAsync()
 
     // Initialiase stores
