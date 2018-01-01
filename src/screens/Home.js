@@ -18,6 +18,10 @@ import {
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator } from 'react-native'
+import { eventTypeMessage, eventTypeImg } from 'const'
+import debounce from 'lodash.debounce'
+import { trackEvent } from 'io/analytics'
+
 import AlignedText from '../components/AlignedText'
 
 const MessageView = styled.View`
@@ -35,16 +39,7 @@ const MessageView = styled.View`
 const EventItem = observer(
   ({
     onPress,
-    event: {
-      guid,
-      eventTypeImage,
-      city,
-      more,
-      timestamp,
-      eventType,
-      isLoading,
-      isTaken
-    }
+    event: { id, type, city, more, timestamp, isLoading, isTaken }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -54,7 +49,7 @@ const EventItem = observer(
         <Body>
           <FormattedMessage
             id="Home.event.loadingTitle"
-            defaultMessage="Please wait, loading new event"
+            defaultMessage="Please wait, loading event..."
           >
             {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
@@ -66,20 +61,20 @@ const EventItem = observer(
       <ListItem
         avatar
         onPress={() => {
-          onPress(guid)
+          onPress(id)
         }}
       >
         <Left>
-          <Thumbnail
-            source={{
-              uri: eventTypeImage
-            }}
-          />
+          <Thumbnail source={eventTypeImg(type)} />
         </Left>
         <Body>
-          <AlignedText>
-            {eventType} - {city}
-          </AlignedText>
+          <FormattedMessage {...eventTypeMessage(type)}>
+            {eventTypeTxt => (
+              <AlignedText>
+                {eventTypeTxt} - {city}
+              </AlignedText>
+            )}
+          </FormattedMessage>
           <AlignedText note>{more}</AlignedText>
         </Body>
         <Right>
@@ -118,7 +113,13 @@ class HomeScreen extends Component {
     header: (
       <Header>
         <Left>
-          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+          <Button
+            transparent
+            onPress={() => {
+              trackEvent('Navigation', { page: 'Sidebar' })
+              navigation.navigate('DrawerOpen')
+            }}
+          >
             <Icon name="menu" />
           </Button>
         </Left>
@@ -139,9 +140,14 @@ class HomeScreen extends Component {
     )
   })
 
-  handleEventItemPress = eventId => {
-    this.props.navigation.navigate('Event', { eventId })
-  }
+  handleEventItemPress = debounce(
+    eventId => {
+      trackEvent('Navigation', { page: 'EventPage', eventId })
+      this.props.navigation.navigate('Event', { eventId })
+    },
+    1000,
+    { leading: true, trailing: false }
+  )
 
   render() {
     const { hasEvents, allEvents } = this.props

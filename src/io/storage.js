@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native'
+import { defaultLanguage } from 'config'
 
 const EVENTS_STORAGE_KEY = '@YedidimNative:events'
 const LANGUAGE_STORAGE_KEY = '@YedidimNative:language'
@@ -31,7 +32,7 @@ export async function clear() {
 }
 
 export async function getLanguage() {
-  return (await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY)) || 'en'
+  return (await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY)) || defaultLanguage()
 }
 
 export async function setLanguage(language) {

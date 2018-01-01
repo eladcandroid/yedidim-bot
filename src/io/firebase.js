@@ -1,6 +1,5 @@
-import { Constants } from 'expo'
 import firebase from 'firebase'
-import Config from '../../Config.json'
+import { firebaseCredentials } from 'config'
 
 // Initialise firebase
-firebase.initializeApp(Config.firebase[Constants.manifest.extra.instance])
+firebase.initializeApp(firebaseCredentials())

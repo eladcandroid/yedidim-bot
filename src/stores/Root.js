@@ -1,7 +1,8 @@
 import { types, flow } from 'mobx-state-tree'
+import { setLanguage } from 'io/storage'
+import { trackEvent } from 'io/analytics'
 import AuthenticationStore from './Authentication'
 import EventStore from './Event'
-import { setLanguage } from '../io/storage'
 
 const RootStore = types
   .model('RootStore', {
@@ -11,7 +12,7 @@ const RootStore = types
     eventStore: types.optional(EventStore, {
       events: {}
     }),
-    language: 'en'
+    language: types.enumeration('Language', ['en', 'he'])
   })
   .views(self => ({
     get nextLanguage() {
@@ -29,6 +30,7 @@ const RootStore = types
       const newLanguage = self.language === 'en' ? 'he' : 'en'
       yield setLanguage(newLanguage)
       self.language = newLanguage
+      trackEvent('ToggleLanguage', { language: newLanguage })
     })
   }))
 

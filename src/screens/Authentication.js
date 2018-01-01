@@ -8,13 +8,15 @@ import {
   Header,
   Title,
   Left,
-  Right
+  Right,
+  Icon
 } from 'native-base'
 import { View, ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
+import { trackEvent } from 'io/analytics'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -45,6 +47,8 @@ const ErrorText = styled.Text`
 @observer
 class AuthenticationScreen extends React.Component {
   handleAuthentication = async () => {
+    trackEvent('Navigation', { page: 'AuthenticationWebView' })
+
     const redirectUrl = AuthSession.getRedirectUrl()
     const result = await AuthSession.startAsync({
       authUrl:
@@ -52,6 +56,8 @@ class AuthenticationScreen extends React.Component {
         `redirect_uri=${encodeURIComponent(redirectUrl)}` +
         `&language=he`
     })
+
+    trackEvent('Navigation', { page: 'BackFromAuthenticationWebView' })
 
     const { error, verificationId, code } = result.params
 
@@ -89,7 +95,7 @@ class AuthenticationScreen extends React.Component {
             <ActivityIndicator size="large" />
           </Content>
         ) : (
-          <Content padder>
+          <Content>
             {authError ? (
               <View>
                 <FormattedMessage
@@ -109,7 +115,14 @@ class AuthenticationScreen extends React.Component {
               </FormattedMessage>
             )}
             <ButtonsView>
-              <StyledButton success onPress={this.handleAuthentication}>
+              <StyledButton
+                iconLeft
+                full
+                large
+                block
+                onPress={this.handleAuthentication}
+              >
+                <Icon style={{ fontSize: 40 }} name="ios-person" />
                 <FormattedMessage
                   id="Authentication.button"
                   defaultMessage="Authenticate me"

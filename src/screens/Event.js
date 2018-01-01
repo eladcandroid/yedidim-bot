@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, defineMessages } from 'react-intl'
-import { I18nManager, Alert } from 'react-native'
+import { I18nManager, Alert, View, ActivityIndicator } from 'react-native'
+import { trackEvent } from 'io/analytics'
 
 import {
   Button,
@@ -150,9 +151,7 @@ const eventTakeErrorMsgs = defineMessages({
 })
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
-// TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
 // TODO Remove token after user logout
-// TODO On notification, save the event data to event store and sync with firebase?
 
 @observer
 class EventScreen extends Component {
@@ -161,7 +160,13 @@ class EventScreen extends Component {
       <Header>
         <Left>
           {!navigation.state.params.isAssigned && (
-            <Button transparent onPress={() => navigation.goBack()}>
+            <Button
+              transparent
+              onPress={() => {
+                trackEvent('Navigation', { page: 'Home' })
+                navigation.goBack()
+              }}
+            >
               <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
             </Button>
           )}
@@ -220,7 +225,7 @@ class EventScreen extends Component {
       isTaken
     } = this.props
 
-    if (!event || !event.guid) {
+    if (!event || !event.id) {
       return (
         <FormattedMessage
           id="Event.error.notfound"
@@ -235,9 +240,14 @@ class EventScreen extends Component {
       ...(isAssigned ? finalise : accept),
       onPress: isAssigned
         ? () => {
+            trackEvent('Navigation', {
+              page: 'FinaliseFeedback',
+              eventId: event.id
+            })
+
             // Finalise Event, navigate to Feedback screen
             navigation.navigate('Feedback', {
-              eventId: event.guid,
+              eventId: event.id,
               action: 'finalise'
             })
           }
@@ -278,13 +288,39 @@ class EventScreen extends Component {
       ...(isAssigned ? cancel : ignore),
       onPress: isAssigned
         ? () => {
+            trackEvent('Navigation', {
+              page: 'UnacceptFeedback',
+              eventId: event.id
+            })
+
             // Navigate to feedback screen to explain why cancelling
             navigation.navigate('Feedback', {
-              eventId: event.guid,
+              eventId: event.id,
               action: 'unaccept'
             })
           }
         : this.handleRemoveEvent
+    }
+
+    if (event.isLoading) {
+      return (
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          <ActivityIndicator
+            style={{ marginTop: 20, marginBottom: 20 }}
+            size="large"
+          />
+          <FormattedMessage
+            id="Event.details.waiting"
+            defaultMessage="Please wait, loading event..."
+          >
+            {txt => (
+              <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                {txt}
+              </Text>
+            )}
+          </FormattedMessage>
+        </View>
+      )
     }
 
     return (

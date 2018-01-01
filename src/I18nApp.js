@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react/native'
+import 'intl'
 import { addLocaleData, IntlProvider } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import he from 'react-intl/locale-data/he'

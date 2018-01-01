@@ -3,6 +3,7 @@ import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
 import { Linking, View } from 'react-native'
+import { eventTypeMessage, eventTypeImg } from 'const'
 
 import {
   Button,
@@ -25,14 +26,13 @@ const MarginView = styled.View`
 `
 const EventDetails = ({
   event: {
-    eventTypeImage,
-    eventType,
+    type,
     timestamp,
     lat,
     lon,
     caller,
     more,
-    fullAddress,
+    address,
     phone,
     carType,
     isAssigned
@@ -45,16 +45,16 @@ const EventDetails = ({
         <Row>
           <Col size={1}>
             <MarginView>
-              <Thumbnail
-                source={{
-                  uri: eventTypeImage
-                }}
-              />
+              <Thumbnail source={eventTypeImg(type)} />
             </MarginView>
           </Col>
           <Col size={3}>
             <MarginView>
-              <H2 style={{ textAlign: 'left' }}>{eventType}</H2>
+              <FormattedMessage {...eventTypeMessage(type)}>
+                {eventTypeTxt => (
+                  <H2 style={{ textAlign: 'left' }}>{eventTypeTxt}</H2>
+                )}
+              </FormattedMessage>
               <FormattedRelative value={timestamp}>
                 {relative => <AlignedText note>{relative}</AlignedText>}
               </FormattedRelative>
@@ -85,7 +85,7 @@ const EventDetails = ({
           {label => <TextFieldRow label={label} value={more} />}
         </FormattedMessage>
         <FormattedMessage id="Event.location" defaultMessage="Location">
-          {label => <TextFieldRow label={label} value={fullAddress} />}
+          {label => <TextFieldRow label={label} value={address} />}
         </FormattedMessage>
         {isAssigned && (
           <FormattedMessage id="Event.caller" defaultMessage="Name">

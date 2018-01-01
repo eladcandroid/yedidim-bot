@@ -57,7 +57,7 @@ async function subscribeToUserInfo(
     const callback = snapshot => {
       if (snapshot && snapshot.val()) {
         onChangeCallback({
-          guid: userAuth.phoneNumber,
+          id: userAuth.phoneNumber,
           ...userSnapshotToJSON(snapshot.val())
         })
       } else {
@@ -117,7 +117,7 @@ export async function signOut() {
 }
 
 const eventSnapshotToJSON = snapshot => ({
-  guid: snapshot.key,
+  id: snapshot.key,
   status: snapshot.status,
   assignedTo: snapshot.assignedTo,
   timestamp: snapshot.timestamp,
@@ -126,13 +126,10 @@ const eventSnapshotToJSON = snapshot => ({
   carType: snapshot.details['car type'],
   type: snapshot.details.case,
   city: snapshot.details.city,
-  fullAddress: snapshot.details.address,
   lat: snapshot.details.geo.lat,
-  lon: snapshot.details.geo.lng,
+  lon: snapshot.details.geo.lon,
   more: snapshot.details.more,
-  phone: snapshot.details['phone number'],
-  streetName: snapshot.details.street_name,
-  streetNumber: snapshot.details.street_number
+  phone: snapshot.details['phone number']
 })
 
 export function subscribeToEvent(eventKey, onChangeCallback) {
