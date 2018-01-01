@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages } from 'react-intl'
 import { I18nManager, View } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { NavigationActions } from 'react-navigation'
+import { trackEvent } from 'io/analytics'
 
 import {
   Button,
@@ -59,7 +60,13 @@ export class FeedbackScreen extends Component {
     header: (
       <Header>
         <Left>
-          <Button transparent onPress={() => navigation.goBack()}>
+          <Button
+            transparent
+            onPress={() => {
+              trackEvent('Navigation', { page: 'EventPage' })
+              navigation.goBack()
+            }}
+          >
             <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
           </Button>
         </Left>
@@ -90,6 +97,7 @@ export class FeedbackScreen extends Component {
     // Remove event from list of events
     await event.remove()
     // Navigate to home (resetting state)
+    trackEvent('Navigation', { page: 'Home' })
     navigation.dispatch(
       NavigationActions.reset({
         index: 0,

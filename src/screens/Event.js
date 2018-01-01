@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, defineMessages } from 'react-intl'
 import { I18nManager, Alert, View, ActivityIndicator } from 'react-native'
+import { trackEvent } from 'io/analytics'
 
 import {
   Button,
@@ -159,7 +160,13 @@ class EventScreen extends Component {
       <Header>
         <Left>
           {!navigation.state.params.isAssigned && (
-            <Button transparent onPress={() => navigation.goBack()}>
+            <Button
+              transparent
+              onPress={() => {
+                trackEvent('Navigation', { page: 'Home' })
+                navigation.goBack()
+              }}
+            >
               <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
             </Button>
           )}
@@ -233,6 +240,11 @@ class EventScreen extends Component {
       ...(isAssigned ? finalise : accept),
       onPress: isAssigned
         ? () => {
+            trackEvent('Navigation', {
+              page: 'FinaliseFeedback',
+              eventId: event.id
+            })
+
             // Finalise Event, navigate to Feedback screen
             navigation.navigate('Feedback', {
               eventId: event.id,
@@ -276,6 +288,11 @@ class EventScreen extends Component {
       ...(isAssigned ? cancel : ignore),
       onPress: isAssigned
         ? () => {
+            trackEvent('Navigation', {
+              page: 'UnacceptFeedback',
+              eventId: event.id
+            })
+
             // Navigate to feedback screen to explain why cancelling
             navigation.navigate('Feedback', {
               eventId: event.id,

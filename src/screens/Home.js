@@ -20,6 +20,7 @@ import {
 import { ActivityIndicator } from 'react-native'
 import { eventTypeMessage, eventTypeImg } from 'const'
 import debounce from 'lodash.debounce'
+import { trackEvent } from 'io/analytics'
 
 import AlignedText from '../components/AlignedText'
 
@@ -112,7 +113,13 @@ class HomeScreen extends Component {
     header: (
       <Header>
         <Left>
-          <Button transparent onPress={() => navigation.navigate('DrawerOpen')}>
+          <Button
+            transparent
+            onPress={() => {
+              trackEvent('Navigation', { page: 'Sidebar' })
+              navigation.navigate('DrawerOpen')
+            }}
+          >
             <Icon name="menu" />
           </Button>
         </Left>
@@ -135,6 +142,7 @@ class HomeScreen extends Component {
 
   handleEventItemPress = debounce(
     eventId => {
+      trackEvent('Navigation', { page: 'EventPage', eventId })
       this.props.navigation.navigate('Event', { eventId })
     },
     1000,

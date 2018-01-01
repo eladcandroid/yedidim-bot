@@ -16,6 +16,7 @@ import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
+import { trackEvent } from 'io/analytics'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -46,6 +47,8 @@ const ErrorText = styled.Text`
 @observer
 class AuthenticationScreen extends React.Component {
   handleAuthentication = async () => {
+    trackEvent('Navigation', { page: 'AuthenticationWebView' })
+
     const redirectUrl = AuthSession.getRedirectUrl()
     const result = await AuthSession.startAsync({
       authUrl:
@@ -53,6 +56,8 @@ class AuthenticationScreen extends React.Component {
         `redirect_uri=${encodeURIComponent(redirectUrl)}` +
         `&language=he`
     })
+
+    trackEvent('Navigation', { page: 'BackFromAuthenticationWebView' })
 
     const { error, verificationId, code } = result.params
 
