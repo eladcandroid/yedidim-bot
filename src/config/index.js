@@ -38,6 +38,9 @@ export const environment = () => {
   return !/(test|development|production)/.test(channel) ? 'production' : channel
 }
 
+export const defaultLanguage = () =>
+  environment() === 'development' ? 'en' : 'he'
+
 export const firebaseCredentials = () => firebaseInfo[environment()]
 
 export default { firebaseCredentials, environment }

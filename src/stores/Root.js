@@ -12,7 +12,7 @@ const RootStore = types
     eventStore: types.optional(EventStore, {
       events: {}
     }),
-    language: 'en'
+    language: types.enumeration('Language', ['en', 'he'])
   })
   .views(self => ({
     get nextLanguage() {
