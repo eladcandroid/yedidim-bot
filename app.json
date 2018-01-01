@@ -27,7 +27,9 @@
       ]
     },
     "extra": {
-      "AmplitudeAPI": "2e1ccff4946b3318c47b05aeaaf7db16"
+      "AmplitudeAPI": "2e1ccff4946b3318c47b05aeaaf7db16",
+      "SentryAPI":
+        "https://dbb23c2a63e64571b8e6e7d665ab2472:5360c3f353e44e16a4d0f2eb1a288329@sentry.io/263712"
     }
   }
 }
