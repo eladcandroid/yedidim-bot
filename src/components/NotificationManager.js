@@ -24,15 +24,19 @@ const withNotificationManager = WrappedComponent => {
     }
 
     handleNotification = ({ origin, data, remote }) => {
-      // If no data was sent, ignore notification
-      if (!data || !data.eventId) {
-        return
+      // If no data was sent, throw exception
+      if (!data || !data.key) {
+        throw new Error(
+          `Notification is incomplete and lacking data, ignoring it : ${JSON.stringify(
+            data
+          )}`
+        )
       }
 
       if (remote) {
         // Add event to store
-        const { eventId } = data
-        this.props.addEventFromNotification(eventId)
+        const { key } = data
+        this.props.addEventFromNotification(key)
 
         // Only listen to remote notifications
         if (origin === 'received') {
@@ -43,11 +47,11 @@ const withNotificationManager = WrappedComponent => {
             buttonText: 'Show',
             type: 'warning',
             // duration: 10000,
-            onClose: () => this.navigateToEvent(data)
+            onClose: () => this.navigateToEvent({ eventId: key })
           })
         } else {
           // Origin is selected: comes from notification while in foreground
-          this.navigateToEvent(data)
+          this.navigateToEvent({ eventId: key })
         }
       }
     }
