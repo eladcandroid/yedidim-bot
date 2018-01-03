@@ -1,5 +1,5 @@
 const Expo = require('expo-server-sdk');
-
+const Consts = require('./consts');
 // Create a new Expo SDK client
 let expo = new Expo();
 
@@ -40,8 +40,8 @@ exports.handleUpdateEvent = (event, admin) => {
             objectToSend.data = {
                 key: eventData.key
             };
-            objectToSend.title = 'yedidim title';
-            objectToSend.body = JSON.stringify(eventData);
+            objectToSend.title = 'ידידים - קריאה חדשה';
+            objectToSend.body = formatEventBody(eventData);
             objectToSend.sound = 'default';
             return objectToSend;
 		});
@@ -73,4 +73,10 @@ exports.handleUpdateEvent = (event, admin) => {
 
 function haveToSendNotification(eventData, previousValue){
 	return eventData.status === 'sent' || (previousValue === null  || previousValue.status !== 'sent');
+}
+
+function formatEventBody(eventData){
+	var data = `נפתחה קריאה מסוג ${Consts.EventCases[eventData.details.case]} ב${eventData.details.street_name} ${eventData.details.street_number} ${eventData.details.city}. לחץ לפרטים`;
+	console.log(data);
+	return data;
 }
