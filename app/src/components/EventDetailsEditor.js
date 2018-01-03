@@ -146,7 +146,7 @@ class EventDetailsEditor extends Component {
         <Input
           value={this.state[field]}
           keyboardType={type}
-          onChangeText={(value) => {this.updateEvent(field, value.trim())}}/>
+          onChangeText={(value) => {this.updateEvent(field, type === 'numeric' ? value.trim() : value)}}/>
       </Item>
     );
   }
