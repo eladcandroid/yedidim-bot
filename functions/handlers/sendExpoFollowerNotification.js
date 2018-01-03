@@ -28,7 +28,7 @@ exports.handleUpdateEvent = (event, admin) => {
         console.log(tokens.val());
         // Listing all tokens.
         let tokenData = tokens.val();
-        const dataToSend = Object.keys(tokenData).map(function(t) {
+        const dataToSend = Object.keys(tokenData).filter(f => Expo.isExpoPushToken(f)).map(function(t) {
             let objectToSend = {};
             objectToSend.to = tokenData[t].NotificationToken;
             objectToSend.data = {
