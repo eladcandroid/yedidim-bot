@@ -4,9 +4,16 @@ const Expo = require('expo-server-sdk');
 let expo = new Expo();
 
 exports.handleUpdateEvent = (event, admin) => {
-    let eventData = event.data.val();
+	let eventData = event.data.val();
+	let previousValue = event.data.previous.val();
+
     console.log(' new is ' + eventData.status, 'event data ', eventData);
     console.log(eventData);
+
+	if (!haveToSendNotification(eventData, previousValue)) {
+		console.log('block',eventData.status,previousValue.status);
+		return Promise.resolve('blocked');
+	}
 
     // Get the list of device notification tokens.
     const getDeviceTokensPromise = admin
@@ -28,7 +35,7 @@ exports.handleUpdateEvent = (event, admin) => {
         console.log(tokens.val());
         // Listing all tokens.
         let tokenData = tokens.val();
-        const dataToSend = Object.keys(tokenData).filter(f => Expo.isExpoPushToken(f)).map(function(t) {
+        const dataToSend = Object.keys(tokenData).filter(f => Expo.isExpoPushToken(tokenData[t].NotificationToken)).map(function(t) {
             let objectToSend = {};
             objectToSend.to = tokenData[t].NotificationToken;
             objectToSend.data = {
@@ -38,7 +45,9 @@ exports.handleUpdateEvent = (event, admin) => {
             objectToSend.body = eventData;
             objectToSend.sound = 'default';
             return objectToSend;
-        });
+		});
+		
+		console.log('after filter their are', dataToSend.length, 'tokens to send notifications to.');
 
         let chunks = expo.chunkPushNotifications(dataToSend);
 		let promises = [];
@@ -48,9 +57,11 @@ exports.handleUpdateEvent = (event, admin) => {
 			  expo.sendPushNotificationsAsync(chunk)
 				.then(receipts => {
 				  console.log("Successfully sent notifications : \n", receipts);
+				  resolve();
 				})
 				.catch(err => {
 				  console.error("Failed to send notifications : \n", err);
+				  resolve();
 				});
 			}));
 		  }
@@ -59,3 +70,8 @@ exports.handleUpdateEvent = (event, admin) => {
 			});
     });
 };
+
+
+function haveToSendNotification(eventData, previousValue){
+	return eventData.status === 'sent' || (previousValue === null  || previous.status !== 'sent');
+}
