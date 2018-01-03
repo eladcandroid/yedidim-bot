@@ -139,13 +139,14 @@ class EventDetailsEditor extends Component {
     )
   }
 
-  renderInput(label, field) {
+  renderInput(label, field, type = 'default') {
     return (
       <Item floatingLabel style={styles.item}>
         <Label style={I18nManager.isRTL ? undefined: {textAlign: 'right'}}>{label}</Label>
         <Input
           value={this.state[field]}
-          onChangeText={(value) => {this.updateEvent(field, value)}}/>
+          keyboardType={type}
+          onChangeText={(value) => {this.updateEvent(field, value.trim())}}/>
       </Item>
     );
   }
@@ -164,7 +165,7 @@ class EventDetailsEditor extends Component {
             {this.renderEventCasePicker()}
             {this.renderInput('סוג רכב', 'car type')}
             {this.renderInput('פרטים', 'more')}
-            {this.renderInput('טלפון', 'phone number')}
+            {this.renderInput('טלפון', 'phone number', 'numeric')}
             {this.renderInput('שם', 'caller name')}
           </Form>
           <Button full style={styles.createButton} onPress={this.createNewEvent.bind(this)}>
