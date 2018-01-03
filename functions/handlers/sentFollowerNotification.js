@@ -1,6 +1,14 @@
 exports.handleUpdateEvent = (event,admin) => {
 	let eventData = event.data.val();
-	console.log(' new is ' + eventData.status, 'data is', eventData);
+	let previousValue = event.data.previous.val();
+
+    console.log(' new is ' + eventData.status, 'event data ', eventData);
+    console.log(eventData);
+
+	if (!haveToSendNotification(eventData, previousValue)) {
+		console.log('block',eventData.status,previousValue.status);
+		return Promise.resolve('blocked');
+	}
 
 	// Get the list of device notification tokens.
 	const getDeviceTokensPromise = admin
@@ -15,7 +23,8 @@ exports.handleUpdateEvent = (event,admin) => {
 	return Promise.resolve(getDeviceTokensPromise).then(tokens => {
 		// Check if there are any device tokens.
 		if (!tokens.hasChildren()) {
-			return console.log('There are no notification tokens to send to.');
+			console.log('There are no notification tokens to send to.');
+			return;
 		}
 
 		console.log('There are', tokens.numChildren(), 'tokens to send notifications to.');
@@ -30,7 +39,7 @@ exports.handleUpdateEvent = (event,admin) => {
 		console.log(tokens.val());
 		// Listing all tokens.
 		let tokenData = tokens.val();
-		const tokensToSend = Object.keys(tokenData).map(function(t) {
+		const tokensToSend = Object.keys(tokenData).filter(t => tokenData[t].FCMToken && tokenData[t].FCMToken.length > 3).map(function(t) {
 			return tokenData[t].FCMToken;
 		});
 
@@ -60,3 +69,7 @@ exports.handleUpdateEvent = (event,admin) => {
 			});
 	});
 };
+
+function haveToSendNotification(eventData, previousValue){
+	return eventData.status === 'sent' || (previousValue === null  || previousValue.status !== 'sent');
+}
