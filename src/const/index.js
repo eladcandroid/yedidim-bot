@@ -29,7 +29,12 @@ const typesImage = [
 ]
 /* eslint-enable */
 
-export const eventTypeMessage = typeId => types[typeId]
+export const eventTypeMessage = typeId =>
+  types[typeId] ? types[typeId] : types[8]
 
-export const eventTypeImg = typeId =>
-  typeof typeId !== 'number' ? typesImage : typesImage[typeId]
+export const eventTypeImg = typeId => {
+  if (typeof typeId !== 'number') {
+    return typesImage
+  }
+  return typesImage[typeId] ? typesImage[typeId] : typesImage[8]
+}
