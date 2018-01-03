@@ -18,19 +18,19 @@ class EventsList extends Component {
   renderGrid(events) {
     let cols = [
       <Col style={{width:30}} key="0">
-        <Text style={getTextStyle(styles.headerText)}/>
+        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}/>
         {events.map(event => this.renderRow(event, 0))}
       </Col>,
       <Col key="1">
-        <Text style={getTextStyle(styles.headerText)}>עיר</Text>
+        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>עיר</Text>
         {events.map(event => this.renderRow(event, 1))}
       </Col>,
       <Col key="2">
-        <Text style={getTextStyle(styles.headerText)}>בעיה</Text>
+        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>בעיה</Text>
         {events.map(event => this.renderRow(event, 2))}
       </Col>,
       <Col key="3">
-        <Text style={getTextStyle(styles.headerText)}>זמן</Text>
+        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>זמן</Text>
         {events.map(event => this.renderRow(event, 3))}
       </Col>]
     ;
@@ -49,11 +49,11 @@ class EventsList extends Component {
       <Row style={[styles.headerRow, I18nManager.isRTL? undefined : {flexDirection: 'row-reverse'}]} onPress={this.openEventDetails.bind(this, event)} key={event.key + '_' + colNum}>
           {
             colNum === 3 ?
-              <Text style={getTextStyle(styles.cellText)}>{formatEventTime(event)}</Text>
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventTime(event)}</Text>
             : colNum === 2 ?
-              <Text style={getTextStyle(styles.cellText)}>{formatEventCase(event)}</Text>
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventCase(event)}</Text>
             : colNum === 1 ?
-              <Text style={getTextStyle(styles.cellText)}>{event.details.city}</Text>
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details.city}</Text>
             : event.source === EventSource.FB_BOT ?
               <Image style={styles.fbImage} source={require('../../assets/images/bot-icon.png')}/>
             : <Text style={getTextStyle(styles.cellText)}/>
@@ -71,12 +71,12 @@ class EventsList extends Component {
           </Button>
         </View>
         <ScrollView style={styles.scrollContainer}>
-          <Text style={getTextStyle(styles.headerTitle)}>אירועים חדשים</Text>
+          <Text style={getTextStyle(styles.headerTitle)} allowFontScaling={false}>אירועים חדשים</Text>
           {this.renderGrid(this.props.newEvents)}
 
           <View style={styles.rowLine}/>
 
-          <Text style={getTextStyle(styles.headerTitle)}>אירועים פעילים</Text>
+          <Text style={getTextStyle(styles.headerTitle)} allowFontScaling={false}>אירועים פעילים</Text>
           {this.renderGrid(this.props.activeEvents)}
         </ScrollView>
       </View>
