@@ -8,7 +8,6 @@ exports.handleUpdateEvent = (event, admin) => {
 	let previousValue = event.data.previous.val();
 
     console.log(' new is ' + eventData.status, 'event data ', eventData);
-    console.log(eventData);
 
 	if (!haveToSendNotification(eventData, previousValue)) {
 		console.log('block',eventData.status,previousValue.status);
@@ -27,22 +26,22 @@ exports.handleUpdateEvent = (event, admin) => {
     return Promise.resolve(getDeviceTokensPromise).then(tokens => {
         // Check if there are any device tokens.
         if (!tokens.hasChildren()) {
-            return console.log('There are no notification tokens to send to.');
+			console.log('There are no notification tokens to send to.');
+			return Promise.resolve(400);
         }
 
         console.log('There are', tokens.numChildren(), 'tokens to send notifications to.');
 
-        console.log(tokens.val());
-        // Listing all tokens.
+		// Listing all tokens.
         let tokenData = tokens.val();
-        const dataToSend = Object.keys(tokenData).filter(f => Expo.isExpoPushToken(tokenData[t].NotificationToken)).map(function(t) {
+        const dataToSend = Object.keys(tokenData).filter(f => Expo.isExpoPushToken(tokenData[f].NotificationToken)).map(function(t) {
             let objectToSend = {};
             objectToSend.to = tokenData[t].NotificationToken;
             objectToSend.data = {
                 key: eventData.key
             };
             objectToSend.title = 'yedidim title';
-            objectToSend.body = eventData;
+            objectToSend.body = JSON.stringify(eventData);
             objectToSend.sound = 'default';
             return objectToSend;
 		});
@@ -73,5 +72,5 @@ exports.handleUpdateEvent = (event, admin) => {
 
 
 function haveToSendNotification(eventData, previousValue){
-	return eventData.status === 'sent' || (previousValue === null  || previous.status !== 'sent');
+	return eventData.status === 'sent' || (previousValue === null  || previousValue.status !== 'sent');
 }

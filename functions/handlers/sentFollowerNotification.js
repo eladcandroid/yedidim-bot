@@ -23,7 +23,8 @@ exports.handleUpdateEvent = (event,admin) => {
 	return Promise.resolve(getDeviceTokensPromise).then(tokens => {
 		// Check if there are any device tokens.
 		if (!tokens.hasChildren()) {
-			return console.log('There are no notification tokens to send to.');
+			console.log('There are no notification tokens to send to.');
+			return;
 		}
 
 		console.log('There are', tokens.numChildren(), 'tokens to send notifications to.');
@@ -38,7 +39,7 @@ exports.handleUpdateEvent = (event,admin) => {
 		console.log(tokens.val());
 		// Listing all tokens.
 		let tokenData = tokens.val();
-		const tokensToSend = Object.keys(tokenData),filter(t => tokenData[t].FCMToken && tokenData[t].FCMToken.length > 3).map(function(t) {
+		const tokensToSend = Object.keys(tokenData).filter(t => tokenData[t].FCMToken && tokenData[t].FCMToken.length > 3).map(function(t) {
 			return tokenData[t].FCMToken;
 		});
 
@@ -70,5 +71,5 @@ exports.handleUpdateEvent = (event,admin) => {
 };
 
 function haveToSendNotification(eventData, previousValue){
-	return eventData.status === 'sent' || (previousValue === null  || previous.status !== 'sent');
+	return eventData.status === 'sent' || (previousValue === null  || previousValue.status !== 'sent');
 }
