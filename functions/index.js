@@ -61,13 +61,13 @@ exports.takeEvent = functions.https.onRequest((req, res) => {
 
 exports.sendFollowerNotification = functions.database.ref('/events/{eventId}').onWrite(event => {
   if (!isProduction) {
-    sendFollowerNotification.handleUpdateEvent(event, admin);
+    return sendFollowerNotification.handleUpdateEvent(event, admin);
   }
 });
 
 exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}').onWrite(event => {
   if (!isProduction) {
-    sendExpoFollowerNotification.handleUpdateEvent(event, admin);
+    return sendExpoFollowerNotification.handleUpdateEvent(event, admin);
   }
 });
 
