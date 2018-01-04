@@ -72,5 +72,9 @@
   "Home.event.loadingTitle": "המתן, טוען את האירוע ...",
   "Home.event.taken": "נלקח",
   "Home.noevents": "מצטערים, לא נמצאו אירועים",
-  "Home.title": "בית"
+  "Home.title": "בית",
+  "Event.button.ignore": "להתעלם",
+  "Event.button.cancel": "לבטל",
+  "Event.button.accept": "לטפל",
+  "Event.button.finalise": "לסיים"
 }

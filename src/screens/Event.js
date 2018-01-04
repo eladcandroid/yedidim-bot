@@ -35,12 +35,12 @@ const ignore = {
     cancel: {
       id: 'Event.alert.ignore.cancel',
       defaultMessage: 'Cancel'
+    },
+    buttonMsgs: {
+      id: 'Event.button.ignore',
+      defaultMessage: 'Ignore'
     }
-  }),
-  buttonMsgs: {
-    id: 'Event.button.ignore',
-    defaultMessage: 'Ignore'
-  }
+  })
 }
 
 const cancel = {
@@ -60,12 +60,12 @@ const cancel = {
     cancel: {
       id: 'Event.alert.cancel.cancel',
       defaultMessage: 'Cancel'
+    },
+    buttonMsgs: {
+      id: 'Event.button.cancel',
+      defaultMessage: 'Cancel'
     }
-  }),
-  buttonMsgs: {
-    id: 'Event.button.cancel',
-    defaultMessage: 'Cancel'
-  }
+  })
 }
 
 const accept = {
@@ -85,12 +85,12 @@ const accept = {
     cancel: {
       id: 'Event.alert.accept.cancel',
       defaultMessage: 'Cancel'
+    },
+    buttonMsgs: {
+      id: 'Event.button.accept',
+      defaultMessage: 'Accept'
     }
-  }),
-  buttonMsgs: {
-    id: 'Event.button.accept',
-    defaultMessage: 'Accept'
-  }
+  })
 }
 
 const finalise = {
@@ -110,12 +110,12 @@ const finalise = {
     cancel: {
       id: 'Event.alert.finalise.cancel',
       defaultMessage: 'Cancel'
+    },
+    buttonMsgs: {
+      id: 'Event.button.finalise',
+      defaultMessage: 'Finalise'
     }
-  }),
-  buttonMsgs: {
-    id: 'Event.button.finalise',
-    defaultMessage: 'Finalise'
-  }
+  })
 }
 
 const eventTakenMsgs = defineMessages({

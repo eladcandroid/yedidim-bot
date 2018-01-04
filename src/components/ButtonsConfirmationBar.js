@@ -42,7 +42,7 @@ class ButtonsConfirmationBar extends Component {
         <Row style={{ marginTop: 10 }}>
           <Col>
             <Button full large block success onPress={this.handleOkClick}>
-              <FormattedMessage {...ok.buttonMsgs}>
+              <FormattedMessage {...ok.modalMsgs.buttonMsgs}>
                 {txt => <Text>{txt}</Text>}
               </FormattedMessage>
               <Icon name="md-checkmark-circle" />
@@ -50,7 +50,7 @@ class ButtonsConfirmationBar extends Component {
           </Col>
           <Col>
             <Button full large block danger onPress={this.handleCancelClick}>
-              <FormattedMessage {...cancel.buttonMsgs}>
+              <FormattedMessage {...cancel.modalMsgs.buttonMsgs}>
                 {txt => <Text>{txt}</Text>}
               </FormattedMessage>
               <Icon name="md-close-circle" />
