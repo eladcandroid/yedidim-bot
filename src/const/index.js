@@ -12,7 +12,8 @@ const types = defineMessages({
     id: 'Event.type.puncture-no-replacement',
     defaultMessage: 'Puncture w/o replacement'
   },
-  8: { id: 'Event.type.other', defaultMessage: 'Other' }
+  8: { id: 'Event.type.other', defaultMessage: 'Other' },
+  9: { id: 'Event.type.lockedCar', defaultMessage: 'Locked Car' }
 })
 
 /* eslint-disable global-require */
@@ -25,7 +26,8 @@ const typesImage = [
   require('images/case5.jpg'),
   require('images/case6.jpg'),
   require('images/case7.jpg'),
-  require('images/case8.jpg')
+  require('images/case8.jpg'),
+  require('images/case9.jpg')
 ]
 /* eslint-enable */
 

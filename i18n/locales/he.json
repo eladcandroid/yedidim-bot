@@ -12,6 +12,7 @@
   "Event.type.puncture": "פנצ'ר",
   "Event.type.compressor": "קומפרסור",
   "Event.type.lockedDoor": "דלת נעולה",
+  "Event.type.lockedCar": "רכב נעול",
   "Event.type.liquids": "דלק / מים / שמן",
   "Event.type.rescue": "חילוץ",
   "Event.type.transponder": "קודנית",
