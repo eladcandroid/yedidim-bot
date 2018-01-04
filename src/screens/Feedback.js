@@ -170,6 +170,7 @@ export class FeedbackScreen extends Component {
                       {txt => (
                         <Input
                           multiline
+                          blurOnSubmit
                           numberOfLines={20}
                           style={{ height: 200 }}
                           placeholder={txt}

@@ -12,6 +12,7 @@
   "Event.type.puncture": "Puncture",
   "Event.type.compressor": "Compressor",
   "Event.type.lockedDoor": "Locked door",
+  "Event.type.lockedCar": "Locked car",
   "Event.type.liquids": "Gas/Water/Oil",
   "Event.type.rescue": "Rescue",
   "Event.type.transponder": "Transponder",
@@ -73,5 +74,9 @@
   "Home.event.loadingTitle": "Please wait, loading event...",
   "Home.event.taken": "TAKEN",
   "Home.noevents": "Sorry, no events were found",
-  "Home.title": "Home"
+  "Home.title": "Home",
+  "Event.button.ignore": "Ignore",
+  "Event.button.cancel": "Cancel",
+  "Event.button.accept": "Accept",
+  "Event.button.finalise": "Finalise"
 }

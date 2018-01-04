@@ -12,6 +12,7 @@
   "Event.type.puncture": "פנצ'ר",
   "Event.type.compressor": "קומפרסור",
   "Event.type.lockedDoor": "דלת נעולה",
+  "Event.type.lockedCar": "רכב נעול",
   "Event.type.liquids": "דלק / מים / שמן",
   "Event.type.rescue": "חילוץ",
   "Event.type.transponder": "קודנית",
@@ -55,7 +56,7 @@
     "מצטערים, אין אפשרות למצוא את פרטי האירוע. פנה למנהל המערכת.",
   "Event.details.waiting": "המתן, טוען את האירוע ...",
   "Event.title.active": "אירוע פעיל",
-  "Event.title.inactive": "מִקרֶה",
+  "Event.title.inactive": "אירוע",
   "Feedback.toast.finalise.text": "האירוע הסתיים",
   "Feedback.toast.finalise.buttonText": "אישור",
   "Feedback.toast.unaccept.text": "האירוע בוטל",
@@ -71,5 +72,9 @@
   "Home.event.loadingTitle": "המתן, טוען את האירוע ...",
   "Home.event.taken": "נלקח",
   "Home.noevents": "מצטערים, לא נמצאו אירועים",
-  "Home.title": "בית"
+  "Home.title": "בית",
+  "Event.button.ignore": "להתעלם",
+  "Event.button.cancel": "לבטל",
+  "Event.button.accept": "לטפל",
+  "Event.button.finalise": "לסיים"
 }
