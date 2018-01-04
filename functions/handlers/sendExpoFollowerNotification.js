@@ -72,11 +72,11 @@ exports.handleUpdateEvent = (event, admin) => {
 
 
 function haveToSendNotification(eventData, previousValue){
-	return eventData.status === 'sent' || (previousValue === null  || previousValue.status !== 'sent');
+	return eventData.status === 'sent' && (previousValue === null  || previousValue.status !== 'sent');
 }
 
 function formatEventBody(eventData){
-	var data = `נפתחה קריאה מסוג ${Consts.EventCases[eventData.details.case]} ב${eventData.details.street_name} ${eventData.details.street_number} ${eventData.details.city}. לחץ לפרטים`;
+	const data = `נפתחה קריאה מסוג ${Consts.EventCases[eventData.details.case]} ב${eventData.details.street_name} ${eventData.details.street_number} ${eventData.details.city}. לחץ לפרטים`;
 	console.log(data);
 	return data;
 }
