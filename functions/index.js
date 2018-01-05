@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 
 const webhook = require('./handlers/webHookHandler');
 const manage = require('./handlers/manageHandler');
+const onUpdateEvent = require('./handlers/onUpdateEventHandler');
 const setLocation = require('./handlers/setLocation');
 const getVolunters = require('./handlers/getVolunters');
 const takeEvent = require('./handlers/takeEvent');
@@ -26,8 +27,6 @@ function getTokens(json) {
   return json.sandbox2;
 }
 
-const isProduction = functions.config().instance && functions.config().instance.name === 'production';
-
 const admin = require('./lib/admin').init(tokens.firebaseCert, tokens.firebaseConfig);
 const dashbot = require('dashbot')(tokens.dashbot.apiKey).facebook;
 
@@ -42,9 +41,7 @@ exports.manage = functions.https.onRequest((req, res) => {
 });
 
 exports.onUserCreateTrigger = functions.database.ref('/volunteer/{id}').onWrite(event => {
-  if (!isProduction) {
-    return onUserCreateTrigger.handleTrigger(event, admin);
-  }
+  return onUserCreateTrigger.handleTrigger(event, admin);
 });
 
 exports.setLocation = functions.https.onRequest((req, res) => {
@@ -60,15 +57,15 @@ exports.takeEvent = functions.https.onRequest((req, res) => {
 });
 
 exports.sendFollowerNotification = functions.database.ref('/events/{eventId}').onWrite(event => {
-  if (!isProduction) {
-    return sendFollowerNotification.handleUpdateEvent(event, admin);
-  }
+  return sendFollowerNotification.handleUpdateEvent(event, admin);
 });
 
 exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}').onWrite(event => {
-  if (!isProduction) {
-    return sendExpoFollowerNotification.handleUpdateEvent(event, admin);
-  }
+  return sendExpoFollowerNotification.handleUpdateEvent(event, admin);
+});
+
+exports.onUpdateEvent = functions.database.ref('/events/{eventId}').onWrite(event => {
+  return onUpdateEvent.onWrite(event)
 });
 
 exports.getOpenedEvents = functions.https.onRequest((req, res) => {
