@@ -71,5 +71,5 @@ exports.handleUpdateEvent = (event,admin) => {
 };
 
 function haveToSendNotification(eventData, previousValue){
-	return eventData.status === 'sent' || (previousValue === null  || previousValue.status !== 'sent');
+	return eventData.status === 'sent' && (previousValue === null  || previousValue.status !== 'sent');
 }
