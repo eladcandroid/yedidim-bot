@@ -66,9 +66,7 @@ export function storeNotificationToken(token) {
     }
     firebase.database().ref('dispatchers/' + getState().dataSource.user.id).update({
       token,
-      notifications: true,
-      time: new Date(),
-      version: getState().dataSource.version
+      notifications: true
     }, (err) => {
       if (err) {
         dispatch(setError('Unable to set token. ', err));
@@ -139,6 +137,7 @@ function handleSignedInUser(user) {
   return (dispatch => {
     dispatch(checkVersion());
     dispatch(loadUserData(user));
+    dispatch(updateUserVersion(user));
     dispatch(loadEvents());
   });
 }
@@ -189,6 +188,15 @@ function loadUserData(user) {
         dispatch(setError('Failed to load user', err));
       });
   });
+}
+
+export function updateUserVersion(user) {
+  return ((dispatch, getState) => {
+    firebase.database().ref('dispatchers/' + user.id).update({
+      time: new Date(),
+      version: getState().dataSource.version
+    })}
+  );
 }
 
 function loadEvents() {
