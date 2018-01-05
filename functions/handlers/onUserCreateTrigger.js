@@ -1,11 +1,11 @@
 exports.handleTrigger = (event, admin) => {
 	if (event.data.previous.exists()) {
-		return;
+		return Promise.resolve();
 	}
 
 	// Exit when the data is deleted.
 	if (!event.data.exists()) {
-		return;
+    return Promise.resolve();
 	}
 
 	const original = event.data.val();
@@ -13,7 +13,7 @@ exports.handleTrigger = (event, admin) => {
 	const mobilePhone = original.MobilePhone;
 	console.log(mobilePhone);
 	if (!mobilePhone || mobilePhone.length === 0) {
-		return;
+    return Promise.resolve();
 	}
 
 	return admin
