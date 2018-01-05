@@ -193,7 +193,7 @@ function loadUserData(user) {
 
 function loadEvents() {
   return ((dispatch, getState) => {
-    firebase.database().ref('/events').once('value')
+    firebase.database().ref('/events').orderByChild('isOpen').equalTo(true).once('value')
       .then((snapshot) => {
         let events = objectToArray(snapshot.val());
         events.sort((c1, c2) => {
@@ -213,7 +213,7 @@ function loadEvents() {
             dispatch(addEvent(event));
           }
         });
-        firebase.database().ref('/events').on('child_changed', (data) => {
+        firebase.database().ref('/events').orderByChild('isOpen').equalTo(true).on('child_changed', (data) => {
           let event = data.val();
           event.key = data.key;
           dispatch(setEvent(event));
