@@ -25,14 +25,14 @@ class EventsSearch extends Component {
     return (
       <View style={styles.container}>
         <Form>
-          <Item style={styles.item}>
+          <Item style={{flex:1, flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse'}}>
             <Label style={I18nManager.isRTL ? undefined: {textAlign: 'right'}}>טלפון</Label>
             <Input
               value={this.state.phone}
               keyboardType="numeric"
               onChangeText={(value) => {this.setState({phone: value.trim()})}}/>
           </Item>
-          <View style={styles.datePickersRow}>
+          <View style={[styles.datePickersRow, {flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse'}]}>
             <DatePicker
               date={this.state.fromDate}
               mode="date"
@@ -109,15 +109,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     backgroundColor: 'white'
   },
-  item: {
-    flex: 1,
-    flexDirection: 'row-reverse'
-  },
   datePickersRow: {
+    flex:1,
     paddingTop: 10,
-    paddingBottom: 10,
-    flex: 1,
-    flexDirection: 'row-reverse'
+    paddingBottom: 10
   },
   button: {
     width: 150,

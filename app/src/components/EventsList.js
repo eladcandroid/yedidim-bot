@@ -48,7 +48,7 @@ class EventsList extends Component {
     const events = this.props.events;
     let cols = this.props.columns.map(col => {
       return (
-        <Col style={col === EventsListColumn.Source ? {width:30} : undefined} key={col.id}>
+        <Col style={col === EventsListColumn.Source ? {width:30} : col === EventsListColumn.Phone ? {width:100} : undefined} key={col.id}>
           <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>{col.label}</Text>
           {events.map(event => this.renderRow(event, col))}
         </Col>
