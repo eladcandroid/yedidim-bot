@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { I18nManager, Platform } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Button, Text, Footer, FooterTab, Icon } from 'native-base';
-import EventsList from "../components/EventsList";
-import EventDetails from "../components/EventDetails";
-import EventDetailsEditor from "../components/EventDetailsEditor";
-import ProfileScreen from "../components/ProfileScreen";
+import EventsMain from '../components/EventsMain';
+import EventDetails from '../components/EventDetails';
+import EventDetailsEditor from '../components/EventDetailsEditor';
+import EventsSearch from '../components/EventsSearch';
+import ProfileScreen from '../components/ProfileScreen';
 import { ScreenType } from '../constants/consts';
 
 export const Screens = {
-  [ScreenType.EventsList]: {screen: EventsList, title: 'אירועים'},
+  [ScreenType.EventsList]: {screen: EventsMain, title: 'אירועים'},
   [ScreenType.EventDetails]: {screen: EventDetails, title: 'פרטי אירוע', backScreen: ScreenType.EventsList},
   [ScreenType.EventDetailsEditor]: {screen: EventDetailsEditor, title: 'פרטי אירוע', backScreen: ScreenType.EventsList},
+  [ScreenType.EventsSearch]: {screen: EventsSearch, title: 'חיפוש'},
   [ScreenType.ProfileScreen]: {screen: ProfileScreen, title: 'משתמש'}
 };
 
@@ -56,8 +58,11 @@ class MainScreen extends Component
         </Content>
         <Footer>
           <FooterTab>
-            <Button active={this.state.activeScreen !== ScreenType.ProfileScreen} onPress={this.setActiveScreen.bind(this, ScreenType.EventsList)}>
+            <Button active={this.state.activeScreen !== ScreenType.ProfileScreen && this.state.activeScreen !== ScreenType.EventsSearch} onPress={this.setActiveScreen.bind(this, ScreenType.EventsList)}>
               <Text>אירועים</Text>
+            </Button>
+            <Button active={this.state.activeScreen === ScreenType.EventsSearch} onPress={this.setActiveScreen.bind(this, ScreenType.EventsSearch)}>
+              <Text>חיפוש</Text>
             </Button>
             <Button active={this.state.activeScreen === ScreenType.ProfileScreen} onPress={this.setActiveScreen.bind(this, ScreenType.ProfileScreen)}>
               <Text>משתמש</Text>

@@ -1,4 +1,4 @@
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_NOTIFICATIONS, SET_LATEST_VERSION } from "../constants/actionTypes";
+import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_LATEST_VERSION } from "../constants/actionTypes";
 
 export function dataSourceReducer(state = {}, action) {
   switch (action.type) {
@@ -35,6 +35,9 @@ export function dataSourceReducer(state = {}, action) {
         return 0;
       });
       return Object.assign({}, state, {events});
+    }
+    case SET_SEARCH_EVENTS: {
+      return Object.assign({}, state, {searchEvents: action.events});
     }
     case SET_NOTIFICATIONS: {
       const user = Object.assign({}, state.user, {notifications: action.notifications});

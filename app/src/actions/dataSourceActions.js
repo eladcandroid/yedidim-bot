@@ -1,7 +1,8 @@
 import * as firebase from 'firebase';
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_NOTIFICATIONS, SET_ERROR, SET_LATEST_VERSION } from '../constants/actionTypes';
+import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_ERROR, SET_LATEST_VERSION } from '../constants/actionTypes';
 import { registerForPushNotifications } from "./notificationsActions";
 import { objectToArray, getInstance } from "../common/utils";
+import {EventStatus} from "../constants/consts";
 
 const firebaseConfig = {
   sandbox: {
@@ -235,6 +236,48 @@ function loadEvents() {
   });
 }
 
+export function searchEvents(phone, fromDate, toDate) {
+  return ((dispatch) => {
+    console.log(fromDate, toDate);
+    let query = firebase.database().ref('/events');
+    if (fromDate){
+      query = query.orderByChild('timestamp').startAt(fromDate);
+    }
+    if (toDate){
+      if (!fromDate){
+        query = query.orderByChild('timestamp');
+      }
+      query = query.endAt(toDate);
+    }
+    if (!fromDate && !toDate && phone){
+      query = query.orderByChild('details/phone number').equalTo(phone);
+    }
+    query.once('value')
+      .then((snapshot) => {
+        let events = objectToArray(snapshot.val());
+        events.sort((c1, c2) => {
+          if (c1.timestamp > c2.timestamp)
+            return -1;
+          if (c1.timestamp < c2.timestamp)
+            return 1;
+          return 0;
+        });
+
+        events = events.filter(event => event.status !== EventStatus.Draft);
+        if (phone) {
+          events = events.filter(event => event.details['phone number'] === phone);
+        }
+        dispatch(setSearchEvents(events.slice(0, 30)));
+      })
+      .catch(err => {
+        if (err) {
+          dispatch(setError('Failed to load data!', err));
+        }
+      });
+  });
+}
+
+
 function setError(message, err){
   console.error(message, err);
   return {
@@ -275,6 +318,13 @@ function addEvent(event){
   return {
     type: ADD_EVENT,
     event,
+  };
+}
+
+function setSearchEvents(events){
+  return {
+    type: SET_SEARCH_EVENTS,
+    events,
   };
 }
 
