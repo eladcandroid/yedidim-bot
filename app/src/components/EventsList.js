@@ -5,24 +5,40 @@ import { Grid, Row, Col, Button } from 'native-base';
 import { formatEventCase, formatEventTime, getTextStyle } from '../common/utils';
 import { EventSource, ScreenType } from '../constants/consts';
 
+export const EventsListColumn = {
+  Time: {id: 0, label: 'זמן'},
+  Name: {id: 1, label: 'שם'},
+  Phone: {id: 2, label: 'טלפון'},
+  Case: {id: 3, label: 'בעיה'},
+  City: {id: 4, label: 'עיר'},
+  Source: {id: 5, label: ''}
+};
+
 class EventsList extends Component {
   openEventDetails(event) {
     this.props.navigate(ScreenType.EventDetails, {key: event.key});
   }
 
-  renderRow(event, colNum) {
+  renderRow(event, col) {
     return (
-      <Row style={[styles.headerRow, I18nManager.isRTL? undefined : {flexDirection: 'row-reverse'}]} onPress={this.openEventDetails.bind(this, event)} key={event.key + '_' + colNum}>
+      <Row style={[styles.headerRow, I18nManager.isRTL? undefined : {flexDirection: 'row-reverse'}]} onPress={this.openEventDetails.bind(this, event)} key={event.key + '_' + col.id}>
           {
-            colNum === 3 ?
+            col === EventsListColumn.Time ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventTime(event)}</Text>
-            : colNum === 2 ?
+            : col === EventsListColumn.Case ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventCase(event)}</Text>
-            : colNum === 1 ?
+            : col === EventsListColumn.City ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details.city}</Text>
-            : event.source === EventSource.FB_BOT ?
-              <Image style={styles.fbImage} source={require('../../assets/images/bot-icon.png')}/>
-            : <Text style={getTextStyle(styles.cellText)}/>
+            : col === EventsListColumn.Name ?
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details['caller name']}</Text>
+            : col === EventsListColumn.Phone ?
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details['phone number']}</Text>
+            : col === EventsListColumn.Source ?
+              (event.source === EventSource.FB_BOT ?
+                <Image style={styles.fbImage} source={require('../../assets/images/bot-icon.png')}/>
+              :
+                <Text style={getTextStyle(styles.cellText)}/>)
+            : undefined
           }
       </Row>
     );
@@ -30,25 +46,15 @@ class EventsList extends Component {
 
   render() {
     const events = this.props.events;
-    let cols = [
-      <Col style={{width:30}} key="0">
-        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}/>
-        {events.map(event => this.renderRow(event, 0))}
-      </Col>,
-      <Col key="1">
-        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>עיר</Text>
-        {events.map(event => this.renderRow(event, 1))}
-      </Col>,
-      <Col key="2">
-        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>בעיה</Text>
-        {events.map(event => this.renderRow(event, 2))}
-      </Col>,
-      <Col key="3">
-        <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>זמן</Text>
-        {events.map(event => this.renderRow(event, 3))}
-      </Col>]
-    ;
-    if (I18nManager.isRTL){
+    let cols = this.props.columns.map(col => {
+      return (
+        <Col style={col === EventsListColumn.Source ? {width:30} : undefined} key={col.id}>
+          <Text style={getTextStyle(styles.headerText)} allowFontScaling={false}>{col.label}</Text>
+          {events.map(event => this.renderRow(event, col))}
+        </Col>
+      );
+    });
+    if (!I18nManager.isRTL){
       cols.reverse();
     }
     return (
@@ -63,6 +69,7 @@ export default EventsList;
 
 EventsList.propTypes = {
   events: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
   navigate: PropTypes.func.isRequired
 };
 

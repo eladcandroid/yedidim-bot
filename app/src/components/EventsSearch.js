@@ -6,7 +6,7 @@ import { Button, Form, Item, Input, Label } from 'native-base';
 import DatePicker from 'react-native-datepicker'
 import { getTextStyle } from '../common/utils';
 import { searchEvents } from '../actions/dataSourceActions';
-import EventsList from './EventsList';
+import EventsList, {EventsListColumn} from './EventsList';
 
 class EventsSearch extends Component {
   constructor(props) {
@@ -59,7 +59,11 @@ class EventsSearch extends Component {
         {this.props.events ?
             <ScrollView style={styles.scrollContainer}>
               <Text style={getTextStyle(styles.headerTitle)} allowFontScaling={false}>{this.props.events.length === 0 ? 'לא נמצאו אירועים' : 'אירועים'}</Text>
-              {this.props.events.length > 0 && <EventsList events={this.props.events} navigate={this.props.navigate}/>}
+              {this.props.events.length > 0 &&
+                <EventsList
+                  events={this.props.events}
+                  columns={[EventsListColumn.Time, EventsListColumn.Name, EventsListColumn.Phone, EventsListColumn.Case]}
+                  navigate={this.props.navigate}/>}
             </ScrollView>
           : undefined
         }

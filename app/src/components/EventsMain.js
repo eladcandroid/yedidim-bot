@@ -5,7 +5,7 @@ import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { Button } from 'native-base';
 import { getEventStatus, getTextStyle } from '../common/utils';
 import { EventStatus, ScreenType } from '../constants/consts';
-import EventsList from './EventsList';
+import EventsList, {EventsListColumn} from './EventsList';
 
 class EventsMain extends Component {
   addNewEvent() {
@@ -22,10 +22,16 @@ class EventsMain extends Component {
         </View>
         <ScrollView style={styles.scrollContainer}>
           <Text style={getTextStyle(styles.headerTitle)} allowFontScaling={false}>אירועים חדשים</Text>
-          <EventsList events={this.props.newEvents} navigate={this.props.navigate}/>
+          <EventsList
+            events={this.props.newEvents}
+            columns={[EventsListColumn.Time, EventsListColumn.Case, EventsListColumn.City, EventsListColumn.Source]}
+            navigate={this.props.navigate}/>
           <View style={styles.rowLine}/>
           <Text style={getTextStyle(styles.headerTitle)} allowFontScaling={false}>אירועים פעילים</Text>
-          <EventsList events={this.props.activeEvents} navigate={this.props.navigate}/>
+          <EventsList
+            events={this.props.activeEvents}
+            columns={[EventsListColumn.Time, EventsListColumn.Case, EventsListColumn.City, EventsListColumn.Source]}
+            navigate={this.props.navigate}/>
         </ScrollView>
       </View>
     );
