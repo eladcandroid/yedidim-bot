@@ -49,6 +49,9 @@ class EventDetails extends Component {
 
   render() {
     const event = this.props.event;
+    if (!event){
+      return undefined;
+    }
     return (
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
@@ -84,9 +87,12 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const event = state.dataSource.events ? state.dataSource.events.find(event => event.key === ownProps.params.key) : undefined;
+  let event = state.dataSource.events ? state.dataSource.events.find(event => event.key === ownProps.params.key) : undefined;
+  if (!event) {
+    event =  state.dataSource.searchEvents.find(event => event.key === ownProps.params.key)
+  }
   return {
-    event: event || {status: EventStatus.Draft, details: {}},
+    event,
     user: state.dataSource.user
   };
 };
