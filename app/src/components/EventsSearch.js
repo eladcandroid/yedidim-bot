@@ -34,6 +34,7 @@ class EventsSearch extends Component {
           </Item>
           <View style={[styles.datePickersRow, {flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse'}]}>
             <DatePicker
+              style={styles.datePicker}
               date={this.state.fromDate}
               mode="date"
               placeholder="מתאריך"
@@ -43,6 +44,7 @@ class EventsSearch extends Component {
               onDateChange={(date) => {this.setState({fromDate: date})}}
             />
             <DatePicker
+              style={styles.datePicker}
               date={this.state.toDate}
               mode="date"
               placeholder="עד תאריך"
@@ -111,8 +113,10 @@ const styles = StyleSheet.create({
   },
   datePickersRow: {
     flex:1,
-    paddingTop: 10,
-    paddingBottom: 10
+    padding: 10
+  },
+  datePicker: {
+    width: 160
   },
   button: {
     width: 150,
