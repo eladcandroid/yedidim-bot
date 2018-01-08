@@ -83,7 +83,7 @@ class EventDetailsEditor extends Component {
       this.setState({error: {message: 'כתובת לא נבדקה', field: 'address'}});
       return false;
     }
-    if (!this.state['case']){
+    if (typeof this.state['case'] === "undefined"){
       this.setState({error: {message: 'לא נבחר סוג בעיה', field: 'case'}});
       return false;
     }
