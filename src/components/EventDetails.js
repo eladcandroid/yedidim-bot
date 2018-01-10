@@ -65,17 +65,18 @@ const EventDetails = ({
           <Col>
             <MapView
               style={{ height: 200, flex: 1 }}
-              region={{
+              initialRegion={{
                 latitude: lat,
                 longitude: lon,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421
               }}
               showsMyLocationButton
+              showsUserLocation
             >
               <MapView.Marker
                 coordinate={{ latitude: lat, longitude: lon }}
-                title={caller}
+                title={address}
                 description={more}
               />
             </MapView>

@@ -26,7 +26,7 @@
   "Authentication.error":
     "אירעה שגיאה, לא ניתן לאמת. בבקשה נסה שוב מאוחר יותר.",
   "Authentication.notauthenticated": "עדיין אינך מאומת. אמת כדי לקבל אירועים.",
-  "Authentication.button": "ללא שם: לאמת אותי",
+  "Authentication.button": "לאמת אותי",
   "Authentication.signout": "התנתק",
   "Event.alert.ignore.title": "התעלם מהאירוע",
   "Event.alert.ignore.text": "אני לא מעוניין לקחת את האירוע",
@@ -76,5 +76,14 @@
   "Event.button.ignore": "להתעלם",
   "Event.button.cancel": "לבטל",
   "Event.button.accept": "לטפל",
-  "Event.button.finalise": "לסיים"
+  "Event.button.finalise": "לסיים",
+  "About.Startach.facebook": "בקרו בדף הפייסבוק שלנו",
+  "About.Startach.title": "סטארטאח",
+  "About.Startach.p1":
+    "סטארטאח הוא מיזם חברתי שמטרתו לפתח פתרונות טכנולוגיים על מנת לתרום ולסייע לקהלים שונים בחברה הישראלית.",
+  "About.Startach.p2":
+    "סטארטאח מאגד אנשים בעלי מודעות חברתית וסביבתית, אכפתיות ורצון טוב ומגייס אותם למען יצירת פתרונות לשיפור המציאות והעולם.",
+  "About.Startach.p3":
+    "אנו בחיפוש מתמיד אחר רעיונות מעולים ואנשים מעולים. רוצים להצטרף? תתחברו אלינו!",
+  "Sidebar.aboutStartach": "אודות סטארטאח"
 }

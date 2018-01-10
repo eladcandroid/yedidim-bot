@@ -5,7 +5,7 @@ import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { environment } from 'config'
 import { FormattedMessage } from 'react-intl'
-// import styled from 'styled-components/native'
+import { NavigationActions } from 'react-navigation'
 import Logo from './logo.png'
 
 const isDevMode = () => environment() === 'development'
@@ -16,7 +16,8 @@ const SideBar = ({
   addEventFromNotification,
   removeEvent,
   nextLanguage,
-  toggleLanguage
+  toggleLanguage,
+  navigation
 }) => (
   <Container>
     <Content>
@@ -51,6 +52,23 @@ const SideBar = ({
           <FormattedMessage
             id="Authentication.signout"
             defaultMessage="Sign out"
+          >
+            {txt => <Text>{txt}</Text>}
+          </FormattedMessage>
+        </ListItem>
+        <ListItem
+          button
+          onPress={() => {
+            navigation.dispatch(
+              NavigationActions.navigate({
+                routeName: 'AboutStartach'
+              })
+            )
+          }}
+        >
+          <FormattedMessage
+            id="Sidebar.aboutStartach"
+            defaultMessage="About Startach"
           >
             {txt => <Text>{txt}</Text>}
           </FormattedMessage>
