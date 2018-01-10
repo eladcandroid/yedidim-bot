@@ -26,7 +26,7 @@
   "Authentication.error":
     "אירעה שגיאה, לא ניתן לאמת. בבקשה נסה שוב מאוחר יותר.",
   "Authentication.notauthenticated": "עדיין אינך מאומת. אמת כדי לקבל אירועים.",
-  "Authentication.button": "ללא שם: לאמת אותי",
+  "Authentication.button": "לאמת אותי",
   "Authentication.signout": "התנתק",
   "Event.alert.ignore.title": "התעלם מהאירוע",
   "Event.alert.ignore.text": "אני לא מעוניין לקחת את האירוע",
