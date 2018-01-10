@@ -109,10 +109,19 @@ export async function signIn({ verificationId, code }) {
 
 export async function signOut() {
   const { callback, userKey } = currentUserInfoSubscription
+
+  // Remove notification token
+  await firebase
+    .database()
+    .ref(`/volunteer/${userKey}`)
+    .update({ NotificationToken: null })
+
+  // Remove callback for updating user details
   await firebase
     .database()
     .ref(`volunteer/${userKey}`)
     .off('value', callback)
+
   return firebase.auth().signOut()
 }
 
