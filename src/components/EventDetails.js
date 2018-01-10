@@ -75,7 +75,7 @@ const EventDetails = ({
             >
               <MapView.Marker
                 coordinate={{ latitude: lat, longitude: lon }}
-                title={caller}
+                title={address}
                 description={more}
               />
             </MapView>
