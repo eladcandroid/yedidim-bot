@@ -78,5 +78,14 @@
   "Event.button.ignore": "Ignore",
   "Event.button.cancel": "Cancel",
   "Event.button.accept": "Accept",
-  "Event.button.finalise": "Finalise"
+  "Event.button.finalise": "Finalise",
+  "About.Startach.facebook": "Visit our Facebook page",
+  "About.Startach.title": "Startach",
+  "About.Startach.p1":
+    "Startach is a social initiative aimed at developing technological solutions to contribute to and assist different audiences in Israeli society.",
+  "About.Startach.p2":
+    "Startach brings together people with social and environmental awareness, caring and goodwill, and mobilizes them to create solutions for improving reality and the world.",
+  "About.Startach.p3":
+    "We are in constant search for great ideas and great people. Want to join? Get in touch with us!",
+  "Sidebar.aboutStartach": "About Startach"
 }

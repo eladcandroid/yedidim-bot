@@ -73,14 +73,6 @@ const SideBar = ({
             {txt => <Text>{txt}</Text>}
           </FormattedMessage>
         </ListItem>
-        <ListItem button onPress={signOut}>
-          <FormattedMessage
-            id="Sidebar.aboutYedidim"
-            defaultMessage="About Yedidim"
-          >
-            {txt => <Text>{txt}</Text>}
-          </FormattedMessage>
-        </ListItem>
         <ListItem>
           <Text>v{Constants.manifest.version}</Text>
         </ListItem>

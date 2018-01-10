@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { I18nManager, Linking, Image } from 'react-native'
 import { trackEvent } from 'io/analytics'
 import StartachLogo from 'images/startach-logo.jpg'
+import AlignedText from 'components/AlignedText'
 
 import {
   Button,
@@ -23,11 +24,6 @@ import {
 
 const MarginView = styled.View`
   margin: 10px 10px;
-`
-
-const P = styled(Text)`
-  font-size: 16;
-  text-align: justify;
 `
 
 class AboutStartach extends Component {
@@ -79,7 +75,7 @@ class AboutStartach extends Component {
                     id="About.Startach.p1"
                     defaultMessage="Startach is a social initiative aimed at developing technological solutions to contribute to and assist different audiences in Israeli society."
                   >
-                    {txt => <P>{txt}</P>}
+                    {txt => <AlignedText>{txt}</AlignedText>}
                   </FormattedMessage>
                 </MarginView>
                 <MarginView>
@@ -87,7 +83,7 @@ class AboutStartach extends Component {
                     id="About.Startach.p2"
                     defaultMessage="Startach brings together people with social and environmental awareness, caring and goodwill, and mobilizes them to create solutions for improving reality and the world."
                   >
-                    {txt => <P>{txt}</P>}
+                    {txt => <AlignedText>{txt}</AlignedText>}
                   </FormattedMessage>
                 </MarginView>
                 <MarginView>
@@ -95,7 +91,7 @@ class AboutStartach extends Component {
                     id="About.Startach.p3"
                     defaultMessage="We are in constant search for great ideas and great people. Want to join? Get in touch with us!"
                   >
-                    {txt => <P>{txt}</P>}
+                    {txt => <AlignedText>{txt}</AlignedText>}
                   </FormattedMessage>
                 </MarginView>
                 <MarginView>
@@ -105,13 +101,13 @@ class AboutStartach extends Component {
                     onPress={() =>
                       Linking.openURL('https://www.facebook.com/StartAchCom/')}
                   >
-                    <Icon name="logo-facebook" />
                     <FormattedMessage
                       id="About.Startach.facebook"
                       defaultMessage="Visit our Facebook page"
                     >
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
+                    <Icon name="logo-facebook" />
                   </Button>
                 </MarginView>
               </Col>
