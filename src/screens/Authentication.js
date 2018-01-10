@@ -17,7 +17,7 @@ import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { trackEvent } from 'io/analytics'
-import { environment } from 'config'
+import { environment, hostingDomain } from 'config'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -53,7 +53,7 @@ class AuthenticationScreen extends React.Component {
     const redirectUrl = AuthSession.getRedirectUrl()
     const result = await AuthSession.startAsync({
       authUrl:
-        `https://yedidim-production.firebaseapp.com/?` +
+        `https://${hostingDomain()}.firebaseapp.com/?` +
         `redirect_uri=${encodeURIComponent(redirectUrl)}&` +
         `firebaseEnv=${encodeURIComponent(environment())}&` +
         `&language=he`
