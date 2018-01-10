@@ -1,8 +1,8 @@
 import { AsyncStorage } from 'react-native'
-import { defaultLanguage } from 'config'
+import { defaultLanguage, environment } from 'config'
 
-const EVENTS_STORAGE_KEY = '@YedidimNative:events'
-const LANGUAGE_STORAGE_KEY = '@YedidimNative:language'
+const EVENTS_STORAGE_KEY = `@YedidimNative:events:${environment()}`
+const LANGUAGE_STORAGE_KEY = `@YedidimNative:language:${environment()}`
 
 export async function eventIds() {
   const serialEvents = await AsyncStorage.getItem(EVENTS_STORAGE_KEY)
