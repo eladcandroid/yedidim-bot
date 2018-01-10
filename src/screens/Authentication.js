@@ -11,7 +11,7 @@ import {
   Right,
   Icon
 } from 'native-base'
-import { View, ActivityIndicator } from 'react-native'
+import { View, ActivityIndicator, Alert } from 'react-native'
 import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
@@ -51,7 +51,7 @@ class AuthenticationScreen extends React.Component {
     trackEvent('Navigation', { page: 'AuthenticationWebView' })
 
     const redirectUrl = AuthSession.getRedirectUrl()
-    const result = await AuthSession.startAsync({
+    const { type, params } = await AuthSession.startAsync({
       authUrl:
         `https://${hostingDomain()}.firebaseapp.com/?` +
         `redirect_uri=${encodeURIComponent(redirectUrl)}&` +
@@ -61,11 +61,15 @@ class AuthenticationScreen extends React.Component {
 
     trackEvent('Navigation', { page: 'BackFromAuthenticationWebView' })
 
-    const { error, verificationId, code } = result.params
-
-    if (!error && verificationId && code) {
+    if (type === 'success') {
+      const { verificationId, code } = params
       this.props.signIn({ verificationId, code }) // No redirection is needed, auth state will change and home will be rendered
       // .catch(errorThrown => this.setState({ error: errorThrown }))
+    } else {
+      Alert.alert(
+        'Authentication Failed',
+        'Unable to authenticate, please try again'
+      )
     }
   }
 
