@@ -40,9 +40,8 @@ class MainScreen extends Component
         <Header>
           <Left>
             {activeScreen.backScreen ?
-              <Button transparent>
-                <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
-                      onPress={this.navigate.bind(this, activeScreen.backScreen)}/>
+              <Button transparent onPress={this.navigate.bind(this, activeScreen.backScreen)}>
+                <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}/>
               </Button>
               :
               undefined
