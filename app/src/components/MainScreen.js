@@ -20,16 +20,21 @@ class MainScreen extends Component
 {
   constructor(props) {
     super(props);
-    this.state = {activeScreen: ScreenType.EventsList};
+    this.state = {activeScreen: ScreenType.EventsList, mainScreen: ScreenType.EventsList};
     this.navigate = this.navigate.bind(this);
+    this.back = this.back.bind(this);
   }
 
   setActiveScreen(screen) {
-    this.setState({activeScreen: screen});
+    this.setState({activeScreen: screen, mainScreen: screen});
   }
 
   navigate(screen, params) {
     this.setState({activeScreen: screen, params});
+  }
+
+  back() {
+    this.navigate(this.state.mainScreen);
   }
 
   render() {
@@ -40,7 +45,7 @@ class MainScreen extends Component
         <Header>
           <Left>
             {activeScreen.backScreen ?
-              <Button transparent onPress={this.navigate.bind(this, activeScreen.backScreen)}>
+              <Button transparent onPress={this.back}>
                 <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}/>
               </Button>
               :
