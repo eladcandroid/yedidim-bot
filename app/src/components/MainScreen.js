@@ -41,7 +41,7 @@ class MainScreen extends Component
     const activeScreen = Screens[this.state.activeScreen];
     const Component = activeScreen.screen;
     return (
-      <Container style={{marginTop: Platform.OS === 'android' ? 24 : 0}}>
+      <Container>
         <Header>
           <Left>
             {activeScreen.backScreen ?
