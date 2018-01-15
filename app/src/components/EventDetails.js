@@ -47,6 +47,29 @@ class EventDetails extends Component {
     );
   }
 
+  getVolunteerData(){
+    const volunteer = this.props.volunteer;
+    if (!volunteer) {
+      return '';
+    }
+    if (volunteer.assignedTo){
+      return volunteer.assignedTo;
+    }
+    return `${volunteer.firstName} ${volunteer.lastName} (${volunteer.code})`
+  }
+
+  renderAssignedTo() {
+
+    if (this.props.event.status === EventStatus.Assigned){
+      return (
+        <View>
+          <Text style={getTextStyle(styles.fieldName)}>מטופל ע״י</Text>
+          <Text style={getTextStyle(styles.fieldValue)}>{this.getVolunteerData()}</Text>
+        </View>
+      )
+    }
+  }
+
   render() {
     const event = this.props.event;
     if (!event){
@@ -57,6 +80,7 @@ class EventDetails extends Component {
         <View style={styles.container}>
           <Text style={getTextStyle(styles.fieldName)}>זמן</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{formatEventTime(event)}</Text>
+          {this.renderAssignedTo()}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
           <TouchableHighlight onPress={this.openAddressInMaps.bind(this)}>
             <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
@@ -91,9 +115,15 @@ const mapStateToProps = (state, ownProps) => {
   if (!event) {
     event =  state.dataSource.searchEvents.find(event => event.key === ownProps.params.key)
   }
+  let volunteer = (event && event.assignedTo && state.dataSource.volunteers) ?
+    state.dataSource.volunteers.find(volunteer => volunteer.key === event.assignedTo)
+    : undefined;
+  if (!volunteer){
+    volunteer = {assignedTo: event.assignedTo};
+  }
   return {
     event,
-    user: state.dataSource.user
+    volunteer
   };
 };
 
@@ -101,7 +131,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 
 EventDetails.propTypes = {
   updateEventStatus: PropTypes.func,
-  user: PropTypes.object
+  event: PropTypes.object,
+  volunteer: PropTypes.object
 };
 
 const styles = StyleSheet.create({

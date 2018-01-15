@@ -1,8 +1,8 @@
 import * as firebase from 'firebase';
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_ERROR, SET_LATEST_VERSION } from '../constants/actionTypes';
+import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_ERROR, SET_LATEST_VERSION } from '../constants/actionTypes';
 import { registerForPushNotifications } from "./notificationsActions";
 import { objectToArray, getInstance } from "../common/utils";
-import {EventStatus} from "../constants/consts";
+import { EventStatus } from "../constants/consts";
 
 const firebaseConfig = {
   sandbox: {
@@ -140,6 +140,7 @@ function handleSignedInUser(user) {
     dispatch(loadUserData(user));
     dispatch(updateUserVersion(user));
     dispatch(loadEvents());
+    dispatch(loadVolunteers())
   });
 }
 
@@ -277,6 +278,29 @@ export function searchEvents(phone, fromDate, toDate) {
   });
 }
 
+function loadVolunteers() {
+  return ((dispatch) => {
+    firebase.database().ref('/volunteer').once('value')
+      .then((snapshot) => {
+        const volunteers = objectToArray(snapshot.val()).map(volunteer => {
+          return {
+            key: volunteer.key,
+            firstName: volunteer.FirstName,
+            lastName: volunteer.LastName,
+            phone: volunteer.MobilePhone,
+            code: volunteer.DriveCode
+          };
+        });
+
+        dispatch(setVolunteers(volunteers));
+      })
+      .catch(err => {
+        if (err) {
+          dispatch(setError('Failed to load data!', err));
+        }
+      });
+  });
+}
 
 function setError(message, err){
   console.error(message, err);
@@ -321,6 +345,12 @@ function addEvent(event){
   };
 }
 
+function setVolunteers(volunteers){
+  return {
+    type: SET_VOLUNTEERS,
+    volunteers,
+  };
+}
 function setSearchEvents(events){
   return {
     type: SET_SEARCH_EVENTS,
