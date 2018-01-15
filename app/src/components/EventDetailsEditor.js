@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Platform, KeyboardAvoidingView, ScrollView, View, Text, Alert, StyleSheet, I18nManager } from 'react-native';
+import { Platform, KeyboardAvoidingView, View, Text, Alert, StyleSheet, I18nManager } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Picker, Form, Item, Label, Input, Button } from 'native-base';
 import { getTextStyle } from "../common/utils";
@@ -22,9 +22,7 @@ class KeyboardAwareScrollViewComponent extends React.Component {
 
     return (
       <KeyboardAvoidingView {...this.props} style={styles.scrollContainer} behavior="padding" keyboardVerticalOffset={100}>
-        <ScrollView>
           {this.props.children}
-        </ScrollView>
       </KeyboardAvoidingView>
     )
   }
