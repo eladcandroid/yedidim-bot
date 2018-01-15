@@ -14,7 +14,7 @@
       "supportsTablet": false
     },
     "extra": {
-      "instance": "sandbox2"
+      "_instance": "sandbox2"
     },
     "androidStatusBar": {
       "backgroundColor": "#4451B9",
