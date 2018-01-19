@@ -38,7 +38,8 @@ export async function updateUser(userKey, properties) {
 const userSnapshotToJSON = snapshot => ({
   name: `${snapshot.FirstName} ${snapshot.LastName}`,
   phone: snapshot.MobilePhone,
-  muted: snapshot.Muted
+  muted: snapshot.Muted,
+  acceptedEventId: snapshot.EventKey
 })
 
 // Store subscription so to be able to unsubscribe on logoff

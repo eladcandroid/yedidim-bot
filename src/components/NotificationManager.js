@@ -1,5 +1,6 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react/native'
+import { reaction } from 'mobx'
 import { Notifications } from 'expo'
 import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
@@ -9,6 +10,32 @@ const withNotificationManager = WrappedComponent => {
     componentWillMount() {
       // Handle Notification received
       Notifications.addListener(this.handleNotification)
+
+      const { acceptedEventId } = this.props.currentUser
+
+      if (acceptedEventId) {
+        this.props.addEventFromNotification(acceptedEventId)
+        this.navigateToEvent({
+          eventId: acceptedEventId
+        })
+      }
+
+      // Navigate to accepted event if assigned to user
+      // this.disposer = reaction(
+      //   () => this.props.currentUser.acceptedEventId,
+      //   eventId => {
+      //     console.log('>>>>', eventId)
+      //     if (eventId) {
+      //       this.navigateToEvent({
+      //         eventId
+      //       })
+      //     }
+      //   }
+      // )
+    }
+
+    componentWillUnmount() {
+      // this.disposer()
     }
 
     navigateToEvent = eventData => {
@@ -57,11 +84,8 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const {
-        saveNotificationToken,
-        addEventFromNotification,
-        ...other
-      } = this.props
+      const { currentUser, addEventFromNotification, ...other } = this.props
+
       return <WrappedComponent {...other} />
     }
   }
@@ -70,7 +94,8 @@ const withNotificationManager = WrappedComponent => {
   Component.router = WrappedComponent.router
 
   return inject(({ stores }) => ({
-    addEventFromNotification: stores.eventStore.addEventFromNotification
+    addEventFromNotification: stores.eventStore.addEventFromNotification,
+    currentUser: stores.authStore.currentUser
   }))(observer(Component))
 }
 
