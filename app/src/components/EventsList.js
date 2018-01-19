@@ -21,14 +21,14 @@ class EventsList extends Component {
 
   renderRow(event, col) {
     return (
-      <Row style={[styles.headerRow, I18nManager.isRTL? undefined : {flexDirection: 'row-reverse'}]} onPress={this.openEventDetails.bind(this, event)} key={event.key + '_' + col.id}>
+      <Row style={[styles.row, I18nManager.isRTL? undefined : {flexDirection: 'row-reverse'}]} onPress={this.openEventDetails.bind(this, event)} key={event.key + '_' + col.id}>
           {
             col === EventsListColumn.Time ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventTime(event)}</Text>
             : col === EventsListColumn.Case ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventCase(event)}</Text>
             : col === EventsListColumn.City ?
-              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details.city}</Text>
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details.city}{event.details.street_name ? (' - ' + event.details.street_name) : ''}</Text>
             : col === EventsListColumn.Name ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details['caller name']}</Text>
             : col === EventsListColumn.Phone ?
@@ -80,14 +80,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   cellText: {
-    height: 30,
+    height: 35,
     fontSize: 14
   },
-  headerRow: {
-    height:30
-  },
   row: {
-    height:50,
+    height:35,
   },
   rowLine: {
     height: 2,

@@ -47,6 +47,12 @@ class EventDetails extends Component {
     );
   }
 
+  openVolunteerPhone() {
+    if (this.props.volunteer.phone) {
+      Linking.openURL('tel:' + this.props.volunteer.phone);
+    }
+  }
+
   getVolunteerData(){
     const volunteer = this.props.volunteer;
     if (!volunteer) {
@@ -55,7 +61,7 @@ class EventDetails extends Component {
     if (volunteer.assignedTo){
       return volunteer.assignedTo;
     }
-    return `${volunteer.firstName} ${volunteer.lastName} (${volunteer.code})`
+    return `${volunteer.firstName} ${volunteer.lastName} (${volunteer.code}) ${volunteer.phone}`
   }
 
   renderAssignedTo() {
@@ -64,7 +70,7 @@ class EventDetails extends Component {
       return (
         <View>
           <Text style={getTextStyle(styles.fieldName)}>מטופל ע״י</Text>
-          <Text style={getTextStyle(styles.fieldValue)}>{this.getVolunteerData()}</Text>
+          <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone.bind(this)}>{this.getVolunteerData()}</Text>
         </View>
       )
     }
