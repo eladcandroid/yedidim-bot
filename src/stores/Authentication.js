@@ -8,7 +8,7 @@ export const User = types
     name: types.string,
     phone: types.string,
     muted: types.maybe(types.Date),
-    acceptedEventId: types.string
+    acceptedEventId: types.maybe(types.string)
   })
   .views(self => ({
     get isMuted() {

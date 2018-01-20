@@ -11,31 +11,30 @@ const withNotificationManager = WrappedComponent => {
       // Handle Notification received
       Notifications.addListener(this.handleNotification)
 
+      // When authentication is done, check if user has
+      //  event accepted, if yes navigate to event
       const { acceptedEventId } = this.props.currentUser
+      this.handleAcceptedEventByUser(acceptedEventId)
 
-      if (acceptedEventId) {
-        this.props.addEventFromNotification(acceptedEventId)
-        this.navigateToEvent({
-          eventId: acceptedEventId
-        })
-      }
-
-      // Navigate to accepted event if assigned to user
-      // this.disposer = reaction(
-      //   () => this.props.currentUser.acceptedEventId,
-      //   eventId => {
-      //     console.log('>>>>', eventId)
-      //     if (eventId) {
-      //       this.navigateToEvent({
-      //         eventId
-      //       })
-      //     }
-      //   }
-      // )
+      // If accepted event was changed during app usage,
+      //  redirect user to accepted event page
+      this.disposer = reaction(
+        () => this.props.currentUser.acceptedEventId,
+        this.handleAcceptedEventByUser
+      )
     }
 
     componentWillUnmount() {
-      // this.disposer()
+      this.disposer()
+    }
+
+    handleAcceptedEventByUser = eventId => {
+      if (eventId) {
+        this.props.addEventFromNotification(eventId)
+        this.navigateToEvent({
+          eventId
+        })
+      }
     }
 
     navigateToEvent = eventData => {
