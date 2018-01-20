@@ -38,6 +38,7 @@ export const User = types
 const AuthenticationStore = types
   .model('AuthenticationStore', {
     isInitializing: true,
+    isOffline: false,
     isLoading: false,
     currentUser: types.maybe(types.reference(User)),
     error: types.maybe(types.string)
@@ -61,13 +62,24 @@ const AuthenticationStore = types
 
       trackUserLogin(self.currentUser && self.currentUser.id)
 
+      self.isOffline = false
       self.isInitializing = false
     }
 
     function onError(error) {
       console.log('onError', error) // TODO Throw ?
       self.error = error
+      self.isOffline = false
       self.isInitializing = false
+    }
+
+    function onOffline() {
+      // If still initialiazing, then we are offline
+      if (self.isInitializing) {
+        // Unblock app
+        self.isInitializing = false
+        self.isOffline = true
+      }
     }
 
     function afterCreate() {
@@ -75,6 +87,9 @@ const AuthenticationStore = types
         self.onUserChanged,
         self.onError
       )
+
+      // Wait to check offline in 15s
+      setTimeout(self.onOffline, 15000)
     }
 
     function beforeDestroy() {
@@ -123,7 +138,8 @@ const AuthenticationStore = types
       signIn,
       signOut,
       onUserChanged,
-      onError
+      onError,
+      onOffline
     }
   })
 
