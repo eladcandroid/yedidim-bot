@@ -30,20 +30,35 @@ const withNotificationManager = WrappedComponent => {
 
     handleAcceptedEventByUser = eventId => {
       if (eventId) {
+        // Add event
         this.props.addEventFromNotification(eventId)
-        this.navigateToEvent({
-          eventId
-        })
+        // Navigate to it locked
+        this.navigateToEvent(
+          {
+            eventId
+          },
+          true
+        )
       }
     }
 
-    navigateToEvent = eventData => {
+    navigateToEvent = (eventData, locked) => {
       const navigateAction = NavigationActions.reset({
-        index: 1,
-        actions: [
-          NavigationActions.navigate({ routeName: 'Home' }),
-          NavigationActions.navigate({ routeName: 'Event', params: eventData })
-        ]
+        index: locked ? 0 : 1,
+        actions: locked
+          ? [
+              NavigationActions.navigate({
+                routeName: 'Event',
+                params: eventData
+              })
+            ]
+          : [
+              NavigationActions.navigate({ routeName: 'Home' }),
+              NavigationActions.navigate({
+                routeName: 'Event',
+                params: eventData
+              })
+            ]
       })
 
       this.props.navigation.dispatch(navigateAction)
