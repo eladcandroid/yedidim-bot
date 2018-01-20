@@ -30,7 +30,7 @@ export const Event = types
     get isAssigned() {
       return (
         self.status === 'assigned' &&
-        self.assignedTo === getRoot(self).authStore.currentUser.id
+        self.id === getRoot(self).authStore.currentUser.acceptedEventId
       )
     },
     get isTaken() {
