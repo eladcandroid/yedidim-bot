@@ -4,7 +4,7 @@ exports.formatNotification = (eventData) => {
 	return data;
 };
 
-exports.haveToSendNotification(eventData, previousValue){
-	return eventData.status === 'sent' && (previousValue === null  || previousValue.status !== 'sent');
+exports.haveToSendNotification = (eventData, previousValue) => {
+    	return eventData.status === 'sent' && (previousValue === null  || previousValue.status !== 'sent');
 }
 
