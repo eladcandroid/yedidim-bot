@@ -87,5 +87,8 @@
     "Startach brings together people with social and environmental awareness, caring and goodwill, and mobilizes them to create solutions for improving reality and the world.",
   "About.Startach.p3":
     "We are in constant search for great ideas and great people. Want to join? Get in touch with us!",
-  "Sidebar.aboutStartach": "About Startach"
+  "Sidebar.aboutStartach": "About Startach",
+  "Offline.alert.title": "No Connection",
+  "Offline.alert.description":
+    "Your device is currently disconnected and we are unable to authenticate the logged in user. Please make sure you have a working internet connection to use this application."
 }

@@ -2,9 +2,22 @@ import React, { Component } from 'react'
 import AuthenticationScreen from 'screens/Authentication'
 import { inject, observer } from 'mobx-react/native'
 import { Root, Toast } from 'native-base'
+import { Alert } from 'react-native'
 import { injectIntl, defineMessages } from 'react-intl'
 import AuthenticatedDrawer from 'layouts/AuthenticatedDrawer'
 import LoadingMask from 'components/LoadingMask'
+
+const offline = defineMessages({
+  title: {
+    id: 'Offline.alert.title',
+    defaultMessage: 'No Connection'
+  },
+  description: {
+    id: 'Offline.alert.description',
+    defaultMessage:
+      'Your device is currently disconnected and we are unable to authenticate the logged in user. Please make sure you have a working internet connection to use this application.'
+  }
+})
 
 const mute = {
   [true]: defineMessages({
@@ -31,6 +44,17 @@ const mute = {
 
 @observer
 class Main extends Component {
+  componentWillMount() {
+    const { intl } = this.props
+
+    if (this.props.isOffline) {
+      Alert.alert(
+        intl.formatMessage(offline.title),
+        intl.formatMessage(offline.description)
+      )
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const { isMuted, intl } = this.props
     if (
@@ -70,5 +94,11 @@ export default inject(({ stores }) => ({
   toggleMute:
     stores.authStore.currentUser && stores.authStore.currentUser.toggleMute,
   isMuted: stores.authStore.currentUser && stores.authStore.currentUser.isMuted,
-  isLoading: stores.isLoading
+  isLoading: stores.isLoading,
+  isOffline: stores.authStore.isOffline,
+  drawerLockMode:
+    stores.authStore.currentUser &&
+    stores.authStore.currentUser.hasEventAssigned
+      ? 'locked-closed'
+      : 'unlocked'
 }))(injectIntl(Main))

@@ -80,7 +80,7 @@ const SideBar = ({
           <ListItem
             button
             onPress={() => {
-              addEventFromNotification('-L1Ltke_wA-fnXQ7HqTU')
+              addEventFromNotification('-L1y19rZZGK6p91r9ByU')
             }}
           >
             <Text>DEBUG: New Event AsyncStorage</Text>
@@ -90,7 +90,7 @@ const SideBar = ({
           <ListItem
             button
             onPress={() => {
-              removeEvent('-L1Ltke_wA-fnXQ7HqTU')
+              removeEvent('-L1y19rZZGK6p91r9ByU')
             }}
           >
             <Text>DEBUG: Remove Sample Event</Text>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react/native'
+import { reaction } from 'mobx'
 import { Notifications } from 'expo'
 import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
@@ -9,15 +10,55 @@ const withNotificationManager = WrappedComponent => {
     componentWillMount() {
       // Handle Notification received
       Notifications.addListener(this.handleNotification)
+
+      // When authentication is done, check if user has
+      //  event accepted, if yes navigate to event
+      const { acceptedEventId } = this.props.currentUser
+      this.handleAcceptedEventByUser(acceptedEventId)
+
+      // If accepted event was changed during app usage,
+      //  redirect user to accepted event page
+      this.disposer = reaction(
+        () => this.props.currentUser.acceptedEventId,
+        this.handleAcceptedEventByUser
+      )
     }
 
-    navigateToEvent = eventData => {
+    componentWillUnmount() {
+      this.disposer()
+    }
+
+    handleAcceptedEventByUser = eventId => {
+      if (eventId) {
+        // Add event
+        this.props.addEventFromNotification(eventId)
+        // Navigate to it locked
+        this.navigateToEvent(
+          {
+            eventId
+          },
+          true
+        )
+      }
+    }
+
+    navigateToEvent = (eventData, locked) => {
       const navigateAction = NavigationActions.reset({
-        index: 1,
-        actions: [
-          NavigationActions.navigate({ routeName: 'Home' }),
-          NavigationActions.navigate({ routeName: 'Event', params: eventData })
-        ]
+        index: locked ? 0 : 1,
+        actions: locked
+          ? [
+              NavigationActions.navigate({
+                routeName: 'Event',
+                params: eventData
+              })
+            ]
+          : [
+              NavigationActions.navigate({ routeName: 'Home' }),
+              NavigationActions.navigate({
+                routeName: 'Event',
+                params: eventData
+              })
+            ]
       })
 
       this.props.navigation.dispatch(navigateAction)
@@ -57,11 +98,8 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const {
-        saveNotificationToken,
-        addEventFromNotification,
-        ...other
-      } = this.props
+      const { currentUser, addEventFromNotification, ...other } = this.props
+
       return <WrappedComponent {...other} />
     }
   }
@@ -70,7 +108,8 @@ const withNotificationManager = WrappedComponent => {
   Component.router = WrappedComponent.router
 
   return inject(({ stores }) => ({
-    addEventFromNotification: stores.eventStore.addEventFromNotification
+    addEventFromNotification: stores.eventStore.addEventFromNotification,
+    currentUser: stores.authStore.currentUser
   }))(observer(Component))
 }
 
