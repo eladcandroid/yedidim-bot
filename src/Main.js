@@ -15,7 +15,7 @@ const offline = defineMessages({
   description: {
     id: 'Offline.alert.description',
     defaultMessage:
-      'Your device is currently disconnected and we are unable to authenticate the current logged in user. Please make sure you have a working internet connection to use this application.'
+      'Your device is currently disconnected and we are unable to authenticate the logged in user. Please make sure you have a working internet connection to use this application.'
   }
 })
 
