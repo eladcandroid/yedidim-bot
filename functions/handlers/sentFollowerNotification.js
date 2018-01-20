@@ -1,3 +1,5 @@
+const notificationHelper = require('./notificationHelper');
+
 exports.handleUpdateEvent = (event,admin) => {
 	let eventData = event.data.val();
 	let previousValue = event.data.previous.val();
@@ -5,7 +7,7 @@ exports.handleUpdateEvent = (event,admin) => {
     console.log(' new is ' + eventData.status, 'event data ', eventData);
     console.log(eventData);
 
-	if (!haveToSendNotification(eventData, previousValue)) {
+	if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
 		console.log('block',eventData.status,previousValue.status);
 		return Promise.resolve('blocked');
 	}
@@ -69,7 +71,3 @@ exports.handleUpdateEvent = (event,admin) => {
 			});
 	});
 };
-
-function haveToSendNotification(eventData, previousValue){
-	return eventData.status === 'sent' && (previousValue === null  || previousValue.status !== 'sent');
-}
