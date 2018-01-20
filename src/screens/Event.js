@@ -155,40 +155,50 @@ const eventTakeErrorMsgs = defineMessages({
 
 @observer
 class EventScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    header: (
-      <Header>
-        <Left>
-          {!navigation.state.params.isAssigned && (
-            <Button
-              transparent
-              onPress={() => {
-                trackEvent('Navigation', { page: 'Home' })
-                navigation.goBack()
-              }}
-            >
-              <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
-            </Button>
-          )}
-        </Left>
-        <Body>
-          {navigation.state.params.isAssigned ? (
-            <FormattedMessage
-              id="Event.title.active"
-              defaultMessage="Active event"
-            >
-              {txt => <Title>{txt}</Title>}
-            </FormattedMessage>
-          ) : (
-            <FormattedMessage id="Event.title.inactive" defaultMessage="Event">
-              {txt => <Title>{txt}</Title>}
-            </FormattedMessage>
-          )}
-        </Body>
-        <Right />
-      </Header>
-    )
-  })
+  static navigationOptions = ({ navigation }) => {
+    const { state: { params: { isAssigned } } } = navigation
+    // Make sure when isAssigned is not defined we don't show arrows
+    return {
+      header: (
+        <Header>
+          <Left>
+            {typeof isAssigned !== 'undefined' &&
+              !isAssigned && (
+                <Button
+                  transparent
+                  onPress={() => {
+                    trackEvent('Navigation', { page: 'Home' })
+                    navigation.goBack()
+                  }}
+                >
+                  <Icon
+                    name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
+                  />
+                </Button>
+              )}
+          </Left>
+          <Body>
+            {isAssigned ? (
+              <FormattedMessage
+                id="Event.title.active"
+                defaultMessage="Active event"
+              >
+                {txt => <Title>{txt}</Title>}
+              </FormattedMessage>
+            ) : (
+              <FormattedMessage
+                id="Event.title.inactive"
+                defaultMessage="Event"
+              >
+                {txt => <Title>{txt}</Title>}
+              </FormattedMessage>
+            )}
+          </Body>
+          <Right />
+        </Header>
+      )
+    }
+  }
 
   componentWillMount() {
     const { navigation, event } = this.props
