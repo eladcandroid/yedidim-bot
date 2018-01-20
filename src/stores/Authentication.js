@@ -17,6 +17,9 @@ export const User = types
         self.muted &&
         self.muted.getTime() > new Date().getTime() - 24 * 3600 * 1000
       )
+    },
+    get hasEventAssigned() {
+      return !!self.acceptedEventId
     }
   }))
   .actions(self => ({

@@ -70,5 +70,10 @@ export default inject(({ stores }) => ({
   toggleMute:
     stores.authStore.currentUser && stores.authStore.currentUser.toggleMute,
   isMuted: stores.authStore.currentUser && stores.authStore.currentUser.isMuted,
-  isLoading: stores.isLoading
+  isLoading: stores.isLoading,
+  drawerLockMode:
+    stores.authStore.currentUser &&
+    stores.authStore.currentUser.hasEventAssigned
+      ? 'locked-closed'
+      : 'unlocked'
 }))(injectIntl(Main))
