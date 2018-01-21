@@ -13,12 +13,15 @@ exports.handleHttp = (req,res,admin) => {
             return console.log('There are no event');
           }
 
+        const value = t.val();
         console.log('There are', t.numChildren(), 'events');
-        console.log(t.val());
-        console.log('found event ', t.val());
+        console.log();
+        console.log('found event ',value);
 
-        const currentVoluneerId = t.val().assignedTo;
-        if(currentVoluneerId){
+        const currentVoluneerId = value.assignedTo;
+
+        
+        if(currentVoluneerId || value.status === "completed" || value.status == "assigned" ){
             console.log('event already took by volunteer ', currentVoluneerId);
             res.status(400).send({ message: 'event already took'});
         }

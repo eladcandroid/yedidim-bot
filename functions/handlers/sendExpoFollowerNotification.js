@@ -1,5 +1,6 @@
 const Expo = require('expo-server-sdk');
 const Consts = require('./consts');
+const notificationHelper = require('./notificationHelper');
 // Create a new Expo SDK client
 let expo = new Expo();
 
@@ -9,7 +10,7 @@ exports.handleUpdateEvent = (event, admin) => {
 
     console.log(' new is ' + eventData.status, 'event data ', eventData);
 
-	if (!haveToSendNotification(eventData, previousValue)) {
+	if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
 		console.log('block',eventData.status,previousValue.status);
 		return Promise.resolve('blocked');
 	}
@@ -41,7 +42,7 @@ exports.handleUpdateEvent = (event, admin) => {
                 key: eventData.key
             };
             objectToSend.title = 'ידידים - קריאה חדשה';
-            objectToSend.body = formatEventBody(eventData);
+            objectToSend.body = notificationHelper.formatNotification(eventData);
             objectToSend.sound = 'default';
             return objectToSend;
 		});
@@ -71,12 +72,3 @@ exports.handleUpdateEvent = (event, admin) => {
 };
 
 
-function haveToSendNotification(eventData, previousValue){
-	return eventData.status === 'sent' && (previousValue === null  || previousValue.status !== 'sent');
-}
-
-function formatEventBody(eventData){
-	const data = `נפתחה קריאה מסוג ${Consts.EventCases[eventData.details.case]} ב${eventData.details.street_name} ${eventData.details.street_number} ${eventData.details.city}. לחץ לפרטים`;
-	console.log(data);
-	return data;
-}
