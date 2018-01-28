@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import AuthenticationScreen from 'screens/Authentication'
+import PhoneAuthenticationScreen from 'screens/Authentication/Phone'
+import EmailPassAuthenticationScreen from 'screens/Authentication/EmailPass'
 import { inject, observer } from 'mobx-react/native'
 import { Root, Toast } from 'native-base'
 import { Alert } from 'react-native'
 import { injectIntl, defineMessages } from 'react-intl'
 import AuthenticatedDrawer from 'layouts/AuthenticatedDrawer'
 import LoadingMask from 'components/LoadingMask'
+import { Constants } from 'expo'
 
 const offline = defineMessages({
   title: {
@@ -75,6 +77,10 @@ class Main extends Component {
 
   render() {
     const { isAuthenticated, isLoading, ...screenProps } = this.props
+
+    const AuthenticationScreen = Constants.platform.android
+      ? PhoneAuthenticationScreen
+      : EmailPassAuthenticationScreen
 
     return (
       <Root>

@@ -46,7 +46,7 @@ const ErrorText = styled.Text`
 `
 
 @observer
-class AuthenticationScreen extends React.Component {
+class PhoneAuthenticationScreen extends React.Component {
   handleAuthentication = async () => {
     trackEvent('Navigation', { page: 'AuthenticationWebView' })
 
@@ -148,4 +148,4 @@ export default inject(({ stores }) => ({
   signIn: stores.authStore.signIn,
   authError: stores.authStore.error,
   isLoading: stores.authStore.isLoading
-}))(AuthenticationScreen)
+}))(PhoneAuthenticationScreen)
