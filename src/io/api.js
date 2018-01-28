@@ -79,12 +79,12 @@ async function subscribeToUserInfo(
   }
 }
 
-async function updateUserNotificationToken(phoneNumber) {
+async function updateUserNotificationToken(userId) {
   const NotificationToken = await registerForPushNotificationsAsync()
 
   return firebase
     .database()
-    .ref(`/volunteer/${phoneNumber}`)
+    .ref(`/volunteer/${userId}`)
     .update({ NotificationToken })
 }
 
@@ -113,15 +113,15 @@ export async function signInWithPhone({ verificationId, code }) {
 
 export async function signInWithEmailPass({ phoneNumber, id }) {
   try {
+    // TODO Support other countries ?
+    const userId = `+972${phoneNumber.replace(/^0/, '')}`
+
     await firebase
       .auth()
-      .signInWithEmailAndPassword(
-        `${`+972${phoneNumber.replace(/^0/, '')}`}@yedidim.org`,
-        id
-      )
+      .signInWithEmailAndPassword(`${userId}@yedidim.org`, id)
 
     // Update notification token after sign in
-    await updateUserNotificationToken(phoneNumber)
+    await updateUserNotificationToken(userId)
 
     // Should have been subscribed to currentUserInfo already (check onAuthenticationChanged)
   } catch (error) {
