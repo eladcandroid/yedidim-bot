@@ -145,7 +145,7 @@ class PhoneAuthenticationScreen extends React.Component {
 }
 
 export default inject(({ stores }) => ({
-  signIn: stores.authStore.signIn,
+  signIn: stores.authStore.signInWithPhone,
   authError: stores.authStore.error,
   isLoading: stores.authStore.isLoading
 }))(PhoneAuthenticationScreen)

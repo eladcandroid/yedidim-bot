@@ -50,15 +50,15 @@ async function subscribeToUserInfo(
   onChangeCallback,
   onErrorCallback
 ) {
-  if (!userAuth || !userAuth.phoneNumber) {
-    // No user authenticated yet, return undefined
-    onChangeCallback()
-  } else {
+  if (userAuth && (userAuth.phoneNumber || userAuth.email)) {
+    const phoneNumber =
+      userAuth.phoneNumber || userAuth.email.replace('@yedidim.org', '')
+
     // User authenticated, subscribe to get updated details
     const callback = snapshot => {
       if (snapshot && snapshot.val()) {
         onChangeCallback({
-          id: userAuth.phoneNumber,
+          id: phoneNumber,
           ...userSnapshotToJSON(snapshot.val())
         })
       } else {
@@ -68,20 +68,23 @@ async function subscribeToUserInfo(
 
     firebase
       .database()
-      .ref(`volunteer/${userAuth.phoneNumber}`)
+      .ref(`volunteer/${phoneNumber}`)
       .on('value', callback)
 
     // Return callback used which the id for unsubscribing
-    currentUserInfoSubscription = { callback, userKey: userAuth.phoneNumber }
+    currentUserInfoSubscription = { callback, userKey: phoneNumber }
+  } else {
+    // No user authenticated yet, return undefined
+    onChangeCallback()
   }
 }
 
-async function updateUserNotificationToken(userAuth) {
+async function updateUserNotificationToken(phoneNumber) {
   const NotificationToken = await registerForPushNotificationsAsync()
 
   return firebase
     .database()
-    .ref(`/volunteer/${userAuth.phoneNumber}`)
+    .ref(`/volunteer/${phoneNumber}`)
     .update({ NotificationToken })
 }
 
@@ -91,7 +94,7 @@ export function onAuthenticationChanged(onAuthentication, onError) {
   })
 }
 
-export async function signIn({ verificationId, code }) {
+export async function signInWithPhone({ verificationId, code }) {
   try {
     const userAuth = await firebase
       .auth()
@@ -100,7 +103,25 @@ export async function signIn({ verificationId, code }) {
       )
 
     // Update notification token after sign in
-    await updateUserNotificationToken(userAuth)
+    await updateUserNotificationToken(userAuth.phoneNumber)
+
+    // Should have been subscribed to currentUserInfo already (check onAuthenticationChanged)
+  } catch (error) {
+    throw error.code
+  }
+}
+
+export async function signInWithEmailPass({ phoneNumber, id }) {
+  try {
+    await firebase
+      .auth()
+      .signInWithEmailAndPassword(
+        `${`+972${phoneNumber.replace(/^0/, '')}`}@yedidim.org`,
+        id
+      )
+
+    // Update notification token after sign in
+    await updateUserNotificationToken(phoneNumber)
 
     // Should have been subscribed to currentUserInfo already (check onAuthenticationChanged)
   } catch (error) {

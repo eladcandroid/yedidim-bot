@@ -83,14 +83,16 @@ const styles = StyleSheet.create({
 
 @observer
 class EmailPassAuthenticationScreen extends React.Component {
-  state = { userId: '', password: '' }
+  state = { phoneNumber: '', id: '' }
 
   handleAuthentication = async () => {
     trackEvent('Navigation', { page: 'EmailPassAuthentication' })
+    this.props.signIn(this.state)
   }
 
   render() {
     const { authError, isLoading } = this.props
+    const { phoneNumber, id } = this.state
 
     return (
       <Container>
@@ -139,15 +141,15 @@ class EmailPassAuthenticationScreen extends React.Component {
               <Item floatingLabel>
                 <Label style={{ textAlign: 'left' }}>Phone</Label>
                 <Input
-                  value={this.state.userId}
-                  onChangeText={text => this.setState({ userId: text })}
+                  value={phoneNumber}
+                  onChangeText={value => this.setState({ phoneNumber: value })}
                 />
               </Item>
               <Item floatingLabel last>
                 <Label style={{ textAlign: 'left' }}>ID</Label>
                 <Input
-                  value={this.state.password}
-                  onChangeText={text => this.setState({ password: text })}
+                  value={id}
+                  onChangeText={value => this.setState({ id: value })}
                 />
               </Item>
               <ButtonsView>
@@ -176,7 +178,7 @@ class EmailPassAuthenticationScreen extends React.Component {
 }
 
 export default inject(({ stores }) => ({
-  signIn: stores.authStore.signIn,
+  signIn: stores.authStore.signInWithEmailPass,
   authError: stores.authStore.error,
   isLoading: stores.authStore.isLoading
 }))(EmailPassAuthenticationScreen)
