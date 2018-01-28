@@ -91,7 +91,7 @@ class EmailPassAuthenticationScreen extends React.Component {
   }
 
   render() {
-    const { authError, isLoading } = this.props
+    const { authError } = this.props
     const { phoneNumber, id } = this.state
 
     return (
@@ -108,70 +108,58 @@ class EmailPassAuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        {isLoading ? (
-          <Content padder>
-            <FormattedMessage
-              id="Authentication.waiting"
-              defaultMessage="Please wait, authenticating..."
-            >
-              {txt => <IntroText>{txt}</IntroText>}
-            </FormattedMessage>
-            <ActivityIndicator size="large" />
-          </Content>
-        ) : (
-          <Content>
-            {authError && (
-              <View>
+        <Content>
+          {authError && (
+            <View>
+              <FormattedMessage
+                id="Authentication.error"
+                defaultMessage="An error has occurred, unable to authenticate. Please try again later."
+              >
+                {txt => <IntroText>{txt}</IntroText>}
+              </FormattedMessage>
+              <ErrorText>Error Code: {authError}</ErrorText>
+            </View>
+          )}
+          <FormattedMessage
+            id="Authentication.notauthenticated"
+            defaultMessage="You are not authenticated yet. Please authenticate to receive events."
+          >
+            {txt => <IntroText>{txt}</IntroText>}
+          </FormattedMessage>
+          <Form>
+            <Item floatingLabel>
+              <Label style={{ textAlign: 'left' }}>Phone</Label>
+              <Input
+                value={phoneNumber}
+                onChangeText={value => this.setState({ phoneNumber: value })}
+              />
+            </Item>
+            <Item floatingLabel last>
+              <Label style={{ textAlign: 'left' }}>ID</Label>
+              <Input
+                value={id}
+                onChangeText={value => this.setState({ id: value })}
+              />
+            </Item>
+            <ButtonsView>
+              <StyledButton
+                iconLeft
+                full
+                large
+                block
+                onPress={this.handleAuthentication}
+              >
+                <Icon style={{ fontSize: 40 }} name="ios-person" />
                 <FormattedMessage
-                  id="Authentication.error"
-                  defaultMessage="An error has occurred, unable to authenticate. Please try again later."
+                  id="Authentication.button"
+                  defaultMessage="Authenticate me"
                 >
-                  {txt => <IntroText>{txt}</IntroText>}
+                  {txt => <Text>{txt}</Text>}
                 </FormattedMessage>
-                <ErrorText>Error Code: {authError}</ErrorText>
-              </View>
-            )}
-            <FormattedMessage
-              id="Authentication.notauthenticated"
-              defaultMessage="You are not authenticated yet. Please authenticate to receive events."
-            >
-              {txt => <IntroText>{txt}</IntroText>}
-            </FormattedMessage>
-            <Form>
-              <Item floatingLabel>
-                <Label style={{ textAlign: 'left' }}>Phone</Label>
-                <Input
-                  value={phoneNumber}
-                  onChangeText={value => this.setState({ phoneNumber: value })}
-                />
-              </Item>
-              <Item floatingLabel last>
-                <Label style={{ textAlign: 'left' }}>ID</Label>
-                <Input
-                  value={id}
-                  onChangeText={value => this.setState({ id: value })}
-                />
-              </Item>
-              <ButtonsView>
-                <StyledButton
-                  iconLeft
-                  full
-                  large
-                  block
-                  onPress={this.handleAuthentication}
-                >
-                  <Icon style={{ fontSize: 40 }} name="ios-person" />
-                  <FormattedMessage
-                    id="Authentication.button"
-                    defaultMessage="Authenticate me"
-                  >
-                    {txt => <Text>{txt}</Text>}
-                  </FormattedMessage>
-                </StyledButton>
-              </ButtonsView>
-            </Form>
-          </Content>
-        )}
+              </StyledButton>
+            </ButtonsView>
+          </Form>
+        </Content>
       </Container>
     )
   }

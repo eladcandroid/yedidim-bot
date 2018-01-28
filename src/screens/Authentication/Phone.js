@@ -74,7 +74,7 @@ class PhoneAuthenticationScreen extends React.Component {
   }
 
   render() {
-    const { authError, isLoading } = this.props
+    const { authError } = this.props
 
     return (
       <Container>
@@ -90,55 +90,43 @@ class PhoneAuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        {isLoading ? (
-          <Content padder>
-            <FormattedMessage
-              id="Authentication.waiting"
-              defaultMessage="Please wait, authenticating..."
-            >
-              {txt => <IntroText>{txt}</IntroText>}
-            </FormattedMessage>
-            <ActivityIndicator size="large" />
-          </Content>
-        ) : (
-          <Content>
-            {authError ? (
-              <View>
-                <FormattedMessage
-                  id="Authentication.error"
-                  defaultMessage="An error has occurred, unable to authenticate. Please try again later."
-                >
-                  {txt => <IntroText>{txt}</IntroText>}
-                </FormattedMessage>
-                <ErrorText>Error Code: {authError}</ErrorText>
-              </View>
-            ) : (
+        <Content>
+          {authError ? (
+            <View>
               <FormattedMessage
-                id="Authentication.notauthenticated"
-                defaultMessage="You are not authenticated yet. Please authenticate to receive events."
+                id="Authentication.error"
+                defaultMessage="An error has occurred, unable to authenticate. Please try again later."
               >
                 {txt => <IntroText>{txt}</IntroText>}
               </FormattedMessage>
-            )}
-            <ButtonsView>
-              <StyledButton
-                iconLeft
-                full
-                large
-                block
-                onPress={this.handleAuthentication}
+              <ErrorText>Error Code: {authError}</ErrorText>
+            </View>
+          ) : (
+            <FormattedMessage
+              id="Authentication.notauthenticated"
+              defaultMessage="You are not authenticated yet. Please authenticate to receive events."
+            >
+              {txt => <IntroText>{txt}</IntroText>}
+            </FormattedMessage>
+          )}
+          <ButtonsView>
+            <StyledButton
+              iconLeft
+              full
+              large
+              block
+              onPress={this.handleAuthentication}
+            >
+              <Icon style={{ fontSize: 40 }} name="ios-person" />
+              <FormattedMessage
+                id="Authentication.button"
+                defaultMessage="Authenticate me"
               >
-                <Icon style={{ fontSize: 40 }} name="ios-person" />
-                <FormattedMessage
-                  id="Authentication.button"
-                  defaultMessage="Authenticate me"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-              </StyledButton>
-            </ButtonsView>
-          </Content>
-        )}
+                {txt => <Text>{txt}</Text>}
+              </FormattedMessage>
+            </StyledButton>
+          </ButtonsView>
+        </Content>
       </Container>
     )
   }
