@@ -78,9 +78,10 @@ class Main extends Component {
   render() {
     const { isAuthenticated, isLoading, ...screenProps } = this.props
 
-    const AuthenticationScreen = Constants.platform.android
-      ? PhoneAuthenticationScreen
-      : EmailPassAuthenticationScreen
+    const AuthenticationScreen =
+      Constants.platform && Constants.platform.ios
+        ? PhoneAuthenticationScreen
+        : EmailPassAuthenticationScreen
 
     return (
       <Root>
