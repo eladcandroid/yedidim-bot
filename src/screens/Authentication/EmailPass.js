@@ -15,13 +15,11 @@ import {
   Input,
   Icon
 } from 'native-base'
-import { View, ActivityIndicator, Alert, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import styled from 'styled-components/native'
-import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { trackEvent } from 'io/analytics'
-import { environment, hostingDomain } from 'config'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -48,38 +46,6 @@ const ErrorText = styled.Text`
   font-weight: bold;
   margin-bottom: 10px;
 `
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 80,
-    marginRight: 20,
-    marginLeft: 20
-  },
-  header: {
-    paddingBottom: 20,
-    fontSize: 20,
-    alignSelf: 'stretch',
-    textAlign: 'center'
-  },
-  item: {
-    flexDirection: 'row-reverse'
-  },
-  button: {
-    paddingTop: 30,
-    justifyContent: 'center'
-  },
-  buttonText: {
-    color: 'white',
-    alignSelf: 'center'
-  },
-  error: {
-    paddingTop: 40,
-    color: 'red',
-    alignSelf: 'stretch',
-    textAlign: 'center'
-  }
-})
 
 @observer
 class EmailPassAuthenticationScreen extends React.Component {
