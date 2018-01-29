@@ -128,14 +128,21 @@ class EmailPassAuthenticationScreen extends React.Component {
           </FormattedMessage>
           <Form>
             <Item floatingLabel>
-              <Label style={{ textAlign: 'left' }}>Phone</Label>
+              <FormattedMessage
+                id="Authentication.phonenumber"
+                defaultMessage="Phone number"
+              >
+                {txt => <Label style={{ textAlign: 'left' }}>{txt}</Label>}
+              </FormattedMessage>
               <Input
                 value={phoneNumber}
                 onChangeText={value => this.setState({ phoneNumber: value })}
               />
             </Item>
             <Item floatingLabel last>
-              <Label style={{ textAlign: 'left' }}>ID</Label>
+              <FormattedMessage id="Authentication.id" defaultMessage="ID">
+                {txt => <Label style={{ textAlign: 'left' }}>{txt}</Label>}
+              </FormattedMessage>
               <Input
                 value={id}
                 onChangeText={value => this.setState({ id: value })}
