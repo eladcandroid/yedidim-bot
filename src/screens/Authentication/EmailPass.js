@@ -109,7 +109,7 @@ class EmailPassAuthenticationScreen extends React.Component {
           <Right />
         </Header>
         <Content>
-          {authError && (
+          {authError ? (
             <View>
               <FormattedMessage
                 id="Authentication.error"
@@ -119,30 +119,35 @@ class EmailPassAuthenticationScreen extends React.Component {
               </FormattedMessage>
               <ErrorText>Error Code: {authError}</ErrorText>
             </View>
+          ) : (
+            <FormattedMessage
+              id="Authentication.notauthenticated"
+              defaultMessage="You are not authenticated yet. Please authenticate to receive events."
+            >
+              {txt => <IntroText>{txt}</IntroText>}
+            </FormattedMessage>
           )}
-          <FormattedMessage
-            id="Authentication.notauthenticated"
-            defaultMessage="You are not authenticated yet. Please authenticate to receive events."
-          >
-            {txt => <IntroText>{txt}</IntroText>}
-          </FormattedMessage>
           <Form>
             <Item floatingLabel>
-              <FormattedMessage
-                id="Authentication.phonenumber"
-                defaultMessage="Phone number"
-              >
-                {txt => <Label style={{ textAlign: 'left' }}>{txt}</Label>}
-              </FormattedMessage>
+              <Label style={{ textAlign: 'left' }}>
+                <FormattedMessage
+                  id="Authentication.phonenumber"
+                  defaultMessage="Phone number"
+                >
+                  {txt => txt}
+                </FormattedMessage>
+              </Label>
               <Input
                 value={phoneNumber}
                 onChangeText={value => this.setState({ phoneNumber: value })}
               />
             </Item>
             <Item floatingLabel last>
-              <FormattedMessage id="Authentication.id" defaultMessage="ID">
-                {txt => <Label style={{ textAlign: 'left' }}>{txt}</Label>}
-              </FormattedMessage>
+              <Label style={{ textAlign: 'left' }}>
+                <FormattedMessage id="Authentication.id" defaultMessage="ID">
+                  {txt => txt}
+                </FormattedMessage>
+              </Label>
               <Input
                 value={id}
                 onChangeText={value => this.setState({ id: value })}
