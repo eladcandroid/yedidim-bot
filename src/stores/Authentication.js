@@ -96,22 +96,47 @@ const AuthenticationStore = types
       self.unwatchAuth()
     }
 
-    const signIn = flow(function* signIn({ verificationId, code }) {
-      trackEvent('SignIn')
+    const signInWithPhone = flow(function* signInWithPhone({
+      verificationId,
+      code
+    }) {
+      trackEvent('PhoneSignIn')
       self.isLoading = true
       self.error = null
 
       try {
-        yield api.signIn({
+        yield api.signInWithPhone({
           verificationId,
           code
         })
         self.isLoading = false
-        trackEvent('SignInSuccess')
+        trackEvent('PhoneSignInSuccess')
       } catch (error) {
         self.error = error
         self.isLoading = false
-        trackEvent('SignInError', { error })
+        trackEvent('PhoneSignInError', { error })
+      }
+    })
+
+    const signInWithEmailPass = flow(function* signInWithEmailPass({
+      phoneNumber,
+      id
+    }) {
+      trackEvent('EmailPassSignIn')
+      self.isLoading = true
+      self.error = null
+
+      try {
+        yield api.signInWithEmailPass({
+          phoneNumber,
+          id
+        })
+        self.isLoading = false
+        trackEvent('EmailPassSignInSuccess')
+      } catch (error) {
+        self.error = error
+        self.isLoading = false
+        trackEvent('EmailPassSignInError', { error })
       }
     })
 
@@ -135,7 +160,8 @@ const AuthenticationStore = types
     return {
       afterCreate,
       beforeDestroy,
-      signIn,
+      signInWithEmailPass,
+      signInWithPhone,
       signOut,
       onUserChanged,
       onError,

@@ -9,7 +9,7 @@ import { initAnalyticsTracking } from 'io/analytics'
 import I18nApp from './src/I18nApp'
 
 // Remove this once Sentry is correctly setup.
-Sentry.enableInExpoDevelopment = true
+// Sentry.enableInExpoDevelopment = true
 
 Sentry.config(Constants.manifest.extra.SentryAPI).install()
 
