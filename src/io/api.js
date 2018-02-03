@@ -163,6 +163,32 @@ const eventSnapshotToJSON = snapshot => ({
   phone: snapshot.details['phone number']
 })
 
+export async function loadLatestOpenEvents() {
+  return new Promise((resolve, reject) => {
+    try {
+      const events = []
+
+      firebase
+        .database()
+        .ref('events')
+        .orderByChild('status')
+        .equalTo('sent')
+        .once('value', snapshot => {
+          Object.values(snapshot.val())
+            .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+            .slice(0, 25)
+            .forEach(childSnapshot => {
+              events.push(eventSnapshotToJSON(childSnapshot))
+            })
+
+          resolve(events)
+        })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 export function subscribeToEvent(eventKey, onChangeCallback) {
   const callback = snapshot => {
     if (snapshot && snapshot.val()) {

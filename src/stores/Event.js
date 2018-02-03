@@ -1,6 +1,5 @@
 import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
 import * as api from 'io/api'
-import * as storage from 'io/storage'
 import { trackEvent } from 'io/analytics'
 
 export const Event = types
@@ -112,36 +111,29 @@ const EventStore = types
     }
   }))
   .actions(self => {
-    function addEvent(eventId) {
+    function addEvent(eventJSON) {
       // If no event was added, add new to store
-      if (!self.events.get(eventId)) {
-        self.events.put(
-          Event.create({
-            id: eventId
-          })
-        )
+      if (!self.events.get(eventJSON.id)) {
+        self.events.put(eventJSON)
       }
     }
 
     return {
-      afterCreate: flow(function* afterCreate() {
-        const eventIds = yield storage.eventIds()
-        eventIds.forEach(eventId => addEvent(eventId))
+      loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
+        self.removeAllEvents()
+        const events = yield api.loadLatestOpenEvents()
+        events.forEach(addEvent)
       }),
-      removeEvent: flow(function* removeEvent(eventId) {
+      removeEvent(eventId) {
         destroy(self.events.get(eventId))
-        yield storage.removeEventId(eventId)
-      }),
+      },
       removeAllEvents: () => {
         self.events.values().forEach(event => {
           self.removeEvent(event.id)
         })
       },
       addEventFromNotification: eventId => {
-        // Add event to async store for restoring on app restart
-        storage.addEventId(eventId)
-
-        addEvent(eventId)
+        addEvent({ id: eventId })
 
         trackEvent('EventNotificationReceived', {
           eventId

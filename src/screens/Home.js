@@ -140,6 +140,10 @@ class HomeScreen extends Component {
     )
   })
 
+  componentWillMount() {
+    this.props.loadLatestOpenEvents()
+  }
+
   handleEventItemPress = debounce(
     eventId => {
       trackEvent('Navigation', { page: 'EventPage', eventId })
@@ -181,5 +185,6 @@ class HomeScreen extends Component {
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser,
   hasEvents: stores.eventStore.hasEvents,
-  allEvents: stores.eventStore.allEvents
+  allEvents: stores.eventStore.allEvents,
+  loadLatestOpenEvents: stores.eventStore.loadLatestOpenEvents
 }))(HomeScreen)
