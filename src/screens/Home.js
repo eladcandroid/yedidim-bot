@@ -65,7 +65,7 @@ const EventItem = observer(
         }}
       >
         <Left>
-          <Thumbnail source={eventTypeImg(type)} />
+          <Thumbnail small source={eventTypeImg(type)} />
         </Left>
         <Body>
           <FormattedMessage {...eventTypeMessage(type)}>
