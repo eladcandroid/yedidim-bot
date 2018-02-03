@@ -109,7 +109,10 @@ const EventStore = types
       return self.events.get(eventId)
     },
     get allEvents() {
-      return self.events.values()
+      // Latest events sorted by timestamp
+      return self.events
+        .values()
+        .sort((e1, e2) => (e1.timestamp > e2.timestamp ? -1 : 1))
     },
     get hasEvents() {
       return self.events.size > 0
@@ -125,7 +128,6 @@ const EventStore = types
 
     return {
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
-        self.removeAllEvents()
         const events = yield api.loadLatestOpenEvents()
         events.forEach(addEvent)
       }),
