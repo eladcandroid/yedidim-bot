@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import EmailPassAuthenticationScreen from 'screens/Authentication/EmailPass'
+import PhoneAuthScreen from 'screens/Authentication/Phone'
 import { inject, observer } from 'mobx-react/native'
 import { Root, Toast } from 'native-base'
 import { Alert } from 'react-native'
@@ -81,7 +81,7 @@ class Main extends Component {
         {isAuthenticated ? (
           <AuthenticatedDrawer screenProps={screenProps} />
         ) : (
-          <EmailPassAuthenticationScreen />
+          <PhoneAuthScreen />
         )}
         {isLoading && <LoadingMask />}
       </Root>
