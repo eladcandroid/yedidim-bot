@@ -17,7 +17,7 @@ export const Event = types
     status: types.maybe(types.string),
     assignedTo: types.maybe(types.string),
     timestamp: types.maybe(types.Date),
-    isLoading: true
+    isLoading: false
   })
   .views(self => ({
     get store() {
@@ -48,6 +48,11 @@ export const Event = types
       self.isLoading = false
     },
     afterCreate: () => {
+      // If no data is provided with event, set it as loading
+      if (!self.address || !self.type) {
+        self.isLoading = true
+      }
+
       self.unsubscribeId = api.subscribeToEvent(self.id, self.onEventUpdated)
     },
     beforeDestroy: () => {
