@@ -4,7 +4,7 @@ import { reaction } from 'mobx'
 import { Notifications } from 'expo'
 import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
-import { defineMessages, injectIntl } from 'react-intl'
+import { defineMessages } from 'react-intl'
 
 const newEventToast = defineMessages({
   button: {
@@ -95,9 +95,11 @@ const withNotificationManager = WrappedComponent => {
         if (origin === 'received') {
           // The app if foregrounded
           Toast.show({
-            text: this.props.intl.formatMessage(newEventToast.text),
+            text: this.props.screenProps.intl.formatMessage(newEventToast.text),
             position: 'bottom',
-            buttonText: this.props.intl.formatMessage(newEventToast.button),
+            buttonText: this.props.screenProps.intl.formatMessage(
+              newEventToast.button
+            ),
             type: 'warning',
             // duration: 10000,
             onClose: () => this.navigateToEvent({ eventId: key })
@@ -110,12 +112,7 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const {
-        currentUser,
-        addEventFromNotification,
-        intl,
-        ...other
-      } = this.props
+      const { currentUser, addEventFromNotification, ...other } = this.props
 
       return <WrappedComponent {...other} />
     }
@@ -124,12 +121,10 @@ const withNotificationManager = WrappedComponent => {
   // As described at https://github.com/react-community/react-navigation/issues/90
   Component.router = WrappedComponent.router
 
-  return injectIntl(
-    inject(({ stores }) => ({
-      addEventFromNotification: stores.eventStore.addEventFromNotification,
-      currentUser: stores.authStore.currentUser
-    }))(observer(Component))
-  )
+  return inject(({ stores }) => ({
+    addEventFromNotification: stores.eventStore.addEventFromNotification,
+    currentUser: stores.authStore.currentUser
+  }))(observer(Component))
 }
 
 export default withNotificationManager
