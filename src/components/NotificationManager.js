@@ -110,7 +110,12 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const { currentUser, addEventFromNotification, ...other } = this.props
+      const {
+        currentUser,
+        addEventFromNotification,
+        intl,
+        ...other
+      } = this.props
 
       return <WrappedComponent {...other} />
     }
