@@ -90,5 +90,7 @@
   "Offline.alert.description":
     "המכשיר שלך מנותק כרגע ואיננו יכולים לאמת את המשתמש המחובר. ודא שיש לך חיבור לאינטרנט פעיל כדי להשתמש ביישום זה.",
   "Authentication.phonenumber": "מספר טלפון",
-  "Authentication.id": "ת.ז."
+  "Authentication.id": "ת.ז.",
+  "Notification.event.button": "לראות",
+  "Notification.event.text": "התקבל אירוע חדש"
 }

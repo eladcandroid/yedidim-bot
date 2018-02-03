@@ -92,5 +92,7 @@
   "Offline.alert.description":
     "Your device is currently disconnected and we are unable to authenticate the logged in user. Please make sure you have a working internet connection to use this application.",
   "Authentication.phonenumber": "Phone number",
-  "Authentication.id": "ID"
+  "Authentication.id": "ID",
+  "Notification.event.button": "Show",
+  "Notification.event.text": "New event received"
 }
