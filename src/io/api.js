@@ -114,7 +114,10 @@ export async function signInWithPhone({ verificationId, code }) {
 export async function signInWithEmailPass({ phoneNumber, id }) {
   try {
     // TODO Support other countries ?
-    const userId = `+972${phoneNumber.replace(/^0/, '')}`
+    const userId = `+972${phoneNumber
+      .trim()
+      .replace(/^0/, '')
+      .replace(/-/, '')}`
 
     await firebase
       .auth()
