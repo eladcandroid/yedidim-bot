@@ -174,7 +174,7 @@ export async function loadLatestOpenEvents() {
         .orderByChild('status')
         .equalTo('sent')
         .once('value', snapshot => {
-          Object.values(snapshot.val())
+          Object.values(snapshot.val() || [])
             .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
             .slice(0, 25)
             .forEach(childSnapshot => {
