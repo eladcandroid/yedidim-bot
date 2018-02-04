@@ -114,7 +114,10 @@ export async function signInWithPhone({ verificationId, code }) {
 export async function signInWithEmailPass({ phoneNumber, id }) {
   try {
     // TODO Support other countries ?
-    const userId = `+972${phoneNumber.replace(/^0/, '')}`
+    const userId = `+972${phoneNumber
+      .trim()
+      .replace(/^0/, '')
+      .replace(/-/g, '')}`
 
     await firebase
       .auth()
@@ -174,7 +177,7 @@ export async function loadLatestOpenEvents() {
         .orderByChild('status')
         .equalTo('sent')
         .once('value', snapshot => {
-          Object.values(snapshot.val())
+          Object.values(snapshot.val() || [])
             .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
             .slice(0, 25)
             .forEach(childSnapshot => {
