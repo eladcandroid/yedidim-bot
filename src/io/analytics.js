@@ -1,10 +1,10 @@
-import { Amplitude, Constants } from 'expo'
-
+// import { Amplitude, Constants } from 'expo'
+// Disabled Amplitude due to issues with Android
 export const initAnalyticsTracking = () => {
-  Amplitude.initialize(Constants.manifest.extra.AmplitudeAPI)
+  // Amplitude.initialize(Constants.manifest.extra.AmplitudeAPI)
 }
 
-export const trackUserLogin = userId => Amplitude.setUserId(userId)
+export const trackUserLogin = userId => {} // Amplitude.setUserId(userId)
 
-export const trackEvent = (eventName, properties) =>
-  Amplitude.logEventWithProperties(eventName, properties)
+export const trackEvent = (eventName, properties) => {}
+// Amplitude.logEventWithProperties(eventName, properties)

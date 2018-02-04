@@ -28,18 +28,6 @@ const IntroText = styled.Text`
   font-size: 16px;
 `
 
-const ButtonsView = styled.View`
-  flex-direction: row;
-  margin-top: 40px;
-`
-
-const StyledButton = styled(Button)`
-  flex-grow: 1;
-  align-content: center;
-  justify-content: center;
-  margin: 0 5px;
-`
-
 const ErrorText = styled.Text`
   text-align: center;
   color: red;
@@ -74,7 +62,7 @@ class EmailPassAuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        <Content>
+        <Content style={{ flex: 1 }}>
           {authError ? (
             <View>
               <FormattedMessage
@@ -108,7 +96,7 @@ class EmailPassAuthenticationScreen extends React.Component {
                 onChangeText={value => this.setState({ phoneNumber: value })}
               />
             </Item>
-            <Item floatingLabel last>
+            <Item floatingLabel>
               <Label style={{ textAlign: 'left' }}>
                 <FormattedMessage id="Authentication.id" defaultMessage="ID">
                   {txt => txt}
@@ -119,25 +107,25 @@ class EmailPassAuthenticationScreen extends React.Component {
                 onChangeText={value => this.setState({ id: value })}
               />
             </Item>
-            <ButtonsView>
-              <StyledButton
-                iconLeft
-                full
-                large
-                block
-                onPress={this.handleAuthentication}
-              >
-                <Icon style={{ fontSize: 40 }} name="ios-person" />
-                <FormattedMessage
-                  id="Authentication.button"
-                  defaultMessage="Authenticate me"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-              </StyledButton>
-            </ButtonsView>
           </Form>
         </Content>
+        <Button
+          style={{ height: 70 }}
+          iconLeft
+          full
+          large
+          block
+          success
+          onPress={this.handleAuthentication}
+        >
+          <Icon style={{ fontSize: 40 }} name="ios-person" />
+          <FormattedMessage
+            id="Authentication.button"
+            defaultMessage="Authenticate me"
+          >
+            {txt => <Text>{txt}</Text>}
+          </FormattedMessage>
+        </Button>
       </Container>
     )
   }

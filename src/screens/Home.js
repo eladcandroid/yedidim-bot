@@ -17,7 +17,7 @@ import {
   ListItem,
   Thumbnail
 } from 'native-base'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, RefreshControl } from 'react-native'
 import { eventTypeMessage, eventTypeImg } from 'const'
 import debounce from 'lodash.debounce'
 import { trackEvent } from 'io/analytics'
@@ -65,7 +65,7 @@ const EventItem = observer(
         }}
       >
         <Left>
-          <Thumbnail source={eventTypeImg(type)} />
+          <Thumbnail small source={eventTypeImg(type)} />
         </Left>
         <Body>
           <FormattedMessage {...eventTypeMessage(type)}>
@@ -140,6 +140,14 @@ class HomeScreen extends Component {
     )
   })
 
+  state = {
+    refreshing: false
+  }
+
+  componentWillMount() {
+    this.handleRefresh()
+  }
+
   handleEventItemPress = debounce(
     eventId => {
       trackEvent('Navigation', { page: 'EventPage', eventId })
@@ -149,29 +157,46 @@ class HomeScreen extends Component {
     { leading: true, trailing: false }
   )
 
+  handleRefresh = async () => {
+    this.setState(() => ({ refreshing: true }))
+    await this.props.loadLatestOpenEvents()
+    this.setState(() => ({ refreshing: false }))
+  }
+
   render() {
     const { hasEvents, allEvents } = this.props
+    const { refreshing } = this.state
 
     return (
       <Container>
-        <Content style={{ backgroundColor: '#fff' }}>
-          {hasEvents ? (
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={this.handleRefresh}
+            />
+          }
+          style={{ backgroundColor: '#fff' }}
+        >
+          {hasEvents && (
             <List
               dataArray={allEvents}
               renderRow={event => (
                 <EventItem event={event} onPress={this.handleEventItemPress} />
               )}
             />
-          ) : (
-            <MessageView>
-              <FormattedMessage
-                id="Home.noevents"
-                defaultMessage="Sorry, no events were found"
-              >
-                {txt => <Text>{txt}</Text>}
-              </FormattedMessage>
-            </MessageView>
           )}
+          {!hasEvents &&
+            !refreshing && (
+              <MessageView>
+                <FormattedMessage
+                  id="Home.noevents"
+                  defaultMessage="Sorry, no events were found"
+                >
+                  {txt => <Text>{txt}</Text>}
+                </FormattedMessage>
+              </MessageView>
+            )}
         </Content>
       </Container>
     )
@@ -181,5 +206,6 @@ class HomeScreen extends Component {
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser,
   hasEvents: stores.eventStore.hasEvents,
-  allEvents: stores.eventStore.allEvents
+  allEvents: stores.eventStore.allEvents,
+  loadLatestOpenEvents: stores.eventStore.loadLatestOpenEvents
 }))(HomeScreen)
