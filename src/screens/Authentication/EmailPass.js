@@ -20,6 +20,7 @@ import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { trackEvent } from 'io/analytics'
+import { Constants } from 'expo'
 
 const IntroText = styled.Text`
   text-align: center;
@@ -33,6 +34,11 @@ const ErrorText = styled.Text`
   color: red;
   font-weight: bold;
   margin-bottom: 10px;
+`
+
+const VersionText = styled.Text`
+  text-align: center;
+  font-weight: bold;
 `
 
 @observer
@@ -81,6 +87,7 @@ class EmailPassAuthenticationScreen extends React.Component {
               {txt => <IntroText>{txt}</IntroText>}
             </FormattedMessage>
           )}
+          <VersionText>v{Constants.manifest.version}</VersionText>
           <Form>
             <Item floatingLabel>
               <Label style={{ textAlign: 'left' }}>
