@@ -239,7 +239,6 @@ function loadEvents() {
 
 export function searchEvents(phone, fromDate, toDate) {
   return ((dispatch) => {
-    console.log(fromDate, toDate);
     let query = firebase.database().ref('/events');
     if (fromDate){
       query = query.orderByChild('timestamp').startAt(fromDate);

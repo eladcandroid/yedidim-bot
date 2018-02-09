@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {ScrollView, View, Text, StyleSheet, I18nManager} from 'react-native';
 import { Button, Form, Item, Input, Label } from 'native-base';
 import DatePicker from 'react-native-datepicker'
-import { getTextStyle } from '../common/utils';
+import { getTextStyle, eventsToCSV } from '../common/utils';
 import { searchEvents } from '../actions/dataSourceActions';
 import EventsList, {EventsListColumn} from './EventsList';
 
@@ -13,12 +13,29 @@ class EventsSearch extends Component {
     super(props);
     this.state = {phone: undefined};
     this.searchEvents = this.searchEvents.bind(this);
+    this.sendSearchResults = this.sendSearchResults.bind(this);
   }
 
   searchEvents() {
-    const fromDate = this.state.fromDate ? Date.parse(this.state.fromDate) : undefined;
-    const toDate = this.state.toDate ? Date.parse(this.state.toDate) + 24 * 60 * 60 * 1000 : undefined;
+    const now = new Date();
+    const fromDate = this.state.fromDate ? Date.parse(this.state.fromDate) + now.getTimezoneOffset() * 60000 : undefined;
+    const toDate = this.state.toDate ? Date.parse(this.state.toDate) + now.getTimezoneOffset() * 60000 + 24 * 60 * 60 * 1000 : undefined;
     this.props.searchEvents(this.state.phone, fromDate, toDate);
+  }
+
+  async sendSearchResults() {
+    if (!this.props.events){
+      return;
+    }
+    const content = eventsToCSV(this.props.events);
+    console.log(content);
+    const fileUri = Expo.FileSystem.cacheDirectory + 'yedidim-events.csv';
+    await Expo.FileSystem.writeAsStringAsync(fileUri, content);
+    await Expo.MailComposer.composeAsync({
+      subject: 'אירועים',
+      body: 'אירועים מ ' + this.state.fromDate + ' עד ' + this.state.toDate,
+      attachments: [fileUri]
+    });
   }
 
   render() {
@@ -54,9 +71,14 @@ class EventsSearch extends Component {
               onDateChange={(date) => {this.setState({toDate: date})}}
             />
           </View>
-          <Button style={styles.button} onPress={this.searchEvents}>
-            <Text style={styles.buttonText}>חפש</Text>
-          </Button>
+          <View style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
+            <Button style={styles.button} onPress={this.searchEvents}>
+              <Text style={styles.buttonText}>חפש</Text>
+            </Button>
+            <Button style={styles.button} onPress={this.sendSearchResults} disabled={!this.props.events}>
+              <Text style={styles.buttonText}>שלח</Text>
+            </Button>
+          </View>
         </Form>
         {this.props.events ?
             <ScrollView style={styles.scrollContainer}>
@@ -121,7 +143,13 @@ const styles = StyleSheet.create({
   button: {
     width: 150,
     alignSelf:'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
+  },
+  buttonsRow: {
+    marginLeft: 10,
+    marginRight: 10,
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   buttonText: {
     color: 'white',
