@@ -39,69 +39,71 @@ const MessageView = styled.View`
 const EventItem = observer(
   ({
     onPress,
-    event: { id, type, city, more, timestamp, isLoading, isTaken }
-  }) =>
-    isLoading ? (
-      <ListItem avatar>
-        <Left>
-          <ActivityIndicator size="large" />
-        </Left>
-        <Body>
-          <FormattedMessage
-            id="Home.event.loadingTitle"
-            defaultMessage="Please wait, loading event..."
+    event: { id, type, city, more, timestamp, isLoading, isTaken, distance }
+  }) => {
+      return isLoading ? (
+          <ListItem avatar>
+              <Left>
+                  <ActivityIndicator size="large"/>
+              </Left>
+              <Body>
+              <FormattedMessage
+                  id="Home.event.loadingTitle"
+                  defaultMessage="Please wait, loading event..."
+              >
+                  {txt => <AlignedText>{txt}</AlignedText>}
+              </FormattedMessage>
+              <AlignedText note/>
+              </Body>
+              <Right/>
+          </ListItem>
+      ) : (
+          <ListItem
+              avatar
+              onPress={() => {
+                  onPress(id)
+              }}
           >
-            {txt => <AlignedText>{txt}</AlignedText>}
-          </FormattedMessage>
-          <AlignedText note />
-        </Body>
-        <Right />
-      </ListItem>
-    ) : (
-      <ListItem
-        avatar
-        onPress={() => {
-          onPress(id)
-        }}
-      >
-        <Left>
-          <Thumbnail small source={eventTypeImg(type)} />
-        </Left>
-        <Body>
-          <FormattedMessage {...eventTypeMessage(type)}>
-            {eventTypeTxt => (
-              <AlignedText>
-                {eventTypeTxt} - {city}
-              </AlignedText>
-            )}
-          </FormattedMessage>
-          <AlignedText note>{more}</AlignedText>
-        </Body>
-        <Right>
-          <FormattedRelative value={timestamp}>
-            {relative => <AlignedText note>{relative}</AlignedText>}
-          </FormattedRelative>
-          {isTaken && (
-            <FormattedMessage id="Home.event.taken" defaultMessage="TAKEN">
-              {txt => (
-                <AlignedText
-                  note
-                  style={{
-                    padding: 3,
-                    marginTop: 3,
-                    backgroundColor: 'red',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  {txt}
-                </AlignedText>
-              )}
-            </FormattedMessage>
-          )}
-        </Right>
-      </ListItem>
-    )
+              <Left>
+                  <Thumbnail small source={eventTypeImg(type)}/>
+              </Left>
+              <Body>
+              <FormattedMessage {...eventTypeMessage(type)}>
+                  {eventTypeTxt => (
+                      <AlignedText>
+                          {eventTypeTxt} - {city}
+                      </AlignedText>
+                  )}
+              </FormattedMessage>
+              <AlignedText note>{more}</AlignedText>
+              </Body>
+              <Right>
+                  <FormattedRelative value={timestamp}>
+                      {relative => <AlignedText note>{relative}</AlignedText>}
+                  </FormattedRelative>
+                  {distance && (<AlignedText note>{distanceToString(distance)}</AlignedText>)}
+                  {isTaken && (
+                      <FormattedMessage id="Home.event.taken" defaultMessage="TAKEN">
+                          {txt => (
+                              <AlignedText
+                                  note
+                                  style={{
+                                      padding: 3,
+                                      marginTop: 3,
+                                      backgroundColor: 'red',
+                                      color: 'white',
+                                      fontWeight: 'bold'
+                                  }}
+                              >
+                                  {txt}
+                              </AlignedText>
+                          )}
+                      </FormattedMessage>
+                  )}
+              </Right>
+          </ListItem>
+      )
+  }
 )
 
 @observer
@@ -209,3 +211,12 @@ export default inject(({ stores }) => ({
   allEvents: stores.eventStore.allEvents,
   loadLatestOpenEvents: stores.eventStore.loadLatestOpenEvents
 }))(HomeScreen)
+
+function distanceToString(distance) {
+    if (distance < 1) {
+        return (distance * 1000).toFixed(0).toString() + 'm';
+    } else {
+        return distance.toFixed(2).toString() + 'km';
+    }
+
+}
