@@ -1,4 +1,4 @@
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_LATEST_VERSION } from "../constants/actionTypes";
+import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_LATEST_VERSION, SET_ERROR } from "../constants/actionTypes";
 
 export function dataSourceReducer(state = {}, action) {
   switch (action.type) {
@@ -48,6 +48,13 @@ export function dataSourceReducer(state = {}, action) {
     }
     case SET_LATEST_VERSION: {
       return Object.assign({}, state, {latestVersion: action.version, newVersionExists:  state.version < action.version});
+    }
+    case SET_ERROR: {
+      if (!action.message) {
+        return Object.assign({}, state, {error: undefined});
+      } else {
+        return Object.assign({}, state, {error: {message: action.message, err: action.err}});
+      }
     }
   }
   return state;

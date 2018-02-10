@@ -334,6 +334,12 @@ function setError(message, err){
   };
 }
 
+export function clearMessage() {
+  return {
+    type: SET_ERROR
+  };
+}
+
 function setUser(user){
   return {
     type: SET_USER,

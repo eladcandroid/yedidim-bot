@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { connect } from 'react-redux';
 import LoginScreen from "./LoginScreen";
 import MainScreen from "./MainScreen";
-import { checkUserAuth } from "../actions/dataSourceActions";
+import { checkUserAuth, clearMessage } from "../actions/dataSourceActions";
 
 
 class HomeScreen extends Component {
@@ -35,6 +35,18 @@ class HomeScreen extends Component {
       { cancelable: false }
     )
   }
+
+  showError() {
+    Alert.alert(
+      'הודעה',
+      this.props.error.message,
+      [
+        {text: 'OK', onPress: () => this.props.clearMessage()},
+      ],
+      {cancelable: false}
+    )
+  }
+
   render() {
     //Check that the app version is the latest
     if (this.props.newVersionExists){
@@ -53,6 +65,10 @@ class HomeScreen extends Component {
     if (!this.props.events) {
       return (<Expo.AppLoading />)
     }
+    if (this.props.error) {
+      this.showError()
+    }
+
     return (<MainScreen/>)
   }
 }
@@ -60,6 +76,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     checkUserAuth: () => {
       dispatch(checkUserAuth());
+    },
+    clearMessage: () => {
+      dispatch(clearMessage());
     }
   };
 };
@@ -68,11 +87,15 @@ const mapStateToProps = (state) => {
   return {
     newVersionExists: state.dataSource.newVersionExists,
     user: state.dataSource.user,
-    events: state.dataSource.events
+    events: state.dataSource.events,
+    error: state.dataSource.error
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 
 HomeScreen.propTypes = {
-  user: PropTypes.object};
+  user: PropTypes.object,
+  error: PropTypes.object,
+  clearMessage: PropTypes.func
+};
