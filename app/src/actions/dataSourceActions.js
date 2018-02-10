@@ -120,6 +120,30 @@ export function createEvent(event) {
   });
 }
 
+export function takeEvent(event) {
+  return ((dispatch, getState) => {
+    const dispatcher = getState().dataSource.user.id;
+    firebase.database().ref('events/' + event.key).transaction(currentEvent => {
+      if (!currentEvent.dispatcher) {
+        currentEvent.dispatcher = dispatcher;
+        return currentEvent;
+      } else {
+        return undefined;
+      }
+    })
+    .then(result => {
+      if (!result.committed) {
+        dispatch(setError('האירוע כבר בטיפול'));
+      } else if (result.snapshot) {
+        dispatch(setEvent(result.snapshot.val()));
+      }
+    })
+    .catch(err => {
+      dispatch(setError('Failed to update!', err));
+    })
+  });
+}
+
 export function updateEventStatus(event, status) {
   return ((dispatch, getState) => {
     const dispatcher = getState().dataSource.user.id;
@@ -302,7 +326,7 @@ function loadVolunteers() {
 }
 
 function setError(message, err){
-  console.error(message, err);
+  console.log('Error: ' + message, err);
   return {
     type: SET_ERROR,
     message,

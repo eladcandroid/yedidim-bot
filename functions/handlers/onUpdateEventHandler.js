@@ -3,7 +3,7 @@ exports.onWrite = (event) => {
 	if (!eventData){
     return Promise.resolve();
   }
-	const isOpen = eventData.status === 'submitted' || eventData.status === 'sent' || eventData.status === 'assigned';
+	const isOpen = eventData.status === 'submitted' || eventData.status === 'sent' || eventData.status === 'assigned' || eventData.status === 'taken';
 
 	if (!event.data.previous.exists() || event.data.previous.val().isOpen !== isOpen){
 	  console.log('isOpen = ' + isOpen);

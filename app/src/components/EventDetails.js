@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { ScrollView, View, Text, Clipboard, TouchableHighlight, Linking, StyleSheet, I18nManager } from 'react-native';
 import { Button } from 'native-base';
 import { getTextStyle, formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
-import { EventStatus, ScreenType } from "../constants/consts";
-import { updateEventStatus } from "../actions/dataSourceActions";
+import { EventSource, EventStatus, ScreenType } from "../constants/consts";
+import { updateEventStatus, takeEvent } from "../actions/dataSourceActions";
 
 class EventDetails extends Component {
   openAddressInMaps() {
@@ -27,21 +27,41 @@ class EventDetails extends Component {
     this.props.navigate(ScreenType.EventsList);
   }
 
+  takeEvent() {
+    this.props.takeEvent(this.props.event);
+  }
+
   completeEvent() {
     this.props.updateEventStatus(this.props.event, EventStatus.Completed);
     this.props.navigate(ScreenType.EventsList);
   }
 
-  renderButtonsRow(event) {
+  isEventAssignedToDispatcher() {
+    return !!this.props.event.dispatcher;
+  }
+
+  isEventAssignedToCurrentDispatcher() {
+    return this.isEventAssignedToDispatcher() && this.props.event.dispatcher === this.props.dispatcher;
+  }
+
+  isAllowToHandleEvent() {
+    return this.props.event.source !== EventSource.FB_BOT || this.isEventAssignedToCurrentDispatcher();
+  }
+
+  renderButtonsRow() {
+    const event = this.props.event;
     const status = getEventStatus(event);
     return (
       <View style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
-        <Button style={styles.button} onPress={this.copyEventDetailsToClipboard.bind(this)}><Text style={styles.buttonText}>העתק אירוע</Text></Button>
-        <Button style={styles.button} onPress={this.copyUserDetailsToClipboard.bind(this)}><Text style={styles.buttonText}>העתק טלפון</Text></Button>
+        <Button style={styles.button} onPress={this.copyEventDetailsToClipboard.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>העתק אירוע</Text></Button>
+        <Button style={styles.button} onPress={this.copyUserDetailsToClipboard.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>העתק טלפון</Text></Button>
         {status === EventStatus.Submitted ?
-          <Button style={styles.button} onPress={this.sendEvent.bind(this)}><Text style={styles.buttonText}>הועבר</Text></Button>
+          !this.isEventAssignedToDispatcher() ?
+            <Button style={styles.button} onPress={this.takeEvent.bind(this)}><Text style={styles.buttonText}>טפל</Text></Button>
+            :
+            <Button style={styles.button} onPress={this.sendEvent.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>הועבר</Text></Button>
           :
-          <Button style={styles.button} onPress={this.completeEvent.bind(this)}><Text style={styles.buttonText}>טופל</Text></Button>
+          <Button style={styles.button} onPress={this.completeEvent.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>טופל</Text></Button>
         }
       </View>
     );
@@ -101,7 +121,7 @@ class EventDetails extends Component {
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['phone number']}</Text>
           <Text style={getTextStyle(styles.fieldName)}>שם</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['caller name']}</Text>
-          {this.renderButtonsRow(event)}
+          {this.renderButtonsRow()}
         </View>
       </ScrollView>
     );
@@ -112,6 +132,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     updateEventStatus: (event, status) => {
       dispatch(updateEventStatus(event, status));
+    },
+    takeEvent: (event) => {
+      dispatch(takeEvent(event));
     }
   };
 };
@@ -127,8 +150,10 @@ const mapStateToProps = (state, ownProps) => {
   if (!volunteer){
     volunteer = {assignedTo: event.assignedTo};
   }
+  const dispatcher = state.dataSource.user ? state.dataSource.user.id : undefined;
   return {
     event,
+    dispatcher,
     volunteer
   };
 };
@@ -137,7 +162,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 
 EventDetails.propTypes = {
   updateEventStatus: PropTypes.func,
+  takeEvent: PropTypes.func,
   event: PropTypes.object,
+  dispatcher: PropTypes.string,
   volunteer: PropTypes.object
 };
 
