@@ -1,7 +1,8 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
-import { Notifications, Location } from 'expo';
+import {Notifications, Location} from 'expo';
 import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler';
+import * as usersDAL from 'users/usersDAL';
 
 const EVENTS_SEARCH_RADIUS_KM = 20;
 
@@ -155,13 +156,13 @@ const eventSnapshotToJSON = snapshot => ({
     distance: snapshot.distance
 });
 
-export async function loadLatestOpenEvents() {
+export async function loadLatestOpenEvents(userId) {
     return new Promise(async (resolve, reject) => {
         try {
             let fetchedEvents;
             let hasLocationPermission = await phonePermissionsHandler.getLocationPermission();
             if (hasLocationPermission) {
-                fetchedEvents = await fetchLatestOpenEventsLocationBased();
+                fetchedEvents = await fetchLatestOpenEventsLocationBased(userId);
             } else {
                 fetchedEvents = await fetchLatestOpenedEvents();
             }
@@ -178,11 +179,12 @@ export async function loadLatestOpenEvents() {
     });
 }
 
-async function fetchLatestOpenEventsLocationBased() {
+async function fetchLatestOpenEventsLocationBased(userId) {
     return new Promise(async (resolve, reject) => {
         try {
             let currentLocation = await Location.getCurrentPositionAsync({});
             let {latitude, longitude} = currentLocation.coords;
+            usersDAL.saveUserLocation(userId, latitude, longitude);
             const nearEventIdToDistance = {};
             let geoFire = new GeoFire(firebase.database().ref().child('events-locations'));
             let geoQuery = geoFire.query({

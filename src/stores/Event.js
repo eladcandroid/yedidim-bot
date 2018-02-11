@@ -130,7 +130,8 @@ const EventStore = types
 
     return {
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
-        const events = yield api.loadLatestOpenEvents()
+          const currentUserId = getRoot(self).authStore.currentUser.id
+        const events = yield api.loadLatestOpenEvents(currentUserId);
         events.forEach(addEvent)
       }),
       removeEvent(eventId) {
