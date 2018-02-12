@@ -10,6 +10,7 @@ const sendFollowerNotification = require('./handlers/sentFollowerNotification');
 const sendExpoFollowerNotification = require('./handlers/sendExpoFollowerNotification');
 const onUserCreateTrigger = require('./handlers/onUserCreateTrigger');
 const openedEvents = require('./handlers/openedEvents');
+const onEventCreateAddGeo = require('./handlers/onEventCreatedAddGeo');
 
 const tokens = getTokens(require('./_tokens.json'));
 
@@ -66,6 +67,10 @@ exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}
 
 exports.onUpdateEvent = functions.database.ref('/events/{eventId}').onWrite(event => {
   return onUpdateEvent.onWrite(event)
+});
+
+exports.onEventCreateAddGeo = functions.database.ref('/events/{eventId}').onWrite(event => {
+  return onEventCreateAddGeo.onWrite(event, admin);
 });
 
 exports.getOpenedEvents = functions.https.onRequest((req, res) => {
