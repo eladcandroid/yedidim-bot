@@ -167,8 +167,6 @@ export async function loadLatestOpenEvents(userId) {
                 fetchedEvents = await fetchLatestOpenedEvents();
             }
             let events = fetchedEvents
-                .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
-                .slice(0, 25)
                 .map(childSnapshot => {
                     return eventSnapshotToJSON(childSnapshot);
                 });
@@ -186,7 +184,7 @@ async function fetchLatestOpenEventsLocationBased(userId) {
             let {latitude, longitude} = currentLocation.coords;
             usersDAL.saveUserLocation(userId, latitude, longitude);
             const nearEventIdToDistance = {};
-            let geoFire = new GeoFire(firebase.database().ref().child('events-locations'));
+            let geoFire = new GeoFire(firebase.database().ref().child('event-location'));
             let geoQuery = geoFire.query({
                 center: [latitude, longitude],
                 radius: EVENTS_SEARCH_RADIUS_KM
@@ -204,13 +202,31 @@ async function fetchLatestOpenEventsLocationBased(userId) {
                     .equalTo('sent')
                     .once('value', snapshot => {
                         let eventsById = snapshot.val() || {};
-                        let nearSentEvents = Object.keys(eventsById).filter(eventId => nearEventIdToDistance.hasOwnProperty(eventId))
+                        let fetchedEvents = Object.values(eventsById);
+                        let eventsToReturn = Object.keys(eventsById)
+                            .filter(eventId => nearEventIdToDistance.hasOwnProperty(eventId))
                             .map(eventId => {
                                 let event = eventsById[eventId];
                                 event.distance = nearEventIdToDistance[eventId];
                                 return event;
-                            });
-                        resolve(nearSentEvents);
+                            })
+                            .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
+                            .slice(0, 25);
+                        if(eventsToReturn.length < 25) {
+                            let oldestEventsFirst = fetchedEvents.sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1));
+                            let i = 0;
+                            let userLocation = [latitude, longitude];
+                            while (eventsToReturn.length < 25 && i < oldestEventsFirst.length) {
+                                let currentEvent = oldestEventsFirst[i];
+                                if (!nearEventIdToDistance.hasOwnProperty(currentEvent.uid)) {
+                                    let eventLocation = [currentEvent.details.geo.lat, currentEvent.details.geo.lon];
+                                    currentEvent.distance = GeoFire.distance(userLocation, eventLocation);
+                                    eventsToReturn.push(currentEvent);
+                                }
+                                i++;
+                            }
+                        }
+                        resolve(eventsToReturn);
                     });
             });
         } catch (error) {
@@ -227,7 +243,10 @@ async function fetchLatestOpenedEvents() {
                 .orderByChild('status')
                 .equalTo('sent')
                 .once('value', snapshot => {
-                    resolve(Object.values(snapshot.val() || {}));
+                    let events = Object.values(snapshot.val() || {})
+                        .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
+                        .slice(0, 25);
+                    resolve(events);
                 });
         } catch (error) {
             reject(error);

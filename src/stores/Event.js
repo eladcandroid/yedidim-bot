@@ -3,23 +3,23 @@ import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
 
 export const Event = types
-    .model('Event', {
-        id: types.identifier(),
-        address: types.maybe(types.string),
-        caller: types.maybe(types.string),
-        carType: types.maybe(types.string),
-        type: types.maybe(types.number), // case in FB
-        city: types.maybe(types.string),
-        lat: types.maybe(types.number),
-        lon: types.maybe(types.number),
-        more: types.maybe(types.string),
-        phone: types.maybe(types.string),
-        status: types.maybe(types.string),
-        assignedTo: types.maybe(types.string),
-        timestamp: types.maybe(types.Date),
-        distance: types.maybe(types.number),
-        isLoading: false
-    })
+  .model('Event', {
+    id: types.identifier(),
+    address: types.maybe(types.string),
+    caller: types.maybe(types.string),
+    carType: types.maybe(types.string),
+    type: types.maybe(types.number), // case in FB
+    city: types.maybe(types.string),
+    lat: types.maybe(types.number),
+    lon: types.maybe(types.number),
+    more: types.maybe(types.string),
+    phone: types.maybe(types.string),
+    status: types.maybe(types.string),
+    assignedTo: types.maybe(types.string),
+    timestamp: types.maybe(types.Date),
+    distance: types.maybe(types.number),
+    isLoading: false
+  })
   .views(self => ({
     get store() {
       return getParent(self, 2)
@@ -44,7 +44,7 @@ export const Event = types
   .actions(self => ({
     onEventUpdated: eventData => {
       // Update properties
-        eventData.distance = eventData.distance || self.distance;
+      eventData.distance = eventData.distance || self.distance
       Object.assign(self, eventData)
       // Not loading anymore (if it was loading)
       self.isLoading = false
@@ -54,7 +54,6 @@ export const Event = types
       if (!self.address || !self.type) {
         self.isLoading = true
       }
-
       self.unsubscribeId = api.subscribeToEvent(self.id, self.onEventUpdated)
     },
     beforeDestroy: () => {
@@ -112,9 +111,7 @@ const EventStore = types
     },
     get allEvents() {
       // Latest events sorted by timestamp
-      return self.events
-        .values()
-        .sort((e1, e2) => (e1.timestamp > e2.timestamp ? -1 : 1))
+      return self.events.values()
     },
     get hasEvents() {
       return self.events.size > 0
@@ -130,8 +127,8 @@ const EventStore = types
 
     return {
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
-          const currentUserId = getRoot(self).authStore.currentUser.id
-        const events = yield api.loadLatestOpenEvents(currentUserId);
+        const currentUserId = getRoot(self).authStore.currentUser.id
+        const events = yield api.loadLatestOpenEvents(currentUserId)
         events.forEach(addEvent)
       }),
       removeEvent(eventId) {
