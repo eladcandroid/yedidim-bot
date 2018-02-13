@@ -36,10 +36,33 @@ const MessageView = styled.View`
 // TODO Remove token after user logout
 // TODO On notification, save the event data to event store and sync with firebase?
 
+const distanceToString = distance => {
+  if (distance < 1) {
+    return (
+      <FormattedMessage
+        id="Home.event.distance.ms"
+        defaultMessage="{formattedDistance} m"
+        values={{ formattedDistance: (distance * 1000).toFixed(0).toString() }}
+      >
+        {txt => <AlignedText note>{txt}</AlignedText>}
+      </FormattedMessage>
+    )
+  }
+  return (
+    <FormattedMessage
+      id="Home.event.distance.kms"
+      defaultMessage="{formattedDistance} km"
+      values={{ formattedDistance: distance.toFixed(2).toString() }}
+    >
+      {txt => <AlignedText note>{txt}</AlignedText>}
+    </FormattedMessage>
+  )
+}
+
 const EventItem = observer(
   ({
     onPress,
-    event: { id, type, city, more, timestamp, isLoading, isTaken }
+    event: { id, type, city, more, timestamp, isLoading, isTaken, distance }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -81,6 +104,7 @@ const EventItem = observer(
           <FormattedRelative value={timestamp}>
             {relative => <AlignedText note>{relative}</AlignedText>}
           </FormattedRelative>
+          {distance && distanceToString(distance)}
           {isTaken && (
             <FormattedMessage id="Home.event.taken" defaultMessage="TAKEN">
               {txt => (
