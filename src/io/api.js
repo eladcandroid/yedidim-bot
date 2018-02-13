@@ -2,7 +2,6 @@ import firebase from 'firebase'
 import GeoFire from 'geofire'
 import { Notifications, Location } from 'expo'
 import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler'
-import saveUserLocation from 'users/usersDAL'
 
 const EVENTS_SEARCH_RADIUS_KM = 20
 
@@ -141,6 +140,16 @@ export async function signOut() {
   return firebase.auth().signOut()
 }
 
+async function saveUserLocation(userId, latitude, longitude) {
+  try {
+    const geoFire = new GeoFire(firebase.database().ref('user_location'))
+    await geoFire.set(userId, [latitude, longitude])
+  } catch (e) {
+    // TODO: error logging?
+    console.error(e)
+  }
+}
+
 const eventSnapshotToJSON = snapshot => ({
   id: snapshot.key,
   status: snapshot.status,
@@ -254,23 +263,17 @@ async function fetchLatestOpenedEvents() {
 }
 
 export async function loadLatestOpenEvents(userId) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let fetchedEvents
-      const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
-      if (hasLocationPermission) {
-        fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
-      } else {
-        fetchedEvents = await fetchLatestOpenedEvents()
-      }
-      const events = fetchedEvents.map(childSnapshot =>
-        eventSnapshotToJSON(childSnapshot)
-      )
-      resolve(events)
-    } catch (error) {
-      reject(error)
-    }
-  })
+  let fetchedEvents
+  const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
+  if (hasLocationPermission) {
+    fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
+  } else {
+    fetchedEvents = await fetchLatestOpenedEvents()
+  }
+  const events = fetchedEvents.map(childSnapshot =>
+    eventSnapshotToJSON(childSnapshot)
+  )
+  return events
 }
 
 export function subscribeToEvent(eventKey, onChangeCallback) {
