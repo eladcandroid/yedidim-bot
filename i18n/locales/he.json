@@ -92,5 +92,7 @@
   "Authentication.phonenumber": "מספר טלפון",
   "Authentication.id": "ת.ז.",
   "Notification.event.button": "לראות",
-  "Notification.event.text": "התקבל אירוע חדש"
+  "Notification.event.text": "התקבל אירוע חדש",
+  "Home.event.distance.ms": "{formattedDistance} מ׳",
+  "Home.event.distance.kms": "{formattedDistance} ק\"מ"
 }
