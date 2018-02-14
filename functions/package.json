@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "deploy": "firebase deploy --only functions:getVolunters,functions:onUserCreateTrigger,functions:sendExpoFollowerNotification,functions:sendFollowerNotification,functions:setLocation,functions:takeEvent,functions:onEventCreateAddGeo"
+    "deploy": "firebase deploy --only functions:getVolunters,functions:onUserCreateTrigger,functions:sendExpoFollowerNotification,functions:sendFollowerNotification,functions:setLocation,functions:takeEvent,functions:onEventCreateAddGeo,functions:getOpenedEvents"
   },
   "dependencies": {
     "async": "^2.6.0",

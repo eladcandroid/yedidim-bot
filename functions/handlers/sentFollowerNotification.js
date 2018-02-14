@@ -8,7 +8,7 @@ exports.handleUpdateEvent = (event,admin) => {
     console.log(eventData);
 
 	if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
-		console.log('block',eventData.status,previousValue.status);
+		console.log('block',eventData.status);
 		return Promise.resolve('blocked');
 	}
 

@@ -1,3 +1,4 @@
+const GeoFire = require('geofire');
 const Expo = require('expo-server-sdk');
 const Consts = require('./consts');
 const notificationHelper = require('./notificationHelper');
@@ -11,9 +12,21 @@ exports.handleUpdateEvent = (event, admin) => {
     console.log(' new is ' + eventData.status, 'event data ', eventData);
 
 	if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
-		console.log('block',eventData.status,previousValue.status);
+		console.log('blocked',eventData.status);
 		return Promise.resolve('blocked');
 	}
+
+	var usersInRadius = [];
+	let geoFire = new GeoFire(admin.database().ref('/user_location'));
+
+	let geoQuery = geoFire.query({
+        center: [eventData.details.geo.lat, eventData.details.geo.lon],
+        radius: 20
+      });
+
+	  geoQuery.on("key_entered", function(key, location, distance) {
+		usersInRadius.push(key);
+	  });
 
     // Get the list of device notification tokens.
     const getDeviceTokensPromise = admin
@@ -31,11 +44,14 @@ exports.handleUpdateEvent = (event, admin) => {
 			return Promise.resolve(400);
         }
 
+		console.log(usersInRadius);
         console.log('There are', tokens.numChildren(), 'tokens to send notifications to.');
 
 		// Listing all tokens.
         let tokenData = tokens.val();
-        const dataToSend = Object.keys(tokenData).filter(f => Expo.isExpoPushToken(tokenData[f].NotificationToken)).map(function(t) {
+		const dataToSend = Object.keys(tokenData).filter(f => Expo.isExpoPushToken(tokenData[f].NotificationToken)
+			&& (usersInRadius.indexOf(f) > -1))
+			.map(function(t) {
             let objectToSend = {};
             objectToSend.to = tokenData[t].NotificationToken;
             objectToSend.data = {

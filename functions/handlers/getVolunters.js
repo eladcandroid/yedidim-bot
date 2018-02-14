@@ -6,7 +6,7 @@ exports.handleHttp = (req, res,admin) => {
 
     let geoQuery = geoFire.query({
         center: [req.body.latitude, req.body.longtitude],
-        radius: 3000
+        radius: 20
       });
 
     geoQuery.on("key_entered", function(key, location) {
