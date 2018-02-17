@@ -86,7 +86,7 @@ class EventDetails extends Component {
 
   renderAssignedTo() {
 
-    if (this.props.event.status === EventStatus.Assigned){
+    if (this.props.event.status === EventStatus.Assigned && this.props.volunteer){
       return (
         <View>
           <Text style={getTextStyle(styles.fieldName)}>מטופל ע״י</Text>
