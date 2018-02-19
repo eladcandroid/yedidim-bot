@@ -41,7 +41,7 @@ class EventDetails extends Component {
   }
 
   isEventAssignedToCurrentDispatcher() {
-    return this.isEventAssignedToDispatcher() && this.props.event.dispatcher === this.props.dispatcher;
+    return this.isEventAssignedToDispatcher() && this.props.event.dispatcher === this.props.currentDispatcher;
   }
 
   isAllowToHandleEvent() {
@@ -84,13 +84,23 @@ class EventDetails extends Component {
     return `${volunteer.firstName} ${volunteer.lastName} (${volunteer.code}) ${volunteer.phone}`
   }
 
-  renderAssignedTo() {
-
+  renderAssignedToVolunteer() {
     if (this.props.event.status === EventStatus.Assigned && this.props.volunteer){
       return (
         <View>
-          <Text style={getTextStyle(styles.fieldName)}>מטופל ע״י</Text>
+          <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
           <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone.bind(this)}>{this.getVolunteerData()}</Text>
+        </View>
+      )
+    }
+  }
+
+  renderAssignedToDispatcher() {
+    if (this.props.dispatcher){
+      return (
+        <View>
+          <Text style={getTextStyle(styles.fieldName)}>מוקדן</Text>
+          <Text style={getTextStyle(styles.fieldValue)}>{this.props.dispatcher.name}</Text>
         </View>
       )
     }
@@ -106,7 +116,8 @@ class EventDetails extends Component {
         <View style={styles.container}>
           <Text style={getTextStyle(styles.fieldName)}>זמן</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{formatEventTime(event)}</Text>
-          {this.renderAssignedTo()}
+          {this.renderAssignedToVolunteer()}
+          {this.renderAssignedToDispatcher()}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
           <TouchableHighlight onPress={this.openAddressInMaps.bind(this)}>
             <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
@@ -150,9 +161,15 @@ const mapStateToProps = (state, ownProps) => {
   if (!volunteer){
     volunteer = {assignedTo: event.assignedTo};
   }
-  const dispatcher = state.dataSource.user ? state.dataSource.user.id : undefined;
+  let dispatcher = (event && event.dispatcher && state.dataSource.dispatchers) ?
+    state.dataSource.dispatchers.find(dispatcher => dispatcher.id === event.dispatcher)
+    : undefined;
+
+  const currentDispatcher = state.dataSource.user ? state.dataSource.user.id : undefined;
+
   return {
     event,
+    currentDispatcher,
     dispatcher,
     volunteer
   };
@@ -164,7 +181,8 @@ EventDetails.propTypes = {
   updateEventStatus: PropTypes.func,
   takeEvent: PropTypes.func,
   event: PropTypes.object,
-  dispatcher: PropTypes.string,
+  currentDispatcher: PropTypes.string,
+  dispatcher: PropTypes.object,
   volunteer: PropTypes.object
 };
 

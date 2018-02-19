@@ -1,5 +1,8 @@
 import * as firebase from 'firebase';
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_ERROR, SET_LATEST_VERSION } from '../constants/actionTypes';
+import {
+  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS,
+  SET_ERROR, SET_LATEST_VERSION
+} from '../constants/actionTypes';
 import { registerForPushNotifications } from "./notificationsActions";
 import { objectToArray, getInstance } from "../common/utils";
 import { EventStatus } from "../constants/consts";
@@ -164,7 +167,8 @@ function handleSignedInUser(user) {
     dispatch(loadUserData(user));
     dispatch(updateUserVersion(user));
     dispatch(loadEvents());
-    dispatch(loadVolunteers())
+    dispatch(loadVolunteers());
+    dispatch(loadDispatchers());
   });
 }
 
@@ -205,6 +209,7 @@ function loadUserData(user) {
         const data = snapshot.val();
         user.name = data.name;
         user.notifications = data.notifications;
+        user.handleBot = data.handleBot;
         dispatch(setUser(user));
         if (!data.token || !data.notifications){
           dispatch(registerForPushNotifications());
@@ -225,7 +230,7 @@ export function updateUserVersion(user) {
   );
 }
 
-function loadEvents() {
+export function loadEvents(onLoad) {
   return ((dispatch, getState) => {
     firebase.database().ref('/events').orderByChild('isOpen').equalTo(true).once('value')
       .then((snapshot) => {
@@ -238,6 +243,9 @@ function loadEvents() {
           return 0;
         });
         dispatch(setEvents(events));
+        if (onLoad) {
+          onLoad();
+        }
         const timestamp = events.length > 0 ? events[0].timestamp + 1 : 0;
         firebase.database().ref('/events').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
           //In case the event already exists ignore it
@@ -325,6 +333,26 @@ function loadVolunteers() {
   });
 }
 
+function loadDispatchers() {
+  return ((dispatch) => {
+    firebase.database().ref('/dispatchers').once('value')
+      .then((snapshot) => {
+        const dispatchers = objectToArray(snapshot.val()).map(dispatcher => {
+          return {
+            id: dispatcher.key,
+            name: dispatcher.name
+          };
+        });
+        dispatch(setDispatchers(dispatchers));
+      })
+      .catch(err => {
+        if (err) {
+          dispatch(setError('Failed to load data!', err));
+        }
+      });
+  });
+}
+
 function setError(message, err){
   console.log('Error: ' + message, err);
   return {
@@ -372,6 +400,13 @@ function addEvent(event){
     type: ADD_EVENT,
     event,
   };
+}
+
+function setDispatchers(dispatchers){
+  return {
+    type: SET_DISPATCHERS,
+    dispatchers
+  }
 }
 
 function setVolunteers(volunteers){

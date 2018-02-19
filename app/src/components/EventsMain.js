@@ -5,16 +5,21 @@ import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { Button } from 'native-base';
 import { getEventStatus, getTextStyle } from '../common/utils';
 import { EventStatus, ScreenType } from '../constants/consts';
-import EventsList, {EventsListColumn} from './EventsList';
+import EventsList, { EventsListColumn } from './EventsList';
+import { loadEvents } from "../actions/dataSourceActions";
 
 class EventsMain extends Component {
+  componentWillMount() {
+    this.props.registerForRefresh(this.props.handleRefresh);
+  }
+
   addNewEvent() {
     this.props.navigate(ScreenType.EventDetailsEditor);
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.buttonRow}>
           <Button style={styles.button} onPress={this.addNewEvent.bind(this)}>
             <Text style={styles.buttonText}>פתיחת אירוע חדש</Text>
@@ -33,10 +38,18 @@ class EventsMain extends Component {
             columns={[EventsListColumn.Time, EventsListColumn.Case, EventsListColumn.City, EventsListColumn.Source]}
             navigate={this.props.navigate}/>
         </ScrollView>
-      </View>
+      </ScrollView>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleRefresh: (onLoad) => {
+      dispatch(loadEvents(onLoad));
+    }
+  };
+};
 
 const mapStateToProps = (state) => {
   const events = state.dataSource.events;
@@ -46,12 +59,14 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(EventsMain);
+export default connect(mapStateToProps, mapDispatchToProps)(EventsMain);
 
 EventsList.propTypes = {
   newEvents: PropTypes.array,
   activeEvents: PropTypes.array,
-  navigate: PropTypes.func.isRequired
+  navigate: PropTypes.func.isRequired,
+  registerForRefresh: PropTypes.func,
+  handleRefresh: PropTypes.func
 };
 
 const styles = StyleSheet.create({

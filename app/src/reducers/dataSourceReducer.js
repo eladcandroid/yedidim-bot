@@ -1,15 +1,16 @@
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_LATEST_VERSION, SET_ERROR } from "../constants/actionTypes";
+import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_LATEST_VERSION, SET_ERROR } from "../constants/actionTypes";
+import {EventSource} from "../constants/consts";
 
 export function dataSourceReducer(state = {}, action) {
   switch (action.type) {
     case SET_USER: {
-      return Object.assign({}, state, {user: action.user});
+      return Object.assign({}, state, {user: action.user, events: filterBotEvents(action.user, state.events)});
     }
     case REMOVE_USER: {
       return Object.assign({}, state, {user: {}});
     }
     case SET_EVENTS: {
-      return Object.assign({}, state, {events: action.events});
+      return Object.assign({}, state, {events: filterBotEvents(state.user, action.events)});
     }
     case SET_EVENT: {
       let events = [];
@@ -22,7 +23,7 @@ export function dataSourceReducer(state = {}, action) {
         }
         events.push(event);
       });
-      return Object.assign({}, state, {events});
+      return Object.assign({}, state, {events: filterBotEvents(state.user, events)});
     }
     case ADD_EVENT: {
       let events = Object.assign([], state.events);
@@ -34,7 +35,10 @@ export function dataSourceReducer(state = {}, action) {
           return 1;
         return 0;
       });
-      return Object.assign({}, state, {events});
+      return Object.assign({}, state, {events: filterBotEvents(state.user, events)});
+    }
+    case SET_DISPATCHERS: {
+      return Object.assign({}, state, {dispatchers: action.dispatchers});
     }
     case SET_VOLUNTEERS: {
       return Object.assign({}, state, {volunteers: action.volunteers});
@@ -58,4 +62,11 @@ export function dataSourceReducer(state = {}, action) {
     }
   }
   return state;
+}
+
+function filterBotEvents(user, events) {
+  if (!events || !user || !user.id) {
+    return events;
+  }
+  return events.filter(event => event.source !== EventSource.FB_BOT || user.handleBot);
 }

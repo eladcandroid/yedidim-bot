@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { I18nManager, Platform } from 'react-native';
+import { I18nManager, Platform, RefreshControl } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Button, Text, Footer, FooterTab, Icon } from 'native-base';
 import EventsMain from '../components/EventsMain';
 import EventDetails from '../components/EventDetails';
@@ -20,9 +20,24 @@ class MainScreen extends Component
 {
   constructor(props) {
     super(props);
-    this.state = {activeScreen: ScreenType.EventsList, mainScreen: ScreenType.EventsList};
+    this.state = {activeScreen: ScreenType.EventsList, mainScreen: ScreenType.EventsList, refreshing: false};
     this.navigate = this.navigate.bind(this);
     this.back = this.back.bind(this);
+    this.registerForRefresh = this.registerForRefresh.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
+  }
+
+  registerForRefresh(handleRefresh) {
+    this.handleRefresh = handleRefresh;
+  }
+
+  onRefresh() {
+    if (this.handleRefresh) {
+      this.setState({refreshing: true});
+      this.handleRefresh(() => {
+        this.setState({refreshing: false});
+      });
+    }
   }
 
   setActiveScreen(screen) {
@@ -57,8 +72,14 @@ class MainScreen extends Component
           </Body>
           <Right/>
         </Header>
-        <Content>
-          <Component navigate={this.navigate} params={this.state.params}/>
+        <Content refreshControl={this.state.activeScreen === ScreenType.EventsList ?
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+          : undefined}
+        >
+          <Component navigate={this.navigate} params={this.state.params} ref={ref => this.component = ref} registerForRefresh={this.registerForRefresh}/>
         </Content>
         <Footer>
           <FooterTab>
