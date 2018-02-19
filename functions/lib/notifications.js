@@ -20,7 +20,7 @@ module.exports = {
           for (const key in dispatchers) {
             if (dispatchers.hasOwnProperty(key)) {
               let dispatcher = dispatchers[key];
-              if (dispatcher.token) {
+              if (dispatcher.token && dispatcher.handleBot) {
                 tokens.push(dispatcher.token);
               }
             }
