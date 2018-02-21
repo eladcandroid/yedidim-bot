@@ -299,7 +299,7 @@ export function searchEvents(phone, fromDate, toDate) {
         if (phone) {
           events = events.filter(event => event.details['phone number'] === phone);
         }
-        dispatch(setSearchEvents(events.slice(0, 30)));
+        dispatch(setSearchEvents(events));
       })
       .catch(err => {
         if (err) {
