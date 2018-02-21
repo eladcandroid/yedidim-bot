@@ -7,7 +7,7 @@ export const EventCases = [
   {case:9, label:'רכב נעול'},
   {case:2, label:'קומפרסור'},
   {case:4, label:'שמן\\מים\\דלק'},
-  {case:3, label:'דלת נעולה'},
+  {case:3, label:'דלת טרוקה'},
   {case:5, label:'חילוץ'},
   {case:6, label:'קודנית'},
   {case:7, label:'פנצ\'ר (אין רזרבי)'},
