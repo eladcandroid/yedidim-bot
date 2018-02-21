@@ -163,6 +163,7 @@ class EventDetailsEditor extends Component {
             {this.renderEventCasePicker()}
             {this.renderInput('סוג רכב', 'car type')}
             {this.renderInput('פרטים', 'more')}
+            {this.renderInput('פרטים חסויים', 'private_info')}
             {this.renderInput('טלפון', 'phone number', 'numeric')}
             {this.renderInput('שם', 'caller name')}
           </Form>

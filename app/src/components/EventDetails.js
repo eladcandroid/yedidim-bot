@@ -128,6 +128,8 @@ class EventDetails extends Component {
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['car type']}</Text>
           <Text style={getTextStyle(styles.fieldName)}>פרטים</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['more']}</Text>
+          <Text style={getTextStyle(styles.fieldName)}>פרטים חסויים</Text>
+          <Text style={getTextStyle(styles.fieldValue)}>{event.details['private_info']}</Text>
           <Text style={getTextStyle(styles.fieldName)}>טלפון</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['phone number']}</Text>
           <Text style={getTextStyle(styles.fieldName)}>שם</Text>
