@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { I18nManager, Platform, RefreshControl } from 'react-native';
+import { I18nManager, Platform, RefreshControl, BackHandler } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Button, Text, Footer, FooterTab, Icon } from 'native-base';
 import EventsMain from '../components/EventsMain';
 import EventDetails from '../components/EventDetails';
@@ -25,6 +25,23 @@ class MainScreen extends Component
     this.back = this.back.bind(this);
     this.registerForRefresh = this.registerForRefresh.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
+    this.handleHardwareBack = this.handleHardwareBack.bind(this);
+  }
+
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBack);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBack);
+  }
+
+  handleHardwareBack() {
+    if (Screens[this.state.activeScreen].backScreen){
+      this.back();
+      return true;
+    }
+    return false;
   }
 
   registerForRefresh(handleRefresh) {
