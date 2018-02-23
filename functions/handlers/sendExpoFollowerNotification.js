@@ -4,6 +4,7 @@ const Consts = require('./consts');
 const notificationHelper = require('./notificationHelper');
 // Create a new Expo SDK client
 let expo = new Expo();
+let NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000;
 
 exports.handleUpdateEvent = (event, admin) => {
 	let eventData = event.data.val();
@@ -108,8 +109,9 @@ let sendNotificationToCloseByVolunteers = (admin, eventData, notificationTitle, 
                     // Listing all tokens.
                     let usersById = tokens.val();
                     let recipients = Object.keys(usersById)
-                        .filter(id => Expo.isExpoPushToken(usersById[id].NotificationToken)
-                            && (usersInRadius.indexOf(id) > -1));
+                        .filter(userId => Expo.isExpoPushToken(usersById[userId].NotificationToken)
+                            && (usersInRadius.indexOf(userId) > -1)
+                            && !userMutedNotifications(usersById[userId]));
                     const notifications = recipients.map(function (userId) {
                         let token = usersById[userId].NotificationToken;
                         return buildEventNotification(eventData, notificationTitle, token);
@@ -157,5 +159,13 @@ let sendNotifications = (notifications) => {
         }));
     }
     return Promise.all(promises);
+};
+
+let userMutedNotifications = (user) => {
+    if (!user.Muted) {
+        return false;
+    }
+    let millisSinceMuted = new Date().getTime() - user.Muted;
+    return millisSinceMuted < NOTIFICATION_MUTE_EXPIRATION_MILLIS;
 };
 
