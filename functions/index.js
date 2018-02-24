@@ -1,4 +1,6 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
 
 const webhook = require('./handlers/webHookHandler');
 const manage = require('./handlers/manageHandler');
@@ -28,7 +30,6 @@ function getTokens(json) {
   return json.sandbox2;
 }
 
-const admin = require('./lib/admin').init(tokens.firebaseCert, tokens.firebaseConfig);
 const dashbot = require('dashbot')(tokens.dashbot.apiKey).facebook;
 
 //Main http function to handle all webhook calls
@@ -75,4 +76,12 @@ exports.onEventCreateAddGeo = functions.database.ref('/events/{eventId}').onWrit
 
 exports.getOpenedEvents = functions.https.onRequest((req, res) => {
   return openedEvents.handleHttp(req, res, admin);
+});
+
+exports.sendNotificationBySearchRadius = functions.https.onRequest((req, res) => {
+    return sendExpoFollowerNotification.sendNotificationBySearchRadius(req, res, admin);
+});
+
+exports.sendNotificationToRecipient = functions.https.onRequest((req, res) => {
+    return sendExpoFollowerNotification.sendNotificationToRecipient(req, res, admin);
 });
