@@ -46,11 +46,32 @@ async function subscribeToUserInfo(
 
     // User authenticated, subscribe to get updated details
     const callback = snapshot => {
-      if (snapshot && snapshot.val()) {
-        onChangeCallback({
-          id: phoneNumber,
-          ...userSnapshotToJSON(snapshot.val())
-        })
+      let userDoc = snapshot.val()
+      if (snapshot && userDoc) {
+        if (userDoc.EventKey) {
+          firebase
+            .database()
+            .ref('/events/' + userDoc.EventKey)
+            .once('value', eventSnapshot => {
+              let assignedEvent = eventSnapshot.val()
+              if (!assignedEvent || assignedEvent.status !== 'assigned') {
+                userDoc.EventKey = null
+                firebase
+                  .database()
+                  .ref('/volunteer/' + phoneNumber + '/EventKey')
+                  .set(null)
+              }
+              onChangeCallback({
+                id: phoneNumber,
+                ...userSnapshotToJSON(userDoc)
+              })
+            })
+        } else {
+          onChangeCallback({
+            id: phoneNumber,
+            ...userSnapshotToJSON(userDoc)
+          })
+        }
       } else {
         onErrorCallback('volunteer-not-registered')
       }
