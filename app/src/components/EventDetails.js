@@ -88,7 +88,7 @@ class EventDetails extends Component {
       </View>,
       <View key="row2" style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
         <Button style={styles.button} onPress={this.editEvent}><Text style={styles.buttonText}>ערוך</Text></Button>
-        <Button style={styles.button} onPress={this.sendNotification}><Text style={styles.buttonText}>שלח התראה</Text></Button>
+        <Button style={styles.button} onPress={this.sendNotification} disabled={!!this.props.event.assignedTo}><Text style={styles.buttonText}>שלח התראה</Text></Button>
       </View>
       ]
     );

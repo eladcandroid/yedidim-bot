@@ -8,6 +8,7 @@ import { getTextStyle } from "../common/utils";
 import { EventCases, EventStatus, EventSource, ScreenType } from "../constants/consts";
 import { createEvent, updateEvent } from "../actions/dataSourceActions";
 import { geocodeAddress } from "../actions/geocodingActions";
+import { sendNotification } from "../actions/notificationsActions";
 
 class KeyboardAwareScrollViewComponent extends React.Component {
   render() {
@@ -77,6 +78,7 @@ class EventDetailsEditor extends Component {
     }
     this.props.event.details = this.getDetailsFromState();
     this.props.updateEvent(this.props.event);
+    this.props.sendNotification(this.props.event.key, this.props.event.assignedTo);
     this.props.navigate(ScreenType.EventsList);
   }
 
@@ -134,7 +136,6 @@ class EventDetailsEditor extends Component {
         {text: 'אישור', onPress: () => {this.setState({error: undefined})}},
       ]
     )
-
   }
 
   renderEventCasePicker() {
@@ -204,6 +205,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateEvent: (event) => {
       dispatch(updateEvent(event));
+    },
+    sendNotification: (key, volunteer) => {
+      dispatch(sendNotification(key, undefined, volunteer));
     }
   };
 };
@@ -224,6 +228,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetailsEditor);
 EventDetailsEditor.propTypes = {
   createEvent: PropTypes.func,
   updateEvent: PropTypes.func,
+  sendNotification: PropTypes.func,
   user: PropTypes.object
 };
 

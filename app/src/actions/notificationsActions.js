@@ -27,3 +27,9 @@ export function registerForPushNotifications() {
     dispatch(storeNotificationToken(token));
   })
 }
+
+export function sendNotification(eventKey, distance, volunteer)  {
+  return (dispatch) => {
+    console.log(eventKey, distance, volunteer);
+  }
+}
