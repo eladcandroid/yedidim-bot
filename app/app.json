@@ -4,7 +4,7 @@
     "description": "ידידים - מוקדן",
     "slug": "dispatcher",
     "sdkVersion": "25.0.0",
-    "version": "0.9.4",
+    "version": "0.9.5",
     "orientation": "portrait",
     "icon": "./assets/images/app-icon.png",
     "splash": {
@@ -14,7 +14,7 @@
       "supportsTablet": false
     },
     "extra": {
-      "_instance": "sandbox2"
+      "instance": "sandbox2"
     },
     "androidStatusBar": {
       "backgroundColor": "#4451B9",

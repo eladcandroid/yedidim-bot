@@ -123,6 +123,27 @@ export function createEvent(event) {
   });
 }
 
+export function updateEvent(event) {
+  return ((dispatch, getState) => {
+    const dispatcher = getState().dataSource.user.id;
+    firebase.database().ref('events/' + event.key).transaction(currentEvent => {
+      currentEvent.details = event.details;
+      currentEvent.dispatcher = dispatcher;
+      return currentEvent;
+    })
+      .then(result => {
+        if (!result.committed) {
+          dispatch(setError('האירוע כבר בטיפול'));
+        } else if (result.snapshot) {
+          dispatch(setEvent(result.snapshot.val()));
+        }
+      })
+      .catch(err => {
+        dispatch(setError('Failed to update!', err));
+      })
+  });
+}
+
 export function takeEvent(event) {
   return ((dispatch, getState) => {
     const dispatcher = getState().dataSource.user.id;

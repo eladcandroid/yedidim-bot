@@ -8,6 +8,19 @@ import { EventSource, EventStatus, ScreenType } from "../constants/consts";
 import { updateEventStatus, takeEvent } from "../actions/dataSourceActions";
 
 class EventDetails extends Component {
+  constructor(props){
+    super(props);
+    this.copyEventDetailsToClipboard = this.copyEventDetailsToClipboard.bind(this);
+    this.copyUserDetailsToClipboard = this.copyUserDetailsToClipboard.bind(this);
+    this.takeEvent = this.takeEvent.bind(this);
+    this.sendEvent = this.sendEvent.bind(this);
+    this.completeEvent = this.completeEvent.bind(this);
+    this.openVolunteerPhone = this.openVolunteerPhone.bind(this);
+    this.openAddressInMaps = this.openAddressInMaps.bind(this);
+    this.editEvent = this.editEvent.bind(this);
+    this.sendNotification = this.sendNotification.bind(this);
+  }
+
   openAddressInMaps() {
     Linking.openURL(getGoogleMapsUrl(this.props.event));
   }
@@ -20,6 +33,14 @@ class EventDetails extends Component {
   copyUserDetailsToClipboard() {
     Clipboard.setString(getUserDetailsText(this.props.event));
     this.props.navigate(ScreenType.EventsList);
+  }
+
+  editEvent() {
+    this.props.navigate(ScreenType.EventDetailsEditor, {key: this.props.event.key});
+  }
+
+  sendNotification() {
+
   }
 
   sendEvent() {
@@ -52,18 +73,24 @@ class EventDetails extends Component {
     const event = this.props.event;
     const status = getEventStatus(event);
     return (
-      <View style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
-        <Button style={styles.button} onPress={this.copyEventDetailsToClipboard.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>העתק אירוע</Text></Button>
-        <Button style={styles.button} onPress={this.copyUserDetailsToClipboard.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>העתק טלפון</Text></Button>
+      [
+      <View key="row1" style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
+        <Button style={styles.button} onPress={this.copyEventDetailsToClipboard} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>העתק אירוע</Text></Button>
+        <Button style={styles.button} onPress={this.copyUserDetailsToClipboard} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>העתק טלפון</Text></Button>
         {status === EventStatus.Submitted ?
           !this.isEventAssignedToDispatcher() ?
-            <Button style={styles.button} onPress={this.takeEvent.bind(this)}><Text style={styles.buttonText}>טפל</Text></Button>
+            <Button style={styles.button} onPress={this.takeEvent}><Text style={styles.buttonText}>טפל</Text></Button>
             :
-            <Button style={styles.button} onPress={this.sendEvent.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>הועבר</Text></Button>
+            <Button style={styles.button} onPress={this.sendEvent} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>הועבר</Text></Button>
           :
-          <Button style={styles.button} onPress={this.completeEvent.bind(this)} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>טופל</Text></Button>
+          <Button style={styles.button} onPress={this.completeEvent} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>טופל</Text></Button>
         }
+      </View>,
+      <View key="row2" style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
+        <Button style={styles.button} onPress={this.editEvent}><Text style={styles.buttonText}>ערוך</Text></Button>
+        <Button style={styles.button} onPress={this.sendNotification}><Text style={styles.buttonText}>שלח התראה</Text></Button>
       </View>
+      ]
     );
   }
 
@@ -89,7 +116,7 @@ class EventDetails extends Component {
       return (
         <View>
           <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
-          <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone.bind(this)}>{this.getVolunteerData()}</Text>
+          <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone}>{this.getVolunteerData()}</Text>
         </View>
       )
     }
@@ -119,7 +146,7 @@ class EventDetails extends Component {
           {this.renderAssignedToVolunteer()}
           {this.renderAssignedToDispatcher()}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
-          <TouchableHighlight onPress={this.openAddressInMaps.bind(this)}>
+          <TouchableHighlight onPress={this.openAddressInMaps}>
             <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
           </TouchableHighlight>
           <Text style={getTextStyle(styles.fieldName)}>בעיה</Text>

@@ -6,11 +6,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Picker, Form, Item, Label, Input, Button } from 'native-base';
 import { getTextStyle } from "../common/utils";
 import { EventCases, EventStatus, EventSource, ScreenType } from "../constants/consts";
-import { createEvent } from "../actions/dataSourceActions";
+import { createEvent, updateEvent } from "../actions/dataSourceActions";
 import { geocodeAddress } from "../actions/geocodingActions";
 
 class KeyboardAwareScrollViewComponent extends React.Component {
-
   render() {
     if (Platform.OS === 'ios') {
       return (
@@ -32,31 +31,52 @@ class EventDetailsEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {address: undefined, geo: undefined, case: 8, street_number: 0, needToValidateAddress: false};
-    this.updateEvent = this.updateEvent.bind(this);
+    this.updateEventData = this.updateEventData.bind(this);
     this.validateAddress = this.validateAddress.bind(this);
+    this.createNewEvent = this.createNewEvent.bind(this);
+    this.updateExistingEvent = this.updateExistingEvent.bind(this);
   }
 
-  updateEvent(field, value) {
+  componentWillMount() {
+      if (this.props.event) {
+        this.setState(this.props.event.details);
+      }
+  }
+
+  updateEventData(field, value) {
     if (field === 'address'){
       this.setState({geo: undefined, needToValidateAddress: true});
     }
-    this.setState({[field]: value});
+    this.setState({[field]: value, modified: true});
   }
 
+  getDetailsFromState() {
+    let details = Object.assign({}, this.state);
+    delete details['needToValidateAddress'];
+    delete details['error'];
+    delete details['modified'];
+    return details;
+  }
   createNewEvent() {
     if (!this.validateEventData()){
       return;
     }
-    let details = Object.assign({}, this.state);
-    delete details['needToValidateAddress'];
-    delete details['error'];
     const event = {
       status: EventStatus.Sent,
       source: EventSource.App,
       dispatcher: this.props.user.id,
-      details
+      details: this.getDetailsFromState()
     };
     this.props.createEvent(event);
+    this.props.navigate(ScreenType.EventsList);
+  }
+
+  updateExistingEvent() {
+    if (!this.validateEventData()){
+      return;
+    }
+    this.props.event.details = this.getDetailsFromState();
+    this.props.updateEvent(this.props.event);
     this.props.navigate(ScreenType.EventsList);
   }
 
@@ -67,7 +87,6 @@ class EventDetailsEditor extends Component {
     }
     this.setState({needToValidateAddress: false});
     const location = await geocodeAddress(this.state.address);
-    console.log(location);
     if (!location){
       this.setState({error: {message: 'כתובת לא חוקית', field: 'address', needToValidateAddress: true}});
       return false;
@@ -144,7 +163,7 @@ class EventDetailsEditor extends Component {
         <Input
           value={this.state[field]}
           keyboardType={type}
-          onChangeText={(value) => {this.updateEvent(field, type === 'numeric' ? value.trim() : value)}}/>
+          onChangeText={(value) => {this.updateEventData(field, type === 'numeric' ? value.trim() : value)}}/>
       </Item>
     );
   }
@@ -167,8 +186,10 @@ class EventDetailsEditor extends Component {
             {this.renderInput('טלפון', 'phone number', 'numeric')}
             {this.renderInput('שם', 'caller name')}
           </Form>
-          <Button full style={styles.createButton} onPress={this.createNewEvent.bind(this)}>
-            <Text style={styles.buttonText}>פתח אירוע</Text>
+          <Button full style={styles.createButton}
+                  disabled={this.props.event.key && !this.state.modified}
+                  onPress={this.props.event.key ? this.updateExistingEvent : this.createNewEvent}>
+            <Text style={styles.buttonText}>{this.props.event.key ? 'עדכן' : 'פתח'} אירוע </Text>
           </Button>
         </View>
       </KeyboardAwareScrollViewComponent>
@@ -180,13 +201,20 @@ const mapDispatchToProps = (dispatch) => {
   return {
     createEvent: (event) => {
       dispatch(createEvent(event));
+    },
+    updateEvent: (event) => {
+      dispatch(updateEvent(event));
     }
   };
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  let event = state.dataSource.events && ownProps.params ? state.dataSource.events.find(event => event.key === ownProps.params.key) : undefined;
+  if (!event) {
+    event = {status: EventStatus.Draft, details: {}};
+  }
   return {
-    event: {status: EventStatus.Draft, details: {}},
+    event,
     user: state.dataSource.user
   };
 };
@@ -195,6 +223,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetailsEditor);
 
 EventDetailsEditor.propTypes = {
   createEvent: PropTypes.func,
+  updateEvent: PropTypes.func,
   user: PropTypes.object
 };
 
