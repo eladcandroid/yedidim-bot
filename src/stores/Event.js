@@ -24,7 +24,7 @@ export const Event = types
     get store() {
       return getParent(self, 2)
     },
-    get isReadyForAssignment() { 
+    get isReadyForAssignment() {
       return self.status === 'sent' || self.status === 'submitted'
     },
     get isAssigned() {
@@ -114,20 +114,30 @@ const EventStore = types
     },
     get hasEvents() {
       return self.events.size > 0
+    },
+    get sortedEventsByStatusAndTimestamp() {
+      return self.allEvents.sort((a, b) => {
+        if (a.isTaken == b.isTaken) {
+          return a.timestamp - b.timestamp
+        } else {
+          // display taken events last
+          return a.isTaken ? 1 : -1
+        }
+      })
     }
   }))
   .actions(self => {
     function addEvent(eventJSON) {
       if (!self.events.get(eventJSON.id)) {
-        self.events.set(eventJSON.id, eventJSON);
+        self.events.put(eventJSON)
       }
     }
 
     return {
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
-        const currentUserId = getRoot(self).authStore.currentUser.id;
-        const events = yield api.loadLatestOpenEvents(currentUserId);
-        events.forEach(addEvent);
+        const currentUserId = getRoot(self).authStore.currentUser.id
+        const events = yield api.loadLatestOpenEvents(currentUserId)
+        events.forEach(addEvent)
       }),
       removeEvent(eventId) {
         destroy(self.events.get(eventId))

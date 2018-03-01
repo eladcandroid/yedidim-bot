@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
-import { computed } from 'mobx'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
 import {
   Button,
@@ -82,100 +81,88 @@ const EventItem = observer(
         <Right />
       </ListItem>
     ) : (
-        <ListItem
-          avatar
-          onPress={() => {
-            onPress(id)
-          }}
-        >
-          <Left>
-            <Thumbnail small source={eventTypeImg(type)} />
-          </Left>
-          <Body>
-            <FormattedMessage {...eventTypeMessage(type) }>
-              {eventTypeTxt => (
-                <AlignedText>
-                  {eventTypeTxt} - {city}
+      <ListItem
+        avatar
+        onPress={() => {
+          onPress(id)
+        }}
+      >
+        <Left>
+          <Thumbnail small source={eventTypeImg(type)} />
+        </Left>
+        <Body>
+          <FormattedMessage {...eventTypeMessage(type)}>
+            {eventTypeTxt => (
+              <AlignedText>
+                {eventTypeTxt} - {city}
+              </AlignedText>
+            )}
+          </FormattedMessage>
+          <AlignedText note>{more}</AlignedText>
+        </Body>
+        <Right>
+          <FormattedRelative value={timestamp}>
+            {relative => <AlignedText note>{relative}</AlignedText>}
+          </FormattedRelative>
+          {distance && distanceToString(distance)}
+          {isTaken && (
+            <FormattedMessage id="Home.event.taken" defaultMessage="TAKEN">
+              {txt => (
+                <AlignedText
+                  note
+                  style={{
+                    padding: 3,
+                    marginTop: 3,
+                    backgroundColor: 'red',
+                    color: 'white',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {txt}
                 </AlignedText>
               )}
             </FormattedMessage>
-            <AlignedText note>{more}</AlignedText>
-          </Body>
-          <Right>
-            <FormattedRelative value={timestamp}>
-              {relative => <AlignedText note>{relative}</AlignedText>}
-            </FormattedRelative>
-            {distance && distanceToString(distance)}
-            {isTaken && (
-              <FormattedMessage id="Home.event.taken" defaultMessage="TAKEN">
-                {txt => (
-                  <AlignedText
-                    note
-                    style={{
-                      padding: 3,
-                      marginTop: 3,
-                      backgroundColor: 'red',
-                      color: 'white',
-                      fontWeight: 'bold'
-                    }}
-                  >
-                    {txt}
-                  </AlignedText>
-                )}
-              </FormattedMessage>
-            )}
-          </Right>
-        </ListItem>
-      )
+          )}
+        </Right>
+      </ListItem>
+    )
 )
 
 @observer
 class HomeScreen extends Component {
-
-  @computed get sortedEvents() {
-    return this.props.eventStore.allEvents.sort((a, b) => {
-      if (a.isTaken == b.isTaken) {
-        return a.timestamp - b.timestamp;
-      } else {
-        // display taken events last
-        return a.isTaken ? 1 : -1;
-      }
-    });
-  }
-
   static navigationOptions = ({
     navigation,
     screenProps: { toggleMute, isMuted }
   }) => ({
-      header: (
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => {
-                trackEvent('Navigation', { page: 'Sidebar' })
-                navigation.navigate('DrawerOpen')
-              }}
-            >
-              <Icon name="menu" />
-            </Button>
-          </Left>
-          <Body>
-            <FormattedMessage id="Home.title" defaultMessage="Home">
-              {txt => <Title>{txt}</Title>}
-            </FormattedMessage>
-          </Body>
-          <Right>
-            <Button transparent onPress={toggleMute}>
-              <Icon
-                style={isMuted ? { color: 'red' } : {}}
-                name={`ios-notifications${isMuted ? '-off' : ''}`}
-              />
-            </Button>
-          </Right>
-        </Header>
-      )
-    })
+    header: (
+      <Header>
+        <Left>
+          <Button
+            transparent
+            onPress={() => {
+              trackEvent('Navigation', { page: 'Sidebar' })
+              navigation.navigate('DrawerOpen')
+            }}
+          >
+            <Icon name="menu" />
+          </Button>
+        </Left>
+        <Body>
+          <FormattedMessage id="Home.title" defaultMessage="Home">
+            {txt => <Title>{txt}</Title>}
+          </FormattedMessage>
+        </Body>
+        <Right>
+          <Button transparent onPress={toggleMute}>
+            <Icon
+              style={isMuted ? { color: 'red' } : {}}
+              name={`ios-notifications${isMuted ? '-off' : ''}`}
+            />
+          </Button>
+        </Right>
+      </Header>
+    )
+  })
 
   state = {
     refreshing: false
@@ -201,8 +188,9 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const hasEvents = this.props.eventStore.hasEvents;
-    const { refreshing } = this.state;
+    const hasEvents = this.props.eventStore.hasEvents
+    const sortedEvents = this.props.eventStore.sortedEventsByStatusAndTimestamp
+    const { refreshing } = this.state
 
     return (
       <Container>
@@ -217,7 +205,7 @@ class HomeScreen extends Component {
         >
           {hasEvents && (
             <List
-              dataArray={this.sortedEvents}
+              dataArray={sortedEvents}
               renderRow={event => (
                 <EventItem event={event} onPress={this.handleEventItemPress} />
               )}
