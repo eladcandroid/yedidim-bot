@@ -44,6 +44,15 @@ class EventDetailsEditor extends Component {
       }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.event && nextProps.event.details !== this.props.event.details) {
+      if (this.state.modified){
+        this.setState({error: {message: 'אירוע שונה ע״י מוקדן אחר'}, modified: false});
+      }
+      this.setState(nextProps.event.details);
+    }
+  }
+
   updateEventData(field, value) {
     if (field === 'address'){
       this.setState({geo: undefined, needToValidateAddress: true});
@@ -148,7 +157,7 @@ class EventDetailsEditor extends Component {
         itemTextStyle={getTextStyle(styles.pickerItem)}
         textStyle={getTextStyle(styles.pickerItem)}
         selectedValue={this.state.case}
-        onValueChange={(value) => this.setState({case: value})}
+        onValueChange={(value) => this.setState({case: value, modified: true})}
       >
         {EventCases.map((eventCase) => {
           return (<Picker.Item label={eventCase.label} value={eventCase.case} key={eventCase.case}/>);
@@ -206,8 +215,8 @@ const mapDispatchToProps = (dispatch) => {
     updateEvent: (event) => {
       dispatch(updateEvent(event));
     },
-    sendNotification: (key, volunteer) => {
-      dispatch(sendNotification(key, undefined, volunteer));
+    sendNotification: (eventKey, volunteer) => {
+      dispatch(sendNotification(eventKey, undefined, volunteer));
     }
   };
 };

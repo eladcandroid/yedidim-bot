@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ScrollView, View, Text, Clipboard, TouchableHighlight, Linking, StyleSheet, I18nManager } from 'react-native';
 import { Button } from 'native-base';
+import { Prompt } from './Prompt';
 import { getTextStyle, formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
 import { EventSource, EventStatus, ScreenType } from "../constants/consts";
 import { updateEventStatus, takeEvent } from "../actions/dataSourceActions";
+import { sendNotification } from "../actions/notificationsActions";
 
 class EventDetails extends Component {
   constructor(props){
     super(props);
+    this.state = {promptNotification: false};
     this.copyEventDetailsToClipboard = this.copyEventDetailsToClipboard.bind(this);
     this.copyUserDetailsToClipboard = this.copyUserDetailsToClipboard.bind(this);
     this.takeEvent = this.takeEvent.bind(this);
@@ -18,7 +21,7 @@ class EventDetails extends Component {
     this.openVolunteerPhone = this.openVolunteerPhone.bind(this);
     this.openAddressInMaps = this.openAddressInMaps.bind(this);
     this.editEvent = this.editEvent.bind(this);
-    this.sendNotification = this.sendNotification.bind(this);
+    this.openNotificationPrompt = this.openNotificationPrompt.bind(this);
   }
 
   openAddressInMaps() {
@@ -39,8 +42,17 @@ class EventDetails extends Component {
     this.props.navigate(ScreenType.EventDetailsEditor, {key: this.props.event.key});
   }
 
-  sendNotification() {
+  openNotificationPrompt() {
+    this.setState({promptNotification : true})
+  }
 
+  sendNotification(distance) {
+    distance = parseInt(distance);
+    if (isNaN(distance)){
+      return;
+    }
+    this.props.sendNotification(this.props.event.key, distance);
+    this.setState({promptNotification : false})
   }
 
   sendEvent() {
@@ -87,8 +99,8 @@ class EventDetails extends Component {
         }
       </View>,
       <View key="row2" style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
+        <Button style={styles.button} onPress={this.openNotificationPrompt} disabled={!!this.props.event.assignedTo}><Text style={styles.buttonText}>שלח התראה</Text></Button>
         <Button style={styles.button} onPress={this.editEvent}><Text style={styles.buttonText}>ערוך</Text></Button>
-        <Button style={styles.button} onPress={this.sendNotification} disabled={!!this.props.event.assignedTo}><Text style={styles.buttonText}>שלח התראה</Text></Button>
       </View>
       ]
     );
@@ -163,6 +175,15 @@ class EventDetails extends Component {
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['caller name']}</Text>
           {this.renderButtonsRow()}
         </View>
+        <Prompt
+          title='הכנס מרחק בק״מ'
+          defaultValue="5"
+          visible={this.state.promptNotification}
+          submitText='שלח'
+          cancelText='בטל'
+          onSubmit={(distance) => this.sendNotification(distance)}
+          onCancel={() => this.setState({promptNotification: false})}
+        />
       </ScrollView>
     );
   }
@@ -175,6 +196,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     takeEvent: (event) => {
       dispatch(takeEvent(event));
+    },
+    sendNotification: (eventKey, distance) => {
+      dispatch(sendNotification(eventKey, distance));
     }
   };
 };
@@ -209,6 +233,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 EventDetails.propTypes = {
   updateEventStatus: PropTypes.func,
   takeEvent: PropTypes.func,
+  sendNotification: PropTypes.func,
   event: PropTypes.object,
   currentDispatcher: PropTypes.string,
   dispatcher: PropTypes.object,
