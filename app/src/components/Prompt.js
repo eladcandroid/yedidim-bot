@@ -19,7 +19,7 @@ export class Prompt extends Component {
                <Input style={styles.input}
                  onChangeText={(value) => this.setState({value})}
                  keyboardType="numeric"
-                 autoFocus={true}
+                 autoFocus={false}
                  returnKeyType="send"
                  onSubmitEditing={() => this.props.onSubmit(this.state.value)}
                  value={this.state.value}/>
@@ -27,11 +27,11 @@ export class Prompt extends Component {
               <View style={styles.buttons}>
                 <TouchableHighlight style={styles.button} underlayColor="#f1f1f1"
                                     onPress={() => this.props.onSubmit(this.state.value)}>
-                  <Text style={styles.buttonText}>{this.props.submitButtonText ? this.props.submitButtonText : 'אשר'}</Text>
+                  <Text style={styles.buttonText}>{this.props.submitText ? this.props.submitText : 'אשר'}</Text>
                 </TouchableHighlight>
                 <View style={styles.buttonsDivider}/>
                 <TouchableHighlight style={styles.button} underlayColor="#f1f1f1" onPress={this.props.onCancel}>
-                  <Text style={styles.buttonText}>{this.props.cancelButtonText ? this.props.cancelButtonText : 'בטל'}</Text>
+                  <Text style={styles.buttonText}>{this.props.cancelText ? this.props.cancelText : 'בטל'}</Text>
                 </TouchableHighlight>
               </View>
             </View>

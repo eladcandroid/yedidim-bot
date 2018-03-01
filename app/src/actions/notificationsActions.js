@@ -1,5 +1,5 @@
 import { Permissions, Notifications } from 'expo';
-import { storeNotificationToken } from "./dataSourceActions";
+import { storeNotificationToken, setError, getFunctionsUrl } from "./dataSourceActions";
 
 export function registerForPushNotifications() {
   return (async dispatch => {
@@ -30,6 +30,27 @@ export function registerForPushNotifications() {
 
 export function sendNotification(eventKey, distance, volunteer)  {
   return (dispatch) => {
-    console.log(eventKey, distance, volunteer);
+    const url = getFunctionsUrl() + '/' + (volunteer ? 'sendNotificationToRecipient' : 'sendNotificationBySearchRadius');
+    const params = volunteer ?
+      {"recipient": volunteer, "eventId" : eventKey}
+      :
+      {"searchRadius": distance, "eventId" : eventKey};
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params)
+    })
+      .then(response => {
+        if (!response.ok) {
+          dispatch(setError("שליחת הודעה נכשלה"));
+        }
+      })
+      .catch((error) => {
+        dispatch(setError("שליחת הודעה נכשלה", error));
+      });
   }
 }

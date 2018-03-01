@@ -13,6 +13,7 @@ const firebaseConfig = {
     authDomain: "yedidim-sandbox.firebaseapp.com",
     databaseURL: "https://yedidim-sandbox.firebaseio.com",
     projectId: "yedidim-sandbox",
+    functionsURL: "https://us-central1-yedidim-sandbox.cloudfunctions.net",
     storageBucket: "yedidim-sandbox.appspot.com",
     messagingSenderId: "918819260524"
   },
@@ -21,6 +22,7 @@ const firebaseConfig = {
     authDomain: "yedidim-sandbox-2.firebaseapp.com",
     databaseURL: "https://yedidim-sandbox-2.firebaseio.com",
     projectId: "yedidim-sandbox-2",
+    functionsURL: "https://us-central1-yedidim-sandbox-2.cloudfunctions.net",
     storageBucket: "yedidim-sandbox-2.appspot.com",
     messagingSenderId: "1011917548573"
   },
@@ -28,6 +30,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyC6bf7YfKoompBlyjw382AJZOzTvLaY7P0",
     authDomain: "yedidim-production.firebaseapp.com",
     databaseURL: "https://yedidim-production.firebaseio.com",
+    functionsURL: "https://us-central1-yedidim-production.cloudfunctions.net",
     projectId: "yedidim-production",
     storageBucket: "yedidim-production.appspot.com",
     messagingSenderId: "33558411934"
@@ -36,6 +39,10 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig[getInstance()]);
+
+export function getFunctionsUrl() {
+  return firebaseConfig[getInstance()].functionsURL;
+}
 
 export function checkUserAuth() {
   return (dispatch => {
@@ -374,7 +381,7 @@ function loadDispatchers() {
   });
 }
 
-function setError(message, err){
+export function setError(message, err){
   console.log('Error: ' + message, err);
   return {
     type: SET_ERROR,
