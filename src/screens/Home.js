@@ -183,12 +183,13 @@ class HomeScreen extends Component {
 
   handleRefresh = async () => {
     this.setState(() => ({ refreshing: true }))
-    await this.props.loadLatestOpenEvents()
+    await this.props.eventStore.loadLatestOpenEvents()
     this.setState(() => ({ refreshing: false }))
   }
 
   render() {
-    const { hasEvents, allEvents } = this.props
+    const hasEvents = this.props.eventStore.hasEvents
+    const sortedEvents = this.props.eventStore.sortedEventsByStatusAndTimestamp
     const { refreshing } = this.state
 
     return (
@@ -204,7 +205,7 @@ class HomeScreen extends Component {
         >
           {hasEvents && (
             <List
-              dataArray={allEvents}
+              dataArray={sortedEvents}
               renderRow={event => (
                 <EventItem event={event} onPress={this.handleEventItemPress} />
               )}
@@ -229,7 +230,5 @@ class HomeScreen extends Component {
 
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser,
-  hasEvents: stores.eventStore.hasEvents,
-  allEvents: stores.eventStore.allEvents,
-  loadLatestOpenEvents: stores.eventStore.loadLatestOpenEvents
+  eventStore: stores.eventStore
 }))(HomeScreen)

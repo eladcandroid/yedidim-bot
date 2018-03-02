@@ -110,16 +110,24 @@ const EventStore = types
       return self.events.get(eventId)
     },
     get allEvents() {
-      // Latest events sorted by timestamp
       return self.events.values()
     },
     get hasEvents() {
       return self.events.size > 0
+    },
+    get sortedEventsByStatusAndTimestamp() {
+      return self.allEvents.sort((a, b) => {
+        if (a.isTaken == b.isTaken) {
+          return a.timestamp - b.timestamp
+        } else {
+          // display taken events last
+          return a.isTaken ? 1 : -1
+        }
+      })
     }
   }))
   .actions(self => {
     function addEvent(eventJSON) {
-      // If no event was added, add new to store
       if (!self.events.get(eventJSON.id)) {
         self.events.put(eventJSON)
       }
