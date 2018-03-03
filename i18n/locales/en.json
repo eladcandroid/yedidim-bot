@@ -1,5 +1,6 @@
 {
   "Event.description": "Description",
+  "Event.privateInfo": "Private Info",
   "Event.location": "Location",
   "Event.caller": "Name",
   "Event.phone": "Phone",

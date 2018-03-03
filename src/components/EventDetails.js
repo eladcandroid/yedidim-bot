@@ -34,6 +34,7 @@ const EventDetails = ({
     more,
     address,
     phone,
+    privateInfo,
     carType,
     isAssigned
   },
@@ -96,6 +97,11 @@ const EventDetails = ({
         {isAssigned && (
           <FormattedMessage id="Event.phone" defaultMessage="Phone">
             {label => <TextFieldRow label={label} value={phone} />}
+          </FormattedMessage>
+        )}
+        {isAssigned && (
+          <FormattedMessage id="Event.privateInfo" defaultMessage="Private Info">
+            {label => <TextFieldRow label={label} value={privateInfo} />}
           </FormattedMessage>
         )}
         {isAssigned && (

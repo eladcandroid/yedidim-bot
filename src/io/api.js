@@ -164,6 +164,7 @@ const eventSnapshotToJSON = snapshot => ({
   lon: snapshot.details.geo.lon,
   more: snapshot.details.more,
   phone: snapshot.details['phone number'],
+  privateInfo: snapshot.details.private_info,
   distance: snapshot.distance
 })
 
