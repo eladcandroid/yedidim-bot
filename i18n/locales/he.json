@@ -1,5 +1,6 @@
 {
   "Event.description": "תיאור",
+  "Event.privateInfo": "מידע חסוי",
   "Event.location": "מקום",
   "Event.caller": "שֵׁם מזעיק הסיוע",
   "Event.phone": "טלפון",

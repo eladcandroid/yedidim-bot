@@ -14,6 +14,7 @@ export const Event = types
     lon: types.maybe(types.number),
     more: types.maybe(types.string),
     phone: types.maybe(types.string),
+    privateInfo: types.maybe(types.string),
     status: types.maybe(types.string),
     assignedTo: types.maybe(types.string),
     timestamp: types.maybe(types.Date),
