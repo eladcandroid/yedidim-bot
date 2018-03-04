@@ -178,17 +178,17 @@ export function takeEvent(event) {
 export function updateEventStatus(event, status) {
   return ((dispatch, getState) => {
     const dispatcher = getState().dataSource.user.id;
-    const updatedEvent = Object.assign({}, event, {status, dispatcher})
+    const updatedEvent = Object.assign({}, event, {status, dispatcher});
     
-    const updates = {}
+    const updates = {};
     
     if(status === EventStatus.Completed) {
       // If status is completed, we need to remove assignment from user
-      updatedEvent.assignedTo = null
-      updates[`volunteer/${event.assignedTo}/EventKey`] = null
+      updatedEvent.assignedTo = null;
+      updates[`volunteer/${event.assignedTo}/EventKey`] = null;
     }
     
-    updates[`events/${event.key}`] = updatedEvent
+    updates[`events/${event.key}`] = updatedEvent;
     
     firebase.database().ref().update(updates, (err) => {
       if (err) {
