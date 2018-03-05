@@ -179,7 +179,18 @@ export function updateEventStatus(event, status) {
   return ((dispatch, getState) => {
     const dispatcher = getState().dataSource.user.id;
     const updatedEvent = Object.assign({}, event, {status, dispatcher});
-    firebase.database().ref('events/' + event.key).set(updatedEvent, (err) => {
+    
+    const updates = {};
+    
+    if(status === EventStatus.Completed) {
+      // If status is completed, we need to remove assignment from user
+      updatedEvent.assignedTo = null;
+      updates[`volunteer/${event.assignedTo}/EventKey`] = null;
+    }
+    
+    updates[`events/${event.key}`] = updatedEvent;
+    
+    firebase.database().ref().update(updates, (err) => {
       if (err) {
         dispatch(setError('Failed to update!', err));
       } else {
