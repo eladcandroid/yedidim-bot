@@ -10,4 +10,6 @@ exports.EventCases = [
     'אחר',
     'רכב נעול'
     ];
+
+exports.NOTIFICATION_SEARCH_RADIUS_KM = 5;
   
