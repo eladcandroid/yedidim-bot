@@ -168,7 +168,7 @@ class EventScreen extends Component {
                   transparent
                   onPress={() => {
                     trackEvent('Navigation', { page: 'Home' })
-                    navigation.goBack()
+                    navigation.navigate({ routeName: 'Home' })
                   }}
                 >
                   <Icon
