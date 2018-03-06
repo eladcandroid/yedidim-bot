@@ -17,7 +17,7 @@ exports.handleUpdateEvent = (event, admin) => {
 		return Promise.resolve('blocked');
 	}
 
-    return sendNotificationToCloseByVolunteers(admin, eventData, 'ידידים - קריאה חדשה');
+    return sendNotificationToCloseByVolunteers(admin, eventData, 'קריאה חדשה');
 };
 
 exports.sendNotificationBySearchRadius = (req, res, admin) => {
@@ -28,7 +28,7 @@ exports.sendNotificationBySearchRadius = (req, res, admin) => {
             .once('value', (snapshot) => {
                 let event = snapshot.val();
                 if (event) {
-                    sendNotificationToCloseByVolunteers(admin, event, 'ידידים - קריאה חדשה', searchRadius)
+                    sendNotificationToCloseByVolunteers(admin, event, 'קריאה חדשה', searchRadius)
                         .then(() => {
                             res.status(200).send('');
                             resolve();
@@ -55,7 +55,8 @@ exports.sendNotificationToRecipient = (req, res, admin) => {
                     admin.database().ref('/volunteer/' + recipient).once('value', (snapshot) => {
                         let user = snapshot.val();
                         if (user) {
-                            let notification = buildEventNotification(event, 'ידידים - התראה על אירוע', user.NotificationToken);
+                            let title = (user.EventKey === eventId) ? "התראה על אירוע פעיל" : "התראה על אירוע";
+                            let notification = buildEventNotification(event, title, user.NotificationToken);
                             sendNotifications([notification])
                                 .then((recipients) => {
                                     res.status(200).send(recipients);
