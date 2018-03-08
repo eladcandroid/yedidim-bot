@@ -1,6 +1,8 @@
 import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
+import GeoFire from "geofire";
+import locationHandler from "../phoneInterface/locationHandler";
 
 export const Event = types
   .model('Event', {
@@ -44,12 +46,23 @@ export const Event = types
   }))
   .actions(self => ({
     onEventUpdated: eventData => {
-      // Update properties
-      eventData.distance = eventData.distance || self.distance
+        eventData.distance = eventData.distance || self.distance
+        if (!eventData.distance) {
+            calculateDistanceFromEvent(eventData)
+                .then(distance => {
+                    if (distance) {
+                        self.setDistance(distance);
+                    }
+                });
+        }
+
       Object.assign(self, eventData)
       // Not loading anymore (if it was loading)
       self.isLoading = false
     },
+      setDistance: (distance) => {
+          self.distance = distance;
+      },
     afterCreate: () => {
       // If no data is provided with event, set it as loading
       if (!self.address || !self.type) {
@@ -100,6 +113,16 @@ export const Event = types
       return results
     })
   }))
+
+let calculateDistanceFromEvent = async (event) => {
+    const eventLocation = [event.lat, event.lon];
+    let userLocation = await locationHandler.getLocationIfPermitted();
+    if (userLocation) {
+        return GeoFire.distance(userLocation, eventLocation);
+    }
+    return null;
+};
+
 
 const EventStore = types
   .model('EventStore', {
