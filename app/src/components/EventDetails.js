@@ -53,6 +53,9 @@ class EventDetails extends Component {
       return;
     }
     this.props.sendNotification(this.props.event.key, distance);
+    if (this.props.event.source === EventSource.FB_BOT) {
+      this.props.updateEventStatus(this.props.event, EventStatus.Sent);
+    }
     this.setState({promptNotification : false})
   }
 
