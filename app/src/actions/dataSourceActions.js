@@ -175,6 +175,30 @@ export function takeEvent(event) {
   });
 }
 
+export function assignEvent(event, volunteer) {
+  return ((dispatch) => {
+    firebase.database().ref('events/' + event.key).transaction(currentEvent => {
+      if (!currentEvent.assignedTo) {
+        currentEvent.assignedTo = volunteer;
+        currentEvent.status = EventStatus.Assigned;
+        return currentEvent;
+      } else {
+        return undefined;
+      }
+    })
+      .then(result => {
+        if (!result.committed) {
+          dispatch(setError('האירוע כבר בטיפול'));
+        } else if (result.snapshot) {
+          dispatch(setEvent(result.snapshot.val()));
+        }
+      })
+      .catch(err => {
+        dispatch(setError('Failed to update!', err));
+      })
+  });
+}
+
 export function updateEventStatus(event, status) {
   return ((dispatch, getState) => {
     const dispatcher = getState().dataSource.user.id;

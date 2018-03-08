@@ -6,17 +6,18 @@ import { Button } from 'native-base';
 import { Prompt } from './Prompt';
 import { getTextStyle, formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
 import { EventSource, EventStatus, ScreenType } from "../constants/consts";
-import { updateEventStatus, takeEvent } from "../actions/dataSourceActions";
+import { updateEventStatus, takeEvent, assignEvent } from "../actions/dataSourceActions";
 import { sendNotification } from "../actions/notificationsActions";
 
 class EventDetails extends Component {
   constructor(props){
     super(props);
-    this.state = {promptNotification: false};
+    this.state = {promptNotification: false, promptAssignment: false};
     this.copyEventDetailsToClipboard = this.copyEventDetailsToClipboard.bind(this);
     this.copyUserDetailsToClipboard = this.copyUserDetailsToClipboard.bind(this);
     this.takeEvent = this.takeEvent.bind(this);
-    this.sendEvent = this.sendEvent.bind(this);
+    this.assignEvent = this.assignEvent.bind(this);
+    this.openAssignmentPrompt = this.openAssignmentPrompt.bind(this);
     this.completeEvent = this.completeEvent.bind(this);
     this.openVolunteerPhone = this.openVolunteerPhone.bind(this);
     this.openAddressInMaps = this.openAddressInMaps.bind(this);
@@ -55,13 +56,18 @@ class EventDetails extends Component {
     this.setState({promptNotification : false})
   }
 
-  sendEvent() {
-    this.props.updateEventStatus(this.props.event, EventStatus.Assigned);
-    this.props.navigate(ScreenType.EventsList);
+  openAssignmentPrompt() {
+    this.setState({promptAssignment : true})
   }
 
   takeEvent() {
     this.props.takeEvent(this.props.event);
+  }
+
+  assignEvent(volunteer) {
+    volunteer = '+972' + volunteer.substr(1);
+    this.props.assignEvent(this.props.event, volunteer);
+    this.props.navigate(ScreenType.EventsList);
   }
 
   completeEvent() {
@@ -93,14 +99,14 @@ class EventDetails extends Component {
           !this.isEventAssignedToDispatcher() ?
             <Button style={styles.button} onPress={this.takeEvent}><Text style={styles.buttonText}>טפל</Text></Button>
             :
-            <Button style={styles.button} onPress={this.sendEvent} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>הועבר</Text></Button>
+            <Button style={styles.button} onPress={this.openAssignmentPrompt} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>הועבר</Text></Button>
           :
           <Button style={styles.button} onPress={this.completeEvent} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>טופל</Text></Button>
         }
       </View>,
       <View key="row2" style={[styles.buttonsRow, I18nManager.isRTL ? {flex:1, flexDirection: 'row-reverse'} : undefined] }>
         <Button style={styles.button} onPress={this.openNotificationPrompt} disabled={!!this.props.event.assignedTo}><Text style={styles.buttonText}>שלח התראה</Text></Button>
-        <Button style={styles.button} onPress={this.editEvent}><Text style={styles.buttonText}>ערוך</Text></Button>
+        <Button style={styles.button} onPress={this.editEvent} disabled={!this.isAllowToHandleEvent()}><Text style={styles.buttonText}>ערוך</Text></Button>
       </View>
       ]
     );
@@ -184,6 +190,15 @@ class EventDetails extends Component {
           onSubmit={(distance) => this.sendNotification(distance)}
           onCancel={() => this.setState({promptNotification: false})}
         />
+        <Prompt
+          title='הכנס טלפון של המתנדב'
+          defaultValue=""
+          visible={this.state.promptAssignment}
+          submitText='עדכן'
+          cancelText='בטל'
+          onSubmit={(volunteer) => this.assignEvent(volunteer)}
+          onCancel={() => this.setState({promptAssignment: false})}
+        />
       </ScrollView>
     );
   }
@@ -196,6 +211,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     takeEvent: (event) => {
       dispatch(takeEvent(event));
+    },
+    assignEvent: (event, volunteer) => {
+      dispatch(assignEvent(event, volunteer));
     },
     sendNotification: (eventKey, distance) => {
       dispatch(sendNotification(eventKey, distance));
@@ -233,6 +251,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
 EventDetails.propTypes = {
   updateEventStatus: PropTypes.func,
   takeEvent: PropTypes.func,
+  assignEvent: PropTypes.func,
   sendNotification: PropTypes.func,
   event: PropTypes.object,
   currentDispatcher: PropTypes.string,
