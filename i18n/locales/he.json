@@ -1,4 +1,7 @@
 {
+  "Dispatcher.button.callDispatcher": "התקשר למוקדן",
+  "Dispatcher.name": "שם מוקדן",
+  "Dispatcher.phone": "טלפון מוקדן",
   "Event.description": "תיאור",
   "Event.privateInfo": "מידע חסוי",
   "Event.location": "מקום",

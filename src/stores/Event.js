@@ -3,6 +3,7 @@ import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
 import GeoFire from 'geofire'
 import locationHandler from '../phoneInterface/locationHandler'
+import { Dispatcher } from 'stores/Dispatcher'
 
 const calculateDistanceFromEvent = async event => {
   try {
@@ -32,6 +33,7 @@ export const Event = types
     assignedTo: types.maybe(types.string),
     timestamp: types.maybe(types.Date),
     distance: types.maybe(types.number),
+    dispatcher: types.maybe(Dispatcher),
     isLoading: false
   })
   .views(self => ({
@@ -61,8 +63,14 @@ export const Event = types
         eventData.distance ||
         self.distance ||
         (yield calculateDistanceFromEvent(eventData))
-
       Object.assign(self, eventData)
+
+      const shouldFetchDispatcher =
+        !self.dispatcher && eventData.dispatcherId && self.isAssigned
+      if (shouldFetchDispatcher) {
+        self.isLoading = true
+        self.dispatcher = yield api.fetchDispatcher(eventData.dispatcherId)
+      }
       // Not loading anymore (if it was loading)
       self.isLoading = false
     }),

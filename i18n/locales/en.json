@@ -1,4 +1,7 @@
 {
+  "Dispatcher.button.callDispatcher": "Call Dispatcher",
+  "Dispatcher.name": "Dispatcher",
+  "Dispatcher.phone": "Dispatcher's phone",
   "Event.description": "Description",
   "Event.privateInfo": "Private Info",
   "Event.location": "Location",

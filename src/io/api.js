@@ -165,7 +165,8 @@ const eventSnapshotToJSON = snapshot => ({
   more: snapshot.details.more,
   phone: snapshot.details['phone number'],
   privateInfo: snapshot.details.private_info,
-  distance: snapshot.distance
+  distance: snapshot.distance,
+  dispatcherId: snapshot.dispatcher
 })
 
 async function fetchLatestOpenEventsLocationBased(userId) {
@@ -361,4 +362,26 @@ export async function unacceptEvent(eventKey, userKey, feedback) {
     .database()
     .ref()
     .update(updates)
+}
+
+export async function fetchDispatcher(dispatcherId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      firebase
+        .database()
+        .ref(`dispatchers/${dispatcherId}`)
+        .once('value', snapshot => {
+          var key = snapshot.key
+          var data = snapshot.val() || {}
+          dispatcher = {
+            id: key,
+            name: data.name,
+            phone: data.phone
+          }
+          resolve(dispatcher)
+        })
+    } catch (error) {
+      reject(error)
+    }
+  })
 }
