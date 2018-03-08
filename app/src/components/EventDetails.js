@@ -170,7 +170,7 @@ class EventDetails extends Component {
           <TouchableHighlight onPress={this.openAddressInMaps}>
             <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
           </TouchableHighlight>
-          <Text style={getTextStyle(styles.fieldName)}>בעיה</Text>
+          <Text style={getTextStyle(styles.fieldName)}>סוג אירוע</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{formatEventCase(event)}</Text>
           <Text style={getTextStyle(styles.fieldName)}>סוג רכב</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['car type']}</Text>
