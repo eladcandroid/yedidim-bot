@@ -1,6 +1,19 @@
 import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
+import GeoFire from 'geofire'
+import locationHandler from '../phoneInterface/locationHandler'
+
+const calculateDistanceFromEvent = async event => {
+  try {
+    return GeoFire.distance(await locationHandler.getLocationIfPermitted(), [
+      event.lat,
+      event.lon
+    ])
+  } catch (error) {
+    return null
+  }
+}
 
 export const Event = types
   .model('Event', {
@@ -43,13 +56,16 @@ export const Event = types
     }
   }))
   .actions(self => ({
-    onEventUpdated: eventData => {
-      // Update properties
-      eventData.distance = eventData.distance || self.distance
+    onEventUpdated: flow(function* onEventUpdated(eventData) {
+      eventData.distance =
+        eventData.distance ||
+        self.distance ||
+        (yield calculateDistanceFromEvent(eventData))
+
       Object.assign(self, eventData)
       // Not loading anymore (if it was loading)
       self.isLoading = false
-    },
+    }),
     afterCreate: () => {
       // If no data is provided with event, set it as loading
       if (!self.address || !self.type) {
@@ -118,12 +134,11 @@ const EventStore = types
     },
     get sortedEventsByStatusAndTimestamp() {
       return self.allEvents.sort((a, b) => {
-        if (a.isTaken == b.isTaken) {
+        if (a.isTaken === b.isTaken) {
           return a.timestamp - b.timestamp
-        } else {
-          // display taken events last
-          return a.isTaken ? 1 : -1
         }
+        // display taken events last
+        return a.isTaken ? 1 : -1
       })
     }
   }))
