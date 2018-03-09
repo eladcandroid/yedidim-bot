@@ -1,17 +1,16 @@
-import * as phonePermissionsHandler from "./phonePermissionsHandler";
-import {Location} from "expo";
+import { Location } from 'expo'
+import * as phonePermissionsHandler from './phonePermissionsHandler'
 
 async function getLocationIfPermitted() {
-    return new Promise(async (resolve) => {
-        const hasLocationPermission = await phonePermissionsHandler.getLocationPermission();
-        if (hasLocationPermission) {
-            const currentLocation = await Location.getCurrentPositionAsync({});
-            const { latitude, longitude } = currentLocation.coords
-            resolve([latitude, longitude]);
-        } else {
-            resolve(null);
-        }
-    })
+  const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
+
+  if (hasLocationPermission) {
+    const currentLocation = await Location.getCurrentPositionAsync({})
+    const { latitude, longitude } = currentLocation.coords
+    return [latitude, longitude]
+  }
+
+  return null
 }
 
-export default {getLocationIfPermitted};
+export default { getLocationIfPermitted }
