@@ -182,9 +182,12 @@ class HomeScreen extends Component {
   )
 
   handleRefresh = async () => {
-    this.setState(() => ({ refreshing: true }))
-    await this.props.eventStore.loadLatestOpenEvents()
-    this.setState(() => ({ refreshing: false }))
+      try {
+          this.setState(() => ({refreshing: true}))
+          await this.props.eventStore.loadLatestOpenEvents()
+      } finally {
+          this.setState(() => ({refreshing: false}))
+      }
   }
 
   render() {
