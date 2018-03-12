@@ -5,13 +5,7 @@ admin.initializeApp(functions.config().firebase);
 const webhook = require('./handlers/webHookHandler');
 const manage = require('./handlers/manageHandler');
 const onUpdateEvent = require('./handlers/onUpdateEventHandler');
-const setLocation = require('./handlers/setLocation');
-const getVolunters = require('./handlers/getVolunters');
-const takeEvent = require('./handlers/takeEvent');
-const sendFollowerNotification = require('./handlers/sentFollowerNotification');
 const sendExpoFollowerNotification = require('./handlers/sendExpoFollowerNotification');
-const onUserCreateTrigger = require('./handlers/onUserCreateTrigger');
-const openedEvents = require('./handlers/openedEvents');
 const onEventCreateAddGeo = require('./handlers/onEventCreatedAddGeo');
 
 const tokens = getTokens(require('./_tokens.json'));
@@ -42,40 +36,16 @@ exports.manage = functions.https.onRequest((req, res) => {
   return manage.handleHttp(req, res, tokens);
 });
 
-exports.onUserCreateTrigger = functions.database.ref('/volunteer/{id}').onWrite(event => {
-  return onUserCreateTrigger.handleTrigger(event, admin);
-});
-
-exports.setLocation = functions.https.onRequest((req, res) => {
-  return setLocation.handleHttp(req, res, admin);
-});
-
-exports.getVolunters = functions.https.onRequest((req, res) => {
-  return getVolunters.handleHttp(req, res, admin);
-});
-
-exports.takeEvent = functions.https.onRequest((req, res) => {
-  return takeEvent.handleHttp(req, res, admin);
-});
-
-exports.sendFollowerNotification = functions.database.ref('/events/{eventId}').onWrite(event => {
-  return sendFollowerNotification.handleUpdateEvent(event, admin);
-});
-
 exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}').onWrite(event => {
   return sendExpoFollowerNotification.handleUpdateEvent(event, admin);
 });
 
 exports.onUpdateEvent = functions.database.ref('/events/{eventId}').onWrite(event => {
-  return onUpdateEvent.onWrite(event)
+  return onUpdateEvent.updateIsOpenProperty(event)
 });
 
 exports.onEventCreateAddGeo = functions.database.ref('/events/{eventId}').onWrite(event => {
-  return onEventCreateAddGeo.onWrite(event, admin);
-});
-
-exports.getOpenedEvents = functions.https.onRequest((req, res) => {
-  return openedEvents.handleHttp(req, res, admin);
+  return onEventCreateAddGeo.indexEventGeoLocation(event, admin);
 });
 
 exports.sendNotificationBySearchRadius = functions.https.onRequest((req, res) => {

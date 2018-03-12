@@ -1,18 +1,18 @@
 {
   "name": "yedidim-fb-bot",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "deploy": "firebase deploy --only functions:getVolunters,functions:onUserCreateTrigger,functions:sendExpoFollowerNotification,functions:sendFollowerNotification,functions:setLocation,functions:takeEvent,functions:onEventCreateAddGeo,functions:getOpenedEvents"
+    "deploy": "firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient"
   },
   "dependencies": {
     "async": "^2.6.0",
     "dashbot": "^9.4.1",
     "expo-server-sdk": "^2.3.3",
     "firebase": "^4.8.1",
-    "firebase-admin": "^5.6.0",
-    "firebase-functions": "^0.7.5",
+    "firebase-admin": "^5.9.0",
+    "firebase-functions": "^0.8.1",
     "geofire": "^4.1.2",
     "node-geocoder": "^3.21.1",
     "request": "^2.83.0",
