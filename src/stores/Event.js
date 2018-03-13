@@ -133,7 +133,7 @@ const EventStore = types
       return self.events.size > 0
     },
     get sortedEventsByStatusAndTimestamp() {
-      return self.allEvents.sort((a, b) => {
+      return self.allEvents.slice().sort((a, b) => {
         if (a.isTaken === b.isTaken) {
           return a.timestamp - b.timestamp
         }
