@@ -1,6 +1,6 @@
 const geoHelper = require('./geoHelper');
 
-exports.onWrite = (event,admin) => {
+exports.indexEventGeoLocation = (event,admin) => {
 	const eventData = event.data.val();
 	if (!eventData){
     return Promise.resolve();

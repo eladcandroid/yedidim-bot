@@ -1,4 +1,4 @@
-exports.onWrite = (event) => {
+exports.updateIsOpenProperty = (event) => {
 	const eventData = event.data.val();
 	if (!eventData){
     return Promise.resolve();
