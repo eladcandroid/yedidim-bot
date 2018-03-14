@@ -365,23 +365,10 @@ export async function unacceptEvent(eventKey, userKey, feedback) {
 }
 
 export async function fetchDispatcher(dispatcherId) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      firebase
-        .database()
-        .ref(`dispatchers/${dispatcherId}`)
-        .once('value', snapshot => {
-          var key = snapshot.key
-          var data = snapshot.val() || {}
-          dispatcher = {
-            id: key,
-            name: data.name,
-            phone: data.phone
-          }
-          resolve(dispatcher)
-        })
-    } catch (error) {
-      reject(error)
-    }
-  })
+  const snapshot = await firebase
+    .database()
+    .ref(`dispatchers/${dispatcherId}`)
+    .once('value')
+  const { name, phone } = snapshot.val() || {}
+  return { id: snapshot.key, name, phone }
 }
