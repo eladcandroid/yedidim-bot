@@ -153,7 +153,7 @@ const EventStore = types
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
         const currentUserId = getRoot(self).authStore.currentUser.id
         const events = yield api.loadLatestOpenEvents(currentUserId)
-          self.removeAllEvents()
+        self.removeAllEvents()
         events.forEach(addEvent)
       }),
       removeEvent(eventId) {
@@ -161,7 +161,10 @@ const EventStore = types
       },
       removeAllEvents: () => {
         self.events.values().forEach(event => {
-          self.removeEvent(event.id)
+          // Remove all events apart from the assigned to the user
+          if (!event.isAssigned) {
+            self.removeEvent(event.id)
+          }
         })
       },
       addEventFromNotification: eventId => {
