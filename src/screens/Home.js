@@ -62,7 +62,7 @@ const distanceToString = distance => {
 const EventItem = observer(
   ({
     onPress,
-    event: { id, type, city, more, timestamp, isLoading, isTaken, distance }
+    event: { id, type, displayAddress, more, timestamp, isLoading, isTaken, distance }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -94,7 +94,7 @@ const EventItem = observer(
           <FormattedMessage {...eventTypeMessage(type)}>
             {eventTypeTxt => (
               <AlignedText>
-                {eventTypeTxt} - {city}
+                {eventTypeTxt} - {displayAddress}
               </AlignedText>
             )}
           </FormattedMessage>
