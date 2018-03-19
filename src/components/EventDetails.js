@@ -32,7 +32,7 @@ const EventDetails = ({
     lon,
     caller,
     more,
-    address,
+    displayAddress,
     phone,
     privateInfo,
     carType,
@@ -78,7 +78,7 @@ const EventDetails = ({
             >
               <MapView.Marker
                 coordinate={{ latitude: lat, longitude: lon }}
-                title={address}
+                title={displayAddress}
                 description={more}
               />
             </MapView>
@@ -88,7 +88,7 @@ const EventDetails = ({
           {label => <TextFieldRow label={label} value={more} />}
         </FormattedMessage>
         <FormattedMessage id="Event.location" defaultMessage="Location">
-          {label => <TextFieldRow label={label} value={address} />}
+          {label => <TextFieldRow label={label} value={displayAddress} />}
         </FormattedMessage>
         {isAssigned && (
           <FormattedMessage id="Event.caller" defaultMessage="Name">

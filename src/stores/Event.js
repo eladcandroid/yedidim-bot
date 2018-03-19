@@ -55,6 +55,9 @@ export const Event = types
           self.assignedTo !== getRoot(self).authStore.currentUser.id) ||
         self.status === 'completed'
       )
+    },
+    get displayAddress() {
+      return self.address.replace(/, ישראל$/, "")
     }
   }))
   .actions(self => ({
