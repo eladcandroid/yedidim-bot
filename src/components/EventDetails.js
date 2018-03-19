@@ -36,7 +36,8 @@ const EventDetails = ({
     phone,
     privateInfo,
     carType,
-    isAssigned
+    isAssigned,
+    dispatcher
   },
   children
 }) => (
@@ -109,6 +110,21 @@ const EventDetails = ({
             {label => <TextFieldRow label={label} value={carType} />}
           </FormattedMessage>
         )}
+        {isAssigned &&
+          dispatcher && (
+            <FormattedMessage id="Dispatcher.name" defaultMessage="Dispatcher">
+              {label => <TextFieldRow label={label} value={dispatcher.name} />}
+            </FormattedMessage>
+          )}
+        {isAssigned &&
+          dispatcher && (
+            <FormattedMessage
+              id="Dispatcher.phone"
+              defaultMessage="Dispatcher's Phone"
+            >
+              {label => <TextFieldRow label={label} value={dispatcher.phone} />}
+            </FormattedMessage>
+          )}
         <Row>
           <Col>
             <MarginView>
@@ -150,6 +166,28 @@ const EventDetails = ({
             </Col>
           </Row>
         )}
+        {isAssigned &&
+          dispatcher && (
+            <Row>
+              <Col>
+                <MarginView>
+                  <Button
+                    block
+                    success
+                    onPress={() => Linking.openURL(`tel:${dispatcher.phone}`)}
+                  >
+                    <FormattedMessage
+                      id="Dispatcher.button.callDispatcher"
+                      defaultMessage="Call Dispatcher"
+                    >
+                      {txt => <Text>{txt}</Text>}
+                    </FormattedMessage>
+                    <Icon name="md-call" />
+                  </Button>
+                </MarginView>
+              </Col>
+            </Row>
+          )}
       </Grid>
     </Content>
     <View style={{ height: 70, backgroundColor: '#fff' }}>{children}</View>
