@@ -67,6 +67,7 @@ function sendPushNotification(tokens, details) {
 
     for (let chunk of chunks) {
       promises.push(new Promise(resolve => {
+        console.log("Sending notification to ", chunk);
         expo.sendPushNotificationsAsync(chunk)
           .then(receipts => {
             console.log("Successfully sent notifications : \n", receipts);
