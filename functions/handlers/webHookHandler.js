@@ -10,12 +10,10 @@ const EventStatus = require('../lib/consts').EventStatus;
 const sendAPIQueue = queue(callSendAPIAsync);
 
 let _tokens;
-let _dashbot;
 
 //Main http function to handle all webhook calls
-exports.handleHttp = (req, res, admin, tokens, dashbot) => {
+exports.handleHttp = (req, res, admin, tokens) => {
   _tokens = tokens;
-  _dashbot = dashbot;
   events.init(admin);
   notifications.init(admin);
   geocoder.init(tokens.maps.apiKey);
@@ -44,7 +42,6 @@ function handleWebHookGetRequest(req, res){
 function handleWebHookPostRequest(req, res) {
   let promises = [];
   const data = req.body;
-  _dashbot.logIncoming(data);
   try {
     if (data.object === 'page') {
       data.entry.forEach(function (entry) {
@@ -375,7 +372,6 @@ function callSendAPI(messageData) {
       } else {
         console.error('Unable to send message. : \n', JSON.stringify(messageData), error, body);
       }
-      _dashbot.logOutgoing(messageData, response.body);
       resolve();
     }));
   })

@@ -24,11 +24,9 @@ function getTokens(json) {
   return json.sandbox2;
 }
 
-const dashbot = require('dashbot')(tokens.dashbot.apiKey).facebook;
-
 //Main http function to handle all webhook calls
 exports.webhook = functions.https.onRequest((req, res) => {
-  return webhook.handleHttp(req, res, admin, tokens, dashbot);
+  return webhook.handleHttp(req, res, admin, tokens);
 });
 
 //function for managing the bot
