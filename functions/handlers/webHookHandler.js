@@ -155,7 +155,7 @@ function sendFollowUpResponse(event, context) {
           sendResponse = true;
         } else if (response.text){
           //Last message - capture the extra data
-          context.details.more = context.details.more + " ; " + response.text;
+          context.details.more = (context.details.more ? (context.details.more + ' ; ') : '') + response.text;
           promises.push(events.set(context));
         }
         if (sendResponse) {
