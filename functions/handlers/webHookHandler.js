@@ -216,17 +216,22 @@ function validateResponse(event, lastMessage) {
       } else {
         //Get geocoding from address
         const userAddress = event.message.text;
-        geocoder.geocode(userAddress)
-          .then(res => {
-            if (!geocoder.verify(res)){
-              console.log('Invalid geocode address', res);
+        if (userAddress) {
+          geocoder.geocode(userAddress)
+            .then(res => {
+              if (!geocoder.verify(res)) {
+                console.log('Invalid geocode address', res);
+                resolve({valid: false});
+              }
+              resolve({valid: true, location: {coordinates: {lat: res[0].latitude, lon: res[0].longitude}, address: geocoder.toAddress(res), userAddress}});
+            })
+            .catch(() => {
               resolve({valid: false});
-            }
-            resolve({valid: true, location: {coordinates: {lat: res[0].latitude, lon: res[0].longitude}, address: geocoder.toAddress(res), userAddress}});
-          })
-          .catch(() => {
-            resolve({valid: false});
-          });
+            });
+        } else {
+          //No location an no text were sent
+          resolve({valid: false});
+        }
       }
     } else if (lastMessage.final){
       resolve({valid: false, final: true, text: event.message.text});
