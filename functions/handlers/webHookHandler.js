@@ -396,7 +396,7 @@ function getUserProfile(psid) {
         console.info('Successfully retrieved user profile (' + psid + ') : \n', body);
         resolve(JSON.parse(body));
       } else {
-        console.error('Failed to retrieve user profile (' + psid + ') : \n', error, body);
+        console.info('Failed to retrieve user profile (' + psid + ') : \n', error, body);
         reject(error);
       }
     });
