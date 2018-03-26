@@ -31,7 +31,7 @@ class KeyboardAwareScrollViewComponent extends React.Component {
 class EventDetailsEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = {address: undefined, geo: undefined, case: 8, street_number: 0, needToValidateAddress: false};
+    this.state = {address: undefined, geo: undefined, category: 'Other', street_number: 0, needToValidateAddress: false};
     this.updateEventData = this.updateEventData.bind(this);
     this.validateAddress = this.validateAddress.bind(this);
     this.createNewEvent = this.createNewEvent.bind(this);
@@ -111,8 +111,8 @@ class EventDetailsEditor extends Component {
       this.setState({error: {message: 'כתובת לא נבדקה', field: 'address'}});
       return false;
     }
-    if (typeof this.state['case'] === "undefined"){
-      this.setState({error: {message: 'לא נבחר סוג בעיה', field: 'case'}});
+    if (typeof this.state['category'] === "undefined"){
+      this.setState({error: {message: 'לא נבחר סוג בעיה', field: 'category'}});
       return false;
     }
     if (!this.state['car type']){
@@ -147,7 +147,13 @@ class EventDetailsEditor extends Component {
     )
   }
 
-  renderEventCasePicker() {
+  setCategory(categoryId) {
+    const category = this.props.categories.find(category => category.id === categoryId);
+    const subCategory = category && category.subCategories ? category.subCategories[0].id : undefined;
+    this.setState({category: categoryId, subCategory, modified: true});
+  }
+
+  renderCategoryPicker() {
     return (
       <Picker
         iosHeader="בחר סוג בעיה"
@@ -156,11 +162,33 @@ class EventDetailsEditor extends Component {
         placeholder="בחר סוג בעיה"
         itemTextStyle={getTextStyle(styles.pickerItem)}
         textStyle={getTextStyle(styles.pickerItem)}
-        selectedValue={this.state.case}
-        onValueChange={(value) => this.setState({case: value, modified: true})}
+        selectedValue={this.state.category}
+        onValueChange={(value) => this.setCategory(value)}
       >
-        {EventCases.map((eventCase) => {
-          return (<Picker.Item label={eventCase.label} value={eventCase.case} key={eventCase.case}/>);
+        {this.props.categories.map((category) => {
+          return (<Picker.Item label={category.displayName} value={category.id} key={category.id}/>);
+        })}
+      </Picker>
+    )
+  }
+  renderSubCategoryPicker() {
+    const category = this.props.categories.find(category => category.id === this.state.category);
+    if (!category || !category.subCategories){
+      return;
+    }
+    return (
+      <Picker
+        iosHeader="בחר תת קטגוריה"
+        headerBackButtonText="חזור"
+        mode="dropdown"
+        placeholder="תת קטגוריה"
+        itemTextStyle={getTextStyle(styles.pickerItem)}
+        textStyle={getTextStyle(styles.pickerItem)}
+        selectedValue={this.state.subCategory}
+        onValueChange={(value) => this.setState({subCategory: value, modified: true})}
+      >
+        {category.subCategories.map((subCategory) => {
+          return (<Picker.Item label={subCategory.displayName} value={subCategory.id} key={subCategory.id}/>);
         })}
       </Picker>
     )
@@ -189,7 +217,8 @@ class EventDetailsEditor extends Component {
               <Text style={styles.buttonText}>בדוק כתובת</Text>
             </Button>
             <Label style={getTextStyle(styles.pickerLabel)}>סוג אירוע</Label>
-            {this.renderEventCasePicker()}
+            {this.renderCategoryPicker()}
+            {this.renderSubCategoryPicker()}
             {this.renderInput('סוג רכב', 'car type')}
             {this.renderInput('פרטים', 'more')}
             {this.renderInput('מידע פרטי', 'private_info')}
@@ -226,9 +255,11 @@ const mapStateToProps = (state, ownProps) => {
   if (!event) {
     event = {status: EventStatus.Draft, details: {}};
   }
+  const categories = state.dataSource.categories || [];
   return {
     event,
-    user: state.dataSource.user
+    user: state.dataSource.user,
+    categories
   };
 };
 
@@ -238,7 +269,8 @@ EventDetailsEditor.propTypes = {
   createEvent: PropTypes.func,
   updateEvent: PropTypes.func,
   sendNotification: PropTypes.func,
-  user: PropTypes.object
+  user: PropTypes.object,
+  categories: PropTypes.array
 };
 
 const styles = StyleSheet.create({

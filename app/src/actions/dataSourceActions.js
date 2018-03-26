@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import {
-  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS,
+  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_CATEGORIES,
+  SET_SEARCH_EVENTS, SET_NOTIFICATIONS,
   SET_ERROR, SET_LATEST_VERSION
 } from '../constants/actionTypes';
 import { registerForPushNotifications } from "./notificationsActions";
@@ -232,6 +233,7 @@ function handleSignedInUser(user) {
     dispatch(loadEvents());
     dispatch(loadVolunteers());
     dispatch(loadDispatchers());
+    dispatch(loadCategories());
   });
 }
 
@@ -414,6 +416,21 @@ function loadDispatchers() {
   });
 }
 
+function loadCategories() {
+  return ((dispatch) => {
+    firebase.database().ref('/eventCategories').once('value')
+      .then((snapshot) => {
+        const categories = snapshot.val();
+        dispatch(setCategories(categories));
+      })
+      .catch(err => {
+        if (err) {
+          dispatch(setError('Failed to load data!', err));
+        }
+      });
+  });
+}
+
 export function setError(message, err){
   console.log('Error: ' + message, err);
   return {
@@ -476,6 +493,14 @@ function setVolunteers(volunteers){
     volunteers,
   };
 }
+
+function setCategories(categories){
+  return {
+    type: SET_CATEGORIES,
+    categories
+  }
+}
+
 function setSearchEvents(events){
   return {
     type: SET_SEARCH_EVENTS,

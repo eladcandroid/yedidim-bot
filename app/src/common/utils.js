@@ -33,9 +33,13 @@ export const getUserDetailsText = (event) => {
 };
 
 
-export const formatEventCase = (event) => {
-  const eventCase = EventCases.find(eventCase => eventCase.case === event.details.case);
-  return eventCase && eventCase.label ? eventCase.label : 'לא ידוע';
+export const formatEventCategory = (categories, event, includeSub) => {
+  const category = categories.find(category => category.id === event.details.category);
+  if (!category) {
+    return 'לא ידוע';
+  }
+  const subCategory = category.subCategories ? category.subCategories.find(subCategory => subCategory.id === event.details.subCategory) : undefined;
+  return category.displayName + (subCategory && includeSub ? (' - ' + subCategory.displayName) : '');
 };
 
 export const formatEventTime = (event) => {
