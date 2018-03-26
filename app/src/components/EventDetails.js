@@ -241,7 +241,7 @@ const mapStateToProps = (state, ownProps) => {
 
   const currentDispatcher = state.dataSource.user ? state.dataSource.user.id : undefined;
 
-  const categories = state.dataSource.categories;
+  const categories = state.dataSource.categories || [];
 
   return {
     event,
