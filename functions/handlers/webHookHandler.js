@@ -250,7 +250,14 @@ function setDetailsAndNextMessage(lastMessage, context, response) {
   if (lastMessage.buttons) {
     const payload = flow.payloads[response.payload];
     if (lastMessage.field) {
-      context.details[lastMessage.field] = payload.case || payload.case === 0 ? payload.case : payload.title;
+      if (payload.category) {
+        context.details[lastMessage.field] = payload.category;
+        if (payload.subCategory) {
+          context.details['subCategory'] = payload.subCategory;
+        }
+      } else {
+        context.details[lastMessage.field] = payload.title;
+      }
     }
     //In case of next use it otherwise the payload is the next
     context.lastMessage = payload.next ? payload.next : response.payload;
