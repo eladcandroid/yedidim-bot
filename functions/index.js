@@ -53,3 +53,11 @@ exports.sendNotificationBySearchRadius = functions.https.onRequest((req, res) =>
 exports.sendNotificationToRecipient = functions.https.onRequest((req, res) => {
     return sendExpoFollowerNotification.sendNotificationToRecipient(req, res, admin);
 });
+
+exports.sendDispatcherTestNotification = functions.https.onRequest((req, res) => {
+    return sendExpoFollowerNotification.sendDispatcherTestNotification(req, res, admin);
+});
+
+exports.sendVolunteerTestNotification = functions.https.onRequest((req, res) => {
+    return sendExpoFollowerNotification.sendVolunteerTestNotification(req, res, admin);
+});
