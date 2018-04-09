@@ -274,9 +274,7 @@ function loadUserData(user) {
         user.notifications = data.notifications;
         user.handleBot = data.handleBot;
         dispatch(setUser(user));
-        if (!data.token || !data.notifications){
-          dispatch(registerForPushNotifications());
-        }
+        dispatch(registerForPushNotifications());
       })
       .catch(err => {
         dispatch(setError('Failed to load user', err));
