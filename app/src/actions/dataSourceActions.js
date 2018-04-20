@@ -4,7 +4,7 @@ import {
   SET_SEARCH_EVENTS, SET_NOTIFICATIONS,
   SET_ERROR, SET_LATEST_VERSION
 } from '../constants/actionTypes';
-import { registerForPushNotifications } from "./notificationsActions";
+import {registerForPushNotifications, sendTestNotificationToDispatcher} from "./notificationsActions";
 import { objectToArray, getInstance } from "../common/utils";
 import { EventStatus } from "../constants/consts";
 
@@ -116,6 +116,12 @@ export function signOutUser() {
         dispatch(handleSignedOutUser());
       });
     });
+  });
+}
+
+export function sendTestNotificationToSelf() {
+  return ((dispatch, getState) => {
+    sendTestNotificationToDispatcher(getState().dataSource.user.id);
   });
 }
 
