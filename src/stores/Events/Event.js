@@ -65,7 +65,18 @@ export default types
       const category = getRoot(self).eventStore.categories.find(
         entry => entry.id === self.category
       )
-      return category && category.displayName
+
+      if (category) {
+        const subCategory = category.subCategories.find(
+          entry => entry.id === self.subCategory
+        )
+
+        return subCategory
+          ? `${category.displayName}/${subCategory.displayName}`
+          : category.displayName
+      }
+
+      return 'אחר'
     },
     get categoryImg() {
       return categoryImg(self.category)
