@@ -2,7 +2,7 @@ import { types, flow, getRoot, getParent } from 'mobx-state-tree'
 import GeoFire from 'geofire'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
-import categoryImg from 'const'
+import { categoryImg } from 'const'
 import locationHandler from '../../phoneInterface/locationHandler'
 import Dispatcher from './Dispatcher'
 

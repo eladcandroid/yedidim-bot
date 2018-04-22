@@ -12,12 +12,9 @@ const categoriesImage = {
   SlammedDoor: require('images/case9.jpg')
 }
 /* eslint-enable */
+export default Object.values(categoriesImage)
 
-export default categoryId => {
-  if (!categoryId) {
-    return Object.values(categoriesImage)
-  }
-  return categoriesImage[categoryId]
+export const categoryImg = categoryId =>
+  categoriesImage[categoryId]
     ? categoriesImage[categoryId]
     : categoriesImage.Other
-}
