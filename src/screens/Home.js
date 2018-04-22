@@ -18,7 +18,6 @@ import {
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator, RefreshControl } from 'react-native'
-import { eventTypeMessage, eventTypeImg } from 'const'
 import debounce from 'lodash.debounce'
 import { trackEvent } from 'io/analytics'
 
@@ -62,7 +61,17 @@ const distanceToString = distance => {
 const EventItem = observer(
   ({
     onPress,
-    event: { id, type, displayAddress, more, timestamp, isLoading, isTaken, distance }
+    event: {
+      id,
+      categoryName,
+      categoryImg,
+      displayAddress,
+      more,
+      timestamp,
+      isLoading,
+      isTaken,
+      distance
+    }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -88,16 +97,12 @@ const EventItem = observer(
         }}
       >
         <Left>
-          <Thumbnail small source={eventTypeImg(type)} />
+          <Thumbnail small source={categoryImg} />
         </Left>
         <Body>
-          <FormattedMessage {...eventTypeMessage(type)}>
-            {eventTypeTxt => (
-              <AlignedText>
-                {eventTypeTxt} - {displayAddress}
-              </AlignedText>
-            )}
-          </FormattedMessage>
+          <AlignedText>
+            {categoryName} - {displayAddress}
+          </AlignedText>
           <AlignedText note>{more}</AlignedText>
         </Body>
         <Right>
@@ -182,17 +187,18 @@ class HomeScreen extends Component {
   )
 
   handleRefresh = async () => {
-      try {
-          this.setState(() => ({refreshing: true}))
-          await this.props.eventStore.loadLatestOpenEvents()
-      } finally {
-          this.setState(() => ({refreshing: false}))
-      }
+    try {
+      this.setState(() => ({ refreshing: true }))
+      await this.props.eventStore.loadLatestOpenEvents()
+    } finally {
+      this.setState(() => ({ refreshing: false }))
+    }
   }
 
   render() {
-    const hasEvents = this.props.eventStore.hasEvents
-    const sortedEvents = this.props.eventStore.sortedEventsByStatusAndTimestamp
+    const {
+      eventStore: { hasEvents, sortedEventsByStatusAndTimestamp }
+    } = this.props
     const { refreshing } = this.state
 
     return (
@@ -208,7 +214,7 @@ class HomeScreen extends Component {
         >
           {hasEvents && (
             <List
-              dataArray={sortedEvents}
+              dataArray={sortedEventsByStatusAndTimestamp}
               renderRow={event => (
                 <EventItem event={event} onPress={this.handleEventItemPress} />
               )}

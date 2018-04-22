@@ -3,7 +3,6 @@ import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
 import { Linking, View } from 'react-native'
-import { eventTypeMessage, eventTypeImg } from 'const'
 
 import {
   Button,
@@ -26,7 +25,8 @@ const MarginView = styled.View`
 `
 const EventDetails = ({
   event: {
-    type,
+    categoryName,
+    categoryImg,
     timestamp,
     lat,
     lon,
@@ -47,16 +47,12 @@ const EventDetails = ({
         <Row>
           <Col size={1}>
             <MarginView>
-              <Thumbnail source={eventTypeImg(type)} />
+              <Thumbnail source={categoryImg} />
             </MarginView>
           </Col>
           <Col size={3}>
             <MarginView>
-              <FormattedMessage {...eventTypeMessage(type)}>
-                {eventTypeTxt => (
-                  <H2 style={{ textAlign: 'left' }}>{eventTypeTxt}</H2>
-                )}
-              </FormattedMessage>
+              <H2 style={{ textAlign: 'left' }}>{categoryName}</H2>
               <FormattedRelative value={timestamp}>
                 {relative => <AlignedText note>{relative}</AlignedText>}
               </FormattedRelative>
@@ -101,7 +97,10 @@ const EventDetails = ({
           </FormattedMessage>
         )}
         {isAssigned && (
-          <FormattedMessage id="Event.privateInfo" defaultMessage="Private Info">
+          <FormattedMessage
+            id="Event.privateInfo"
+            defaultMessage="Private Info"
+          >
             {label => <TextFieldRow label={label} value={privateInfo} />}
           </FormattedMessage>
         )}

@@ -3,7 +3,7 @@ import { Asset, Font, AppLoading, Constants } from 'expo'
 import createRootStore from 'stores'
 import { Image } from 'react-native'
 import { Provider, observer } from 'mobx-react/native'
-import { eventTypeImg } from 'const'
+import categoriesImages from 'const'
 import Sentry from 'sentry-expo'
 import { initAnalyticsTracking } from 'io/analytics'
 import I18nApp from './src/I18nApp'
@@ -40,7 +40,7 @@ export default class App extends Component {
   }
 
   loadAssetsAsync = async () => {
-    const imageAssets = cacheImages(eventTypeImg())
+    const imageAssets = cacheImages(categoriesImages)
 
     const fontAssets = Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'), // eslint-disable-line
