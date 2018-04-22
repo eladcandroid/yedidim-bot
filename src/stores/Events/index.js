@@ -1,11 +1,14 @@
 import { types, destroy, flow, getRoot } from 'mobx-state-tree'
 import * as api from 'io/api'
+import loadCategories from 'io/category'
 import { trackEvent } from 'io/analytics'
 import Event from './Event'
+import Category from './Category'
 
 export default types
   .model('EventStore', {
     events: types.map(Event),
+    categories: types.array(Category),
     isLoading: false
   })
   .views(self => ({
@@ -62,6 +65,13 @@ export default types
       },
       setLoading: isLoading => {
         self.isLoading = isLoading
+      },
+      setCategories: categories => {
+        self.categories.replace(categories)
+      },
+      afterCreate: async () => {
+        // Load categories from API
+        self.setCategories(await loadCategories())
       }
     }
   })

@@ -10,7 +10,8 @@ const RootStore = types
       user: null
     }),
     eventStore: types.optional(EventStore, {
-      events: {}
+      events: {},
+      categories: []
     }),
     language: types.enumeration('Language', ['en', 'he'])
   })
