@@ -76,14 +76,27 @@ const withNotificationManager = WrappedComponent => {
       this.props.navigation.dispatch(navigateAction)
     }
 
-    handleNotification = ({ origin, data, remote }) => {
-      // If no data was sent, throw exception
+    handleNotification = ({origin, data, remote}) => {
+      if (!data) {
+        return
+      }
+      if (data.type === 'event') {
+        this.handleEventNotification(origin, data, remote)
+        return
+      }
+
+      if (data.type === 'test') {
+        console.log('Received test notification.')
+      }
+    }
+
+    handleEventNotification(origin, data, remote) {
       if (!data || !data.key) {
         throw new Error(
           `Notification is incomplete and lacking data, ignoring it : ${JSON.stringify(
             data
           )}`
-        )
+        );
       }
 
       if (remote) {
@@ -93,7 +106,7 @@ const withNotificationManager = WrappedComponent => {
 
         // Only listen to remote notifications
         if (origin === 'received') {
-          // The app if foregrounded
+          // The app is foregrounded
           Toast.show({
             text: this.props.screenProps.intl.formatMessage(newEventToast.text),
             position: 'bottom',
@@ -112,7 +125,7 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const { currentUser, addEventFromNotification, ...other } = this.props
+      const {currentUser, addEventFromNotification, ...other} = this.props
 
       return <WrappedComponent {...other} />
     }
@@ -121,7 +134,7 @@ const withNotificationManager = WrappedComponent => {
   // As described at https://github.com/react-community/react-navigation/issues/90
   Component.router = WrappedComponent.router
 
-  return inject(({ stores }) => ({
+  return inject(({stores}) => ({
     addEventFromNotification: stores.eventStore.addEventFromNotification,
     currentUser: stores.authStore.currentUser
   }))(observer(Component))

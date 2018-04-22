@@ -68,6 +68,23 @@ const SideBar = ({
             {txt => <Text>{txt}</Text>}
           </FormattedMessage>
         </ListItem>
+        <ListItem
+          button
+          onPress={() => {
+            navigation.dispatch(
+              NavigationActions.navigate({
+                routeName: 'HelpPage'
+              })
+            )
+          }}
+        >
+          <FormattedMessage
+            id="Sidebar.helpPage"
+            defaultMessage="Help"
+          >
+            {txt => <Text>{txt}</Text>}
+          </FormattedMessage>
+        </ListItem>
         <ListItem>
           <Text>v{Constants.manifest.version}</Text>
         </ListItem>

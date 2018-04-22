@@ -30,6 +30,12 @@
       "AmplitudeAPI": "2e1ccff4946b3318c47b05aeaaf7db16",
       "SentryAPI":
         "https://e075960424d7484ab62d767a844a9502:422a3b4e953b4c7a84cd9811bb71fc90@sentry.io/266660"
+    },
+    "ios": {
+      "bundleIdentifier": "com.startach.yedidim.volunteers"
+    },
+    "android": {
+      "package": "com.startach.yedidim.volunteers"
     }
   }
 }
