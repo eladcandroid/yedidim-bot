@@ -201,8 +201,9 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const hasEvents = this.props.eventStore.hasEvents
-    const sortedEvents = this.props.eventStore.sortedEventsByStatusAndTimestamp
+    const {
+      eventStore: { hasEvents, sortedEventsByStatusAndTimestamp }
+    } = this.props
     const { refreshing } = this.state
 
     return (
@@ -218,7 +219,7 @@ class HomeScreen extends Component {
         >
           {hasEvents && (
             <List
-              dataArray={sortedEvents}
+              dataArray={sortedEventsByStatusAndTimestamp}
               renderRow={event => (
                 <EventItem event={event} onPress={this.handleEventItemPress} />
               )}
