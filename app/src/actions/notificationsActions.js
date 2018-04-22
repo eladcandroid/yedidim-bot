@@ -54,3 +54,29 @@ export function sendNotification(eventKey, distance, volunteer)  {
       });
   }
 }
+
+export function sendTestNotificationToDispatcher(dispatcherId) {
+  return new Promise((resolve, reject) => {
+    const url = getFunctionsUrl() + '/sendDispatcherTestNotification';
+    const params = {"dispatcherCode": dispatcherId.toString()};
+
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params)
+    })
+      .then(response => {
+        if (!response.ok) {
+          reject("שליחת הודעה נכשלה");
+        } else {
+          resolve();
+        }
+      })
+      .catch((error) => {
+        reject("שליחת הודעה נכשלה");
+      });
+  });
+}

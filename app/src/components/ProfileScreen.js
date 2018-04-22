@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text, Button, Switch, StyleSheet, I18nManager } from 'react-native';
 import { InstanceTypes } from "../constants/consts";
-import { enableNotifications, signOutUser } from "../actions/dataSourceActions";
+import {enableNotifications, sendTestNotificationToSelf, signOutUser} from "../actions/dataSourceActions";
 import { getTextStyle } from "../common/utils";
 
 class ProfileScreen extends Component {
@@ -30,6 +30,9 @@ class ProfileScreen extends Component {
           : undefined
         }
         <View style={styles.buttonRow}>
+          <Button onPress={this.props.sendTestNotification.bind(this)} title="בדוק התראות"/>
+        </View>
+        <View style={styles.buttonRow}>
           <Button onPress={this.props.signOut.bind(this)} title="התנתק"/>
         </View>
       </View>
@@ -44,6 +47,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     signOut: () => {
       dispatch(signOutUser());
+    },
+    sendTestNotification: () => {
+      dispatch(sendTestNotificationToSelf());
     }
   };
 };
@@ -63,7 +69,8 @@ ProfileScreen.propTypes = {
   version: PropTypes.string,
   user: PropTypes.object,
   enableNotifications: PropTypes.func,
-  signOut: PropTypes.func
+  signOut: PropTypes.func,
+  sendTestNotification: PropTypes.func
 };
 
 const styles = StyleSheet.create({
