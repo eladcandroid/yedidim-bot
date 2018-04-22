@@ -18,7 +18,7 @@ import {
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator, RefreshControl } from 'react-native'
-import { eventTypeMessage, eventTypeImg } from 'const'
+import { eventCategoryMessage, eventCategoryImg } from 'const'
 import debounce from 'lodash.debounce'
 import { trackEvent } from 'io/analytics'
 
@@ -62,7 +62,17 @@ const distanceToString = distance => {
 const EventItem = observer(
   ({
     onPress,
-    event: { id, type, displayAddress, more, timestamp, isLoading, isTaken, distance }
+    event: {
+      id,
+      category,
+      subCategory,
+      displayAddress,
+      more,
+      timestamp,
+      isLoading,
+      isTaken,
+      distance
+    }
   }) =>
     isLoading ? (
       <ListItem avatar>
@@ -88,10 +98,10 @@ const EventItem = observer(
         }}
       >
         <Left>
-          <Thumbnail small source={eventTypeImg(type)} />
+          <Thumbnail small source={eventCategoryImg(category, subCategory)} />
         </Left>
         <Body>
-          <FormattedMessage {...eventTypeMessage(type)}>
+          <FormattedMessage {...eventCategoryMessage(category, subCategory)}>
             {eventTypeTxt => (
               <AlignedText>
                 {eventTypeTxt} - {displayAddress}
@@ -182,12 +192,12 @@ class HomeScreen extends Component {
   )
 
   handleRefresh = async () => {
-      try {
-          this.setState(() => ({refreshing: true}))
-          await this.props.eventStore.loadLatestOpenEvents()
-      } finally {
-          this.setState(() => ({refreshing: false}))
-      }
+    try {
+      this.setState(() => ({ refreshing: true }))
+      await this.props.eventStore.loadLatestOpenEvents()
+    } finally {
+      this.setState(() => ({ refreshing: false }))
+    }
   }
 
   render() {

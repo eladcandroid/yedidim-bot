@@ -2,8 +2,8 @@ import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
 import GeoFire from 'geofire'
-import locationHandler from '../phoneInterface/locationHandler'
 import { Dispatcher } from 'stores/Dispatcher'
+import locationHandler from '../phoneInterface/locationHandler'
 
 const calculateDistanceFromEvent = async event => {
   try {
@@ -22,7 +22,8 @@ export const Event = types
     address: types.maybe(types.string),
     caller: types.maybe(types.string),
     carType: types.maybe(types.string),
-    type: types.maybe(types.number), // case in FB
+    category: types.maybe(types.string),
+    subCategory: types.maybe(types.string),
     city: types.maybe(types.string),
     lat: types.maybe(types.number),
     lon: types.maybe(types.number),
@@ -57,7 +58,7 @@ export const Event = types
       )
     },
     get displayAddress() {
-      return self.address.replace(/, ישראל$/, "")
+      return self.address.replace(/, ישראל$/, '')
     }
   }))
   .actions(self => ({
@@ -79,7 +80,7 @@ export const Event = types
     }),
     afterCreate: () => {
       // If no data is provided with event, set it as loading
-      if (!self.address || !self.type) {
+      if (!self.address || !self.category) {
         self.isLoading = true
       }
       self.unsubscribeId = api.subscribeToEvent(self.id, self.onEventUpdated)
