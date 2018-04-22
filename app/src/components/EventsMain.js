@@ -30,12 +30,14 @@ class EventsMain extends Component {
           <EventsList
             events={this.props.newEvents}
             columns={[EventsListColumn.Time, EventsListColumn.Case, EventsListColumn.City, EventsListColumn.Source]}
+            categories={this.props.categories}
             navigate={this.props.navigate}/>
           <View style={styles.rowLine}/>
           <Text style={getTextStyle(styles.headerTitle)} allowFontScaling={false}>אירועים פעילים</Text>
           <EventsList
             events={this.props.activeEvents}
             columns={[EventsListColumn.Time, EventsListColumn.Case, EventsListColumn.City, EventsListColumn.Source]}
+            categories={this.props.categories}
             navigate={this.props.navigate}/>
         </ScrollView>
       </ScrollView>
@@ -53,9 +55,11 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   const events = state.dataSource.events;
+  const categories = state.dataSource.categories || [];
   return {
     newEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Submitted || getEventStatus(event) === EventStatus.Sent) : [],
-    activeEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Assigned) : []
+    activeEvents: events ? events.filter(event => getEventStatus(event) === EventStatus.Assigned) : [],
+    categories
   };
 };
 
@@ -66,7 +70,8 @@ EventsList.propTypes = {
   activeEvents: PropTypes.array,
   navigate: PropTypes.func.isRequired,
   registerForRefresh: PropTypes.func,
-  handleRefresh: PropTypes.func
+  handleRefresh: PropTypes.func,
+  categories: PropTypes.array
 };
 
 const styles = StyleSheet.create({

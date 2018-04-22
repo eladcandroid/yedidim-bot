@@ -1,4 +1,7 @@
-import { SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_NOTIFICATIONS, SET_LATEST_VERSION, SET_ERROR } from "../constants/actionTypes";
+import {
+  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_CATEGORIES,
+  SET_NOTIFICATIONS, SET_LATEST_VERSION, SET_ERROR
+} from "../constants/actionTypes";
 import {EventSource} from "../constants/consts";
 
 export function dataSourceReducer(state = {}, action) {
@@ -42,6 +45,9 @@ export function dataSourceReducer(state = {}, action) {
     }
     case SET_VOLUNTEERS: {
       return Object.assign({}, state, {volunteers: action.volunteers});
+    }
+    case SET_CATEGORIES: {
+      return Object.assign({}, state, {categories: action.categories});
     }
     case SET_SEARCH_EVENTS: {
       return Object.assign({}, state, {searchEvents: action.events});

@@ -39,7 +39,7 @@
       "text": "אנא בחר\\י את סוג התקלה ברכב",
       "variable": "caller name",
       "pre": "{variable}, כעת אבקש ממך לענות על מס' שאלות על מנת שאוכל להעביר את המידע למתנדב שיסייע לך",
-      "field": "case",
+      "field": "category",
       "buttons": [
         {"payload": "problem_battery"},
         {"payload": "problem_flat_tire"},
@@ -135,37 +135,40 @@
     },
     "problem_battery": {
       "title": "כבלים ועזרה בהתנעה",
-      "case": 0,
+      "category": "Starting",
+      "subCategory": "Cables",
       "next": "more_details_battery"
     },
     "problem_flat_tire": {
       "title": "יש לי פנצ'ר",
-      "case": 1,
+      "category": "FlatTire",
+      "subCategory": "WheelChange",
       "next": "more_details_flat_tire"
     },
     "problem_fuel": {
       "title": "חסר שמן/דלק/מים",
-      "case": 4,
+      "category": "OilWaterFuel",
       "next": "more_details_fuel"
     },
     "problem_rescue": {
       "title": "חילוץ הרכב",
-      "case": 5,
+      "category": "Extraction",
       "next": "more_details_rescue"
     },
     "problem_code": {
       "title": "הקודנית לא תקינה",
-      "case": 6,
+      "category": "Starting",
+      "subCategory": "ResetCoder",
       "next": "more_details_code"
     },
     "problem_other": {
       "title": "אחר",
-      "case": 8,
+      "category": "Other",
       "next": "more_details"
     },
     "problem_car_locked": {
       "title": "הרכב ננעל",
-      "case": 9,
+      "category": "LockedCar",
       "next": "more_details"
     }
   }

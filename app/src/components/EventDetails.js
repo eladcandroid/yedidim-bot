@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ScrollView, View, Text, Clipboard, TouchableHighlight, Linking, StyleSheet, I18nManager } from 'react-native';
 import { Button } from 'native-base';
 import { Prompt } from './Prompt';
-import { getTextStyle, formatEventCase, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
+import { getTextStyle, formatEventCategory, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
 import { EventSource, EventStatus, ScreenType } from "../constants/consts";
 import { updateEventStatus, takeEvent, assignEvent } from "../actions/dataSourceActions";
 import { sendNotification } from "../actions/notificationsActions";
@@ -171,7 +171,7 @@ class EventDetails extends Component {
             <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
           </TouchableHighlight>
           <Text style={getTextStyle(styles.fieldName)}>סוג אירוע</Text>
-          <Text style={getTextStyle(styles.fieldValue)}>{formatEventCase(event)}</Text>
+          <Text style={getTextStyle(styles.fieldValue)}>{formatEventCategory(this.props.categories, event, true)}</Text>
           <Text style={getTextStyle(styles.fieldName)}>סוג רכב</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['car type']}</Text>
           <Text style={getTextStyle(styles.fieldName)}>פרטים</Text>
@@ -241,11 +241,14 @@ const mapStateToProps = (state, ownProps) => {
 
   const currentDispatcher = state.dataSource.user ? state.dataSource.user.id : undefined;
 
+  const categories = state.dataSource.categories || [];
+
   return {
     event,
     currentDispatcher,
     dispatcher,
-    volunteer
+    volunteer,
+    categories
   };
 };
 
@@ -259,7 +262,8 @@ EventDetails.propTypes = {
   event: PropTypes.object,
   currentDispatcher: PropTypes.string,
   dispatcher: PropTypes.object,
-  volunteer: PropTypes.object
+  volunteer: PropTypes.object,
+  categories: PropTypes.array
 };
 
 const styles = StyleSheet.create({

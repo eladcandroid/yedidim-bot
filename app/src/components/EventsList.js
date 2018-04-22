@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Text, StyleSheet, Image, I18nManager } from 'react-native';
 import { Grid, Row, Col, Button } from 'native-base';
-import { formatEventCase, formatEventTime, getTextStyle } from '../common/utils';
+import { formatEventCategory, formatEventTime, getTextStyle } from '../common/utils';
 import { EventSource, ScreenType } from '../constants/consts';
 
 export const EventsListColumn = {
@@ -26,7 +26,7 @@ class EventsList extends Component {
             col === EventsListColumn.Time ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventTime(event)}</Text>
             : col === EventsListColumn.Case ?
-              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventCase(event)}</Text>
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventCategory(this.props.categories, event, false)}</Text>
             : col === EventsListColumn.City ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details.city}{event.details.street_name ? (' - ' + event.details.street_name) : ''}</Text>
             : col === EventsListColumn.Name ?
@@ -70,7 +70,8 @@ export default EventsList;
 EventsList.propTypes = {
   events: PropTypes.array.isRequired,
   columns: PropTypes.array.isRequired,
-  navigate: PropTypes.func.isRequired
+  navigate: PropTypes.func.isRequired,
+  categories: PropTypes.array
 };
 
 const styles = StyleSheet.create({

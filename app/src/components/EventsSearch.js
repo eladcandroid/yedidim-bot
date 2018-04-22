@@ -27,7 +27,7 @@ class EventsSearch extends Component {
     if (!this.props.events){
       return;
     }
-    const content = eventsToCSV(this.props.events);
+    const content = eventsToCSV(this.props.categories, this.props.events);
     console.log(content);
     const fileUri = Expo.FileSystem.cacheDirectory + 'yedidim-events.csv';
     await Expo.FileSystem.writeAsStringAsync(fileUri, content);
@@ -87,6 +87,7 @@ class EventsSearch extends Component {
                 <EventsList
                   events={this.props.events}
                   columns={[EventsListColumn.Time, EventsListColumn.Name, EventsListColumn.Phone, EventsListColumn.Case]}
+                  categories={this.props.categories}
                   navigate={this.props.navigate}/>}
             </ScrollView>
           : undefined
@@ -107,8 +108,10 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   const events = state.dataSource.searchEvents;
+  const categories = state.dataSource.categories || [];
   return {
-    events
+    events,
+    categories
   };
 };
 
@@ -117,7 +120,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(EventsSearch);
 EventsList.propTypes = {
   events: PropTypes.array,
   navigate: PropTypes.func.isRequired,
-  searchEvents: PropTypes.func
+  searchEvents: PropTypes.func,
+  categories: PropTypes.array
 };
 
 const styles = StyleSheet.create({

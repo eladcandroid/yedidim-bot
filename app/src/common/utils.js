@@ -1,5 +1,5 @@
 import dateFormat from 'dateformat';
-import { EventCases, EventSource, EventStatus } from "../constants/consts";
+import { EventSource, EventStatus } from "../constants/consts";
 import { I18nManager } from "react-native";
 
 export const getInstance = () => {
@@ -33,9 +33,13 @@ export const getUserDetailsText = (event) => {
 };
 
 
-export const formatEventCase = (event) => {
-  const eventCase = EventCases.find(eventCase => eventCase.case === event.details.case);
-  return eventCase && eventCase.label ? eventCase.label : 'לא ידוע';
+export const formatEventCategory = (categories, event, includeSub) => {
+  const category = categories.find(category => category.id === event.details.category);
+  if (!category) {
+    return 'לא ידוע';
+  }
+  const subCategory = category.subCategories ? category.subCategories.find(subCategory => subCategory.id === event.details.subCategory) : undefined;
+  return category.displayName + (subCategory && includeSub ? (' - ' + subCategory.displayName) : '');
 };
 
 export const formatEventTime = (event) => {
@@ -50,13 +54,13 @@ export const getGoogleMapsUrl = (event) => {
   return 'https://www.google.com/maps/search/?api=1&query=' + event.details.geo.lat + ',' + event.details.geo.lon;
 };
 
-export const eventsToCSV = (events) => {
+export const eventsToCSV = (categories, events) => {
   let buffer = "זמן, כתובת, שם, רכב, מקרה, פרטים, טלפון, מקור";
   buffer += '\n';
   events.map(event => {
     if (event.status === EventStatus.Completed) {
       const details = event.details;
-      buffer += `${formatEventTime(event)},"${formatCSVCell(details.address)}",${formatCSVCell(details['caller name'])},${formatCSVCell(details['car type'])},${formatEventCase(event)},"${formatCSVCell(details['more'])}",${details['phone number']},` +
+      buffer += `${formatEventTime(event)},"${formatCSVCell(details.address)}",${formatCSVCell(details['caller name'])},${formatCSVCell(details['car type'])},${formatEventCategory(categories, event, true)},"${formatCSVCell(details['more'])}",${details['phone number']},` +
         (event.source === EventSource.FB_BOT ? 'בוט' : 'אפליקציה') + '\n';
     }
   });
