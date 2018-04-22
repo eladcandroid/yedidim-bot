@@ -3,7 +3,6 @@ import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
 import { Linking, View } from 'react-native'
-import { eventCategoryMessage, eventCategoryImg } from 'const'
 
 import {
   Button,
@@ -26,8 +25,8 @@ const MarginView = styled.View`
 `
 const EventDetails = ({
   event: {
-    category,
-    subCategory,
+    categoryName,
+    categoryImg,
     timestamp,
     lat,
     lon,
@@ -48,18 +47,12 @@ const EventDetails = ({
         <Row>
           <Col size={1}>
             <MarginView>
-              <Thumbnail source={eventCategoryImg(category, subCategory)} />
+              <Thumbnail source={categoryImg} />
             </MarginView>
           </Col>
           <Col size={3}>
             <MarginView>
-              <FormattedMessage
-                {...eventCategoryMessage(category, subCategory)}
-              >
-                {eventCategoryTxt => (
-                  <H2 style={{ textAlign: 'left' }}>{eventCategoryTxt}</H2>
-                )}
-              </FormattedMessage>
+              <H2 style={{ textAlign: 'left' }}>{categoryName}</H2>
               <FormattedRelative value={timestamp}>
                 {relative => <AlignedText note>{relative}</AlignedText>}
               </FormattedRelative>

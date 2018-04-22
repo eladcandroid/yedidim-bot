@@ -2,6 +2,7 @@ import { types, flow, getRoot, getParent } from 'mobx-state-tree'
 import GeoFire from 'geofire'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
+import categoryImg from 'const'
 import locationHandler from '../../phoneInterface/locationHandler'
 import Dispatcher from './Dispatcher'
 
@@ -59,6 +60,15 @@ export default types
     },
     get displayAddress() {
       return self.address.replace(/, ישראל$/, '')
+    },
+    get categoryName() {
+      const category = getRoot(self).eventStore.categories.find(
+        entry => entry.id === self.category
+      )
+      return category && category.displayName
+    },
+    get categoryImg() {
+      return categoryImg(self.category)
     }
   }))
   .actions(self => ({

@@ -18,7 +18,6 @@ import {
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator, RefreshControl } from 'react-native'
-import { eventCategoryMessage, eventCategoryImg } from 'const'
 import debounce from 'lodash.debounce'
 import { trackEvent } from 'io/analytics'
 
@@ -64,8 +63,8 @@ const EventItem = observer(
     onPress,
     event: {
       id,
-      category,
-      subCategory,
+      categoryName,
+      categoryImg,
       displayAddress,
       more,
       timestamp,
@@ -98,16 +97,12 @@ const EventItem = observer(
         }}
       >
         <Left>
-          <Thumbnail small source={eventCategoryImg(category, subCategory)} />
+          <Thumbnail small source={categoryImg} />
         </Left>
         <Body>
-          <FormattedMessage {...eventCategoryMessage(category, subCategory)}>
-            {eventTypeTxt => (
-              <AlignedText>
-                {eventTypeTxt} - {displayAddress}
-              </AlignedText>
-            )}
-          </FormattedMessage>
+          <AlignedText>
+            {categoryName} - {displayAddress}
+          </AlignedText>
           <AlignedText note>{more}</AlignedText>
         </Body>
         <Right>
