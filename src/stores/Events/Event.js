@@ -1,9 +1,9 @@
-import { types, destroy, flow, getRoot, getParent } from 'mobx-state-tree'
+import { types, flow, getRoot, getParent } from 'mobx-state-tree'
+import GeoFire from 'geofire'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
-import GeoFire from 'geofire'
-import { Dispatcher } from 'stores/Dispatcher'
-import locationHandler from '../phoneInterface/locationHandler'
+import locationHandler from '../../phoneInterface/locationHandler'
+import Dispatcher from './Dispatcher'
 
 const calculateDistanceFromEvent = async event => {
   try {
@@ -16,7 +16,7 @@ const calculateDistanceFromEvent = async event => {
   }
 }
 
-export const Event = types
+export default types
   .model('Event', {
     id: types.identifier(),
     address: types.maybe(types.string),
@@ -128,67 +128,3 @@ export const Event = types
       return results
     })
   }))
-
-const EventStore = types
-  .model('EventStore', {
-    events: types.map(Event),
-    isLoading: false
-  })
-  .views(self => ({
-    findById(eventId) {
-      return self.events.get(eventId)
-    },
-    get allEvents() {
-      return self.events.values()
-    },
-    get hasEvents() {
-      return self.events.size > 0
-    },
-    get sortedEventsByStatusAndTimestamp() {
-      return self.allEvents.slice().sort((a, b) => {
-        if (a.isTaken === b.isTaken) {
-          return a.timestamp - b.timestamp
-        }
-        // display taken events last
-        return a.isTaken ? 1 : -1
-      })
-    }
-  }))
-  .actions(self => {
-    function addEvent(eventJSON) {
-      if (!self.events.get(eventJSON.id)) {
-        self.events.put(eventJSON)
-      }
-    }
-
-    return {
-      loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
-        const currentUserId = getRoot(self).authStore.currentUser.id
-        const events = yield api.loadLatestOpenEvents(currentUserId)
-        self.removeAllEvents()
-        events.forEach(addEvent)
-      }),
-      removeEvent(eventId) {
-        destroy(self.events.get(eventId))
-      },
-      removeAllEvents: () => {
-        self.events.values().forEach(event => {
-          // Remove all events apart from the assigned to the user
-          if (!event.isAssigned) {
-            self.removeEvent(event.id)
-          }
-        })
-      },
-      addEventFromNotification: eventId => {
-        addEvent({ id: eventId })
-
-        trackEvent('EventNotificationReceived', {
-          eventId
-        })
-      },
-      setLoading: isLoading => {
-        self.isLoading = isLoading
-      }
-    }
-  })
-export default EventStore

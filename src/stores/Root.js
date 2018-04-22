@@ -2,7 +2,7 @@ import { types, flow } from 'mobx-state-tree'
 import { setLanguage } from 'io/storage'
 import { trackEvent } from 'io/analytics'
 import AuthenticationStore from './Authentication'
-import EventStore from './Event'
+import EventStore from './Events'
 
 const RootStore = types
   .model('RootStore', {
