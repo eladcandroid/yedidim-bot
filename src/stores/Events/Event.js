@@ -59,7 +59,7 @@ export default types
       )
     },
     get displayAddress() {
-      return self.address.replace(/, ישראל$/, '')
+      return self.address && self.address.replace(/, ישראל$/, '')
     },
     get categoryName() {
       const category = getRoot(self).eventStore.categories.find(
