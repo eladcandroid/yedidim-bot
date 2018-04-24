@@ -1,4 +1,9 @@
-node_modules
+node_modules/
+.expo/
+npm-debug.*
+i18n/messages
+.tmp
+
 .idea/
 /functions/_tokens.json
 /webApp/dist/

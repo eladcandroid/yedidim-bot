@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "ידידים מתנדבים",
+    "slug": "yedidim-volunteers",
+    "sdkVersion": "25.0.0",
+    "splash": {
+      "resizeMode": "cover",
+      "image": "./assets/icons/splash.png",
+      "backgroundColor": "#ffffff"
+    },
+    "icon": "./assets/icons/icon.png",
+    "notification": {
+      "icon": "./assets/notification/icon.png"
+    },
+    "scheme": "yddmva",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "startach",
+            "project": "yedidim-volunteers",
+            "authToken":
+              "b1c4ef08fddd49fabb4fbc4d8190e51c8108d1d8986d4e1caf7bc1c3e98315e4"
+          }
+        }
+      ]
+    },
+    "extra": {
+      "AmplitudeAPI": "2e1ccff4946b3318c47b05aeaaf7db16",
+      "SentryAPI":
+        "https://e075960424d7484ab62d767a844a9502:422a3b4e953b4c7a84cd9811bb71fc90@sentry.io/266660"
+    },
+    "ios": {
+      "bundleIdentifier": "com.startach.yedidim.volunteers"
+    },
+    "android": {
+      "package": "com.startach.yedidim.volunteers"
+    }
+  }
+}
