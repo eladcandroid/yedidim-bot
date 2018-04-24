@@ -30,7 +30,7 @@ class EventDetails extends Component {
   }
 
   copyEventDetailsToClipboard() {
-    Clipboard.setString(getEventDetailsText(this.props.event));
+    Clipboard.setString(getEventDetailsText(this.props.event, this.props.categories));
     this.props.navigate(ScreenType.EventsList);
   }
 

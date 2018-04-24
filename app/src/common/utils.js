@@ -24,8 +24,8 @@ export const  getTextStyle = (style) => {
   return [style, I18nManager.isRTL ? {textAlign: 'left'} : {textAlign:'right'}]
 };
 
-export const getEventDetailsText = (event) => {
-  return `*עיר:* ${event.details['city']}\r\n*כתובת:* ${event.details['address']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*בעיה:* ${formatEventCase(event)}`;
+export const getEventDetailsText = (event, categories) => {
+  return `*עיר:* ${event.details['city']}\r\n*כתובת:* ${event.details['address']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*בעיה:* ${formatEventCategory(categories, event, true)}`;
 };
 
 export const getUserDetailsText = (event) => {
