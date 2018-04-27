@@ -67,9 +67,9 @@ export default types
       )
 
       if (category) {
-        const subCategory = category.subCategories.find(
+        const subCategory = (category.subCategories !== null) ? category.subCategories.find(
           entry => entry.id === self.subCategory
-        )
+        ) : null;
 
         return subCategory
           ? `${category.displayName}/${subCategory.displayName}`

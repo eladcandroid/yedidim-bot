@@ -173,7 +173,7 @@ const eventSnapshotToJSON = snapshot => ({
 async function fetchLatestOpenEventsLocationBased(userId) {
   return new Promise(async (resolve, reject) => {
     try {
-      const currentLocation = await Location.getCurrentPositionAsync({})
+      const currentLocation = await Location.getCurrentPositionAsync({ enableHighAccuracy: true })
       const { latitude, longitude } = currentLocation.coords
       saveUserLocation(userId, latitude, longitude)
       const nearEventIdToDistance = {}
