@@ -1,0 +1,10 @@
+[
+  {
+    "id": "Notification.event.button",
+    "defaultMessage": "Show"
+  },
+  {
+    "id": "Notification.event.text",
+    "defaultMessage": "New event received"
+  }
+]

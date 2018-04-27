@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Authentication.title",
+    "defaultMessage": "Authentication"
+  },
+  {
+    "id": "Authentication.error",
+    "defaultMessage": "An error has occurred, unable to authenticate. Please try again later."
+  },
+  {
+    "id": "Authentication.notauthenticated",
+    "defaultMessage": "You are not authenticated yet. Please authenticate to receive events."
+  },
+  {
+    "id": "Authentication.phonenumber",
+    "defaultMessage": "Phone number"
+  },
+  {
+    "id": "Authentication.id",
+    "defaultMessage": "ID"
+  },
+  {
+    "id": "Authentication.button",
+    "defaultMessage": "Authenticate me"
+  }
+]

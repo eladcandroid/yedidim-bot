@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Home.event.distance.ms",
+    "defaultMessage": "{formattedDistance} m"
+  },
+  {
+    "id": "Home.event.distance.kms",
+    "defaultMessage": "{formattedDistance} km"
+  },
+  {
+    "id": "Home.event.loadingTitle",
+    "defaultMessage": "Please wait, loading event..."
+  },
+  {
+    "id": "Home.event.taken",
+    "defaultMessage": "TAKEN"
+  },
+  {
+    "id": "Home.noevents",
+    "defaultMessage": "Sorry, no events were found"
+  },
+  {
+    "id": "Home.title",
+    "defaultMessage": "Home"
+  }
+]

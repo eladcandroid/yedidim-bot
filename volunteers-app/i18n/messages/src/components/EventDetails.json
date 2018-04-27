@@ -1,0 +1,46 @@
+[
+  {
+    "id": "Event.description",
+    "defaultMessage": "Description"
+  },
+  {
+    "id": "Event.location",
+    "defaultMessage": "Location"
+  },
+  {
+    "id": "Event.caller",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "Event.phone",
+    "defaultMessage": "Phone"
+  },
+  {
+    "id": "Event.privateInfo",
+    "defaultMessage": "Private Info"
+  },
+  {
+    "id": "Event.carType",
+    "defaultMessage": "Car type"
+  },
+  {
+    "id": "Dispatcher.name",
+    "defaultMessage": "Dispatcher"
+  },
+  {
+    "id": "Dispatcher.phone",
+    "defaultMessage": "Dispatcher's Phone"
+  },
+  {
+    "id": "Event.button.navigate",
+    "defaultMessage": "Navigate with Waze"
+  },
+  {
+    "id": "Event.button.callPerson",
+    "defaultMessage": "Call Person"
+  },
+  {
+    "id": "Dispatcher.button.callDispatcher",
+    "defaultMessage": "Call Dispatcher"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "Authentication.signout",
+    "defaultMessage": "Sign out"
+  },
+  {
+    "id": "Sidebar.aboutStartach",
+    "defaultMessage": "About Startach"
+  },
+  {
+    "id": "Sidebar.helpPage",
+    "defaultMessage": "Help"
+  }
+]
