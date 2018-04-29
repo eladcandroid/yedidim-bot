@@ -4,6 +4,18 @@
     "defaultMessage": "Test Notifications"
   },
   {
+    "id": "NotificationReport.volunteers",
+    "defaultMessage": "Volunteers"
+  },
+  {
+    "id": "NotificationReport.status.sent",
+    "defaultMessage": "Sent"
+  },
+  {
+    "id": "NotificationReport.dispatchers",
+    "defaultMessage": "Dispatchers"
+  },
+  {
     "id": "NotificationReport.title",
     "defaultMessage": "Notifications"
   }
