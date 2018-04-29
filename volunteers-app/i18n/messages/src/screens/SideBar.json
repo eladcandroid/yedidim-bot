@@ -8,7 +8,11 @@
     "defaultMessage": "About Startach"
   },
   {
-    "id": "Sidebar.helpPage",
-    "defaultMessage": "Help"
+    "id": "Sidebar.admin",
+    "defaultMessage": "Administrators"
+  },
+  {
+    "id": "Sidebar.admin.notificationReport",
+    "defaultMessage": "Notification Report"
   }
 ]

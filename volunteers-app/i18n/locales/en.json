@@ -102,6 +102,5 @@
   "Home.event.distance.ms": "{formattedDistance} m",
   "Home.event.distance.kms": "{formattedDistance} km",
   "helpPage.notificationTestBtn.text": "Test Notifications",
-  "HelpPage.title": "Help",
-  "Sidebar.helpPage": "Help"
+  "HelpPage.title": "Help"
 }

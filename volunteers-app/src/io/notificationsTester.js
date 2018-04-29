@@ -1,6 +1,6 @@
 import { firebaseFunctionsUrl } from '../config'
 
-export async function sendTestNotification(userId) {
+export default async function sendTestNotification(userId) {
   fetch(`${firebaseFunctionsUrl()}/sendVolunteerTestNotification`, {
     method: 'POST',
     headers: {

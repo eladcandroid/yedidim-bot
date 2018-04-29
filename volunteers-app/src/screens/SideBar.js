@@ -1,6 +1,16 @@
 import React from 'react'
 import { Constants } from 'expo'
-import { Text, Container, List, ListItem, Content } from 'native-base'
+import {
+  Text,
+  Container,
+  List,
+  ListItem,
+  Content,
+  Icon,
+  Body,
+  Left,
+  Separator
+} from 'native-base'
 import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
@@ -35,6 +45,9 @@ const SideBar = ({
             {name} {phone && `(${phone})`}
           </Text>
         </ListItem>
+        <ListItem>
+          <Text>v{Constants.manifest.version}</Text>
+        </ListItem>
         <ListItem
           button
           onPress={async () => {
@@ -68,8 +81,14 @@ const SideBar = ({
             {txt => <Text>{txt}</Text>}
           </FormattedMessage>
         </ListItem>
+        <Separator bordered>
+          <FormattedMessage id="Sidebar.admin" defaultMessage="Administrators">
+            {txt => <Text>{txt}</Text>}
+          </FormattedMessage>
+        </Separator>
         <ListItem
           button
+          icon
           onPress={() => {
             navigation.dispatch(
               NavigationActions.navigate({
@@ -78,12 +97,17 @@ const SideBar = ({
             )
           }}
         >
-          <FormattedMessage id="Sidebar.helpPage" defaultMessage="Help">
-            {txt => <Text>{txt}</Text>}
-          </FormattedMessage>
-        </ListItem>
-        <ListItem>
-          <Text>v{Constants.manifest.version}</Text>
+          <Body>
+            <FormattedMessage
+              id="Sidebar.admin.notificationReport"
+              defaultMessage="Notification Report"
+            >
+              {txt => <Text>{txt}</Text>}
+            </FormattedMessage>
+          </Body>
+          <Left>
+            <Icon name="ios-notifications" />
+          </Left>
         </ListItem>
       </List>
     </Content>
