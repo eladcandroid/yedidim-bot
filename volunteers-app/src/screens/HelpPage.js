@@ -1,15 +1,27 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { FormattedMessage } from 'react-intl'
-import { I18nManager, Linking, Image } from 'react-native'
+import { I18nManager } from 'react-native'
 import { trackEvent } from 'io/analytics'
 
 import {
-  Button, Body, Header, Title, Left, Icon, Right, Container, Content, Text, Grid, Col, Row
+  Button,
+  Body,
+  Header,
+  Title,
+  Left,
+  Icon,
+  Right,
+  Container,
+  Content,
+  Text,
+  Grid,
+  Col,
+  Row
 } from 'native-base'
 
-import {sendTestNotification} from '../io/notificationsTester'
-import {inject, observer} from "mobx-react/native";
+import { inject, observer } from 'mobx-react/native'
+import { sendTestNotification } from '../io/notificationsTester'
 
 const MarginView = styled.View`
   margin: 10px 10px;
@@ -17,32 +29,32 @@ const MarginView = styled.View`
 
 @observer
 class HelpPage extends Component {
-  static navigationOptions = ({navigation}) => ({
+  static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
         <Left>
           <Button
             transparent
             onPress={() => {
-              trackEvent('Navigation', {page: 'BackFromHelpPage'})
+              trackEvent('Navigation', { page: 'BackFromHelpPage' })
               navigation.goBack()
             }}
           >
-            <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}/>
+            <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
           </Button>
         </Left>
         <Body>
-        <FormattedMessage id="HelpPage.title" defaultMessage="Help">
-          {txt => <Title>{txt}</Title>}
-        </FormattedMessage>
+          <FormattedMessage id="HelpPage.title" defaultMessage="Help">
+            {txt => <Title>{txt}</Title>}
+          </FormattedMessage>
         </Body>
-        <Right/>
+        <Right />
       </Header>
     )
   })
 
   render() {
-    const userId = this.props.currentUser.id;
+    const userId = this.props.currentUser.id
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>

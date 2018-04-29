@@ -78,10 +78,7 @@ const SideBar = ({
             )
           }}
         >
-          <FormattedMessage
-            id="Sidebar.helpPage"
-            defaultMessage="Help"
-          >
+          <FormattedMessage id="Sidebar.helpPage" defaultMessage="Help">
             {txt => <Text>{txt}</Text>}
           </FormattedMessage>
         </ListItem>
