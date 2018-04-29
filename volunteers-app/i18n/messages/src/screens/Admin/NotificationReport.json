@@ -1,0 +1,10 @@
+[
+  {
+    "id": "NotificationReport.button.text",
+    "defaultMessage": "Test Notifications"
+  },
+  {
+    "id": "NotificationReport.title",
+    "defaultMessage": "Notifications"
+  }
+]

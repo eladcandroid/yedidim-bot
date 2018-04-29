@@ -92,7 +92,7 @@ const SideBar = ({
           onPress={() => {
             navigation.dispatch(
               NavigationActions.navigate({
-                routeName: 'HelpPage'
+                routeName: 'NotificationReport'
               })
             )
           }}

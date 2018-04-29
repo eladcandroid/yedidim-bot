@@ -100,7 +100,5 @@
   "Notification.event.button": "Show",
   "Notification.event.text": "New event received",
   "Home.event.distance.ms": "{formattedDistance} m",
-  "Home.event.distance.kms": "{formattedDistance} km",
-  "helpPage.notificationTestBtn.text": "Test Notifications",
-  "HelpPage.title": "Help"
+  "Home.event.distance.kms": "{formattedDistance} km"
 }

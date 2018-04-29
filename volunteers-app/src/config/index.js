@@ -49,8 +49,10 @@ export const environment = () => {
 export const defaultLanguage = () =>
   environment() === 'development' ? 'en' : 'he'
 
-export const firebaseCredentials = () => firebaseInfo[environment()].authCredentials
-export const firebaseFunctionsUrl = () => firebaseInfo[environment()].functionsUrl
+export const firebaseCredentials = () =>
+  firebaseInfo[environment()].authCredentials
+export const firebaseFunctionsUrl = () =>
+  firebaseInfo[environment()].functionsUrl
 export const hostingDomain = () =>
   environment() === 'production' ? 'yedidim-production' : 'yedidim-sandbox-2'
 

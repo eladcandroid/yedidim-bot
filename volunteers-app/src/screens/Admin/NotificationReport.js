@@ -21,14 +21,14 @@ import {
 } from 'native-base'
 
 import { inject, observer } from 'mobx-react/native'
-import { sendTestNotification } from '../io/notificationsTester'
+import { sendTestNotification } from 'io/notificationsTester'
 
 const MarginView = styled.View`
   margin: 10px 10px;
 `
 
 @observer
-class HelpPage extends Component {
+class NotificationReport extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
@@ -44,7 +44,10 @@ class HelpPage extends Component {
           </Button>
         </Left>
         <Body>
-          <FormattedMessage id="HelpPage.title" defaultMessage="Help">
+          <FormattedMessage
+            id="NotificationReport.title"
+            defaultMessage="Notifications"
+          >
             {txt => <Title>{txt}</Title>}
           </FormattedMessage>
         </Body>
@@ -68,8 +71,8 @@ class HelpPage extends Component {
                     onPress={() => sendTestNotification(userId)}
                   >
                     <FormattedMessage
-                      id="helpPage.notificationTestBtn.text"
-                      defaultMessage="בדוק התראות"
+                      id="NotificationReport.button.text"
+                      defaultMessage="Test Notifications"
                     >
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
@@ -86,4 +89,4 @@ class HelpPage extends Component {
 
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser
-}))(HelpPage)
+}))(NotificationReport)
