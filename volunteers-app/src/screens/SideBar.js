@@ -1,7 +1,6 @@
 import React from 'react'
 import { Constants } from 'expo'
 import {
-  Text,
   Container,
   List,
   ListItem,
@@ -16,6 +15,7 @@ import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { NavigationActions } from 'react-navigation'
 import Logo from './logo.png'
+import AlignedText from '../components/AlignedText'
 
 const SideBar = ({
   signOut,
@@ -41,12 +41,12 @@ const SideBar = ({
       />
       <List style={{ marginTop: 20 }}>
         <ListItem>
-          <Text>
+          <AlignedText>
             {name} {phone && `(${phone})`}
-          </Text>
+          </AlignedText>
         </ListItem>
         <ListItem>
-          <Text>v{Constants.manifest.version}</Text>
+          <AlignedText>v{Constants.manifest.version}</AlignedText>
         </ListItem>
         <ListItem
           button
@@ -54,14 +54,14 @@ const SideBar = ({
             await toggleLanguage()
           }}
         >
-          <Text>{nextLanguage}</Text>
+          <AlignedText>{nextLanguage}</AlignedText>
         </ListItem>
         <ListItem button onPress={signOut}>
           <FormattedMessage
             id="Authentication.signout"
             defaultMessage="Sign out"
           >
-            {txt => <Text>{txt}</Text>}
+            {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
         </ListItem>
         <ListItem
@@ -78,7 +78,7 @@ const SideBar = ({
             id="Sidebar.aboutStartach"
             defaultMessage="About Startach"
           >
-            {txt => <Text>{txt}</Text>}
+            {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
         </ListItem>
         {role === 'admin' && (
@@ -88,7 +88,7 @@ const SideBar = ({
                 id="Sidebar.admin"
                 defaultMessage="Administrators"
               >
-                {txt => <Text>{txt}</Text>}
+                {txt => <AlignedText>{txt}</AlignedText>}
               </FormattedMessage>
             </Separator>
             <ListItem
@@ -110,7 +110,7 @@ const SideBar = ({
                   id="Sidebar.admin.notificationTest"
                   defaultMessage="Notification Test"
                 >
-                  {txt => <Text>{txt}</Text>}
+                  {txt => <AlignedText>{txt}</AlignedText>}
                 </FormattedMessage>
               </Body>
             </ListItem>

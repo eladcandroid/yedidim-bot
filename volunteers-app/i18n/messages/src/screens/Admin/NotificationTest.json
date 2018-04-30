@@ -1,7 +1,7 @@
 [
   {
     "id": "NotificationReport.button.text",
-    "defaultMessage": "Reset & Send test notifications to all"
+    "defaultMessage": "Retest Notifications for everyone"
   },
   {
     "id": "NotificationReport.volunteers",

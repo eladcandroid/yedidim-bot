@@ -14,7 +14,6 @@ import {
   Right,
   Container,
   Content,
-  Text,
   Grid,
   Col,
   Row,
@@ -25,9 +24,9 @@ import {
 import { inject, observer } from 'mobx-react/native'
 import { sendTestNotification } from 'io/notificationsTester'
 
-import UserListItem from './UserListItem'
+import AlignedText from 'components/AlignedText'
 
-// import AlignedText from 'components/AlignedText'
+import UserListItem from './UserListItem'
 
 const MarginView = styled.View`
   margin: 10px 10px 0;
@@ -83,9 +82,9 @@ class NotificationTest extends Component {
                   >
                     <FormattedMessage
                       id="NotificationReport.button.text"
-                      defaultMessage="Reset & Send test notifications to all"
+                      defaultMessage="Retest Notifications for everyone"
                     >
-                      {txt => <Text>{txt}</Text>}
+                      {txt => <AlignedText>{txt}</AlignedText>}
                     </FormattedMessage>
                   </Button>
                 </MarginView>
@@ -115,7 +114,7 @@ class NotificationTest extends Component {
                       id="NotificationReport.volunteers"
                       defaultMessage="Volunteers"
                     >
-                      {txt => <Text>{txt}</Text>}
+                      {txt => <AlignedText>{txt}</AlignedText>}
                     </FormattedMessage>
                   </Separator>
                   {volunteers.map(volunteer => (
@@ -126,7 +125,7 @@ class NotificationTest extends Component {
                       id="NotificationReport.dispatchers"
                       defaultMessage="Dispatchers"
                     >
-                      {txt => <Text>{txt}</Text>}
+                      {txt => <AlignedText>{txt}</AlignedText>}
                     </FormattedMessage>
                   </Separator>
                   {dispatchers.map(dispatcher => (
@@ -137,7 +136,7 @@ class NotificationTest extends Component {
                       id="NotificationReport.admins"
                       defaultMessage="Administrators"
                     >
-                      {txt => <Text>{txt}</Text>}
+                      {txt => <AlignedText>{txt}</AlignedText>}
                     </FormattedMessage>
                   </Separator>
                   {admins.map(admin => (

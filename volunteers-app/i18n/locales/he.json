@@ -98,5 +98,12 @@
   "Notification.event.button": "לראות",
   "Notification.event.text": "התקבל אירוע חדש",
   "Home.event.distance.ms": "{formattedDistance} מ׳",
-  "Home.event.distance.kms": "{formattedDistance} ק\"מ"
+  "Home.event.distance.kms": "{formattedDistance} ק\"מ",
+  "Sidebar.admin": "מנהלים",
+  "Sidebar.admin.notificationTest": "בדיקת התראות",
+  "NotificationReport.title": "התראות",
+  "NotificationReport.button.text": "בדוק שוב התראות לכולם",
+  "NotificationReport.volunteers": "מתנדבים",
+  "NotificationReport.dispatchers": "מוקדנים",
+  "NotificationReport.admins": "מנהלים"
 }

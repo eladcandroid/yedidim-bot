@@ -37,7 +37,9 @@ const UserListItem = ({
           }
           if (buttonIndex === 1) {
             // Whatsapp
-            Linking.openURL(`whatsapp://send?phone=${phone}`)
+            Linking.openURL(
+              `whatsapp://send?phone=${phone.replace(/^0/, '+972')}`
+            )
           }
           // TODO Resend notification for user
         }
