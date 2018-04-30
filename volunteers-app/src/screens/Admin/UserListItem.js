@@ -3,7 +3,7 @@ import { Body, Icon, Right, Text, ListItem, ActionSheet } from 'native-base'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
 import { Linking } from 'react-native'
 
-const options = ['Call', 'Resend Notification', 'Cancel']
+const options = ['להתקשר', 'WhatsApp', 'לשלוח בדיקה מחדש', 'לבטל']
 
 const UserListItem = ({ name, phone }) => (
   <ListItem
@@ -12,13 +12,17 @@ const UserListItem = ({ name, phone }) => (
       ActionSheet.show(
         {
           options,
-          cancelButtonIndex: 2,
+          cancelButtonIndex: 3,
           title: name
         },
         buttonIndex => {
           if (buttonIndex === 0) {
             // Call
             Linking.openURL(`tel:${phone.replace(/\+972/, '0')}`)
+          }
+          if (buttonIndex === 1) {
+            // Whatsapp
+            Linking.openURL(`whatsapp://send?phone=${phone}`)
           }
           console.log(options[buttonIndex])
         }
