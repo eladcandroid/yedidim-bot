@@ -2,6 +2,7 @@ import React from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { reaction } from 'mobx'
 import { Notifications } from 'expo'
+import { Alert } from 'react-native'
 import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
 import { defineMessages } from 'react-intl'
@@ -76,7 +77,7 @@ const withNotificationManager = WrappedComponent => {
       this.props.navigation.dispatch(navigateAction)
     }
 
-    handleNotification = ({origin, data, remote}) => {
+    handleNotification = ({ origin, data, remote, ...others }) => {
       if (!data) {
         return
       }
@@ -86,7 +87,13 @@ const withNotificationManager = WrappedComponent => {
       }
 
       if (data.type === 'test') {
-        console.log('Received test notification.')
+        Alert.alert(
+          'בדיקת התראות',
+          'ההתראות נדבקו ונמצאו תקינים. הדכענו את המערכת עם התוצאות הבדיקה.',
+          [{ text: 'OK', onPress: () => {} }],
+          { cancelable: false }
+        )
+        // TODO Acknowledge test on firebase (invoke currentUser.ackNotification?)
       }
     }
 
@@ -96,7 +103,7 @@ const withNotificationManager = WrappedComponent => {
           `Notification is incomplete and lacking data, ignoring it : ${JSON.stringify(
             data
           )}`
-        );
+        )
       }
 
       if (remote) {
@@ -125,7 +132,7 @@ const withNotificationManager = WrappedComponent => {
     }
 
     render() {
-      const {currentUser, addEventFromNotification, ...other} = this.props
+      const { currentUser, addEventFromNotification, ...other } = this.props
 
       return <WrappedComponent {...other} />
     }
@@ -134,7 +141,7 @@ const withNotificationManager = WrappedComponent => {
   // As described at https://github.com/react-community/react-navigation/issues/90
   Component.router = WrappedComponent.router
 
-  return inject(({stores}) => ({
+  return inject(({ stores }) => ({
     addEventFromNotification: stores.eventStore.addEventFromNotification,
     currentUser: stores.authStore.currentUser
   }))(observer(Component))
