@@ -12,7 +12,7 @@
     "defaultMessage": "Administrators"
   },
   {
-    "id": "Sidebar.admin.notificationReport",
-    "defaultMessage": "Notification Report"
+    "id": "Sidebar.admin.notificationTest",
+    "defaultMessage": "Notification Test"
   }
 ]

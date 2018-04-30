@@ -1,7 +1,7 @@
 [
   {
     "id": "NotificationReport.button.text",
-    "defaultMessage": "Test Notifications"
+    "defaultMessage": "Reset & Send test notifications to all"
   },
   {
     "id": "NotificationReport.volunteers",
@@ -9,7 +9,7 @@
   },
   {
     "id": "NotificationReport.status.sent",
-    "defaultMessage": "Sent"
+    "defaultMessage": "Waiting"
   },
   {
     "id": "NotificationReport.dispatchers",

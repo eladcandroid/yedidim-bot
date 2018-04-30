@@ -82,7 +82,7 @@ class NotificationReport extends Component {
                   >
                     <FormattedMessage
                       id="NotificationReport.button.text"
-                      defaultMessage="Test Notifications"
+                      defaultMessage="Reset & Send test notifications to all"
                     >
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
@@ -124,7 +124,7 @@ class NotificationReport extends Component {
                         {
                           options: ['Call', 'Resend Notification', 'Cancel'],
                           cancelButtonIndex: 2,
-                          title: 'Actions'
+                          title: 'Aaron Bennet Actions'
                         },
                         buttonIndex => {
                           console.log(
@@ -139,7 +139,9 @@ class NotificationReport extends Component {
                       <Text>Aaron Bennet</Text>
                     </Body>
                     <Right>
-                      <Text style={{ color: 'green' }}>Received</Text>
+                      <Text note style={{ color: 'green' }}>
+                        Received now
+                      </Text>
                       <Icon
                         warning
                         name="ios-checkmark-circle"
@@ -154,15 +156,15 @@ class NotificationReport extends Component {
                     <Right>
                       <FormattedMessage
                         id="NotificationReport.status.sent"
-                        defaultMessage="Sent"
+                        defaultMessage="Waiting"
                       >
                         {txt => (
                           <FormattedRelative
                             value={new Date().getTime() - 232223222}
                           >
                             {relative => (
-                              <Text style={{ color: 'orange' }}>
-                                {txt} {relative}
+                              <Text note style={{ color: 'orange' }}>
+                                {txt} ({relative})
                               </Text>
                             )}
                           </FormattedRelative>
@@ -176,7 +178,9 @@ class NotificationReport extends Component {
                       <Text>Aaron Bennet</Text>
                     </Body>
                     <Right>
-                      <Text style={{ color: 'orange' }}>Waiting Response</Text>
+                      <Text note style={{ color: 'orange' }}>
+                        Waiting (3 days ago)
+                      </Text>
                       <Icon name="ios-time" style={{ color: 'orange' }} />
                     </Right>
                   </ListItem>
@@ -193,7 +197,9 @@ class NotificationReport extends Component {
                       <Text>Aaron Bennet</Text>
                     </Body>
                     <Right>
-                      <Text style={{ color: 'red' }}>No Token</Text>
+                      <Text note style={{ color: 'red' }}>
+                        No Token (1 hour ago)
+                      </Text>
                       <Icon name="ios-alert" style={{ color: 'red' }} />
                     </Right>
                   </ListItem>
@@ -202,7 +208,9 @@ class NotificationReport extends Component {
                       <Text>Aaron Bennet</Text>
                     </Body>
                     <Right>
-                      <Text style={{ color: 'red' }}>Server Error</Text>
+                      <Text note style={{ color: 'red' }}>
+                        Server Error (just now)
+                      </Text>
                       <Icon name="ios-alert" style={{ color: 'red' }} />
                     </Right>
                   </ListItem>

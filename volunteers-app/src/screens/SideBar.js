@@ -98,12 +98,12 @@ const SideBar = ({
           }}
         >
           <Left>
-            <Icon name="ios-notifications" style={{ color: 'orange' }} />
+            <Icon name="ios-notifications" />
           </Left>
           <Body>
             <FormattedMessage
-              id="Sidebar.admin.notificationReport"
-              defaultMessage="Notification Report"
+              id="Sidebar.admin.notificationTest"
+              defaultMessage="Notification Test"
             >
               {txt => <Text>{txt}</Text>}
             </FormattedMessage>
