@@ -37,6 +37,44 @@ const ListMargin = styled(List)`
   margin: 10px 0;
 `
 
+const UserEntry = ({ name }) => (
+  <ListItem
+    icon
+    onPress={() =>
+      ActionSheet.show(
+        {
+          options: ['Call', 'Resend Notification', 'Cancel'],
+          cancelButtonIndex: 2,
+          title: name
+        },
+        buttonIndex => {
+          console.log(['Call', 'Resend Notification', 'Cancel'][buttonIndex])
+        }
+      )}
+  >
+    <Body>
+      <Text>{name}</Text>
+    </Body>
+    <Right>
+      <FormattedMessage
+        id="NotificationReport.status.sent"
+        defaultMessage="Waiting"
+      >
+        {txt => (
+          <FormattedRelative value={new Date().getTime() - 232223222}>
+            {relative => (
+              <Text note style={{ color: 'orange' }}>
+                {txt} ({relative})
+              </Text>
+            )}
+          </FormattedRelative>
+        )}
+      </FormattedMessage>
+      <Icon name="ios-time" style={{ color: 'orange' }} />
+    </Right>
+  </ListItem>
+)
+
 @observer
 class NotificationTest extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -68,6 +106,8 @@ class NotificationTest extends Component {
 
   render() {
     const userId = this.props.currentUser.id
+    const { volunteers, dispatchers, admins } = this.props
+
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -117,73 +157,9 @@ class NotificationTest extends Component {
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
                   </Separator>
-                  <ListItem
-                    icon
-                    onPress={() =>
-                      ActionSheet.show(
-                        {
-                          options: ['Call', 'Resend Notification', 'Cancel'],
-                          cancelButtonIndex: 2,
-                          title: 'Aaron Bennet Actions'
-                        },
-                        buttonIndex => {
-                          console.log(
-                            ['Call', 'Resend Notification', 'Delete', 'Cancel'][
-                              buttonIndex
-                            ]
-                          )
-                        }
-                      )}
-                  >
-                    <Body>
-                      <Text>Aaron Bennet</Text>
-                    </Body>
-                    <Right>
-                      <Text note style={{ color: 'green' }}>
-                        Received now
-                      </Text>
-                      <Icon
-                        warning
-                        name="ios-checkmark-circle"
-                        style={{ color: 'green' }}
-                      />
-                    </Right>
-                  </ListItem>
-                  <ListItem icon>
-                    <Body>
-                      <Text>Aaron Bennet</Text>
-                    </Body>
-                    <Right>
-                      <FormattedMessage
-                        id="NotificationReport.status.sent"
-                        defaultMessage="Waiting"
-                      >
-                        {txt => (
-                          <FormattedRelative
-                            value={new Date().getTime() - 232223222}
-                          >
-                            {relative => (
-                              <Text note style={{ color: 'orange' }}>
-                                {txt} ({relative})
-                              </Text>
-                            )}
-                          </FormattedRelative>
-                        )}
-                      </FormattedMessage>
-                      <Icon name="ios-time" style={{ color: 'orange' }} />
-                    </Right>
-                  </ListItem>
-                  <ListItem icon last>
-                    <Body>
-                      <Text>Aaron Bennet</Text>
-                    </Body>
-                    <Right>
-                      <Text note style={{ color: 'orange' }}>
-                        Waiting (3 days ago)
-                      </Text>
-                      <Icon name="ios-time" style={{ color: 'orange' }} />
-                    </Right>
-                  </ListItem>
+                  {volunteers.map(volunteer => (
+                    <UserEntry key={volunteer.id} {...volunteer} />
+                  ))}
                   <Separator bordered>
                     <FormattedMessage
                       id="NotificationReport.dispatchers"
@@ -192,28 +168,18 @@ class NotificationTest extends Component {
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
                   </Separator>
-                  <ListItem icon>
-                    <Body>
-                      <Text>Aaron Bennet</Text>
-                    </Body>
-                    <Right>
-                      <Text note style={{ color: 'red' }}>
-                        No Token (1 hour ago)
-                      </Text>
-                      <Icon name="ios-alert" style={{ color: 'red' }} />
-                    </Right>
-                  </ListItem>
-                  <ListItem icon>
-                    <Body>
-                      <Text>Aaron Bennet</Text>
-                    </Body>
-                    <Right>
-                      <Text note style={{ color: 'red' }}>
-                        Server Error (just now)
-                      </Text>
-                      <Icon name="ios-alert" style={{ color: 'red' }} />
-                    </Right>
-                  </ListItem>
+                  {dispatchers.map(dispatcher => (
+                    <UserEntry key={dispatcher.id} {...dispatcher} />
+                  ))}
+                  <Separator bordered>
+                    <FormattedMessage
+                      id="NotificationReport.admins"
+                      defaultMessage="Administrators"
+                    >
+                      {txt => <Text>{txt}</Text>}
+                    </FormattedMessage>
+                  </Separator>
+                  {admins.map(admin => <UserEntry key={admin.id} {...admin} />)}
                 </ListMargin>
               </Col>
             </Row>
@@ -225,5 +191,8 @@ class NotificationTest extends Component {
 }
 
 export default inject(({ stores }) => ({
-  currentUser: stores.authStore.currentUser
+  currentUser: stores.authStore.currentUser,
+  admins: stores.userStore.admins,
+  dispatchers: stores.userStore.dispatchers,
+  volunteers: stores.userStore.volunteers
 }))(NotificationTest)
