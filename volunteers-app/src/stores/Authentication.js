@@ -2,8 +2,8 @@ import { types, getParent, flow } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackUserLogin, trackEvent } from 'io/analytics'
 
-export const User = types
-  .model('User', {
+const CurrentUser = types
+  .model('CurrentUser', {
     id: types.identifier(),
     name: types.string,
     phone: types.string,
@@ -44,7 +44,7 @@ const AuthenticationStore = types
     isInitializing: true,
     isOffline: false,
     isLoading: false,
-    currentUser: types.maybe(types.reference(User)),
+    currentUser: types.maybe(CurrentUser),
     error: types.maybe(types.string)
   })
   .views(self => ({
@@ -61,7 +61,7 @@ const AuthenticationStore = types
         // Not authenticated
         self.currentUser = null
       } else {
-        self.currentUser = User.create(userInfo)
+        self.currentUser = userInfo
       }
 
       trackUserLogin(self.currentUser && self.currentUser.id)
