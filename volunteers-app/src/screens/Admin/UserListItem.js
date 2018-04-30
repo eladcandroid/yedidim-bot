@@ -11,7 +11,7 @@ const status = {
   'not-tested': { text: 'לא נבדק', color: 'orange', icon: 'ios-help-circle' },
   pending: { text: 'מחכה למשתמש', color: 'orange', icon: 'ios-time' },
   'token-error': { text: 'טוקן לא מוגדר', color: 'red', icon: 'ios-alert' },
-  'sending-error': { text: 'טוקן לא תקין', color: 'red', icon: 'server' },
+  'sending-error': { text: 'טוקן לא תקין', color: 'red', icon: 'md-desktop' },
   working: { text: 'עובד', color: 'green', icon: 'ios-checkmark-circle' }
 }
 
