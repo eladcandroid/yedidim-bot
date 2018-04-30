@@ -1,27 +1,33 @@
 import firebase from 'firebase'
 
+const notificationStatus = (status, token) => {
+  if (!token) {
+    return 'token-error'
+  }
+
+  return status || 'not-tested'
+}
+
 const volunteerSnapshotToUserJSON = snapshot => ({
   name: `${snapshot.FirstName} ${snapshot.LastName}`,
   phone: snapshot.MobilePhone,
   role: snapshot.Role ? snapshot.Role : 'volunteer',
-  notificationStatus: snapshot.NotificationTest
-    ? snapshot.NotificationTest.Status
-    : 'pending',
-  notificationTimestamp: snapshot.NotificationTest
-    ? snapshot.NotificationTest.Status
-    : null
+  notificationStatus: notificationStatus(
+    snapshot.NotificationStatus,
+    snapshot.NotificationToken
+  ),
+  notificationTimestamp: snapshot.NotificationStatusTimestamp
 })
 
 const dispatcherSnapshotToUserJSON = snapshot => ({
   name: snapshot.name,
   phone: snapshot.phone,
   role: snapshot.role ? snapshot.role : 'dispatcher',
-  notificationStatus: snapshot.NotificationTest
-    ? snapshot.NotificationTest.Status
-    : 'pending',
-  notificationTimestamp: snapshot.NotificationTest
-    ? snapshot.NotificationTest.Status
-    : null
+  notificationStatus: notificationStatus(
+    snapshot.NotificationStatus,
+    snapshot.token
+  ),
+  notificationTimestamp: snapshot.NotificationStatusTimestamp
 })
 
 function onUsersChange(onChangeCallback) {

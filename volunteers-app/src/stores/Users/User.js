@@ -9,6 +9,7 @@ const User = types.model('User', {
     'volunteer'
   ),
   notificationStatus: types.enumeration('NotificationStatus', [
+    'not-tested',
     'pending',
     'token-error',
     'sending-error',
