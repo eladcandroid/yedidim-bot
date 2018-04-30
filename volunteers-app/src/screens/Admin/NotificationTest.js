@@ -64,6 +64,14 @@ class NotificationTest extends Component {
     )
   })
 
+  componentDidMount = () => {
+    this.props.init()
+  }
+
+  componentWillUnmount = () => {
+    this.props.finish()
+  }
+
   render() {
     const userId = this.props.currentUser.id
     const { volunteers, dispatchers, admins } = this.props
@@ -154,6 +162,8 @@ class NotificationTest extends Component {
 
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser,
+  init: stores.userStore.init,
+  finish: stores.userStore.finish,
   admins: stores.userStore.admins,
   dispatchers: stores.userStore.dispatchers,
   volunteers: stores.userStore.volunteers

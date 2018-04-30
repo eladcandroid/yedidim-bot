@@ -1,4 +1,4 @@
-import { types, applySnapshot } from 'mobx-state-tree'
+import { types, applySnapshot, destroy } from 'mobx-state-tree'
 import onUsersChange from 'io/users'
 import User from './User'
 
@@ -19,7 +19,7 @@ const UserStore = types
     }
   }))
   .actions(self => ({
-    afterCreate: () => {
+    init: () => {
       self.unsubscribe = onUsersChange(({ event, data }) => {
         if (event === 'child_added') {
           self.addUser(data)
@@ -30,8 +30,10 @@ const UserStore = types
         }
       })
     },
-    beforeDestroy: () => {
+    finish: () => {
       self.unsubscribe()
+      self.users.forEach(user => destroy(user))
+      self.users.clear()
     },
     addUser: json => {
       self.users.push(json)
