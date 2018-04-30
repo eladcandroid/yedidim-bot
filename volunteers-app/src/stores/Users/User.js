@@ -7,7 +7,14 @@ const User = types.model('User', {
   role: types.optional(
     types.enumeration('Role', ['volunteer', 'dispatcher', 'admin']),
     'volunteer'
-  )
+  ),
+  notificationStatus: types.enumeration('NotificationStatus', [
+    'pending',
+    'token-error',
+    'sending-error',
+    'working'
+  ]),
+  notificationTimestamp: types.maybe(types.Date)
 })
 
 export default User

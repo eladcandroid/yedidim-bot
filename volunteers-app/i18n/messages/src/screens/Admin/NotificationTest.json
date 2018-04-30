@@ -1,9 +1,5 @@
 [
   {
-    "id": "NotificationReport.status.sent",
-    "defaultMessage": "Waiting"
-  },
-  {
     "id": "NotificationReport.button.text",
     "defaultMessage": "Reset & Send test notifications to all"
   },

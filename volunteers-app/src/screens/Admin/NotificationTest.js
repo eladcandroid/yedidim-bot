@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
-import { FormattedMessage, FormattedRelative } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { I18nManager } from 'react-native'
 import { trackEvent } from 'io/analytics'
 
@@ -19,13 +19,13 @@ import {
   Col,
   Row,
   List,
-  ListItem,
-  Separator,
-  ActionSheet
+  Separator
 } from 'native-base'
 
 import { inject, observer } from 'mobx-react/native'
 import { sendTestNotification } from 'io/notificationsTester'
+
+import UserListItem from './UserListItem'
 
 // import AlignedText from 'components/AlignedText'
 
@@ -36,45 +36,6 @@ const MarginView = styled.View`
 const ListMargin = styled(List)`
   margin: 10px 0;
 `
-
-const UserEntry = ({ name }) => (
-  <ListItem
-    icon
-    onPress={() =>
-      ActionSheet.show(
-        {
-          options: ['Call', 'Resend Notification', 'Cancel'],
-          cancelButtonIndex: 2,
-          title: name
-        },
-        buttonIndex => {
-          console.log(['Call', 'Resend Notification', 'Cancel'][buttonIndex])
-        }
-      )}
-  >
-    <Body>
-      <Text>{name}</Text>
-    </Body>
-    <Right>
-      <FormattedMessage
-        id="NotificationReport.status.sent"
-        defaultMessage="Waiting"
-      >
-        {txt => (
-          <FormattedRelative value={new Date().getTime() - 232223222}>
-            {relative => (
-              <Text note style={{ color: 'orange' }}>
-                {txt} ({relative})
-              </Text>
-            )}
-          </FormattedRelative>
-        )}
-      </FormattedMessage>
-      <Icon name="ios-time" style={{ color: 'orange' }} />
-    </Right>
-  </ListItem>
-)
-
 @observer
 class NotificationTest extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -158,7 +119,7 @@ class NotificationTest extends Component {
                     </FormattedMessage>
                   </Separator>
                   {volunteers.map(volunteer => (
-                    <UserEntry key={volunteer.id} {...volunteer} />
+                    <UserListItem key={volunteer.id} {...volunteer} />
                   ))}
                   <Separator bordered>
                     <FormattedMessage
@@ -169,7 +130,7 @@ class NotificationTest extends Component {
                     </FormattedMessage>
                   </Separator>
                   {dispatchers.map(dispatcher => (
-                    <UserEntry key={dispatcher.id} {...dispatcher} />
+                    <UserListItem key={dispatcher.id} {...dispatcher} />
                   ))}
                   <Separator bordered>
                     <FormattedMessage
@@ -179,7 +140,9 @@ class NotificationTest extends Component {
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
                   </Separator>
-                  {admins.map(admin => <UserEntry key={admin.id} {...admin} />)}
+                  {admins.map(admin => (
+                    <UserListItem key={admin.id} {...admin} />
+                  ))}
                 </ListMargin>
               </Col>
             </Row>
