@@ -29,7 +29,8 @@ const userSnapshotToJSON = snapshot => ({
   name: `${snapshot.FirstName} ${snapshot.LastName}`,
   phone: snapshot.MobilePhone,
   muted: snapshot.Muted,
-  acceptedEventId: snapshot.EventKey
+  acceptedEventId: snapshot.EventKey,
+  role: snapshot.Role
 })
 
 // Store subscription so to be able to unsubscribe on logoff

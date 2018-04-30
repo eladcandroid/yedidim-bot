@@ -19,7 +19,7 @@ import Logo from './logo.png'
 
 const SideBar = ({
   signOut,
-  currentUser: { name, phone },
+  currentUser: { name, phone, role },
   nextLanguage,
   toggleLanguage,
   navigation
@@ -81,34 +81,41 @@ const SideBar = ({
             {txt => <Text>{txt}</Text>}
           </FormattedMessage>
         </ListItem>
-        <Separator bordered>
-          <FormattedMessage id="Sidebar.admin" defaultMessage="Administrators">
-            {txt => <Text>{txt}</Text>}
-          </FormattedMessage>
-        </Separator>
-        <ListItem
-          button
-          icon
-          onPress={() => {
-            navigation.dispatch(
-              NavigationActions.navigate({
-                routeName: 'NotificationReport'
-              })
-            )
-          }}
-        >
-          <Left>
-            <Icon name="ios-notifications" />
-          </Left>
-          <Body>
-            <FormattedMessage
-              id="Sidebar.admin.notificationTest"
-              defaultMessage="Notification Test"
+        {role === 'admin' && (
+          <React.Fragment>
+            <Separator bordered>
+              <FormattedMessage
+                id="Sidebar.admin"
+                defaultMessage="Administrators"
+              >
+                {txt => <Text>{txt}</Text>}
+              </FormattedMessage>
+            </Separator>
+            <ListItem
+              button
+              icon
+              onPress={() => {
+                navigation.dispatch(
+                  NavigationActions.navigate({
+                    routeName: 'NotificationReport'
+                  })
+                )
+              }}
             >
-              {txt => <Text>{txt}</Text>}
-            </FormattedMessage>
-          </Body>
-        </ListItem>
+              <Left>
+                <Icon name="ios-notifications" />
+              </Left>
+              <Body>
+                <FormattedMessage
+                  id="Sidebar.admin.notificationTest"
+                  defaultMessage="Notification Test"
+                >
+                  {txt => <Text>{txt}</Text>}
+                </FormattedMessage>
+              </Body>
+            </ListItem>
+          </React.Fragment>
+        )}
       </List>
     </Content>
   </Container>

@@ -8,7 +8,11 @@ export const User = types
     name: types.string,
     phone: types.string,
     muted: types.maybe(types.Date),
-    acceptedEventId: types.maybe(types.string)
+    acceptedEventId: types.maybe(types.string),
+    role: types.optional(
+      types.enumeration('Role', ['volunteer', 'dispatcher', 'admin']),
+      'volunteer'
+    )
   })
   .views(self => ({
     get isMuted() {
