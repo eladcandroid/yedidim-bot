@@ -1,19 +1,26 @@
 import React from 'react'
 import { Body, Icon, Right, Text, ListItem, ActionSheet } from 'native-base'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
+import { Linking } from 'react-native'
 
-const UserListItem = ({ name }) => (
+const options = ['Call', 'Resend Notification', 'Cancel']
+
+const UserListItem = ({ name, phone }) => (
   <ListItem
     icon
     onPress={() =>
       ActionSheet.show(
         {
-          options: ['Call', 'Resend Notification', 'Cancel'],
+          options,
           cancelButtonIndex: 2,
           title: name
         },
         buttonIndex => {
-          console.log(['Call', 'Resend Notification', 'Cancel'][buttonIndex])
+          if (buttonIndex === 0) {
+            // Call
+            Linking.openURL(`tel:${phone.replace(/\+972/, '0')}`)
+          }
+          console.log(options[buttonIndex])
         }
       )}
   >
