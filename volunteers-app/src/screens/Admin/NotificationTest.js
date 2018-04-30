@@ -38,7 +38,7 @@ const ListMargin = styled(List)`
 `
 
 @observer
-class NotificationReport extends Component {
+class NotificationTest extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header>
@@ -226,4 +226,4 @@ class NotificationReport extends Component {
 
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser
-}))(NotificationReport)
+}))(NotificationTest)

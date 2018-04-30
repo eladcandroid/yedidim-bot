@@ -4,14 +4,14 @@ import Home from 'screens/Home'
 import Event from 'screens/Event'
 import Feedback from 'screens/Feedback'
 import AboutStartach from 'screens/AboutStartach'
-import NotificationReport from 'screens/Admin/NotificationReport'
+import NotificationTest from 'screens/Admin/NotificationTest'
 
 const AuthenticatedStack = StackNavigator({
   Home: { screen: Home },
   Event: { screen: Event },
   Feedback: { screen: Feedback },
   AboutStartach: { screen: AboutStartach },
-  NotificationReport: { screen: NotificationReport }
+  NotificationReport: { screen: NotificationTest }
 })
 
 export default withNotificationManager(AuthenticatedStack)

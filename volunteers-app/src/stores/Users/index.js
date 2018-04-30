@@ -7,6 +7,17 @@ const UserStore = types
     isInitializing: true,
     users: types.optional(types.array(User), [])
   })
+  .views(self => ({
+    get dispatchers() {
+      return self.users.filter(({ role }) => role === 'dispatcher')
+    },
+    get volunteers() {
+      return self.users.filter(({ role }) => role === 'volunteer')
+    },
+    get admins() {
+      return self.users.filter(({ role }) => role === 'admin')
+    }
+  }))
   .actions(self => ({
     afterCreate: () => {
       self.unsubscribe = onUsersChange(({ event, data }) => {
