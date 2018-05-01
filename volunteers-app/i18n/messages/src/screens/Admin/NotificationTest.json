@@ -4,18 +4,6 @@
     "defaultMessage": "Retest Notifications for everyone"
   },
   {
-    "id": "NotificationReport.volunteers",
-    "defaultMessage": "Volunteers"
-  },
-  {
-    "id": "NotificationReport.dispatchers",
-    "defaultMessage": "Dispatchers"
-  },
-  {
-    "id": "NotificationReport.admins",
-    "defaultMessage": "Administrators"
-  },
-  {
     "id": "NotificationReport.title",
     "defaultMessage": "Notifications"
   }

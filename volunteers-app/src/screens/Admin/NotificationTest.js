@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { FormattedMessage } from 'react-intl'
-import { I18nManager } from 'react-native'
+import { I18nManager, SectionList } from 'react-native'
 import { trackEvent } from 'io/analytics'
 
 import {
@@ -17,7 +17,6 @@ import {
   Grid,
   Col,
   Row,
-  List,
   Separator
 } from 'native-base'
 
@@ -29,12 +28,9 @@ import AlignedText from 'components/AlignedText'
 import UserListItem from './UserListItem'
 
 const MarginView = styled.View`
-  margin: 10px 10px 0;
+  margin: 10px 10px;
 `
 
-const ListMargin = styled(List)`
-  margin: 10px 0;
-`
 @observer
 class NotificationTest extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -111,41 +107,31 @@ class NotificationTest extends Component {
             </Row>
             <Row>
               <Col>
-                <ListMargin>
-                  <Separator bordered>
-                    <FormattedMessage
-                      id="NotificationReport.volunteers"
-                      defaultMessage="Volunteers"
-                    >
-                      {txt => <AlignedText>{txt}</AlignedText>}
-                    </FormattedMessage>
-                  </Separator>
-                  {volunteers.map(volunteer => (
-                    <UserListItem key={volunteer.id} {...volunteer} />
-                  ))}
-                  <Separator bordered>
-                    <FormattedMessage
-                      id="NotificationReport.dispatchers"
-                      defaultMessage="Dispatchers"
-                    >
-                      {txt => <AlignedText>{txt}</AlignedText>}
-                    </FormattedMessage>
-                  </Separator>
-                  {dispatchers.map(dispatcher => (
-                    <UserListItem key={dispatcher.id} {...dispatcher} />
-                  ))}
-                  <Separator bordered>
-                    <FormattedMessage
-                      id="NotificationReport.admins"
-                      defaultMessage="Administrators"
-                    >
-                      {txt => <AlignedText>{txt}</AlignedText>}
-                    </FormattedMessage>
-                  </Separator>
-                  {admins.map(admin => (
-                    <UserListItem key={admin.id} {...admin} />
-                  ))}
-                </ListMargin>
+                <SectionList
+                  renderItem={({ item }) => (
+                    <UserListItem key={item.id} {...item} />
+                  )}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <Separator bordered>
+                      <AlignedText>{title}</AlignedText>
+                    </Separator>
+                  )}
+                  sections={[
+                    {
+                      title: 'מתנדבים',
+                      data: volunteers
+                    },
+                    {
+                      title: 'מוקדנים',
+                      data: dispatchers
+                    },
+                    {
+                      title: 'מנהלים',
+                      data: admins
+                    }
+                  ]}
+                  keyExtractor={item => item.id}
+                />
               </Col>
             </Row>
           </Grid>
