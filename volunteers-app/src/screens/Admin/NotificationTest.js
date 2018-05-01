@@ -22,7 +22,7 @@ import {
 } from 'native-base'
 
 import { inject, observer } from 'mobx-react/native'
-import { sendTestNotification } from 'io/notificationsTester'
+import { sendTestNotification } from 'io/notifications'
 
 import AlignedText from 'components/AlignedText'
 
@@ -73,7 +73,6 @@ class NotificationTest extends Component {
   }
 
   render() {
-    const userId = this.props.currentUser.id
     const { volunteers, dispatchers, admins } = this.props
 
     return (
@@ -83,11 +82,7 @@ class NotificationTest extends Component {
             <Row>
               <Col>
                 <MarginView>
-                  <Button
-                    full
-                    block
-                    onPress={() => sendTestNotification(userId)}
-                  >
+                  <Button full block onPress={() => sendTestNotification()}>
                     <FormattedMessage
                       id="NotificationReport.button.text"
                       defaultMessage="Retest Notifications for everyone"
@@ -161,7 +156,6 @@ class NotificationTest extends Component {
 }
 
 export default inject(({ stores }) => ({
-  currentUser: stores.authStore.currentUser,
   init: stores.userStore.init,
   finish: stores.userStore.finish,
   admins: stores.userStore.admins,

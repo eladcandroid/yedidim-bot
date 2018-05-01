@@ -77,7 +77,7 @@ const withNotificationManager = WrappedComponent => {
       this.props.navigation.dispatch(navigateAction)
     }
 
-    handleNotification = ({ origin, data, remote, ...others }) => {
+    handleNotification = ({ origin, data, remote }) => {
       if (!data) {
         return
       }
@@ -89,11 +89,12 @@ const withNotificationManager = WrappedComponent => {
       if (data.type === 'test') {
         Alert.alert(
           'בדיקת התראות',
-          'ההתראות נדבקו ונמצאו תקינים. הדכענו את המערכת עם התוצאות הבדיקה.',
+          'ההתראות נבדקו ונמצאו תקינות. הדכענו את המערכת עם תוצאות הבדיקה.',
           [{ text: 'OK', onPress: () => {} }],
           { cancelable: false }
         )
-        // TODO Acknowledge test on firebase (invoke currentUser.ackNotification?)
+        // Acknowledge test on firebase
+        this.props.currentUser.acknowledgeTestNotification()
       }
     }
 

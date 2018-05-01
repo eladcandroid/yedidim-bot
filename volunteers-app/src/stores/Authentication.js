@@ -1,6 +1,7 @@
 import { types, getParent, flow } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackUserLogin, trackEvent } from 'io/analytics'
+import { acknowledgeTestNotification } from 'io/notifications'
 
 const CurrentUser = types
   .model('CurrentUser', {
@@ -36,7 +37,10 @@ const CurrentUser = types
       yield api.updateUser(self.id, {
         Muted: newMute
       })
-    })
+    }),
+    acknowledgeTestNotification: () => {
+      acknowledgeTestNotification(self.id)
+    }
   }))
 
 const AuthenticationStore = types

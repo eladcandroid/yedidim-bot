@@ -1,9 +1,10 @@
 import React from 'react'
 import { Body, Icon, Right, ListItem, ActionSheet } from 'native-base'
 import { FormattedRelative } from 'react-intl'
-import { Linking } from 'react-native'
+import { Linking, Alert } from 'react-native'
 import { observer } from 'mobx-react/native'
 import AlignedText from 'components/AlignedText'
+import { sendTestNotification } from 'io/notifications'
 
 const options = ['להתקשר', 'WhatsApp', 'לשלוח בדיקה מחדש', 'לבטל']
 
@@ -16,8 +17,10 @@ const status = {
 }
 
 const UserListItem = ({
+  id,
   name,
   phone,
+  role,
   notificationStatus,
   notificationTimestamp
 }) => (
@@ -30,7 +33,7 @@ const UserListItem = ({
           cancelButtonIndex: 3,
           title: `${name} (${phone})`
         },
-        buttonIndex => {
+        async buttonIndex => {
           if (buttonIndex === 0) {
             // Call
             Linking.openURL(`tel:${phone}`)
@@ -41,7 +44,18 @@ const UserListItem = ({
               `whatsapp://send?phone=${phone.replace(/^0/, '+972')}`
             )
           }
-          // TODO Resend notification for user
+          if (buttonIndex === 2) {
+            try {
+              await sendTestNotification(id, role)
+            } catch (error) {
+              Alert.alert(
+                'שגיעה',
+                'אירע שגיעה, לא הצלחנו לשלוח מחדש את הבדיקה התראות למשתמש. נסה שוב מאוחר יותר.',
+                [{ text: 'בסדר', onPress: () => {} }],
+                { cancelable: false }
+              )
+            }
+          }
         }
       )}
   >
@@ -52,16 +66,13 @@ const UserListItem = ({
       {notificationTimestamp ? (
         <FormattedRelative value={notificationTimestamp}>
           {relative => (
-            <AlignedText
-              note
-              style={{ color: status[notificationStatus].color }}
-            >
+            <AlignedText style={{ color: status[notificationStatus].color }}>
               {status[notificationStatus].text} ({relative})
             </AlignedText>
           )}
         </FormattedRelative>
       ) : (
-        <AlignedText note style={{ color: status[notificationStatus].color }}>
+        <AlignedText style={{ color: status[notificationStatus].color }}>
           {status[notificationStatus].text}
         </AlignedText>
       )}
