@@ -78,7 +78,7 @@ const UserListItem = ({
       )}
       <Icon
         name={status[notificationStatus].icon}
-        style={{ color: status[notificationStatus].color }}
+        style={{ color: status[notificationStatus].color, marginLeft: 5 }}
       />
     </Right>
   </ListItem>
