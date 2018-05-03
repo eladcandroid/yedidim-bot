@@ -115,6 +115,7 @@ const userToJSON = (key, val, role) => {
     return {
       role: 'dispatcher',
       key,
+      val,
       phone: normalizePhone(val.phone),
       token: val.token
     }
@@ -122,6 +123,7 @@ const userToJSON = (key, val, role) => {
     return {
       role: 'volunteer',
       key,
+      val,
       phone: normalizePhone(val.MobilePhone),
       token: val.NotificationToken
     }
@@ -182,6 +184,7 @@ exports.sendTestNotification = async (req, res, admin) => {
       users.reduce((acc, user) => {
         // { 'path/to/user': {... properties to update }}
         acc[userRoleToPath(user.role, user.key)] = {
+          ...user.val,
           NotificationStatus: 'pending',
           NotificationStatusTimestamp: new Date().getTime()
         }
@@ -208,7 +211,9 @@ exports.sendTestNotification = async (req, res, admin) => {
     `[SendTestNotification]D: Writing new status based on receipts`,
     receipts
   )
+
   // TODO
+  res.status(200).end()
 }
 
 let sendNotificationToCloseByVolunteers = (
