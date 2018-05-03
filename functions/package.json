@@ -5,7 +5,8 @@
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "prepare": "babel ./**.es6 --retain-lines -d ./",
+    "prepare":
+      "babel handlers/sendExpoFollowerNotification.es6 --out-file handlers/sendExpoFollowerNotification.js",
     "deploy": "firebase use yedidim-sandbox-2 && yarn run deploy:functions",
     "deploy:production":
       "firebase use yedidim-production && yarn run deploy:functions",
@@ -13,6 +14,7 @@
       "yarn run prepare && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient"
   },
   "dependencies": {
+    "babel-runtime": "^6.23.0",
     "async": "^2.6.0",
     "expo-server-sdk": "^2.3.3",
     "firebase": "^4.8.1",
