@@ -20,7 +20,7 @@ import {
   Separator
 } from 'native-base'
 
-import { inject, observer } from 'mobx-react/native'
+import { inject, observer, Observer } from 'mobx-react/native'
 import { sendTestNotification } from 'io/notifications'
 
 import AlignedText from 'components/AlignedText'
@@ -109,7 +109,9 @@ class NotificationTest extends Component {
               <Col>
                 <SectionList
                   renderItem={({ item }) => (
-                    <UserListItem key={item.id} {...item} />
+                    <Observer>
+                      {() => <UserListItem key={item.id} {...item} />}
+                    </Observer>
                   )}
                   renderSectionHeader={({ section: { title } }) => (
                     <Separator bordered>
@@ -147,4 +149,4 @@ export default inject(({ stores }) => ({
   admins: stores.userStore.admins,
   dispatchers: stores.userStore.dispatchers,
   volunteers: stores.userStore.volunteers
-}))(NotificationTest)
+}))(observer(NotificationTest))
