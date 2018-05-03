@@ -115,13 +115,15 @@ const userToJSON = (key, val, role) => {
     return {
       role: 'dispatcher',
       key,
-      phone: normalizePhone(val.phone)
+      phone: normalizePhone(val.phone),
+      token: val.token
     }
   } else {
     return {
       role: 'volunteer',
       key,
-      phone: normalizePhone(val.MobilePhone)
+      phone: normalizePhone(val.MobilePhone),
+      token: val.NotificationToken
     }
   }
 }
@@ -138,23 +140,23 @@ exports.sendTestNotification = async (req, res, admin) => {
       userId,
       role
     )
-    const volunteers = await admin
-      .database()
-      .ref('/volunteer')
-      .once('value')
+    // const volunteers = await admin
+    //   .database()
+    //   .ref('/volunteer')
+    //   .once('value')
 
-    volunteers.forEach(entry => {
-      users.push(userToJSON(entry.key, entry.val(), 'volunteer'))
-    })
+    // volunteers.forEach(entry => {
+    //   users.push(userToJSON(entry.key, entry.val(), 'volunteer'))
+    // })
 
-    const dispatchers = await admin
-      .database()
-      .ref('/dispatchers')
-      .once('value')
+    // const dispatchers = await admin
+    //   .database()
+    //   .ref('/dispatchers')
+    //   .once('value')
 
-    dispatchers.forEach(entry => {
-      users.push(userToJSON(entry.key, entry.val(), 'dispatcher'))
-    })
+    // dispatchers.forEach(entry => {
+    //   users.push(userToJSON(entry.key, entry.val(), 'dispatcher'))
+    // })
   } else {
     console.log(
       `[SendTestNotification]A: Sending test notification to specific user`,
@@ -173,7 +175,7 @@ exports.sendTestNotification = async (req, res, admin) => {
   // 2. Batch write pending status and timestamp
   console.log(`[SendTestNotification]B: Writing pending status to users`, users)
 
-  await firebase
+  await admin
     .database()
     .ref()
     .update(

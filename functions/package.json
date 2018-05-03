@@ -11,7 +11,7 @@
     "deploy:production":
       "firebase use yedidim-production && yarn run deploy:functions",
     "deploy:functions":
-      "yarn run prepare && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient"
+      "yarn run prepare && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient,functions:sendTestNotification"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
