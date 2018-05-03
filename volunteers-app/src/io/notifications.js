@@ -2,7 +2,7 @@ import { firebaseFunctionsUrl } from 'config'
 import firebase from 'firebase'
 
 export const sendTestNotification = async (userId, role) =>
-  fetch(`${firebaseFunctionsUrl()}/sendVolunteerTestNotification`, {
+  fetch(`${firebaseFunctionsUrl()}/sendTestNotification`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
