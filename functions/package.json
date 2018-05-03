@@ -1,14 +1,16 @@
 {
   "name": "yedidim-fb-bot",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
+    "prepare": "babel ./**.es6 --retain-lines -d ./",
     "deploy": "firebase use yedidim-sandbox-2 && yarn run deploy:functions",
     "deploy:production":
       "firebase use yedidim-production && yarn run deploy:functions",
     "deploy:functions":
-      "firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient"
+      "yarn run prepare && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -24,6 +26,10 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^3.5.3",
-    "sinon": "^4.1.3"
+    "sinon": "^4.1.3",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0"
   }
 }
