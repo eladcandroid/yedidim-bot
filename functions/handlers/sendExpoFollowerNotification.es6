@@ -212,6 +212,27 @@ exports.sendTestNotification = async (req, res, admin) => {
     receipts
   )
 
+  await admin
+    .database()
+    .ref()
+    .update(
+      receipts.reduce((acc, receipt, idx) => {
+        // Retrieve user
+        const user = users[idx]
+
+        // Write update
+        acc[userRoleToPath(user.role, user.key)] = {
+          ...user.val,
+          NotificationStatus:
+            receipt.status === 'error' ? 'sending-error' : 'sent',
+          NotificationStatusTimestamp: new Date().getTime()
+        }
+        return acc
+      }, {})
+    )
+
+  console.log(`[SendTestNotification]E: Wrote new status - end`, receipts)
+
   // TODO
   res.status(200).end()
 }

@@ -13,6 +13,7 @@ const User = types.model('User', {
     'pending',
     'token-error',
     'sending-error',
+    'sent',
     'working'
   ]),
   notificationTimestamp: types.maybe(types.Date)
