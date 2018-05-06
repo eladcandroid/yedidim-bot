@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Alert } from 'react-native';
 import { connect } from 'react-redux';
+import { Notifications } from 'expo';
 import LoginScreen from "./LoginScreen";
 import MainScreen from "./MainScreen";
-import { checkUserAuth, clearMessage } from "../actions/dataSourceActions";
+import { checkUserAuth, clearMessage, acknowledgeTestNotification } from "../actions/dataSourceActions";
 
 
 class HomeScreen extends Component {
@@ -15,12 +16,26 @@ class HomeScreen extends Component {
 
   componentWillMount() {
     this.props.checkUserAuth();
+    Notifications.addListener(this.handleNotification);
   }
 
   componentWillReceiveProps(nextProps) {
     //Check that the app version is the latest
     if (nextProps.newVersionExists && !this.state.showNewVersionAlert){
       this.reloadNewVersion();
+    }
+  }
+
+  handleNotification = ({ origin, data, remote }) => {
+    if (data.type === 'test') {
+      Alert.alert(
+        'בדיקת התראות',
+        'ההתראות נבדקו ונמצאו תקינות. הדכענו את המערכת עם תוצאות הבדיקה.',
+        [{ text: 'OK', onPress: () => {} }],
+        { cancelable: false }
+      );
+      // Acknowledge test on firebase
+      this.props.acknowledgeTestNotification();
     }
   }
 
@@ -79,6 +94,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     clearMessage: () => {
       dispatch(clearMessage());
+    },
+    acknowledgeTestNotification: () => {
+      dispatch(acknowledgeTestNotification());
     }
   };
 };

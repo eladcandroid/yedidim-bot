@@ -4,7 +4,7 @@ import {
   SET_SEARCH_EVENTS, SET_NOTIFICATIONS,
   SET_ERROR, SET_LATEST_VERSION
 } from '../constants/actionTypes';
-import {registerForPushNotifications, sendTestNotificationToDispatcher} from "./notificationsActions";
+import {registerForPushNotifications, sendTestNotification} from "./notificationsActions";
 import { objectToArray, getInstance } from "../common/utils";
 import { EventStatus } from "../constants/consts";
 
@@ -121,7 +121,19 @@ export function signOutUser() {
 
 export function sendTestNotificationToSelf() {
   return ((dispatch, getState) => {
-    sendTestNotificationToDispatcher(getState().dataSource.user.id);
+    sendTestNotification(getState().dataSource.user.id);
+  });
+}
+
+export function acknowledgeTestNotification() {
+  return ((dispatch, getState) => {
+    firebase
+    .database()
+    .ref(`/dispatchers/${getState().dataSource.user.id}`)
+    .update({
+      NotificationStatus: 'working',
+      NotificationStatusTimestamp: new Date().getTime()
+    })
   });
 }
 

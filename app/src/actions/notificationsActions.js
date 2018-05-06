@@ -55,28 +55,26 @@ export function sendNotification(eventKey, distance, volunteer)  {
   }
 }
 
-export function sendTestNotificationToDispatcher(dispatcherId) {
-  return new Promise((resolve, reject) => {
-    const url = getFunctionsUrl() + '/sendDispatcherTestNotification';
-    const params = {"dispatcherCode": dispatcherId.toString()};
-
-    return fetch(url, {
+export const sendTestNotification = async (userId) => {
+  const response = await fetch(
+    `${getFunctionsUrl()}/sendTestNotification`,
+    {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(params)
-    })
-      .then(response => {
-        if (!response.ok) {
-          reject("שליחת הודעה נכשלה");
-        } else {
-          resolve();
-        }
+      body: JSON.stringify({
+        userId,
+        role: 'dispatcher'
       })
-      .catch((error) => {
-        reject("שליחת הודעה נכשלה");
-      });
-  });
+    }
+  );
+
+  if (response.status === 200) {
+    return true;
+  }
+
+  const errorMessage = await response.text();
+  throw new Error(errorMessage);
 }
