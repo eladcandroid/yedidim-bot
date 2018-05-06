@@ -1,4 +1,5 @@
 import { types, applySnapshot, destroy } from 'mobx-state-tree'
+import { reaction } from 'mobx'
 import onUsersChange from 'io/users'
 import User from './User'
 
@@ -19,6 +20,21 @@ const UserStore = types
     }
   }))
   .actions(self => ({
+    afterCreate: () => {
+      self.disposer = reaction(
+        () => self.users.length,
+        length => {
+          if (length) {
+            // If new users were added, set init false
+            self.setInitEnded()
+          }
+        },
+        { delay: 2000 } // Debounce to wait for whole list to load
+      )
+    },
+    beforeDestroy: () => {
+      self.disposer()
+    },
     init: () => {
       self.unsubscribe = onUsersChange(({ event, data }) => {
         if (event === 'child_added') {
@@ -43,6 +59,9 @@ const UserStore = types
       if (user) {
         applySnapshot(user, json)
       }
+    },
+    setInitEnded: () => {
+      self.isInitializing = false
     },
     removeUser: json => self.users.remove(json)
   }))

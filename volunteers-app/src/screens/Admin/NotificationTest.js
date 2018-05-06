@@ -17,7 +17,8 @@ import {
   Grid,
   Col,
   Row,
-  Separator
+  Separator,
+  Spinner
 } from 'native-base'
 
 import { inject, observer, Observer } from 'mobx-react/native'
@@ -71,7 +72,7 @@ class NotificationTest extends Component {
   }
 
   render() {
-    const { volunteers, dispatchers, admins } = this.props
+    const { volunteers, dispatchers, admins, isInitializing } = this.props
     const { sendingNotifications } = this.state
 
     return (
@@ -99,6 +100,7 @@ class NotificationTest extends Component {
                     </FormattedMessage>
                   </Button>
                 </MarginView>
+                {isInitializing && <Spinner color="green" />}
                 {/* <MarginView>
                   <FormattedMessage
                     id="NotificationReport.text"
@@ -160,5 +162,6 @@ export default inject(({ stores }) => ({
   finish: stores.userStore.finish,
   admins: stores.userStore.admins,
   dispatchers: stores.userStore.dispatchers,
-  volunteers: stores.userStore.volunteers
+  volunteers: stores.userStore.volunteers,
+  isInitializing: stores.userStore.isInitializing
 }))(observer(NotificationTest))
