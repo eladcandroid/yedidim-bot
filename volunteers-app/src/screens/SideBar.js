@@ -10,13 +10,13 @@ import {
   Left,
   Separator
 } from 'native-base'
-import { Image, Alert } from 'react-native'
+import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { NavigationActions } from 'react-navigation'
-import { sendTestNotification } from 'io/notifications'
+import sendTestNotificationWithFeedback from 'components/SendTestNotificationWithFeedback'
+import AlignedText from 'components/AlignedText'
 import Logo from './logo.png'
-import AlignedText from '../components/AlignedText'
 
 const SideBar = ({
   signOut,
@@ -59,23 +59,8 @@ const SideBar = ({
         </ListItem>
         <ListItem
           button
-          onPress={async () => {
-            try {
-              await sendTestNotification(id, role)
-              Alert.alert(
-                'התראה נשלחה',
-                'הבדיקה תצליח אם תקבל התראה בדיקה בשניות הקרובות',
-                [{ text: 'בסדר', onPress: () => {} }],
-                { cancelable: false }
-              )
-            } catch (error) {
-              Alert.alert(
-                'שגיעה',
-                'אירע שגיעה, לא הצלחנו לשלוח את הבדיקה התראות אליך. נסה שוב מאוחר יותר.',
-                [{ text: 'בסדר', onPress: () => {} }],
-                { cancelable: false }
-              )
-            }
+          onPress={() => {
+            sendTestNotificationWithFeedback(id, role)
           }}
         >
           <AlignedText>בדוק התראות</AlignedText>
