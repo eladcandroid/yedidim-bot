@@ -21,7 +21,7 @@ import {
 } from 'native-base'
 
 import { inject, observer, Observer } from 'mobx-react/native'
-import { sendTestNotification } from 'io/notifications'
+import sendTestNotificationWithFeedback from 'components/SendTestNotificationWithFeedback'
 
 import AlignedText from 'components/AlignedText'
 
@@ -78,7 +78,11 @@ class NotificationTest extends Component {
             <Row>
               <Col>
                 <MarginView>
-                  <Button full block onPress={() => sendTestNotification()}>
+                  <Button
+                    full
+                    block
+                    onPress={() => sendTestNotificationWithFeedback()}
+                  >
                     <FormattedMessage
                       id="NotificationReport.button.text"
                       defaultMessage="Retest Notifications for everyone"

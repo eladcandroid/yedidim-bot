@@ -1,10 +1,10 @@
 import React from 'react'
 import { Body, Icon, Right, ListItem, ActionSheet } from 'native-base'
 import { FormattedRelative } from 'react-intl'
-import { Linking, Alert } from 'react-native'
+import { Linking } from 'react-native'
 import { observer } from 'mobx-react/native'
 import AlignedText from 'components/AlignedText'
-import { sendTestNotification } from 'io/notifications'
+import sendTestNotificationWithFeedback from 'components/SendTestNotificationWithFeedback'
 
 const options = ['להתקשר', 'WhatsApp', 'לשלוח בדיקה מחדש', 'לבטל']
 
@@ -46,16 +46,7 @@ const UserListItem = ({
             )
           }
           if (buttonIndex === 2) {
-            try {
-              await sendTestNotification(id, role)
-            } catch (error) {
-              Alert.alert(
-                'שגיעה',
-                'אירע שגיעה, לא הצלחנו לשלוח מחדש את הבדיקה התראות למשתמש. נסה שוב מאוחר יותר.',
-                [{ text: 'בסדר', onPress: () => {} }],
-                { cancelable: false }
-              )
-            }
+            sendTestNotificationWithFeedback(id, role)
           }
         }
       )}
