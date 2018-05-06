@@ -10,16 +10,17 @@ import {
   Left,
   Separator
 } from 'native-base'
-import { Image } from 'react-native'
+import { Image, Alert } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { NavigationActions } from 'react-navigation'
+import { sendTestNotification } from 'io/notifications'
 import Logo from './logo.png'
 import AlignedText from '../components/AlignedText'
 
 const SideBar = ({
   signOut,
-  currentUser: { name, phone, role },
+  currentUser: { id, name, phone, role },
   nextLanguage,
   toggleLanguage,
   navigation
@@ -55,6 +56,29 @@ const SideBar = ({
           }}
         >
           <AlignedText>{nextLanguage}</AlignedText>
+        </ListItem>
+        <ListItem
+          button
+          onPress={async () => {
+            try {
+              await sendTestNotification(id, role)
+              Alert.alert(
+                'התראה נשלחה',
+                'הבדיקה תצליח אם תקבל התראה בדיקה בשניות הקרובות',
+                [{ text: 'בסדר', onPress: () => {} }],
+                { cancelable: false }
+              )
+            } catch (error) {
+              Alert.alert(
+                'שגיעה',
+                'אירע שגיעה, לא הצלחנו לשלוח את הבדיקה התראות אליך. נסה שוב מאוחר יותר.',
+                [{ text: 'בסדר', onPress: () => {} }],
+                { cancelable: false }
+              )
+            }
+          }}
+        >
+          <AlignedText>בדוק התראות</AlignedText>
         </ListItem>
         <ListItem button onPress={signOut}>
           <FormattedMessage
