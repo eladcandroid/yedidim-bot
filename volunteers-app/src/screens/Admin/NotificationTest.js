@@ -60,6 +60,8 @@ class NotificationTest extends Component {
     )
   })
 
+  state = {}
+
   componentDidMount = () => {
     this.props.init()
   }
@@ -70,6 +72,7 @@ class NotificationTest extends Component {
 
   render() {
     const { volunteers, dispatchers, admins } = this.props
+    const { sendingNotifications } = this.state
 
     return (
       <Container>
@@ -81,7 +84,12 @@ class NotificationTest extends Component {
                   <Button
                     full
                     block
-                    onPress={() => sendTestNotificationWithFeedback()}
+                    disabled={sendingNotifications}
+                    onPress={async () => {
+                      this.setState(() => ({ sendingNotifications: true }))
+                      await sendTestNotificationWithFeedback()
+                      this.setState(() => ({ sendingNotifications: false }))
+                    }}
                   >
                     <FormattedMessage
                       id="NotificationReport.button.text"
