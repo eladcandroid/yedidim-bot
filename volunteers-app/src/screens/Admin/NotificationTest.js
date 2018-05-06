@@ -93,7 +93,7 @@ class NotificationTest extends Component {
                   >
                     <FormattedMessage
                       id="NotificationReport.button.text"
-                      defaultMessage="Retest Notifications for everyone"
+                      defaultMessage="Test notifications for everyone"
                     >
                       {txt => <AlignedText>{txt}</AlignedText>}
                     </FormattedMessage>

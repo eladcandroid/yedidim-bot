@@ -104,7 +104,7 @@
   "Sidebar.admin": "Administrators",
   "Sidebar.admin.notificationTest": "Notification Test",
   "NotificationReport.title": "Notifications",
-  "NotificationReport.button.text": "Retest Notifications for everyone",
+  "NotificationReport.button.text": "Test notifications for everyone",
   "NotificationReport.volunteers": "Volunteers",
   "NotificationReport.dispatchers": "Dispatchers",
   "NotificationReport.admins": "Administrators"
