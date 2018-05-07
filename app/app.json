@@ -4,7 +4,7 @@
     "description": "ידידים - מוקדן",
     "slug": "dispatcher",
     "sdkVersion": "25.0.0",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "icon": "./assets/images/app-icon.png",
     "notification": {
       "icon": "./assets/notification/icon.png"
@@ -21,7 +21,7 @@
       "package": "com.startach.yedidim.dispatchers.separated"
     },
     "extra": {
-      "_instance": "sandbox2"
+      "instance": "sandbox2"
     },
     "androidStatusBar": {
       "backgroundColor": "#4451B9",
@@ -34,7 +34,8 @@
           "config": {
             "organization": "startach",
             "project": "yedidim-dispatcher",
-            "authToken": "480786f7e02a4b15b0c5bc0416abc510302409d4a0f84547873a47564b2765ab"
+            "authToken":
+              "480786f7e02a4b15b0c5bc0416abc510302409d4a0f84547873a47564b2765ab"
           }
         }
       ]
