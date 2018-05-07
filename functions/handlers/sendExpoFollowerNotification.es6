@@ -198,48 +198,65 @@ exports.sendTestNotification = async (req, res, admin) => {
     )
 
   // 3. Try to send notifications for users
-  console.log(
-    `[SendTestNotification]C: Sending notifications to users`,
-    users.map(({ key }) => key)
-  )
-  const receipts = await sendNotifications(
-    users.map(user => ({
-      to: user.token,
-      title: 'בדיקת התראות לישום',
-      body: 'נא לפתוח התראה הזאת כדי לאשר קבלה. לא מדובר באירוע.',
-      data: {
-        type: 'test'
-      },
-      sound: 'default'
-    }))
-  )
+  // send separately notification for each project, otherwise it won't work
+  // https://github.com/expo/expo/issues/792
+  const usersGroups = [
+    users.filter(({ role }) => role === 'dispatcher'),
+    users.filter(({ role }) => role !== 'dispatcher')
+  ]
 
-  // 4. Interpret results and write results
-  console.log(
-    `[SendTestNotification]D: Writing new status based on receipts`,
-    receipts
-  )
+  let index = 0
 
-  await admin
-    .database()
-    .ref()
-    .update(
-      receipts.reduce((acc, receipt, idx) => {
-        // Retrieve user
-        const user = users[idx]
-
-        // Write update
-        acc[userRoleToPath(user.role, user.key)] = {
-          ...user.val,
-          NotificationStatus:
-            receipt.status === 'error' ? 'sending-error' : 'sent',
-          NotificationStatusTimestamp: new Date().getTime()
-        }
-        return acc
-      }, {})
+  for (const userGroup of usersGroups) {
+    console.log(
+      `[SendTestNotification]C: Sending notifications to users group ${index}`,
+      userGroup.map(({ key }) => key)
     )
 
-  console.log(`[SendTestNotification]E: Wrote new status - end`, receipts)
+    const receipts = await sendNotifications(
+      userGroup.map(user => ({
+        to: user.token,
+        title: 'בדיקת התראות לישום',
+        body: 'נא לפתוח התראה הזאת כדי לאשר קבלה. לא מדובר באירוע.',
+        data: {
+          type: 'test'
+        },
+        sound: 'default'
+      }))
+    )
+
+    // 4. Interpret results and write results
+    console.log(
+      `[SendTestNotification]D: Writing new status based on receipts for users group ${index}`,
+      receipts[0]
+    )
+
+    await admin
+      .database()
+      .ref()
+      .update(
+        (receipts[0] || []).reduce((acc, receipt, idx) => {
+          // Retrieve user
+          const user = userGroup[idx]
+
+          // Write update
+          acc[userRoleToPath(user.role, user.key)] = {
+            ...user.val,
+            NotificationStatus:
+              receipt.status === 'error' ? 'sending-error' : 'sent',
+            NotificationStatusTimestamp: new Date().getTime()
+          }
+          return acc
+        }, {})
+      )
+
+    console.log(
+      `[SendTestNotification]E: Wrote new status - end users group ${index}`,
+      receipts[0]
+    )
+
+    index++
+  }
 
   // TODO
   res.status(200).end()
