@@ -20,7 +20,7 @@ export default async (id, role) => {
     Sentry.captureException(e)
     Toast.show({
       text:
-        'אירע שגיעה, המערכת לא הצליחה לשלוח התראה בדיקה. נסה שוב מאוחר יותר.',
+        'אירע שגיאה, המערכת לא הצליחה לשלוח התראה בדיקה. נסה שוב מאוחר יותר.',
       position: 'bottom',
       buttonText: 'בסדר',
       type: 'danger',

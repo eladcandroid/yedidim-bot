@@ -29,7 +29,7 @@ const NotificationBadge = ({ sent, error, received, showMore }) => (
                 .map(phone => phone.replace(/(\+972)/, '0'))
                 .join(', ')}` +
               '\n\n' +
-              `שגיעה: ${error
+              `שגיאה: ${error
                 .map(phone => phone.replace(/(\+972)/, '0'))
                 .join(', ')}`,
             [{ text: 'OK', onPress: () => {} }],
