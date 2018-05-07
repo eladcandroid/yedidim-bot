@@ -72,7 +72,10 @@ const EventItem = observer(
       timestamp,
       isLoading,
       isTaken,
-      distance
+      distance,
+      sentNotification,
+      receivedNotification,
+      errorNotification
     }
   }) =>
     isLoading ? (
@@ -106,7 +109,13 @@ const EventItem = observer(
             {categoryName} - {displayAddress}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
-          {isAdmin && <NotificationBadge />}
+          {isAdmin && (
+            <NotificationBadge
+              sent={sentNotification}
+              error={errorNotification}
+              received={receivedNotification}
+            />
+          )}
         </Body>
         <Right>
           <FormattedRelative value={timestamp}>
