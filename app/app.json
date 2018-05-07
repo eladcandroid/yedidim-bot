@@ -21,7 +21,7 @@
       "package": "com.startach.yedidim.dispatchers.separated"
     },
     "extra": {
-      "instance": "sandbox2"
+      "instance": "_sandbox2"
     },
     "androidStatusBar": {
       "backgroundColor": "#4451B9",
