@@ -133,7 +133,7 @@ const userToJSON = (key, val, role) => {
 exports.sendTestNotification = async (req, res, admin) => {
   const { userId, role } = req.body
 
-  const users = []
+  const allUsers = []
 
   // 1. Grab relevant users info - if userId or role is not defined, then grab all users
   if (!userId || !role) {
@@ -148,7 +148,7 @@ exports.sendTestNotification = async (req, res, admin) => {
       .once('value')
 
     volunteers.forEach(entry => {
-      users.push(userToJSON(entry.key, entry.val(), 'volunteer'))
+      allUsers.push(userToJSON(entry.key, entry.val(), 'volunteer'))
     })
 
     const dispatchers = await admin
@@ -157,7 +157,7 @@ exports.sendTestNotification = async (req, res, admin) => {
       .once('value')
 
     dispatchers.forEach(entry => {
-      users.push(userToJSON(entry.key, entry.val(), 'dispatcher'))
+      allUsers.push(userToJSON(entry.key, entry.val(), 'dispatcher'))
     })
   } else {
     console.log(
@@ -171,11 +171,16 @@ exports.sendTestNotification = async (req, res, admin) => {
       .ref(userRoleToPath(role, userId))
       .once('value')
 
-    users.push(userToJSON(user.key, user.val(), role))
+    allUsers.push(userToJSON(user.key, user.val(), role))
   }
 
+  const users = allUsers.filter(({ token }) => !!token)
+
   // 2. Batch write pending status and timestamp
-  console.log(`[SendTestNotification]B: Writing pending status to users`, users)
+  console.log(
+    `[SendTestNotification]B: Writing pending status to users`,
+    users.map(({ key }) => key)
+  )
 
   await admin
     .database()
@@ -193,7 +198,10 @@ exports.sendTestNotification = async (req, res, admin) => {
     )
 
   // 3. Try to send notifications for users
-  console.log(`[SendTestNotification]C: Sending notifications to users`, users)
+  console.log(
+    `[SendTestNotification]C: Sending notifications to users`,
+    users.map(({ key }) => key)
+  )
   const receipts = await sendNotifications(
     users.map(user => ({
       to: user.token,
