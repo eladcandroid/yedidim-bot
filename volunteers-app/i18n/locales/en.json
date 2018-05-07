@@ -100,5 +100,12 @@
   "Notification.event.button": "Show",
   "Notification.event.text": "New event received",
   "Home.event.distance.ms": "{formattedDistance} m",
-  "Home.event.distance.kms": "{formattedDistance} km"
+  "Home.event.distance.kms": "{formattedDistance} km",
+  "Sidebar.admin": "Administrators",
+  "Sidebar.admin.notificationTest": "Notification Test",
+  "NotificationReport.title": "Notifications",
+  "NotificationReport.button.text": "Test notifications for everyone",
+  "NotificationReport.volunteers": "Volunteers",
+  "NotificationReport.dispatchers": "Dispatchers",
+  "NotificationReport.admins": "Administrators"
 }

@@ -1,15 +1,26 @@
 import React from 'react'
 import { Constants } from 'expo'
-import { Text, Container, List, ListItem, Content } from 'native-base'
+import {
+  Container,
+  List,
+  ListItem,
+  Content,
+  Icon,
+  Body,
+  Left,
+  Separator
+} from 'native-base'
 import { Image } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { NavigationActions } from 'react-navigation'
+import sendTestNotificationWithFeedback from 'components/SendTestNotificationWithFeedback'
+import AlignedText from 'components/AlignedText'
 import Logo from './logo.png'
 
 const SideBar = ({
   signOut,
-  currentUser: { name, phone },
+  currentUser: { id, name, phone, role, isAdmin },
   nextLanguage,
   toggleLanguage,
   navigation
@@ -31,9 +42,12 @@ const SideBar = ({
       />
       <List style={{ marginTop: 20 }}>
         <ListItem>
-          <Text>
+          <AlignedText>
             {name} {phone && `(${phone})`}
-          </Text>
+          </AlignedText>
+        </ListItem>
+        <ListItem>
+          <AlignedText>v{Constants.manifest.version}</AlignedText>
         </ListItem>
         <ListItem
           button
@@ -41,14 +55,22 @@ const SideBar = ({
             await toggleLanguage()
           }}
         >
-          <Text>{nextLanguage}</Text>
+          <AlignedText>{nextLanguage}</AlignedText>
+        </ListItem>
+        <ListItem
+          button
+          onPress={() => {
+            sendTestNotificationWithFeedback(id, role)
+          }}
+        >
+          <AlignedText>בדוק התראות</AlignedText>
         </ListItem>
         <ListItem button onPress={signOut}>
           <FormattedMessage
             id="Authentication.signout"
             defaultMessage="Sign out"
           >
-            {txt => <Text>{txt}</Text>}
+            {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
         </ListItem>
         <ListItem
@@ -65,29 +87,44 @@ const SideBar = ({
             id="Sidebar.aboutStartach"
             defaultMessage="About Startach"
           >
-            {txt => <Text>{txt}</Text>}
+            {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
         </ListItem>
-        <ListItem
-          button
-          onPress={() => {
-            navigation.dispatch(
-              NavigationActions.navigate({
-                routeName: 'HelpPage'
-              })
-            )
-          }}
-        >
-          <FormattedMessage
-            id="Sidebar.helpPage"
-            defaultMessage="Help"
-          >
-            {txt => <Text>{txt}</Text>}
-          </FormattedMessage>
-        </ListItem>
-        <ListItem>
-          <Text>v{Constants.manifest.version}</Text>
-        </ListItem>
+        {isAdmin && (
+          <React.Fragment>
+            <Separator bordered>
+              <FormattedMessage
+                id="Sidebar.admin"
+                defaultMessage="Administrators"
+              >
+                {txt => <AlignedText>{txt}</AlignedText>}
+              </FormattedMessage>
+            </Separator>
+            <ListItem
+              button
+              icon
+              onPress={() => {
+                navigation.dispatch(
+                  NavigationActions.navigate({
+                    routeName: 'NotificationReport'
+                  })
+                )
+              }}
+            >
+              <Left>
+                <Icon name="ios-notifications" />
+              </Left>
+              <Body>
+                <FormattedMessage
+                  id="Sidebar.admin.notificationTest"
+                  defaultMessage="Notification Test"
+                >
+                  {txt => <AlignedText>{txt}</AlignedText>}
+                </FormattedMessage>
+              </Body>
+            </ListItem>
+          </React.Fragment>
+        )}
       </List>
     </Content>
   </Container>

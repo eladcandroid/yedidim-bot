@@ -3,6 +3,7 @@ import { setLanguage } from 'io/storage'
 import { trackEvent } from 'io/analytics'
 import AuthenticationStore from './Authentication'
 import EventStore from './Events'
+import UserStore from './Users'
 
 const RootStore = types
   .model('RootStore', {
@@ -13,7 +14,8 @@ const RootStore = types
       events: {},
       categories: []
     }),
-    language: types.enumeration('Language', ['en', 'he'])
+    language: types.enumeration('Language', ['en', 'he']),
+    userStore: types.optional(UserStore, {})
   })
   .views(self => ({
     get nextLanguage() {
