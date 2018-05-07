@@ -125,11 +125,11 @@ export function sendTestNotificationToSelf() {
   });
 }
 
-export function acknowledgeTestNotification() {
+export function acknowledgeTestNotification(userId) {
   return ((dispatch, getState) => {
     firebase
     .database()
-    .ref(`/dispatchers/${getState().dataSource.user.id}`)
+    .ref(`/dispatchers/${userId}`)
     .update({
       NotificationStatus: 'working',
       NotificationStatusTimestamp: new Date().getTime()

@@ -27,7 +27,7 @@ class HomeScreen extends Component {
   }
 
   handleNotification = ({ origin, data, remote }) => {
-    if (data.type === 'test') {
+    if (data.type === 'test' && !!data.userId) {
       Alert.alert(
         "בדיקת התראות",
         "ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.",
@@ -35,7 +35,7 @@ class HomeScreen extends Component {
         { cancelable: false }
       );
       // Acknowledge test on firebase
-      this.props.acknowledgeTestNotification();
+      this.props.acknowledgeTestNotification(data.userId);
     }
   }
 
@@ -95,8 +95,8 @@ const mapDispatchToProps = (dispatch) => {
     clearMessage: () => {
       dispatch(clearMessage());
     },
-    acknowledgeTestNotification: () => {
-      dispatch(acknowledgeTestNotification());
+    acknowledgeTestNotification: (userId) => {
+      dispatch(acknowledgeTestNotification(userId));
     }
   };
 };
