@@ -10,13 +10,19 @@ const UserStore = types
   })
   .views(self => ({
     get dispatchers() {
-      return self.users.filter(({ role }) => role === 'dispatcher')
+      return self.users
+        .filter(({ role }) => role === 'dispatcher')
+        .sort((a, b) => a.name.localeCompare(b.name))
     },
     get volunteers() {
-      return self.users.filter(({ role }) => role === 'volunteer')
+      return self.users
+        .filter(({ role }) => role === 'volunteer')
+        .sort((a, b) => a.name.localeCompare(b.name))
     },
     get admins() {
-      return self.users.filter(({ role }) => role === 'admin')
+      return self.users
+        .filter(({ role }) => role === 'admin')
+        .sort((a, b) => a.name.localeCompare(b.name))
     }
   }))
   .actions(self => ({
@@ -36,6 +42,8 @@ const UserStore = types
       self.disposer()
     },
     init: () => {
+      self.isInitializing = true
+
       self.unsubscribe = onUsersChange(({ event, data }) => {
         if (event === 'child_added') {
           self.addUser(data)
