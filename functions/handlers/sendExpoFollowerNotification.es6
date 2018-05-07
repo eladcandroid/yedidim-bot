@@ -197,7 +197,7 @@ exports.sendTestNotification = async (req, res, admin) => {
   const receipts = await sendNotifications(
     users.map(user => ({
       to: user.token,
-      title: 'בקידת התראות לישום',
+      title: 'בדיקת התראות לישום',
       body: 'נא לפתוח התראה הזאת כדי לאשר קבלה. לא מדובר באירוע.',
       data: {
         type: 'test'
