@@ -55,7 +55,7 @@ const UserListItem = ({
       <AlignedText>{name}</AlignedText>
     </Body>
     <Right>
-      {notificationTimestamp ? (
+      {notificationTimestamp && notificationStatus !== 'token-error' ? (
         <FormattedRelative value={notificationTimestamp}>
           {relative => (
             <AlignedText style={{ color: status[notificationStatus].color }}>
