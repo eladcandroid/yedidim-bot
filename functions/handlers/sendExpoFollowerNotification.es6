@@ -219,7 +219,8 @@ exports.sendTestNotification = async (req, res, admin) => {
         title: 'בדיקת התראות לישום',
         body: 'נא לפתוח התראה הזאת כדי לאשר קבלה. לא מדובר באירוע.',
         data: {
-          type: 'test'
+          type: 'test',
+          userId: user.key
         },
         sound: 'default'
       }))
