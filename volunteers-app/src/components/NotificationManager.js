@@ -89,7 +89,7 @@ const withNotificationManager = WrappedComponent => {
       if (data.type === 'test') {
         Alert.alert(
           'בדיקת התראות',
-          'ההתראות נבדקו ונמצאו תקינות. הדכענו את המערכת עם תוצאות הבדיקה.',
+          'ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.',
           [{ text: 'OK', onPress: () => {} }],
           { cancelable: false }
         )
