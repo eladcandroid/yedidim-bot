@@ -20,7 +20,7 @@ import Logo from './logo.png'
 
 const SideBar = ({
   signOut,
-  currentUser: { id, name, phone, role },
+  currentUser: { id, name, phone, role, isAdmin },
   nextLanguage,
   toggleLanguage,
   navigation
@@ -90,7 +90,7 @@ const SideBar = ({
             {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
         </ListItem>
-        {role === 'admin' && (
+        {isAdmin && (
           <React.Fragment>
             <Separator bordered>
               <FormattedMessage

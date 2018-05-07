@@ -21,7 +21,8 @@ import { ActivityIndicator, RefreshControl } from 'react-native'
 import debounce from 'lodash.debounce'
 import { trackEvent } from 'io/analytics'
 
-import AlignedText from '../components/AlignedText'
+import AlignedText from 'components/AlignedText'
+import NotificationBadge from 'components/NotificationBadge'
 
 const MessageView = styled.View`
   flex: 1;
@@ -61,6 +62,7 @@ const distanceToString = distance => {
 const EventItem = observer(
   ({
     onPress,
+    isAdmin,
     event: {
       id,
       categoryName,
@@ -104,6 +106,7 @@ const EventItem = observer(
             {categoryName} - {displayAddress}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
+          {isAdmin && <NotificationBadge />}
         </Body>
         <Right>
           <FormattedRelative value={timestamp}>
@@ -197,7 +200,8 @@ class HomeScreen extends Component {
 
   render() {
     const {
-      eventStore: { hasEvents, sortedEventsByStatusAndTimestamp }
+      eventStore: { hasEvents, sortedEventsByStatusAndTimestamp },
+      currentUser
     } = this.props
     const { refreshing } = this.state
 
@@ -216,7 +220,11 @@ class HomeScreen extends Component {
             <List
               dataArray={sortedEventsByStatusAndTimestamp}
               renderRow={event => (
-                <EventItem event={event} onPress={this.handleEventItemPress} />
+                <EventItem
+                  event={event}
+                  onPress={this.handleEventItemPress}
+                  isAdmin={currentUser.isAdmin}
+                />
               )}
             />
           )}

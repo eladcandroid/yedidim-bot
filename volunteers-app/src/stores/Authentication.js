@@ -25,6 +25,9 @@ const CurrentUser = types
     },
     get hasEventAssigned() {
       return !!self.acceptedEventId
+    },
+    get isAdmin() {
+      return self.role === 'admin'
     }
   }))
   .actions(self => ({
