@@ -14,9 +14,9 @@ import {
   Right,
   Text
 } from 'native-base'
-import EventDetails from '../components/EventDetails'
-import ButtonsConfirmationBar from '../components/ButtonsConfirmationBar'
-import TakenEventButtons from '../components/TakenEventButtons'
+import EventDetails from 'components/EventDetails'
+import ButtonsConfirmationBar from 'components/ButtonsConfirmationBar'
+import TakenEventButtons from 'components/TakenEventButtons'
 
 const ignore = {
   modalMsgs: defineMessages({
@@ -232,7 +232,8 @@ class EventScreen extends Component {
       navigation,
       screenProps: { intl },
       isAssigned,
-      isTaken
+      isTaken,
+      isAdmin
     } = this.props
 
     if (!event || !event.id) {
@@ -334,7 +335,7 @@ class EventScreen extends Component {
     }
 
     return (
-      <EventDetails event={event}>
+      <EventDetails event={event} isAdmin={isAdmin}>
         {isTaken ? (
           <TakenEventButtons onPress={this.handleRemoveEvent} />
         ) : (
@@ -353,6 +354,7 @@ export default inject(
       //  if it changes
       isAssigned: event && event.isAssigned,
       isTaken: event && event.isTaken,
+      isAdmin: stores.authStore.currentUser.isAdmin,
       event
     }
   }
