@@ -237,7 +237,23 @@ exports.sendTestNotification = async (req, res, admin) => {
   res.status(200).end()
 }
 
-let sendNotificationToCloseByVolunteers = (
+const updateEventNotificationStatus = async (eventId, sent, error) => {
+  return admin
+    .database()
+    .ref(`/events/${eventId}/notifications`)
+    .update({
+      sent: sent.reduce((acc, userId) => {
+        acc[userId] = false
+        return acc
+      }, {}),
+      error: error.reduce((acc, userId) => {
+        acc[userId] = true
+        return acc
+      }, {})
+    })
+}
+
+let sendNotificationToCloseByVolunteers = async (
   admin,
   eventData,
   notificationTitle,
@@ -289,7 +305,14 @@ let sendNotificationToCloseByVolunteers = (
           )
 
           sendNotifications(notifications)
-            .then(() => resolve(recipients))
+            .then((receipts) => {
+              // Save status of notifications for the event
+              await updateEventNotificationStatus(
+                eventData.key, 
+                recipients.filter((recipient, idx) => receipts[idx].status === 'ok'), 
+                recipients.filter((recipient, idx) => receipts[idx].status === 'error'))
+              resolve(recipients)
+            })
             .catch(err => {
               reject(err)
             })
