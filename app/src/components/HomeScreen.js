@@ -22,7 +22,7 @@ class HomeScreen extends Component {
   componentWillReceiveProps(nextProps) {
     //Check that the app version is the latest
     if (nextProps.newVersionExists && !this.state.showNewVersionAlert){
-      this.reloadNewVersion();
+      // this.reloadNewVersion();
     }
   }
 
