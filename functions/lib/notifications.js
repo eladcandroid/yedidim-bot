@@ -52,7 +52,7 @@ function sendPushNotification(tokens, details) {
       }
 
       messages.push({
-        to: pushToken,
+        to: token,
         sound: 'default',
         title: 'נפתח ארוע חדש',
         body: 'ארוע ב ' + details.address,
