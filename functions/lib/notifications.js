@@ -55,7 +55,10 @@ function sendPushNotification(tokens, details) {
         to: pushToken,
         sound: 'default',
         title: 'נפתח ארוע חדש',
-        body: 'ארוע ב ' + details.address
+        body: 'ארוע ב ' + details.address,
+        data: {
+          type: 'bot'
+        }
       })
     }
 
@@ -71,7 +74,7 @@ function sendPushNotification(tokens, details) {
         console.log("Sending notification to ", chunk);
         expo.sendPushNotificationsAsync(chunk)
           .then(receipts => {
-            console.log("Successfully sent notifications : \n", (receipts || []).map((receipt, idx) => ({ ...receipt, ...tokens[idx] })));
+            console.log("Successfully sent notifications : \n", (receipts || []).map((receipt, idx) => Object.assign({}, receipt, tokens[idx])));
             resolve();
           })
           .catch(err => {
