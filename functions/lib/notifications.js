@@ -13,7 +13,7 @@ module.exports = {
         .then(snapshot => {
           let tokens = [];
           const dispatchers = snapshot.val();
-          console.info('Dispatchers were retrieved : \n', dispatchers);
+          console.info('Dispatchers were retrieved : \n', Object.keys(dispatchers));
           if (!dispatchers) {
             return;
           }
@@ -21,7 +21,7 @@ module.exports = {
             if (dispatchers.hasOwnProperty(key)) {
               let dispatcher = dispatchers[key];
               if (dispatcher.token && dispatcher.handleBot) {
-                tokens.push(dispatcher.token);
+                tokens.push({ token: dispatcher.token, dispatcher: key });
               }
             }
           }
@@ -45,8 +45,9 @@ function sendPushNotification(tokens, details) {
   return new Promise((resolve) => {
     let messages = [];
     for (let pushToken of tokens) {
-      if (!Expo.isExpoPushToken(pushToken)) {
-        console.error(`Push token ${pushToken} is not a valid Expo push token`);
+      const { token } = pushToken
+      if (!Expo.isExpoPushToken(token)) {
+        console.error(`Push token ${token} is not a valid Expo push token`);
         continue;
       }
 
@@ -70,7 +71,7 @@ function sendPushNotification(tokens, details) {
         console.log("Sending notification to ", chunk);
         expo.sendPushNotificationsAsync(chunk)
           .then(receipts => {
-            console.log("Successfully sent notifications : \n", receipts);
+            console.log("Successfully sent notifications : \n", (receipts || []).map((receipt, idx) => ({ ...receipt, ...tokens[idx] })));
             resolve();
           })
           .catch(err => {
