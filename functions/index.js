@@ -34,33 +34,16 @@ exports.manage = functions.https.onRequest((req, res) => {
   return manage.handleHttp(req, res, tokens)
 })
 
-exports.sendExpoFollowerNotification = functions.database
-  .ref('/events/{eventId}')
-  .onWrite(event => {
-    console.log('[sendExpoFollowerNotification] Start', event.params.eventId)
-    return sendExpoFollowerNotification.handleUpdateEvent(
-      event,
-      admin,
-      event.params.eventId
-    )
-  })
-
 exports.onUpdateEvent = functions.database
   .ref('/events/{eventId}')
   .onWrite(event => {
-    console.log('[onUpdateEvent] Start', event.params.eventId)
-    return onUpdateEvent.updateIsOpenProperty(event, event.params.eventId)
-  })
-
-exports.onEventCreateAddGeo = functions.database
-  .ref('/events/{eventId}')
-  .onWrite(event => {
-    console.log('[onEventCreateAddGeo] Start', event.params.eventId)
-    return onEventCreateAddGeo.indexEventGeoLocation(
-      event,
-      admin,
-      event.params.eventId
-    )
+    const { eventId } = event.params
+    console.log('[onUpdateEvent] Start', eventId)
+    return Promise.all([
+      onUpdateEvent.updateIsOpenProperty(event, eventId),
+      onEventCreateAddGeo.indexEventGeoLocation(event, admin, eventId),
+      sendExpoFollowerNotification.handleUpdateEvent(event, admin, eventId)
+    ])
   })
 
 exports.sendNotificationBySearchRadius = functions.https.onRequest(
