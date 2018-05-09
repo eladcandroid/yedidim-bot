@@ -6,14 +6,21 @@ const notificationHelper = require('./notificationHelper')
 let expo = new Expo()
 let NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
 
-exports.handleUpdateEvent = (event, admin) => {
+exports.handleUpdateEvent = (event, admin, eventId) => {
   let eventData = event.data.val()
   let previousValue = event.data.previous.val()
 
-  console.log(' new is ' + eventData.status, 'event data ', eventData)
+  console.log(
+    '[sendExpoFollowerNotification] New event status is',
+    eventData.status,
+    eventId
+  )
 
   if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
-    console.log('blocked', eventData.status)
+    console.log(
+      '[sendExpoFollowerNotification] No need to send notifications, doing nothing',
+      eventId
+    )
     return Promise.resolve('blocked')
   }
 
@@ -291,10 +298,18 @@ let sendNotificationToCloseByVolunteers = (
     let usersInRadius = []
     let geoFire = new GeoFire(admin.database().ref('/user_location'))
 
-    let geoQuery = geoFire.query({
+    const userQueryParams = {
       center: [eventData.details.geo.lat, eventData.details.geo.lon],
       radius: searchRadius || Consts.NOTIFICATION_SEARCH_RADIUS_KM
-    })
+    }
+
+    console.log(
+      `[sendNotificationToCloseByVolunteers] Querying users in location`,
+      userQueryParams,
+      eventData.key
+    )
+
+    let geoQuery = geoFire.query(userQueryParams)
 
     geoQuery.on('key_entered', function(userId) {
       usersInRadius.push(userId)
@@ -302,7 +317,13 @@ let sendNotificationToCloseByVolunteers = (
 
     geoQuery.on('ready', function() {
       geoQuery.cancel()
-      console.log(`Total of ${usersInRadius.length} in radius.`, usersInRadius)
+      console.log(
+        `[sendNotificationToCloseByVolunteers] Found ${
+          usersInRadius.length
+        } in location`,
+        usersInRadius,
+        eventData.key
+      )
       admin
         .database()
         .ref('/volunteer')
@@ -310,30 +331,47 @@ let sendNotificationToCloseByVolunteers = (
         .startAt('')
         .once('value', tokens => {
           if (!tokens.hasChildren()) {
-            console.log('There are no notification tokens to send to.')
+            console.log(
+              `[sendNotificationToCloseByVolunteers] There are no notification tokens to send to, stopping`,
+              eventData.key
+            )
             return resolve.resolve(400)
           }
 
           // Listing all tokens.
           let usersById = tokens.val()
+          console.log(
+            `[sendNotificationToCloseByVolunteers] Filtering original users list to validate tokens`,
+            Object.keys(usersById),
+            eventData.key
+          )
+
           let recipients = Object.keys(usersById).filter(
             userId =>
               Expo.isExpoPushToken(usersById[userId].NotificationToken) &&
               usersInRadius.indexOf(userId) > -1 &&
               !userMutedNotifications(usersById[userId])
           )
+
+          console.log(
+            `[sendNotificationToCloseByVolunteers] After filter, users list for sending is`,
+            recipients,
+            eventData.key
+          )
+
           const notifications = recipients.map(function(userId) {
             let token = usersById[userId].NotificationToken
             return buildEventNotification(eventData, notificationTitle, token)
           })
-          console.log(
-            'after filter their are',
-            notifications.length,
-            'tokens to send notifications to.'
-          )
 
           sendNotifications(notifications)
             .then(receipts => {
+              console.log(
+                `[sendNotificationToCloseByVolunteers] Finishing sending notifications, receipts are`,
+                receipts[0],
+                eventData.key
+              )
+
               // Save status of notifications for the event
               updateEventNotificationStatus(
                 admin,
@@ -349,6 +387,11 @@ let sendNotificationToCloseByVolunteers = (
               })
             })
             .catch(err => {
+              console.log(
+                `[sendNotificationToCloseByVolunteers] Error sending notifications`,
+                eventData.key,
+                err
+              )
               reject(err)
             })
         })

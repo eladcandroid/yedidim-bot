@@ -37,23 +37,35 @@ exports.manage = functions.https.onRequest((req, res) => {
 exports.sendExpoFollowerNotification = functions.database
   .ref('/events/{eventId}')
   .onWrite(event => {
-    return sendExpoFollowerNotification.handleUpdateEvent(event, admin)
+    console.log('[sendExpoFollowerNotification] Start', event.params.eventId)
+    return sendExpoFollowerNotification.handleUpdateEvent(
+      event,
+      admin,
+      event.params.eventId
+    )
   })
 
 exports.onUpdateEvent = functions.database
   .ref('/events/{eventId}')
   .onWrite(event => {
-    return onUpdateEvent.updateIsOpenProperty(event)
+    console.log('[onUpdateEvent] Start', event.params.eventId)
+    return onUpdateEvent.updateIsOpenProperty(event, event.params.eventId)
   })
 
 exports.onEventCreateAddGeo = functions.database
   .ref('/events/{eventId}')
   .onWrite(event => {
-    return onEventCreateAddGeo.indexEventGeoLocation(event, admin)
+    console.log('[onEventCreateAddGeo] Start', event.params.eventId)
+    return onEventCreateAddGeo.indexEventGeoLocation(
+      event,
+      admin,
+      event.params.eventId
+    )
   })
 
 exports.sendNotificationBySearchRadius = functions.https.onRequest(
   (req, res) => {
+    console.log('[sendNotificationBySearchRadius] Start', req.body)
     return sendExpoFollowerNotification.sendNotificationBySearchRadius(
       req,
       res,
@@ -63,6 +75,7 @@ exports.sendNotificationBySearchRadius = functions.https.onRequest(
 )
 
 exports.sendNotificationToRecipient = functions.https.onRequest((req, res) => {
+  console.log('[sendNotificationToRecipient] Start', req.body)
   return sendExpoFollowerNotification.sendNotificationToRecipient(
     req,
     res,

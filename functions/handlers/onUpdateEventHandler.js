@@ -1,14 +1,23 @@
-exports.updateIsOpenProperty = (event) => {
-	const eventData = event.data.val();
-	if (!eventData){
-    return Promise.resolve();
+exports.updateIsOpenProperty = (event, eventId) => {
+  const eventData = event.data.val()
+  if (!eventData) {
+    console.log('[onUpdateEvent] No event data, returning', eventId)
+    return Promise.resolve()
   }
-	const isOpen = eventData.status === 'submitted' || eventData.status === 'sent' || eventData.status === 'assigned' || eventData.status === 'taken';
+  const isOpen =
+    eventData.status === 'submitted' ||
+    eventData.status === 'sent' ||
+    eventData.status === 'assigned' ||
+    eventData.status === 'taken'
 
-	if (!event.data.previous.exists() || event.data.previous.val().isOpen !== isOpen){
-	  console.log('isOpen = ' + isOpen);
-	  return event.data.ref.update({isOpen});
+  if (
+    !event.data.previous.exists() ||
+    event.data.previous.val().isOpen !== isOpen
+  ) {
+    console.log('[onUpdateEvent] Updating isOpen for ', isOpen, eventId)
+    return event.data.ref.update({ isOpen })
   } else {
-		return Promise.resolve();
-	}
-};
+    console.log('[onUpdateEvent] Not updating isOpen', eventId)
+    return Promise.resolve()
+  }
+}
