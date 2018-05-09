@@ -27,7 +27,7 @@ class HomeScreen extends Component {
   }
 
   handleNotification = ({ origin, data, remote }) => {
-    if (data.type === 'test' && !!data.userId) {
+    if (data && data.type === 'test' && !!data.userId) {
       Alert.alert(
         "בדיקת התראות",
         "ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.",
