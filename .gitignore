@@ -9,3 +9,6 @@ i18n/messages
 /webApp/dist/
 ./npm-debug.log
 /functions/npm-debug.log
+/volunteers-app/android/build
+/volunteers-app/android/app/build
+/volunteers-app/android/local.properties

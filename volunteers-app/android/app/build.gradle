@@ -1,3 +1,5 @@
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
 buildscript {
   repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -31,7 +33,9 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     // Deprecated. Used by net.openid:appauth
     manifestPlaceholders = [
-      'appAuthRedirectScheme': 'host.exp.exponent'
+      'appAuthRedirectScheme': 'host.exp.exponent',
+      'onesignal_app_id': "2ee2bdaa-39dc-4667-99d6-e66e81af79ba",
+      'onesignal_google_project_number': "REMOTE"
     ]
   }
   dexOptions {
@@ -168,8 +172,21 @@ dependencies {
   compile('host.exp.exponent:expoview:25.0.0@aar') {
     transitive = true
   }
-  
-  
+
+  compile project(path: ':react-native-onesignal')
+}
+
+
+
+configurations.all {
+  resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+    def requested = details.requested
+    if (requested.group == 'com.android.support') {
+      if (!requested.name.startsWith("multidex")) {
+        details.useVersion '26.0.1'
+      }
+    }
+  }
 }
 
 // This has to be down here for some reason

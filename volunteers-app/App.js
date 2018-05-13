@@ -7,6 +7,7 @@ import categoriesImages from 'const'
 import Sentry from 'sentry-expo'
 import { initAnalyticsTracking } from 'io/analytics'
 import I18nApp from './src/I18nApp'
+import OneSignal from "react-native-onesignal";
 
 // Remove this once Sentry is correctly setup.
 // Sentry.enableInExpoDevelopment = true
@@ -29,6 +30,10 @@ export default class App extends Component {
   }
 
   async componentWillMount() {
+    OneSignal.init("2ee2bdaa-39dc-4667-99d6-e66e81af79ba");
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener('ids', this.onIds);
     initAnalyticsTracking()
 
     await this.loadAssetsAsync()
@@ -37,6 +42,27 @@ export default class App extends Component {
     const stores = await createRootStore()
 
     this.setState({ isReady: true, stores })
+  }
+
+  componentWillUnmount() {
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
+    OneSignal.removeEventListener('ids', this.onIds);
+  }
+
+  onReceived(notification) {
+    console.log("Notification received: ", notification);
+  }
+
+  onOpened(openResult) {
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  }
+
+  onIds(device) {
+    console.log('Device info: ', device);
   }
 
   loadAssetsAsync = async () => {
