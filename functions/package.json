@@ -5,17 +5,16 @@
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "prepare":
-      "babel handlers/sendExpoFollowerNotification.es6 --out-file handlers/sendExpoFollowerNotification.js",
+    "prepare": "babel handlers/sendExpoFollowerNotification.es6 --out-file handlers/sendExpoFollowerNotification.js",
     "deploy": "firebase use yedidim-sandbox-2 && yarn run deploy:functions",
-    "deploy:production":
-      "firebase use yedidim-production && yarn run deploy:functions",
-    "deploy:functions":
-      "yarn run prepare && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient,functions:sendTestNotification"
+    "deploy:production": "firebase use yedidim-production && yarn run deploy:functions",
+    "deploy:functions": "yarn run prepare && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient,functions:sendTestNotification"
   },
   "dependencies": {
-    "babel-runtime": "^6.23.0",
     "async": "^2.6.0",
+    "babel-runtime": "^6.23.0",
+    "bunyan": "^1.8.12",
+    "bunyan-loggly": "^1.3.4",
     "expo-server-sdk": "^2.3.3",
     "firebase": "^4.8.1",
     "firebase-admin": "^5.9.0",
@@ -26,12 +25,12 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^3.5.3",
-    "sinon": "^4.1.3",
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0"
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "sinon": "^4.1.3"
   }
 }
