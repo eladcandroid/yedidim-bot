@@ -8,7 +8,8 @@ import MainScreen from './MainScreen'
 import {
   checkUserAuth,
   clearMessage,
-  acknowledgeTestNotification
+  acknowledgeTestNotification,
+  acknowledgeEventNotification
 } from '../actions/dataSourceActions'
 
 class HomeScreen extends Component {
@@ -32,6 +33,11 @@ class HomeScreen extends Component {
       )
       // Acknowledge test on firebase
       this.props.acknowledgeTestNotification(data.userId)
+    }
+
+    if (data && data.type === 'event' && !!data.userId && !!data.eventId) {
+      // Acknowledge event received on firebase
+      this.props.acknowledgeEventNotification(data.userId, data.eventId)
     }
   }
 
@@ -84,6 +90,9 @@ const mapDispatchToProps = dispatch => {
     },
     acknowledgeTestNotification: userId => {
       dispatch(acknowledgeTestNotification(userId))
+    },
+    acknowledgeEventNotification: (userId, eventId) => {
+      dispatch(acknowledgeEventNotification(userId, eventId))
     }
   }
 }

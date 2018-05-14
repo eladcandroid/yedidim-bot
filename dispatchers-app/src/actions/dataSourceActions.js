@@ -156,6 +156,17 @@ export function acknowledgeTestNotification(userId) {
   }
 }
 
+export function acknowledgeEventNotification(userId, eventId) {
+  return (dispatch, getState) => {
+    firebase
+      .database()
+      .ref(`events/${eventId}/notifications/dispatchers/sent`)
+      .update({
+        [userId]: new Date().getTime()
+      })
+  }
+}
+
 export function createEvent(event) {
   event.key = firebase
     .database()

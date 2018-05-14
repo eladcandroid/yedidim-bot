@@ -50,10 +50,10 @@ const instance =
   'sandbox2'
 
 module.exports = {
-  init: function(admin) {
+  init: function (admin) {
     db = admin.database()
   },
-  send: function(context) {
+  send: function (context) {
     return new Promise(resolve => {
       db
         .ref('/dispatchers')
@@ -121,7 +121,8 @@ function sendPushNotification(tokens, { details, key }) {
         title: 'נפתח ארוע חדש',
         body: 'ארוע ב ' + details.address,
         data: {
-          type: 'bot'
+          type: 'event',
+          eventId: key
         }
       })
     }
