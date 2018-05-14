@@ -1,5 +1,44 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
+    "name": "ידידים - מוקדן",
+    "description": "ידידים - מוקדן",
+    "slug": "dispatcher",
+    "sdkVersion": "25.0.0",
+    "version": "1.3.1",
+    "icon": "./assets/images/app-icon.png",
+    "notification": {
+      "icon": "./assets/notification/icon.png"
+    },
+    "splash": {
+      "resizeMode": "cover",
+      "image": "./assets/images/splash.png",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.startach.yedidim.dispatchers.separated"
+    },
+    "android": {
+      "package": "com.startach.yedidim.dispatchers.separated"
+    },
+    "extra": {
+      "instance": "production"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#4451B9",
+      "barStyle": "light-content"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "startach",
+            "project": "yedidim-dispatcher",
+            "authToken":
+              "480786f7e02a4b15b0c5bc0416abc510302409d4a0f84547873a47564b2765ab"
+          }
+        }
+      ]
+    }
   }
 }
