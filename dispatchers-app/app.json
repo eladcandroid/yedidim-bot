@@ -19,9 +19,6 @@
     "android": {
       "package": "com.startach.yedidim.dispatchers.separated"
     },
-    "extra": {
-      "instance": "production"
-    },
     "androidStatusBar": {
       "backgroundColor": "#4451B9",
       "barStyle": "light-content"

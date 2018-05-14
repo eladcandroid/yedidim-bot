@@ -1,52 +1,46 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Alert } from 'react-native';
-import { connect } from 'react-redux';
-import { Notifications } from 'expo';
-import LoginScreen from "./LoginScreen";
-import MainScreen from "./MainScreen";
-import { checkUserAuth, clearMessage, acknowledgeTestNotification } from "../actions/dataSourceActions";
-
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { Alert } from 'react-native'
+import { connect } from 'react-redux'
+import { Notifications } from 'expo'
+import LoginScreen from './LoginScreen'
+import MainScreen from './MainScreen'
+import {
+  checkUserAuth,
+  clearMessage,
+  acknowledgeTestNotification
+} from '../actions/dataSourceActions'
 
 class HomeScreen extends Component {
   constructor(props) {
-    super(props);
-    this.state = {showNewVersionAlert: false};
+    super(props)
+    this.state = { showNewVersionAlert: false }
   }
 
   componentWillMount() {
-    this.props.checkUserAuth();
-    Notifications.addListener(this.handleNotification);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    //Check that the app version is the latest
-    if (nextProps.newVersionExists && !this.state.showNewVersionAlert){
-      // this.reloadNewVersion();
-    }
+    this.props.checkUserAuth()
+    Notifications.addListener(this.handleNotification)
   }
 
   handleNotification = ({ origin, data, remote }) => {
     if (data && data.type === 'test' && !!data.userId) {
       Alert.alert(
-        "בדיקת התראות",
-        "ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.",
+        'בדיקת התראות',
+        'ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.',
         [{ text: 'OK', onPress: () => {} }],
         { cancelable: false }
-      );
+      )
       // Acknowledge test on firebase
-      this.props.acknowledgeTestNotification(data.userId);
+      this.props.acknowledgeTestNotification(data.userId)
     }
   }
 
   reloadNewVersion() {
-    this.setState({showNewVersionAlert: true});
+    this.setState({ showNewVersionAlert: true })
     Alert.alert(
       'עדכון גירסא',
       'בבקשה עדכן גירסא חדשה',
-      [
-        {text: 'עדכן', onPress: () => Expo.Util.reload()},
-      ],
+      [{ text: 'עדכן', onPress: () => Expo.Util.reload() }],
       { cancelable: false }
     )
   }
@@ -55,65 +49,57 @@ class HomeScreen extends Component {
     Alert.alert(
       'הודעה',
       this.props.error.message,
-      [
-        {text: 'OK', onPress: () => this.props.clearMessage()},
-      ],
-      {cancelable: false}
+      [{ text: 'OK', onPress: () => this.props.clearMessage() }],
+      { cancelable: false }
     )
   }
 
   render() {
-    //Check that the app version is the latest
-    if (this.props.newVersionExists){
-      return (<Expo.AppLoading />);
-    }
-
     //User authentication was not checked it
     if (!this.props.user) {
-      return (<Expo.AppLoading />)
+      return <Expo.AppLoading />
     }
     //There is no log in user
     if (!this.props.user.id) {
-      return (<LoginScreen/>);
+      return <LoginScreen />
     }
     //Events data was not loaded yet
     if (!this.props.events) {
-      return (<Expo.AppLoading />)
+      return <Expo.AppLoading />
     }
     if (this.props.error) {
       this.showError()
     }
 
-    return (<MainScreen/>)
+    return <MainScreen />
   }
 }
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     checkUserAuth: () => {
-      dispatch(checkUserAuth());
+      dispatch(checkUserAuth())
     },
     clearMessage: () => {
-      dispatch(clearMessage());
+      dispatch(clearMessage())
     },
-    acknowledgeTestNotification: (userId) => {
-      dispatch(acknowledgeTestNotification(userId));
+    acknowledgeTestNotification: userId => {
+      dispatch(acknowledgeTestNotification(userId))
     }
-  };
-};
+  }
+}
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    newVersionExists: state.dataSource.newVersionExists,
     user: state.dataSource.user,
     events: state.dataSource.events,
     error: state.dataSource.error
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
 
 HomeScreen.propTypes = {
   user: PropTypes.object,
   error: PropTypes.object,
   clearMessage: PropTypes.func
-};
+}
