@@ -12,3 +12,6 @@ i18n/messages
 /volunteers-app/android/build
 /volunteers-app/android/app/build
 /volunteers-app/android/local.properties
+/app/android/build
+/app/android/app/build
+/app/android/local.properties

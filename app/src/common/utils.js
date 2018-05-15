@@ -38,7 +38,7 @@ export const formatEventCategory = (categories, event, includeSub) => {
   if (!category) {
     return 'לא ידוע';
   }
-  const subCategory = (category.subCategories !== null) ? category.subCategories.find(subCategory => subCategory.id === event.details.subCategory) : undefined;
+  const subCategory = (category.subCategories) ? category.subCategories.find(subCategory => subCategory.id === event.details.subCategory) : undefined;
   return category.displayName + (subCategory && includeSub ? (' - ' + subCategory.displayName) : '');
 };
 
