@@ -50,10 +50,10 @@ const instance =
   'sandbox2'
 
 module.exports = {
-  init: function (admin) {
+  init: function(admin) {
     db = admin.database()
   },
-  send: function (context) {
+  send: function(context) {
     return new Promise(resolve => {
       db
         .ref('/dispatchers')

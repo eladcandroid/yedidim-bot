@@ -275,7 +275,7 @@ const updateEventNotificationStatus = async (admin, eventId, sent, error) => {
 
   return admin
     .database()
-    .ref(`/events/${eventId}/notifications`)
+    .ref(`/events/${eventId}/notifications/volunteers`)
     .update({
       sent: sent.reduce((acc, userId) => {
         acc[userId] = false
