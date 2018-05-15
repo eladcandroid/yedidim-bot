@@ -5,10 +5,12 @@
   "description": "",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "prepare": "babel handlers/sendExpoFollowerNotification.es6 --out-file handlers/sendExpoFollowerNotification.js",
-    "deploy": "firebase use yedidim-sandbox-2 && yarn run deploy:functions",
-    "deploy:production": "firebase use yedidim-production && yarn run deploy:functions",
-    "deploy:functions": "yarn run prepare && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient,functions:sendTestNotification"
+    "build":
+      "babel handlers/sendExpoFollowerNotification.es6 --out-file handlers/sendExpoFollowerNotification.js",
+    "fb-deploy":
+      "yarn run build && firebase deploy --only functions:webhook,functions:manage,functions:sendExpoFollowerNotification,functions:onUpdateEvent,functions:onEventCreateAddGeo,functions:sendNotificationBySearchRadius,functions:sendNotificationToRecipient,functions:sendTestNotification",
+    "publish": "firebase use yedidim-sandbox-2 && yarn fb-deploy",
+    "publish:production": "firebase use yedidim-production && yarn fb-deploy"
   },
   "dependencies": {
     "async": "^2.6.0",
