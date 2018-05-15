@@ -32,8 +32,8 @@
     "lint": "eslint --ext .js .",
     "flow": "flow",
     "login": "exp logout && exp login -u startach -p startach1",
-    "publish": "yarn login && exp publish --release-channel development",
-    "publish:production": "yarn login && exp publish"
+    "deploy": "yarn login && exp publish --release-channel development",
+    "deploy:production": "yarn login && exp publish"
   },
   "jest": {
     "preset": "jest-expo"
