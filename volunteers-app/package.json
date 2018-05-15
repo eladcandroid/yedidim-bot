@@ -31,9 +31,9 @@
     "test": "node node_modules/jest/bin/jest.js --watch",
     "lint": "eslint --ext .js .",
     "flow": "flow",
-    "login": "exp logout && exp login -u startach -p startach1",
-    "deploy": "yarn login && exp publish --release-channel development",
-    "deploy:production": "yarn login && exp publish"
+    "exp-login": "exp logout && exp login -u startach -p startach1",
+    "deploy": "yarn exp-login && exp publish --release-channel development",
+    "deploy:production": "yarn exp-login && exp publish"
   },
   "jest": {
     "preset": "jest-expo"
