@@ -31,9 +31,9 @@
     "test": "node node_modules/jest/bin/jest.js --watch",
     "lint": "eslint --ext .js .",
     "flow": "flow",
-    "publish:development": "exp publish --release-channel development",
-    "publish:test": "exp publish --release-channel development",
-    "publish:production": "exp publish"
+    "login": "exp logout && exp login -u startach -p startach1",
+    "publish": "yarn login && exp publish --release-channel development",
+    "publish:production": "yarn login && exp publish"
   },
   "jest": {
     "preset": "jest-expo"
@@ -50,18 +50,14 @@
     "native-base": "^2.3.5",
     "react": "16.3.1",
     "react-intl": "^2.4.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz",
+    "react-native":
+      "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz",
     "react-navigation": "1.5.11",
     "sentry-expo": "~1.7.0",
     "styled-components": "^2.2.1"
   },
   "lint-staged": {
-    "**/*.{jsx,js,json,css}": [
-      "prettier --write",
-      "git add"
-    ],
-    "**/*.{jsx,js}": [
-      "eslint"
-    ]
+    "**/*.{jsx,js,json,css}": ["prettier --write", "git add"],
+    "**/*.{jsx,js}": ["eslint"]
   }
 }

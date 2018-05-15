@@ -1,6 +1,6 @@
 {
   "name": "dispatchers-app",
-  "version": "1.3.1",  
+  "version": "1.3.1",
   "private": true,
   "devDependencies": {
     "react-native-scripts": "1.14.0",
@@ -13,7 +13,10 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "jest"
+    "test": "jest",
+    "login": "exp logout && exp login -u yedidimdispatchers -p startach1",
+    "publish": "yarn login && exp publish --release-channel sandbox2",
+    "publish:production": "yarn login && exp publish"
   },
   "jest": {
     "preset": "jest-expo"
@@ -24,7 +27,8 @@
     "firebase": "^4.9.1",
     "native-base": "^2.3.8",
     "react": "16.2.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react-native":
+      "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
     "react-native-datepicker": "^1.6.0",
     "react-native-keyboard-aware-scroll-view": "^0.4.3",
     "react-redux": "^5.0.6",
