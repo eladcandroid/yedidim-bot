@@ -122,7 +122,8 @@ function sendPushNotification(tokens, { details, key }) {
         body: 'ארוע ב ' + details.address,
         data: {
           type: 'event',
-          eventId: key
+          eventId: key,
+          userId: dispatcher
         }
       })
     }
