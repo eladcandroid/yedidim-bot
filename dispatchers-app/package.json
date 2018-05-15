@@ -1,0 +1,38 @@
+{
+  "name": "dispatchers-app",
+  "version": "1.3.3",
+  "private": true,
+  "devDependencies": {
+    "jest-expo": "~27.0.0",
+    "react-native-scripts": "1.14.0",
+    "react-test-renderer": "16.3.1"
+  },
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+  "scripts": {
+    "start": "react-native-scripts start",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "test": "jest",
+    "login": "exp logout && exp login -u yedidimdispatchers -p startach1",
+    "deploy": "yarn login && exp publish --release-channel sandbox2",
+    "deploy:production": "yarn login && exp publish"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "dateformat": "^3.0.3",
+    "expo": "^25.0.0",
+    "firebase": "^4.9.1",
+    "native-base": "^2.3.8",
+    "react": "16.2.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react-native-datepicker": "^1.6.0",
+    "react-native-keyboard-aware-scroll-view": "^0.4.3",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "sentry-expo": "^1.7.0"
+  }
+}

@@ -169,7 +169,7 @@ function sendFollowUpResponse(event, context) {
           promises.push(sendMessage(senderID, getTemplate(nextQuestion, context)));
           if (nextQuestion.submit) {
             context.status = EventStatus.Submitted;
-            promises.push(notifications.send(context.details));
+            promises.push(notifications.send(context));
           }
           promises.push(events.set(context));
         }

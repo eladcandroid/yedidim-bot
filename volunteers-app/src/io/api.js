@@ -170,20 +170,26 @@ const eventSnapshotToJSON = snapshot => ({
   distance: snapshot.distance,
   dispatcherId: snapshot.dispatcher,
   sentNotification:
-    snapshot.notifications && snapshot.notifications.sent
-      ? Object.keys(snapshot.notifications.sent).filter(
-          userId => !snapshot.notifications.sent[userId]
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.sent
+      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+          userId => !snapshot.notifications.volunteers.sent[userId]
         )
       : [],
   receivedNotification:
-    snapshot.notifications && snapshot.notifications.sent
-      ? Object.keys(snapshot.notifications.sent).filter(
-          userId => snapshot.notifications.sent[userId]
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.sent
+      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+          userId => snapshot.notifications.volunteers.sent[userId]
         )
       : [],
   errorNotification:
-    snapshot.notifications && snapshot.notifications.error
-      ? Object.keys(snapshot.notifications.error)
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.error
+      ? Object.keys(snapshot.notifications.volunteers.error)
       : []
 })
 
@@ -353,7 +359,7 @@ export async function acceptEvent(eventKey, userKey) {
 export const acknowledgeReceivedEvent = async (eventId, userId) =>
   firebase
     .database()
-    .ref(`events/${eventId}/notifications/sent`)
+    .ref(`events/${eventId}/notifications/volunteers/sent`)
     .update({
       [userId]: true
     })
