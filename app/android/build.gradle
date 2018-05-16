@@ -3,12 +3,14 @@
 buildscript {
   repositories {
     jcenter()
+    maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.3'
     classpath 'com.google.gms:google-services:3.0.0'
     classpath 'de.undercouch:gradle-download-task:2.0.0'
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.9.0, 0.99.99]' // OneSignal-Gradle-Plugin
   }
 }
 
@@ -42,4 +44,15 @@ allprojects {
 
 task clean(type: Delete) {
   delete rootProject.buildDir
+}
+
+subprojects {
+  afterEvaluate {project ->
+    if (project.hasProperty("android")) {
+      android {
+        compileSdkVersion 26
+        buildToolsVersion '26.0.1'
+      }
+    }
+  }
 }

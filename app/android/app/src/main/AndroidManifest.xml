@@ -50,7 +50,7 @@
     <activity
       android:name=".LauncherActivity"
       android:exported="true"
-      android:launchMode="singleTask"
+      android:launchMode="singleTop"
       android:screenOrientation="portrait"
       android:theme="@android:style/Theme.Translucent.NoTitleBar">
       <!-- ADD SHELL SCHEME HERE -->
