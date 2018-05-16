@@ -34,7 +34,7 @@ android {
     // Deprecated. Used by net.openid:appauth
     manifestPlaceholders = [
       'appAuthRedirectScheme': 'host.exp.exponent',
-      'onesignal_app_id': "2ee2bdaa-39dc-4667-99d6-e66e81af79ba",
+      'onesignal_app_id': "e5ef1cdc-a50b-430f-8fac-b7702740c59a",
       'onesignal_google_project_number': "REMOTE"
     ]
   }

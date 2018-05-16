@@ -30,7 +30,7 @@ export default class App extends Component {
   }
 
   async componentWillMount() {
-    OneSignal.init("2ee2bdaa-39dc-4667-99d6-e66e81af79ba");
+    OneSignal.init("e5ef1cdc-a50b-430f-8fac-b7702740c59a");
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);

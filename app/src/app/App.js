@@ -15,7 +15,7 @@ class App extends Component {
 
   async componentWillMount() {
 
-    OneSignal.init("2ee2bdaa-39dc-4667-99d6-e66e81af79ba");
+    OneSignal.init("9177d83e-8dc2-4501-aef8-c18697ca6f27");
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);
