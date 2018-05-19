@@ -8,4 +8,4 @@ const config = {
   instance
 }
 
-export default config
+exports = config

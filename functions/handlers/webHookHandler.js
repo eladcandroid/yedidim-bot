@@ -3,7 +3,7 @@ const queue = require('async/queue')
 
 const flow = require('../lib/flow.json')
 const events = require('../lib/events')
-const { notifyEvent } = require('../lib/onesignal')
+const { notifyAll } = require('../lib/onesignal')
 const geocoder = require('../lib/geocoder')
 const EventStatus = require('../lib/consts').EventStatus
 
@@ -204,11 +204,16 @@ function sendFollowUpResponse(event, context) {
           )
           if (nextQuestion.submit) {
             context.status = EventStatus.Submitted
+            let title = 'נפתח ארוע חדש'
+            let message = 'ארוע ב ' + context.address
+            let data = {
+              eventId: context.key,
+              type: 'event'
+            }
             promises.push(
-              notifyEvent({
-                userType: 'dispatcher',
-                eventId: context.key,
-                address: context.address
+              notifyAll({
+                appType: 'dispatchers',
+                title, message, data
               })
             )
           }

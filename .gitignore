@@ -15,3 +15,7 @@ i18n/messages
 /app/android/build
 /app/android/app/build
 /app/android/local.properties
+
+functions/handlers/sendExpoFollowerNotification.js
+functions/config/index.js
+functions/lib/onesignal.js

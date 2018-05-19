@@ -1,48 +1,54 @@
-import rp from 'request-promise'
-import { instance } from '../config'
+let rp = require('request-promise')
+let {instance} = require('../config')
 
-const ONE_SIGNAL_REST_API_KEY =
-  'OTgxNmJiYTItM2U0Ni00MzAzLWEyMjEtZWVmYWVkZTg3ZGUz'
-const ONE_SIGNAL_APP_ID = '2ee2bdaa-39dc-4667-99d6-e66e81af79ba'
+const credentials = {
+  "dispatchers": {
+    "RestApiToken": "NTA4NjZlMjEtZmZkNi00ZjQ4LWE0NDAtMDgyNGVhNGJiMGMw",
+    "AppId": "9177d83e-8dc2-4501-aef8-c18697ca6f27"
+  },
+  "volunteers": {
+    "RestApiToken": "NDE4NmE2NjQtY2E3Mi00YmFjLTlkYzktODEzYmJiZDY4OWZk",
+    "AppId": "e5ef1cdc-a50b-430f-8fac-b7702740c59a"
+  }
+}
 
 const buildFilters = filter => [
   ...filter,
   // Make filter always targets right environment
-  { field: 'tag', key: 'environment', relation: '=', value: instance }
+  {field: 'tag', key: 'environment', relation: '=', value: instance}
 ]
 
-const sendNotifications = async ({ title, message, ...other }) =>
-  rp({
+const sendNotifications = async ({title, message, appType, ...other}) => {
+  return rp({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      Authorization: `Basic ${ONE_SIGNAL_REST_API_KEY}`
+      Authorization: `Basic ${credentials[appType].RestApiToken}`
     },
     uri: 'https://onesignal.com/api/v1/notifications',
     body: {
-      app_id: ONE_SIGNAL_APP_ID,
-      headings: { en: title },
-      contents: { en: message },
+      app_id: credentials[appType].AppId,
+      headings: {en: title},
+      contents: {en: message},
       ...other
     },
     json: true // Automatically stringifies the body to JSON
   })
+}
 
-export const notifyEvent = async props => {
+const sendNotificationByLocation = async (props) => {
   console.log('[OneSignal] Sending event notification', props)
-  const { userType, address, eventId } = props
+  const {title, message, data, appType} = props
   try {
+    let radiusMeters = props.radius * 1000;
     const results = await sendNotifications({
-      // TODO support handleBot
-      filters: buildFilters([
-        { field: 'tag', key: `is_${userType}`, relation: '=', value: 'true' }
-      ]),
-      title: 'נפתח ארוע חדש',
-      message: 'ארוע ב ' + address,
-      data: {
-        eventId,
-        type: 'event'
-      }
+      filters: [
+        {"field": "location", "radius": radiusMeters, lat: props.latitude, long: props.longitude}
+      ],
+      title,
+      message,
+      data,
+      appType
     })
     console.log('[OneSignal] Success event notifications', results)
     return results
@@ -52,21 +58,16 @@ export const notifyEvent = async props => {
   }
 }
 
-export const notifyTest = async props => {
-  console.log('[OneSignal] Sending test notifications', props)
-  const { userId } = props
-  // if userId is set then send to specific user
-  // if not, then send to all users
+const sendNotificationByUserIds = async (props) => {
+  console.log('[OneSignal] Sending event notification', props)
+  const {title, message, data, userIds, appType} = props
   try {
     const results = await sendNotifications({
-      filters: userId ? undefined : buildFilters([]),
-      include_player_ids: userId ? [userId] : undefined,
-      title: 'בדיקת התראות לישום',
-      message: 'נא לפתוח התראה הזאת כדי לאשר קבלה. לא מדובר באירוע.',
-      data: {
-        userId,
-        type: 'test'
-      }
+      include_player_ids: userIds,
+      title,
+      message,
+      data,
+      appType
     })
     console.log('[OneSignal] Success test notifications', results)
     return results
@@ -75,3 +76,26 @@ export const notifyTest = async props => {
     throw error
   }
 }
+
+const notifyAll = async (props) => {
+  console.log('[OneSignal] Sending event notification', props)
+  const {title, message, data, appType} = props
+  try {
+    const results = await sendNotifications({
+      included_segments: ["All"],
+      title,
+      message,
+      data,
+      appType
+    })
+    console.log('[OneSignal] Success event notifications', results)
+    return results
+  } catch (error) {
+    console.log('[OneSignal] Fail event notifications', error)
+    throw error
+  }
+}
+
+module.exports = {sendNotificationByLocation, sendNotificationByUserIds, notifyAll}
+
+
