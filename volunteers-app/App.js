@@ -30,10 +30,7 @@ export default class App extends Component {
   }
 
   async componentWillMount() {
-    OneSignal.init("e5ef1cdc-a50b-430f-8fac-b7702740c59a");
-    OneSignal.addEventListener('received', this.onReceived);
-    OneSignal.addEventListener('opened', this.onOpened);
-    OneSignal.addEventListener('ids', this.onIds);
+
     initAnalyticsTracking()
 
     await this.loadAssetsAsync()
@@ -45,24 +42,9 @@ export default class App extends Component {
   }
 
   componentWillUnmount() {
+    OneSignal.removeEventListener('ids', this.onIds);
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
-    OneSignal.removeEventListener('ids', this.onIds);
-  }
-
-  onReceived(notification) {
-    console.log("Notification received: ", notification);
-  }
-
-  onOpened(openResult) {
-    console.log('Message: ', openResult.notification.payload.body);
-    console.log('Data: ', openResult.notification.payload.additionalData);
-    console.log('isActive: ', openResult.notification.isAppInFocus);
-    console.log('openResult: ', openResult);
-  }
-
-  onIds(device) {
-    console.log('Device info: ', device);
   }
 
   loadAssetsAsync = async () => {

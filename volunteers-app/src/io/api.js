@@ -2,20 +2,42 @@ import firebase from 'firebase'
 import GeoFire from 'geofire'
 import { Notifications, Location } from 'expo'
 import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler'
+import OneSignal from "react-native-onesignal";
 
 const EVENTS_SEARCH_RADIUS_KM = 20
 
-async function registerForPushNotificationsAsync() {
-  const hasPermission = await phonePermissionsHandler.getNotificationsPermission()
-  if (!hasPermission) {
-    throw {
-      code: 'Notification not granted',
-      message: 'User did not granted notification permissions'
-    }
-  }
+async function registerForPushNotificationsAsync(userId) {
+  return new Promise((resolve, reject) => {
+    OneSignal.init("e5ef1cdc-a50b-430f-8fac-b7702740c59a");
+    console.log('Registered to received');
+    OneSignal.addEventListener('received', (notification) => {
+      console.log("Notification received: ", notification);
+    });
+    OneSignal.addEventListener('opened', (openResult) => {
+      console.log('Message: ', openResult.notification.payload.body);
+      console.log('Data: ', openResult.notification.payload.additionalData);
+      console.log('isActive: ', openResult.notification.isAppInFocus);
+      console.log('openResult: ', openResult);
+    });
+    OneSignal.addEventListener('ids', (device) => {
+      firebase.database()
+        .ref(`/volunteer/${userId}`)
+        .update({ NotificationToken: device.userId })
+      resolve(device.userId);
+    });
+    OneSignal.configure();
+  });
+}
 
-  // Get the token that uniquely identifies this device
-  return Notifications.getExpoPushTokenAsync()
+function onReceived(notification) {
+  console.log("Notification received: ", notification);
+}
+
+function onOpened(openResult) {
+  console.log('Message: ', openResult.notification.payload.body);
+  console.log('Data: ', openResult.notification.payload.additionalData);
+  console.log('isActive: ', openResult.notification.isAppInFocus);
+  console.log('openResult: ', openResult);
 }
 
 export async function updateUser(userKey, properties) {
@@ -69,18 +91,12 @@ async function subscribeToUserInfo(
   }
 }
 
-async function updateUserNotificationToken(userId) {
-  const NotificationToken = await registerForPushNotificationsAsync()
-
-  return firebase
-    .database()
-    .ref(`/volunteer/${userId}`)
-    .update({ NotificationToken })
-}
-
 export function onAuthenticationChanged(onAuthentication, onError) {
   return firebase.auth().onAuthStateChanged(async userAuth => {
     subscribeToUserInfo(userAuth, onAuthentication, onError)
+    if (userAuth && userAuth.phoneNumber) {
+      await registerForPushNotificationsAsync(userAuth.phoneNumber);
+    }
   })
 }
 
@@ -91,9 +107,6 @@ export async function signInWithPhone({ verificationId, code }) {
       .signInWithCredential(
         firebase.auth.PhoneAuthProvider.credential(verificationId, code)
       )
-
-    // Update notification token after sign in
-    await updateUserNotificationToken(userAuth.phoneNumber)
 
     // Should have been subscribed to currentUserInfo already (check onAuthenticationChanged)
   } catch (error) {
@@ -112,9 +125,6 @@ export async function signInWithEmailPass({ phoneNumber, id }) {
     await firebase
       .auth()
       .signInWithEmailAndPassword(`${userId}@yedidim.org`, id)
-
-    // Update notification token after sign in
-    await updateUserNotificationToken(userId)
 
     // Should have been subscribed to currentUserInfo already (check onAuthenticationChanged)
   } catch (error) {
