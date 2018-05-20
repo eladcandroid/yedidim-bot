@@ -1,30 +1,25 @@
 import { Permissions, Notifications } from 'expo';
 import { storeNotificationToken, setError, getFunctionsUrl } from "./dataSourceActions";
+import OneSignal from "react-native-onesignal";
 
 export function registerForPushNotifications() {
   return (async dispatch => {
-    const {existingStatus} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    let finalStatus = existingStatus;
+    OneSignal.init("9177d83e-8dc2-4501-aef8-c18697ca6f27");
 
-    // only ask if permissions have not already been determined, because
-    // iOS won't necessarily prompt the user a second time.
-    if (existingStatus !== 'granted') {
-      // Android remote notification permissions are granted during the app
-      // install, so this will only ask on iOS
-      const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      finalStatus = status;
-    }
+    OneSignal.addEventListener('received', (notification) => {
+      console.log("Notification received: ", notification);
+    });
+    OneSignal.addEventListener('opened', (openResult) => {
+      console.log('Message: ', openResult.notification.payload.body);
+      console.log('Data: ', openResult.notification.payload.additionalData);
+      console.log('isActive: ', openResult.notification.isAppInFocus);
+      console.log('openResult: ', openResult);
+    });
+    OneSignal.addEventListener('ids', (device) => {
+      dispatch(storeNotificationToken(device.userId));
+    });
 
-    // Stop here if the user did not grant permissions
-    if (finalStatus !== 'granted') {
-      return;
-    }
-
-    // Get the token that uniquely identifies this device
-    let token = await Notifications.getExpoPushTokenAsync();
-
-    console.log(token);
-    dispatch(storeNotificationToken(token));
+    OneSignal.configure();
   })
 }
 
