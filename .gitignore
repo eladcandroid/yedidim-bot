@@ -12,9 +12,11 @@ i18n/messages
 /volunteers-app/android/build
 /volunteers-app/android/app/build
 /volunteers-app/android/local.properties
+/volunteers-app/android/.gradle
 /app/android/build
 /app/android/app/build
 /app/android/local.properties
+/app/android/.gradle
 
 functions/handlers/sendExpoFollowerNotification.js
 functions/config/index.js

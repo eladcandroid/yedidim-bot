@@ -1,6 +1,6 @@
 import { Constants } from 'expo'
 
-const firebaseInfo = {
+const configByEnvironment = {
   test: {
     authCredentials: {
       // sandbox
@@ -22,7 +22,8 @@ const firebaseInfo = {
       storageBucket: 'yedidim-sandbox-2.appspot.com',
       messagingSenderId: '1011917548573'
     },
-    functionsUrl: 'https://us-central1-yedidim-sandbox-2.cloudfunctions.net'
+    functionsUrl: 'https://us-central1-yedidim-sandbox-2.cloudfunctions.net',
+    oneSignalAppId: "e5ef1cdc-a50b-430f-8fac-b7702740c59a"
   },
   production: {
     // production
@@ -34,7 +35,8 @@ const firebaseInfo = {
       storageBucket: 'yedidim-production.appspot.com',
       messagingSenderId: '33558411934'
     },
-    functionsUrl: 'https://us-central1-yedidim-production.cloudfunctions.net'
+    functionsUrl: 'https://us-central1-yedidim-production.cloudfunctions.net',
+    oneSignalAppId: ""
   }
 }
 
@@ -49,9 +51,10 @@ export const environment = () => {
 export const defaultLanguage = () =>
   environment() === 'development' ? 'en' : 'he'
 
-export const firebaseCredentials = () => firebaseInfo[environment()].authCredentials
-export const firebaseFunctionsUrl = () => firebaseInfo[environment()].functionsUrl
+export const firebaseCredentials = () => configByEnvironment[environment()].authCredentials
+export const firebaseFunctionsUrl = () => configByEnvironment[environment()].functionsUrl
+export const config = () => configByEnvironment[environment()]
 export const hostingDomain = () =>
   environment() === 'production' ? 'yedidim-production' : 'yedidim-sandbox-2'
 
-export default { firebaseCredentials, environment, firebaseFunctionsUrl }
+export default { firebaseCredentials, environment, firebaseFunctionsUrl, config }

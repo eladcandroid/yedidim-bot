@@ -86,7 +86,7 @@ exports.sendDispatcherTestNotification = async (req, res, admin) => {
     res.status(200).send('');
   } catch (e) {
     console.error(e);
-    res.error(500).send(e);
+    res.status(500).send(e);
   }
 };
 

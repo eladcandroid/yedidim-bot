@@ -3,12 +3,13 @@ import GeoFire from 'geofire'
 import { Notifications, Location } from 'expo'
 import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler'
 import OneSignal from "react-native-onesignal";
+import {config} from '../config';
 
 const EVENTS_SEARCH_RADIUS_KM = 20
 
 async function registerForPushNotificationsAsync(userId) {
   return new Promise((resolve, reject) => {
-    OneSignal.init("e5ef1cdc-a50b-430f-8fac-b7702740c59a");
+    OneSignal.init(config().oneSignalAppId);
     console.log('Registered to received');
     OneSignal.addEventListener('received', (notification) => {
       console.log("Notification received: ", notification);

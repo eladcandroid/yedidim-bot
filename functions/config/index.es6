@@ -4,8 +4,11 @@ const instance =
   (functions.config().instance && functions.config().instance.name) ||
   'sandbox2'
 
-const config = {
-  instance
-}
+const tokens = require('../_tokens.json')[instance];
 
-exports = config
+console.log('Took tokens for ', instance, tokens);
+
+module.exports = {
+  instance,
+  tokens
+}

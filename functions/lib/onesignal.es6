@@ -1,16 +1,5 @@
 let rp = require('request-promise')
-let {instance} = require('../config')
-
-const credentials = {
-  "dispatchers": {
-    "RestApiToken": "NTA4NjZlMjEtZmZkNi00ZjQ4LWE0NDAtMDgyNGVhNGJiMGMw",
-    "AppId": "9177d83e-8dc2-4501-aef8-c18697ca6f27"
-  },
-  "volunteers": {
-    "RestApiToken": "NDE4NmE2NjQtY2E3Mi00YmFjLTlkYzktODEzYmJiZDY4OWZk",
-    "AppId": "e5ef1cdc-a50b-430f-8fac-b7702740c59a"
-  }
-}
+let {instance, tokens} = require('../config')
 
 const buildFilters = filter => [
   ...filter,
@@ -19,15 +8,16 @@ const buildFilters = filter => [
 ]
 
 const sendNotifications = async ({title, message, appType, ...other}) => {
+  console.log('Using tokens ', tokens)
   return rp({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      Authorization: `Basic ${credentials[appType].RestApiToken}`
+      Authorization: `Basic ${tokens.oneSignal[appType].RestApiToken}`
     },
     uri: 'https://onesignal.com/api/v1/notifications',
     body: {
-      app_id: credentials[appType].AppId,
+      app_id: tokens.oneSignal[appType].AppId,
       headings: {en: title},
       contents: {en: message},
       ...other

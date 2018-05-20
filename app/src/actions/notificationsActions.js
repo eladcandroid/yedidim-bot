@@ -1,10 +1,19 @@
 import { Permissions, Notifications } from 'expo';
 import { storeNotificationToken, setError, getFunctionsUrl } from "./dataSourceActions";
+import { getInstance } from "../common/utils";
 import OneSignal from "react-native-onesignal";
+const oneSignalConfig = {
+  sandbox2: {
+    appId: "9177d83e-8dc2-4501-aef8-c18697ca6f27"
+  },
+  production: {
+    appId: ""
+  }
+}
 
 export function registerForPushNotifications() {
   return (async dispatch => {
-    OneSignal.init("9177d83e-8dc2-4501-aef8-c18697ca6f27");
+    OneSignal.init(oneSignalConfig[getInstance()].appId);
 
     OneSignal.addEventListener('received', (notification) => {
       console.log("Notification received: ", notification);
