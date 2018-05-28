@@ -12,19 +12,22 @@ import host.exp.exponent.Constants;
 public class AppConstants {
 
   public static final String VERSION_NAME = "2.3.0";
-  public static String INITIAL_URL = "exp://exp.host/@dorelm/dispatcher";
+  public static String INITIAL_URL = "exp://exp.host/@yedidimdispatchers/dispatcher?release-channel=sandbox2";
   public static final boolean IS_DETACHED = true;
   public static final String SHELL_APP_SCHEME = "expf2d929db42794c5ca64e076d905d21d0";
-  public static final String RELEASE_CHANNEL = "default";
+  public static final String RELEASE_CHANNEL = "sandbox2";
   public static boolean SHOW_LOADING_VIEW_IN_SHELL_APP = true;
   public static final List<Constants.EmbeddedResponse> EMBEDDED_RESPONSES;
 
   static {
     List<Constants.EmbeddedResponse> embeddedResponses = new ArrayList<>();
 
-    // ADD EMBEDDED RESPONSES HERE
-    // START EMBEDDED RESPONSES
-    // END EMBEDDED RESPONSES
+    
+        // ADD EMBEDDED RESPONSES HERE
+        // START EMBEDDED RESPONSES
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@yedidimdispatchers/dispatcher/index.exp", "assets://shell-app-manifest.json", "application/json"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40yedidimdispatchers%2Fdispatcher%2F3.0.1%2Fb7a82a761af7e2c022c1b78f3cf7e881-25.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+        // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }
 
