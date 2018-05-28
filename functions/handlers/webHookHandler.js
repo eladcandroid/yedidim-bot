@@ -205,7 +205,8 @@ function sendFollowUpResponse(event, context) {
           if (nextQuestion.submit) {
             context.status = EventStatus.Submitted
             let title = 'נפתח ארוע חדש'
-            let message = 'ארוע ב ' + context.address
+            let address = context.details && context.details.address
+            let message = 'ארוע ב ' + address
             let data = {
               eventId: context.key,
               type: 'event'
