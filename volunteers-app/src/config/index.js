@@ -36,7 +36,7 @@ const configByEnvironment = {
       messagingSenderId: '33558411934'
     },
     functionsUrl: 'https://us-central1-yedidim-production.cloudfunctions.net',
-    oneSignalAppId: ""
+    oneSignalAppId: "3d5d3aa3-eeda-473f-90dd-62691388f475"
   }
 }
 

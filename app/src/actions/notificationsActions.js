@@ -7,7 +7,7 @@ const oneSignalConfig = {
     appId: "9177d83e-8dc2-4501-aef8-c18697ca6f27"
   },
   production: {
-    appId: ""
+    appId: "e9949900-dac3-4b6f-9aa0-a388e7a353e9"
   }
 }
 
