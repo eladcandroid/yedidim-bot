@@ -21,3 +21,8 @@ i18n/messages
 functions/handlers/sendExpoFollowerNotification.js
 functions/config/index.js
 functions/lib/onesignal.js
+
+*.iml
+*/android/app/src/main/java/host/exp/exponent/generated/DetachBuildConstants.java
+*.apk
+*.jks
