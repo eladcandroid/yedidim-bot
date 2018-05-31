@@ -15,7 +15,7 @@ public class MainActivity extends DetachActivity {
 
   @Override
   public String publishedUrl() {
-    return "exp://exp.host/@startach/yedidim-volunteers?release-channel=development";
+    return "exp://exp.host/@startach/yedidim-volunteers";
   }
 
   @Override

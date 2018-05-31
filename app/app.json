@@ -4,7 +4,7 @@
     "description": "ידידים - מוקדן",
     "slug": "dispatcher",
     "sdkVersion": "25.0.0",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "icon": "./assets/images/app-icon.png",
     "notification": {
       "icon": "./assets/notification/icon.png"
@@ -23,7 +23,7 @@
       "publishManifestPath": "android\\app\\src\\main\\assets\\shell-app-manifest.json"
     },
     "extra": {
-      "instance": "sandbox2"
+      "_instance": "sandbox2"
     },
     "androidStatusBar": {
       "backgroundColor": "#4451B9",

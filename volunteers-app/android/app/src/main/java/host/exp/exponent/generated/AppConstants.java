@@ -15,7 +15,7 @@ public class AppConstants {
   public static String INITIAL_URL = "exp://exp.host/@startach/yedidim-volunteers";
   public static final boolean IS_DETACHED = true;
   public static final String SHELL_APP_SCHEME = "yddmva";
-  public static final String RELEASE_CHANNEL = "development";
+  public static final String RELEASE_CHANNEL = "default";
   public static boolean SHOW_LOADING_VIEW_IN_SHELL_APP = true;
   public static final List<Constants.EmbeddedResponse> EMBEDDED_RESPONSES;
 
