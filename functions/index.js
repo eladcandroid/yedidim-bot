@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 const webhook = require('./handlers/webHookHandler');
 const manage = require('./handlers/manageHandler');
@@ -34,16 +34,16 @@ exports.manage = functions.https.onRequest((req, res) => {
   return manage.handleHttp(req, res, tokens);
 });
 
-exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}').onWrite(event => {
-  return sendExpoFollowerNotification.handleUpdateEvent(event, admin);
+exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}').onWrite((change, context) => {
+  return sendExpoFollowerNotification.handleUpdateEvent(context.params.eventId, change, admin);
 });
 
-exports.onUpdateEvent = functions.database.ref('/events/{eventId}').onWrite(event => {
-  return onUpdateEvent.updateIsOpenProperty(event)
+exports.onUpdateEvent = functions.database.ref('/events/{eventId}').onWrite((change, context) => {
+  return onUpdateEvent.updateIsOpenProperty(context.params.eventId, change)
 });
 
-exports.onEventCreateAddGeo = functions.database.ref('/events/{eventId}').onWrite(event => {
-  return onEventCreateAddGeo.indexEventGeoLocation(event, admin);
+exports.onEventCreateAddGeo = functions.database.ref('/events/{eventId}').onWrite((change, context) => {
+  return onEventCreateAddGeo.indexEventGeoLocation(context.params.eventId, change, admin);
 });
 
 exports.sendNotificationBySearchRadius = functions.https.onRequest((req, res) => {

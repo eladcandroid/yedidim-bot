@@ -4,11 +4,11 @@ const notificationHelper = require('./notificationHelper');
 let NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000;
 const {sendNotificationByUserIds, sendNotificationByLocation} = require('../lib/onesignal')
 
-exports.handleUpdateEvent = (event, admin) => {
-  let eventData = event.data.val();
-  let previousValue = event.data.previous.val();
+exports.handleUpdateEvent = (eventId, change) => {
+  let eventData = change.after.val();
+  let previousValue = change.before.val();
 
-  console.log(' new is ' + eventData.status, 'event data ', eventData);
+  console.log('Event updated = ', eventData);
 
   if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
     console.log('blocked', eventData.status);
