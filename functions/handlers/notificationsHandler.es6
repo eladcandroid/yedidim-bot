@@ -1,24 +1,22 @@
 const Consts = require('./consts');
-const notificationHelper = require('./notificationHelper');
-// Create a new Expo SDK client
 let NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000;
 const {sendNotificationByUserIds, sendNotificationByLocation} = require('../lib/onesignal')
 
 exports.handleUpdateEvent = (eventId, change) => {
   let eventData = change.after.val();
   let previousValue = change.before.val();
-
   console.log('Event updated = ', eventData);
 
-  if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
+  if (!haveToSendNotification(eventData, previousValue)) {
+
     console.log('blocked', eventData.status);
     return Promise.resolve('blocked');
   }
-
   return sendEventNotificationToCloseByVolunteers(eventData, 'קריאה חדשה');
-};
 
+};
 exports.sendNotificationBySearchRadius = async (req, res, admin) => {
+
   try {
     let {eventId} = req.body;
     let searchRadius = req.body.searchRadius && parseInt(req.body.searchRadius);
@@ -34,8 +32,8 @@ exports.sendNotificationBySearchRadius = async (req, res, admin) => {
     res.status(500).send(e);
   }
 };
-
 exports.sendNotificationToRecipient = async (req, res, admin) => {
+
   try {
     let {eventId, recipient} = req.body;
     let snapshot = await admin.database().ref('/events/' + eventId).once('value');
@@ -46,7 +44,7 @@ exports.sendNotificationToRecipient = async (req, res, admin) => {
       if (user) {
         let title = (user.EventKey === eventId) ? "התראה על אירוע פעיל" : "התראה על אירוע";
 
-        let message = notificationHelper.formatNotification(event);
+        let message = formatNotification(event);
         let data = {
           eventId: event.key,
           type: 'event'
@@ -71,6 +69,7 @@ exports.sendNotificationToRecipient = async (req, res, admin) => {
 };
 
 exports.sendDispatcherTestNotification = async (req, res, admin) => {
+
   try {
     let {dispatcherCode} = req.body;
     let snapshot = await admin.database().ref('/dispatchers/' + dispatcherCode).once('value');
@@ -89,8 +88,8 @@ exports.sendDispatcherTestNotification = async (req, res, admin) => {
     res.status(500).send(e);
   }
 };
-
 exports.sendVolunteerTestNotification = async (req, res, admin) => {
+
   try {
     let {phone} = req.body;
     if (phone.charAt(0) === '0') {
@@ -111,25 +110,25 @@ exports.sendVolunteerTestNotification = async (req, res, admin) => {
     res.status(500).send(e);
   }
 };
-
 let sendEventNotificationToCloseByVolunteers = (eventData, notificationTitle, radius) => {
+
   let latitude = eventData.details.geo.lat;
   let longitude = eventData.details.geo.lon;
   radius = radius || Consts.NOTIFICATION_SEARCH_RADIUS_KM;
-
   let title = notificationTitle;
-  let message = notificationHelper.formatNotification(eventData);
+
+  let message = formatNotification(eventData);
   let data = {
     eventId: eventData.key,
     type: 'event'
   }
-
   return sendNotificationByLocation({
     title, message, data, latitude, longitude, radius, appType: "volunteers"
   })
-};
 
+};
 let userMutedNotifications = (user) => {
+
   if (!user.Muted) {
     return false;
   }
@@ -137,3 +136,12 @@ let userMutedNotifications = (user) => {
   return millisSinceMuted < NOTIFICATION_MUTE_EXPIRATION_MILLIS;
 };
 
+exports.sendEventNotificationToCloseByVolunteers = sendEventNotificationToCloseByVolunteers;
+
+let formatNotification = (eventData) => {
+  return ` ${Consts.CategoriesDisplay[eventData.details.category] || "לא ידוע"} ב${eventData.details.street_name} ${eventData.details.street_number} ${eventData.details.city}. סוג רכב ${eventData.details["car type"]} לחץ לפרטים`;
+};
+
+let haveToSendNotification = (eventData, previousValue) => {
+  return eventData.status === 'sent' && (previousValue === null  || previousValue.status !== 'sent');
+}

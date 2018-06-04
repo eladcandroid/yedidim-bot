@@ -4,9 +4,8 @@ admin.initializeApp();
 
 const webhook = require('./handlers/webHookHandler');
 const manage = require('./handlers/manageHandler');
-const onUpdateEvent = require('./handlers/onUpdateEventHandler');
-const sendExpoFollowerNotification = require('./handlers/sendExpoFollowerNotification');
-const onEventCreateAddGeo = require('./handlers/onEventCreatedAddGeo');
+const sendExpoFollowerNotification = require('./handlers/notificationsHandler');
+const eventUpdatesHandlers = require("./handlers/eventUpdatesHandlers");
 
 const tokens = getTokens(require('./_tokens.json'));
 
@@ -34,16 +33,20 @@ exports.manage = functions.https.onRequest((req, res) => {
   return manage.handleHttp(req, res, tokens);
 });
 
-exports.sendExpoFollowerNotification = functions.database.ref('/events/{eventId}').onWrite((change, context) => {
-  return sendExpoFollowerNotification.handleUpdateEvent(context.params.eventId, change, admin);
+exports.onEventCreated = functions.database.ref('/events/{eventId}').onCreate((snapshot, context) => {
+  return eventUpdatesHandlers.onEventCreated(snapshot, context);
 });
 
-exports.onUpdateEvent = functions.database.ref('/events/{eventId}').onWrite((change, context) => {
-  return onUpdateEvent.updateIsOpenProperty(context.params.eventId, change)
+exports.onStatusUpdated = functions.database.ref('/events/{eventId}/status').onUpdate((event, context) => {
+  return eventUpdatesHandlers.onEventStatusUpdate(event, context);
 });
 
-exports.onEventCreateAddGeo = functions.database.ref('/events/{eventId}').onWrite((change, context) => {
-  return onEventCreateAddGeo.indexEventGeoLocation(context.params.eventId, change, admin);
+exports.onIsOpenUpdated = functions.database.ref('/events/{eventId}/isOpen').onWrite((event, context) => {
+  return eventUpdatesHandlers.onEventIsOpenUpdate(event, context, admin);
+});
+
+exports.onEventDeleted = functions.database.ref('/events/{eventId}').onDelete((snapshot, context) => {
+  return eventUpdatesHandlers.onEventDeleted(snapshot, context, admin);
 });
 
 exports.sendNotificationBySearchRadius = functions.https.onRequest((req, res) => {
