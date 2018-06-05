@@ -1,6 +1,6 @@
 {
   "name": "yedidim-volunteer",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "private": true,
   "devDependencies": {
     "babel-eslint": "^8.0.1",
@@ -57,7 +57,12 @@
     "styled-components": "^2.2.1"
   },
   "lint-staged": {
-    "**/*.{jsx,js,json,css}": ["prettier --write", "git add"],
-    "**/*.{jsx,js}": ["eslint"]
+    "**/*.{jsx,js,json,css}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.{jsx,js}": [
+      "eslint"
+    ]
   }
 }
