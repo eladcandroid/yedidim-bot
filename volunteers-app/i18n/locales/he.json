@@ -98,5 +98,8 @@
   "Notification.event.button": "לראות",
   "Notification.event.text": "התקבל אירוע חדש",
   "Home.event.distance.ms": "{formattedDistance} מ׳",
-  "Home.event.distance.kms": "{formattedDistance} ק\"מ"
+  "Home.event.distance.kms": "{formattedDistance} ק\"מ",
+  "Sidebar.helpPage": "עזרה",
+  "HelpPage.title": "עזרה",
+  "helpPage.notificationTestBtn.text": "בדוק התראות"
 }

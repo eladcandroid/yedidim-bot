@@ -99,6 +99,7 @@ class EmailPassAuthenticationScreen extends React.Component {
                 </FormattedMessage>
               </Label>
               <Input
+                keyboardType="numeric"
                 value={phoneNumber}
                 onChangeText={value => this.setState({ phoneNumber: value })}
               />
@@ -110,6 +111,7 @@ class EmailPassAuthenticationScreen extends React.Component {
                 </FormattedMessage>
               </Label>
               <Input
+                keyboardType="numeric"
                 value={id}
                 onChangeText={value => this.setState({ id: value })}
               />
