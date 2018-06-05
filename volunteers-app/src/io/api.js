@@ -1,44 +1,34 @@
 import firebase from 'firebase'
 import GeoFire from 'geofire'
-import { Notifications, Location } from 'expo'
+import { Location } from 'expo'
 import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler'
-import OneSignal from "react-native-onesignal";
-import {config} from '../config';
+import OneSignal from 'react-native-onesignal'
+import { config } from '../config'
 
 const EVENTS_SEARCH_RADIUS_KM = 20
 
 async function registerForPushNotificationsAsync(userId) {
-  return new Promise((resolve, reject) => {
-    OneSignal.init(config().oneSignalAppId);
-    console.log('Registered to received');
-    OneSignal.addEventListener('received', (notification) => {
-      console.log("Notification received: ", notification);
-    });
-    OneSignal.addEventListener('opened', (openResult) => {
-      console.log('Message: ', openResult.notification.payload.body);
-      console.log('Data: ', openResult.notification.payload.additionalData);
-      console.log('isActive: ', openResult.notification.isAppInFocus);
-      console.log('openResult: ', openResult);
-    });
-    OneSignal.addEventListener('ids', (device) => {
-      firebase.database()
+  return new Promise(resolve => {
+    OneSignal.init(config().oneSignalAppId)
+    console.log('Registered to received')
+    OneSignal.addEventListener('received', notification => {
+      console.log('Notification received: ', notification)
+    })
+    OneSignal.addEventListener('opened', openResult => {
+      console.log('Message: ', openResult.notification.payload.body)
+      console.log('Data: ', openResult.notification.payload.additionalData)
+      console.log('isActive: ', openResult.notification.isAppInFocus)
+      console.log('openResult: ', openResult)
+    })
+    OneSignal.addEventListener('ids', device => {
+      firebase
+        .database()
         .ref(`/volunteer/${userId}`)
         .update({ NotificationToken: device.userId })
-      resolve(device.userId);
-    });
-    OneSignal.configure();
-  });
-}
-
-function onReceived(notification) {
-  console.log("Notification received: ", notification);
-}
-
-function onOpened(openResult) {
-  console.log('Message: ', openResult.notification.payload.body);
-  console.log('Data: ', openResult.notification.payload.additionalData);
-  console.log('isActive: ', openResult.notification.isAppInFocus);
-  console.log('openResult: ', openResult);
+      resolve(device.userId)
+    })
+    OneSignal.configure()
+  })
 }
 
 export async function updateUser(userKey, properties) {
@@ -96,14 +86,14 @@ export function onAuthenticationChanged(onAuthentication, onError) {
   return firebase.auth().onAuthStateChanged(async userAuth => {
     subscribeToUserInfo(userAuth, onAuthentication, onError)
     if (userAuth && userAuth.phoneNumber) {
-      await registerForPushNotificationsAsync(userAuth.phoneNumber);
+      await registerForPushNotificationsAsync(userAuth.phoneNumber)
     }
   })
 }
 
 export async function signInWithPhone({ verificationId, code }) {
   try {
-    const userAuth = await firebase
+    await firebase
       .auth()
       .signInWithCredential(
         firebase.auth.PhoneAuthProvider.credential(verificationId, code)
@@ -184,7 +174,9 @@ const eventSnapshotToJSON = snapshot => ({
 async function fetchLatestOpenEventsLocationBased(userId) {
   return new Promise(async (resolve, reject) => {
     try {
-      const currentLocation = await Location.getCurrentPositionAsync({ enableHighAccuracy: true })
+      const currentLocation = await Location.getCurrentPositionAsync({
+        enableHighAccuracy: true
+      })
       const { latitude, longitude } = currentLocation.coords
       saveUserLocation(userId, latitude, longitude)
       const nearEventIdToDistance = {}
@@ -280,10 +272,16 @@ export async function loadLatestOpenEvents(userId) {
   let fetchedEvents
   const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
   if (hasLocationPermission) {
-    fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
+    try {
+      fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
+    } catch (error) {
+      // User has given permissions but disabled temporary location or location is unavailable
+      fetchedEvents = await fetchLatestOpenedEvents()
+    }
   } else {
     fetchedEvents = await fetchLatestOpenedEvents()
   }
+
   const events = fetchedEvents.map(childSnapshot =>
     eventSnapshotToJSON(childSnapshot)
   )
@@ -332,7 +330,7 @@ export async function acceptEvent(eventKey, userKey) {
     })
 
   if (!committed) {
-    throw { code: 'event-taken' }
+    throw { code: 'event-taken' } // eslint-disable-line
   }
 
   // Event was took successful, update volunteer side, don't need transactions
