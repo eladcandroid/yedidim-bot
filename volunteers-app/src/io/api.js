@@ -37,7 +37,8 @@ const userSnapshotToJSON = snapshot => ({
   name: `${snapshot.FirstName} ${snapshot.LastName}`,
   phone: snapshot.MobilePhone,
   muted: snapshot.Muted,
-  acceptedEventId: snapshot.EventKey
+  acceptedEventId: snapshot.EventKey,
+  role: snapshot.Role
 })
 
 // Store subscription so to be able to unsubscribe on logoff
@@ -163,7 +164,29 @@ const eventSnapshotToJSON = snapshot => ({
   phone: snapshot.details['phone number'],
   privateInfo: snapshot.details.private_info,
   distance: snapshot.distance,
-  dispatcherId: snapshot.dispatcher
+  dispatcherId: snapshot.dispatcher,
+  sentNotification:
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.sent
+      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+          userId => !snapshot.notifications.volunteers.sent[userId]
+        )
+      : [],
+  receivedNotification:
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.sent
+      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+          userId => snapshot.notifications.volunteers.sent[userId]
+        )
+      : [],
+  errorNotification:
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.error
+      ? Object.keys(snapshot.notifications.volunteers.error)
+      : []
 })
 
 async function fetchLatestOpenEventsLocationBased(userId) {
@@ -336,6 +359,14 @@ export async function acceptEvent(eventKey, userKey) {
       EventKey: eventKey
     })
 }
+
+export const acknowledgeReceivedEvent = async (eventId, userId) =>
+  firebase
+    .database()
+    .ref(`events/${eventId}/notifications/volunteers/sent`)
+    .update({
+      [userId]: true
+    })
 
 export async function finaliseEvent(eventKey, userKey, feedback) {
   // Update event to completed and make user free again

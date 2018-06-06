@@ -1,6 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { reaction } from 'mobx'
+import { Alert } from 'react-native'
 import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
 import { defineMessages } from 'react-intl'
@@ -102,7 +103,14 @@ const withNotificationManager = WrappedComponent => {
       }
 
       if (additionalData.type === 'test') {
-        console.log('>>>Received test notification.')
+        Alert.alert(
+          'בדיקת התראות',
+          'ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.',
+          [{ text: 'OK', onPress: () => {} }],
+          { cancelable: false }
+        )
+        // Acknowledge test on firebase
+        this.props.currentUser.acknowledgeTestNotification()
       }
     }
 

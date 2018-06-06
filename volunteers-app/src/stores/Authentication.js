@@ -1,14 +1,19 @@
 import { types, getParent, flow } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackUserLogin, trackEvent } from 'io/analytics'
+import { acknowledgeTestNotification } from 'io/notifications'
 
-export const User = types
-  .model('User', {
+const CurrentUser = types
+  .model('CurrentUser', {
     id: types.identifier(),
     name: types.string,
     phone: types.string,
     muted: types.maybe(types.Date),
-    acceptedEventId: types.maybe(types.string)
+    acceptedEventId: types.maybe(types.string),
+    role: types.optional(
+      types.enumeration('Role', ['volunteer', 'dispatcher', 'admin']),
+      'volunteer'
+    )
   })
   .views(self => ({
     get isMuted() {
@@ -20,6 +25,9 @@ export const User = types
     },
     get hasEventAssigned() {
       return !!self.acceptedEventId
+    },
+    get isAdmin() {
+      return self.role === 'admin'
     }
   }))
   .actions(self => ({
@@ -32,7 +40,10 @@ export const User = types
       yield api.updateUser(self.id, {
         Muted: newMute
       })
-    })
+    }),
+    acknowledgeTestNotification: () => {
+      acknowledgeTestNotification(self.id)
+    }
   }))
 
 const AuthenticationStore = types
@@ -40,7 +51,7 @@ const AuthenticationStore = types
     isInitializing: true,
     isOffline: false,
     isLoading: false,
-    currentUser: types.maybe(types.reference(User)),
+    currentUser: types.maybe(CurrentUser),
     error: types.maybe(types.string)
   })
   .views(self => ({
@@ -57,7 +68,7 @@ const AuthenticationStore = types
         // Not authenticated
         self.currentUser = null
       } else {
-        self.currentUser = User.create(userInfo)
+        self.currentUser = userInfo
       }
 
       trackUserLogin(self.currentUser && self.currentUser.id)

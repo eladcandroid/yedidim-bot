@@ -59,6 +59,11 @@ export default types
       addEventFromNotification: eventId => {
         addEvent({ id: eventId })
 
+        api.acknowledgeReceivedEvent(
+          eventId,
+          getRoot(self).authStore.currentUser.id
+        )
+
         trackEvent('EventNotificationReceived', {
           eventId
         })

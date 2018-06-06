@@ -36,6 +36,9 @@ export default types
     timestamp: types.maybe(types.Date),
     distance: types.maybe(types.number),
     dispatcher: types.maybe(Dispatcher),
+    sentNotification: types.optional(types.array(types.string), []),
+    errorNotification: types.optional(types.array(types.string), []),
+    receivedNotification: types.optional(types.array(types.string), []),
     isLoading: false
   })
   .views(self => ({
@@ -67,9 +70,9 @@ export default types
       )
 
       if (category) {
-        const subCategory = (category.subCategories) ? category.subCategories.find(
+        const subCategory = category.subCategories.find(
           entry => entry.id === self.subCategory
-        ) : null;
+        )
 
         return subCategory
           ? `${category.displayName}/${subCategory.displayName}`
