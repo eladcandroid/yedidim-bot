@@ -4,6 +4,7 @@ curl -H "Content-Type: application/json; charset=utf-8" -X POST https://onesigna
   "headings": {"en": "אירוע חדש"},
   "contents": {"en": "היי אלן, אתה נדרש בקריאה מסוג פונצ׳ר דרך הנשיאים 45 י-ם. לחץ לפרטים נוספים"},
   "data": {
-      "key": "-LDbbpzvdZWxljGGYbWO"
+      "key": "-LDbbpzvdZWxljGGYbWO",
+      "type": "event"
   }
 }'
