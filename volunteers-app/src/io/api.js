@@ -9,17 +9,11 @@ const EVENTS_SEARCH_RADIUS_KM = 20
 
 async function registerForPushNotificationsAsync(userId) {
   return new Promise(resolve => {
+    // Initialise One Signal
     OneSignal.init(config().oneSignalAppId)
-    console.log('Registered to received')
-    OneSignal.addEventListener('received', notification => {
-      console.log('Notification received: ', notification)
-    })
-    OneSignal.addEventListener('opened', openResult => {
-      console.log('Message: ', openResult.notification.payload.body)
-      console.log('Data: ', openResult.notification.payload.additionalData)
-      console.log('isActive: ', openResult.notification.isAppInFocus)
-      console.log('openResult: ', openResult)
-    })
+    // Make sure we don't display alerts while in focus
+    OneSignal.inFocusDisplaying(0)
+    // Add event listener to grab userId
     OneSignal.addEventListener('ids', device => {
       firebase
         .database()
@@ -27,6 +21,7 @@ async function registerForPushNotificationsAsync(userId) {
         .update({ NotificationToken: device.userId })
       resolve(device.userId)
     })
+    // Triggers the ids event listener to grab the userId
     OneSignal.configure()
   })
 }

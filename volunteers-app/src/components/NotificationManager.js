@@ -1,10 +1,10 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { reaction } from 'mobx'
-import { Notifications } from 'expo'
 import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
 import { defineMessages } from 'react-intl'
+import OneSignal from 'react-native-onesignal'
 
 const newEventToast = defineMessages({
   button: {
@@ -21,7 +21,8 @@ const withNotificationManager = WrappedComponent => {
   const Component = class extends React.Component {
     componentWillMount() {
       // Handle Notification received
-      Notifications.addListener(this.handleNotification)
+      OneSignal.addEventListener('received', this.onReceived)
+      OneSignal.addEventListener('opened', this.onOpened)
 
       // When authentication is done, check if user has
       //  event accepted, if yes navigate to event
@@ -38,6 +39,17 @@ const withNotificationManager = WrappedComponent => {
 
     componentWillUnmount() {
       this.disposer()
+      OneSignal.removeEventListener('ids')
+      OneSignal.removeEventListener('received', this.onReceived)
+      OneSignal.removeEventListener('opened', this.onOpened)
+    }
+
+    onReceived = notification => {
+      this.handleNotification(notification)
+    }
+
+    onOpened = ({ notification }) => {
+      this.handleNotification({ ...notification, isOpenEvent: true })
     }
 
     handleAcceptedEventByUser = eventId => {
@@ -76,56 +88,57 @@ const withNotificationManager = WrappedComponent => {
       this.props.navigation.dispatch(navigateAction)
     }
 
-    handleNotification = ({origin, data, remote}) => {
-      if (!data) {
+    handleNotification = ({
+      isAppInFocus,
+      payload: { additionalData },
+      isOpenEvent
+    }) => {
+      if (!additionalData) {
         return
       }
-      if (data.type === 'event') {
-        this.handleEventNotification(origin, data, remote)
+      if (additionalData.type === 'event') {
+        this.handleEventNotification(isAppInFocus, additionalData, isOpenEvent)
         return
       }
 
-      if (data.type === 'test') {
-        console.log('Received test notification.')
+      if (additionalData.type === 'test') {
+        console.log('>>>Received test notification.')
       }
     }
 
-    handleEventNotification(origin, data, remote) {
+    handleEventNotification = (isAppInFocus, data, isOpenEvent) => {
       if (!data || !data.key) {
         throw new Error(
           `Notification is incomplete and lacking data, ignoring it : ${JSON.stringify(
             data
           )}`
-        );
+        )
       }
 
-      if (remote) {
-        // Add event to store
-        const { key } = data
-        this.props.addEventFromNotification(key)
+      // Add event to store
+      const { key } = data
+      this.props.addEventFromNotification(key)
 
-        // Only listen to remote notifications
-        if (origin === 'received') {
-          // The app is foregrounded
-          Toast.show({
-            text: this.props.screenProps.intl.formatMessage(newEventToast.text),
-            position: 'bottom',
-            buttonText: this.props.screenProps.intl.formatMessage(
-              newEventToast.button
-            ),
-            type: 'warning',
-            // duration: 10000,
-            onClose: () => this.navigateToEvent({ eventId: key })
-          })
-        } else {
-          // Origin is selected: comes from notification while in foreground
-          this.navigateToEvent({ eventId: key })
-        }
+      if (isOpenEvent) {
+        // If is open event, user touched notification, open it
+        this.navigateToEvent({ eventId: key })
+      } else if (isAppInFocus) {
+        // The app is foregrounded and it is not an open event, show toast
+        Toast.show({
+          text: this.props.screenProps.intl.formatMessage(newEventToast.text),
+          position: 'bottom',
+          buttonText: this.props.screenProps.intl.formatMessage(
+            newEventToast.button
+          ),
+          type: 'warning',
+          duration: 20000,
+          onClose: () => this.navigateToEvent({ eventId: key })
+        })
       }
     }
 
     render() {
-      const {currentUser, addEventFromNotification, ...other} = this.props
+      const { currentUser, addEventFromNotification, ...other } = this.props
 
       return <WrappedComponent {...other} />
     }
@@ -134,7 +147,7 @@ const withNotificationManager = WrappedComponent => {
   // As described at https://github.com/react-community/react-navigation/issues/90
   Component.router = WrappedComponent.router
 
-  return inject(({stores}) => ({
+  return inject(({ stores }) => ({
     addEventFromNotification: stores.eventStore.addEventFromNotification,
     currentUser: stores.authStore.currentUser
   }))(observer(Component))
