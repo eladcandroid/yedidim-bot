@@ -8,5 +8,5 @@ const SubCategory = types.model('SubCategory', {
 export default types.model('Category', {
   id: types.identifier(),
   displayName: types.string,
-  subCategories: types.maybe(types.array(SubCategory))
+  subCategories: types.optional(types.array(SubCategory), [])
 })

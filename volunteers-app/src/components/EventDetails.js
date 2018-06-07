@@ -17,6 +17,8 @@ import {
   Thumbnail
 } from 'native-base'
 import { MapView } from 'expo'
+
+import NotificationBadge from 'components/NotificationBadge'
 import TextFieldRow from './TextFieldRow'
 import AlignedText from './AlignedText'
 
@@ -24,6 +26,7 @@ const MarginView = styled.View`
   margin: 10px 10px;
 `
 const EventDetails = ({
+  isAdmin,
   event: {
     categoryName,
     categoryImg,
@@ -37,7 +40,10 @@ const EventDetails = ({
     privateInfo,
     carType,
     isAssigned,
-    dispatcher
+    dispatcher,
+    sentNotification,
+    errorNotification,
+    receivedNotification
   },
   children
 }) => (
@@ -59,6 +65,23 @@ const EventDetails = ({
             </MarginView>
           </Col>
         </Row>
+        {isAdmin && (
+          <Row>
+            <Col
+              style={{
+                paddingBottom: 10,
+                paddingLeft: 10
+              }}
+            >
+              <NotificationBadge
+                sent={sentNotification}
+                received={receivedNotification}
+                error={errorNotification}
+                showMore
+              />
+            </Col>
+          </Row>
+        )}
         <Row>
           <Col>
             <MapView

@@ -7,7 +7,6 @@ import categoriesImages from 'const'
 import Sentry from 'sentry-expo'
 import { initAnalyticsTracking } from 'io/analytics'
 import I18nApp from './src/I18nApp'
-import OneSignal from "react-native-onesignal";
 
 // Remove this once Sentry is correctly setup.
 // Sentry.enableInExpoDevelopment = true
@@ -30,7 +29,6 @@ export default class App extends Component {
   }
 
   async componentWillMount() {
-
     initAnalyticsTracking()
 
     await this.loadAssetsAsync()
@@ -39,12 +37,6 @@ export default class App extends Component {
     const stores = await createRootStore()
 
     this.setState({ isReady: true, stores })
-  }
-
-  componentWillUnmount() {
-    OneSignal.removeEventListener('ids', this.onIds);
-    OneSignal.removeEventListener('received', this.onReceived);
-    OneSignal.removeEventListener('opened', this.onOpened);
   }
 
   loadAssetsAsync = async () => {

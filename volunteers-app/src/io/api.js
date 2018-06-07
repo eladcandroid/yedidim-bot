@@ -9,17 +9,11 @@ const EVENTS_SEARCH_RADIUS_KM = 20
 
 async function registerForPushNotificationsAsync(userId) {
   return new Promise(resolve => {
+    // Initialise One Signal
     OneSignal.init(config().oneSignalAppId)
-    console.log('Registered to received')
-    OneSignal.addEventListener('received', notification => {
-      console.log('Notification received: ', notification)
-    })
-    OneSignal.addEventListener('opened', openResult => {
-      console.log('Message: ', openResult.notification.payload.body)
-      console.log('Data: ', openResult.notification.payload.additionalData)
-      console.log('isActive: ', openResult.notification.isAppInFocus)
-      console.log('openResult: ', openResult)
-    })
+    // Make sure we don't display alerts while in focus
+    OneSignal.inFocusDisplaying(0)
+    // Add event listener to grab userId
     OneSignal.addEventListener('ids', device => {
       firebase
         .database()
@@ -27,6 +21,7 @@ async function registerForPushNotificationsAsync(userId) {
         .update({ NotificationToken: device.userId })
       resolve(device.userId)
     })
+    // Triggers the ids event listener to grab the userId
     OneSignal.configure()
   })
 }
@@ -42,7 +37,8 @@ const userSnapshotToJSON = snapshot => ({
   name: `${snapshot.FirstName} ${snapshot.LastName}`,
   phone: snapshot.MobilePhone,
   muted: snapshot.Muted,
-  acceptedEventId: snapshot.EventKey
+  acceptedEventId: snapshot.EventKey,
+  role: snapshot.Role
 })
 
 // Store subscription so to be able to unsubscribe on logoff
@@ -168,7 +164,29 @@ const eventSnapshotToJSON = snapshot => ({
   phone: snapshot.details['phone number'],
   privateInfo: snapshot.details.private_info,
   distance: snapshot.distance,
-  dispatcherId: snapshot.dispatcher
+  dispatcherId: snapshot.dispatcher,
+  sentNotification:
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.sent
+      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+          userId => !snapshot.notifications.volunteers.sent[userId]
+        )
+      : [],
+  receivedNotification:
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.sent
+      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+          userId => snapshot.notifications.volunteers.sent[userId]
+        )
+      : [],
+  errorNotification:
+    snapshot.notifications &&
+    snapshot.notifications.volunteers &&
+    snapshot.notifications.volunteers.error
+      ? Object.keys(snapshot.notifications.volunteers.error)
+      : []
 })
 
 async function fetchLatestOpenEventsLocationBased(userId) {
@@ -341,6 +359,14 @@ export async function acceptEvent(eventKey, userKey) {
       EventKey: eventKey
     })
 }
+
+export const acknowledgeReceivedEvent = async (eventId, userId) =>
+  firebase
+    .database()
+    .ref(`events/${eventId}/notifications/volunteers/sent`)
+    .update({
+      [userId]: true
+    })
 
 export async function finaliseEvent(eventKey, userKey, feedback) {
   // Update event to completed and make user free again
