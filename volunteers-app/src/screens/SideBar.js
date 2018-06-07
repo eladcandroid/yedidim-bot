@@ -1,5 +1,4 @@
 import React from 'react'
-import { Constants } from 'expo'
 import {
   Container,
   List,
@@ -17,6 +16,7 @@ import { NavigationActions } from 'react-navigation'
 import sendTestNotificationWithFeedback from 'components/SendTestNotificationWithFeedback'
 import AlignedText from 'components/AlignedText'
 import Logo from './logo.png'
+import packageJson from '../../package.json'
 
 const SideBar = ({
   signOut,
@@ -47,7 +47,7 @@ const SideBar = ({
           </AlignedText>
         </ListItem>
         <ListItem>
-          <AlignedText>v{Constants.manifest.version}</AlignedText>
+          <AlignedText>v{packageJson.version}</AlignedText>
         </ListItem>
         <ListItem
           button
