@@ -27,7 +27,8 @@ const CurrentUser = types
       return !!self.acceptedEventId
     },
     get isAdmin() {
-      return self.role === 'admin'
+      // Disable admin features for the time being
+      return false // self.role === 'admin'
     }
   }))
   .actions(self => ({

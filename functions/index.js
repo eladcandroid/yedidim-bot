@@ -5,6 +5,7 @@ admin.initializeApp();
 const webhook = require('./handlers/webHookHandler');
 const manage = require('./handlers/manageHandler');
 const sendExpoFollowerNotification = require('./handlers/notificationsHandler');
+const testNotificationHandler = require('./handlers/testNotificationHandler');
 const eventUpdatesHandlers = require("./handlers/eventUpdatesHandlers");
 
 const tokens = getTokens(require('./_tokens.json'));
@@ -63,4 +64,8 @@ exports.sendDispatcherTestNotification = functions.https.onRequest((req, res) =>
 
 exports.sendVolunteerTestNotification = functions.https.onRequest((req, res) => {
     return sendExpoFollowerNotification.sendVolunteerTestNotification(req, res, admin);
+});
+
+exports.sendTestNotification = functions.https.onRequest((req, res) => {
+  return testNotificationHandler.sendTestNotification(req, res, admin);
 });
