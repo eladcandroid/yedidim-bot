@@ -234,9 +234,7 @@ export function updateEventStatus(event, status) {
 
 function handleSignedInUser(user) {
   return (dispatch => {
-    dispatch(checkVersion());
     dispatch(loadUserData(user));
-    dispatch(updateUserVersion(user));
     dispatch(loadEvents());
     dispatch(loadVolunteers());
     dispatch(loadDispatchers());
@@ -305,13 +303,7 @@ export function loadEvents(onLoad) {
     firebase.database().ref('/events').orderByChild('isOpen').equalTo(true).once('value')
       .then((snapshot) => {
         let events = objectToArray(snapshot.val());
-        events.sort((c1, c2) => {
-          if (c1.timestamp > c2.timestamp)
-            return -1;
-          if (c1.timestamp < c2.timestamp)
-            return 1;
-          return 0;
-        });
+        sortEventsDescending(events);
         dispatch(setEvents(events));
         if (onLoad) {
           onLoad();
@@ -339,32 +331,42 @@ export function loadEvents(onLoad) {
   });
 }
 
+function sortEventsDescending(events) {
+  events.sort((c1, c2) => {
+    if (c1.timestamp > c2.timestamp)
+      return -1;
+    if (c1.timestamp < c2.timestamp)
+      return 1;
+    return 0;
+  });
+}
+
+function getEventsQuery(collection, fromDate, toDate, phone) {
+  let query = firebase.database().ref(collection);
+  if (fromDate) {
+    query = query.orderByChild('timestamp').startAt(fromDate);
+  }
+  if (toDate) {
+    if (!fromDate) {
+      query = query.orderByChild('timestamp');
+    }
+    query = query.endAt(toDate);
+  }
+  if (!fromDate && !toDate && phone) {
+    query = query.orderByChild('details/phone number').equalTo(phone);
+  }
+  return query;
+}
+
 export function searchEvents(phone, fromDate, toDate) {
   return ((dispatch) => {
-    let query = firebase.database().ref('/events');
-    if (fromDate){
-      query = query.orderByChild('timestamp').startAt(fromDate);
-    }
-    if (toDate){
-      if (!fromDate){
-        query = query.orderByChild('timestamp');
-      }
-      query = query.endAt(toDate);
-    }
-    if (!fromDate && !toDate && phone){
-      query = query.orderByChild('details/phone number').equalTo(phone);
-    }
-    query.once('value')
-      .then((snapshot) => {
-        let events = objectToArray(snapshot.val());
-        events.sort((c1, c2) => {
-          if (c1.timestamp > c2.timestamp)
-            return -1;
-          if (c1.timestamp < c2.timestamp)
-            return 1;
-          return 0;
-        });
-
+    let queryEvents = getEventsQuery("events", fromDate, toDate, phone);
+    let queryEventsArchive = getEventsQuery("events_archive", fromDate, toDate, phone);
+    Promise.all([queryEvents.once('value'), queryEventsArchive.once('value')])
+      .then(([eventsSnapshot, archivedSnapshot]) => {
+        let events = objectToArray(eventsSnapshot.val());
+        events = events.concat(objectToArray(archivedSnapshot.val()));
+        sortEventsDescending(events);
         events = events.filter(event => event.status !== EventStatus.Draft);
         if (phone) {
           events = events.filter(event => event.details['phone number'] === phone);

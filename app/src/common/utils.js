@@ -9,6 +9,7 @@ export const getInstance = () => {
 };
 
 export const objectToArray = (obj) => {
+  if(!obj) return [];
   let arr = [];
   for (const key in obj){
     if (obj.hasOwnProperty(key)) {
