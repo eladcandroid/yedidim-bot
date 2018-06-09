@@ -114,8 +114,9 @@ const withNotificationManager = WrappedComponent => {
       }
     }
 
+
     handleEventNotification = (isAppInFocus, data, isOpenEvent) => {
-      if (!data || !data.key) {
+      if (!data || !data.eventId) {
         throw new Error(
           `Notification is incomplete and lacking data, ignoring it : ${JSON.stringify(
             data
@@ -124,12 +125,12 @@ const withNotificationManager = WrappedComponent => {
       }
 
       // Add event to store
-      const { key } = data
-      this.props.addEventFromNotification(key)
+      const { eventId } = data
+      this.props.addEventFromNotification(eventId)
 
       if (isOpenEvent) {
         // If is open event, user touched notification, open it
-        this.navigateToEvent({ eventId: key })
+        this.navigateToEvent({ eventId: eventId })
       } else if (isAppInFocus) {
         // The app is foregrounded and it is not an open event, show toast
         Toast.show({
@@ -140,7 +141,7 @@ const withNotificationManager = WrappedComponent => {
           ),
           type: 'warning',
           duration: 20000,
-          onClose: () => this.navigateToEvent({ eventId: key })
+          onClose: () => this.navigateToEvent({ eventId: eventId })
         })
       }
     }
