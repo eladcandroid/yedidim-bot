@@ -1,8 +1,6 @@
 'use strict';
 
 var Consts = require('./consts');
-var notificationHelper = require('./notificationHelper');
-// Create a new Expo SDK client
 var NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000;
 
 var _require = require('../lib/onesignal'),
@@ -14,7 +12,7 @@ exports.handleUpdateEvent = function (eventId, change) {
   var previousValue = change.before.val();
   console.log('Event updated = ', eventData);
 
-  if (!notificationHelper.haveToSendNotification(eventData, previousValue)) {
+  if (!haveToSendNotification(eventData, previousValue)) {
 
     console.log('blocked', eventData.status);
     return Promise.resolve('blocked');
@@ -69,7 +67,7 @@ exports.sendNotificationToRecipient = function (req, res, admin) {
     }).then(function () {
       if (_test && user) {
         title = user.EventKey === eventId ? "התראה על אירוע פעיל" : "התראה על אירוע";
-        message = notificationHelper.formatNotification(event);
+        message = formatNotification(event);
         data = {
           eventId: event.key,
           type: 'event'
@@ -93,6 +91,7 @@ exports.sendNotificationToRecipient = function (req, res, admin) {
     });
   }).then(function () {});
 };
+
 exports.sendDispatcherTestNotification = function (req, res, admin) {
   var dispatcherCode, snapshot, token, title, message, data;
   return Promise.resolve().then(function () {
@@ -153,7 +152,7 @@ var sendEventNotificationToCloseByVolunteers = function sendEventNotificationToC
   radius = radius || Consts.NOTIFICATION_SEARCH_RADIUS_KM;
   var title = notificationTitle;
 
-  var message = notificationHelper.formatNotification(eventData);
+  var message = formatNotification(eventData);
   var data = {
     eventId: eventData.key,
     type: 'event'
@@ -172,3 +171,11 @@ var userMutedNotifications = function userMutedNotifications(user) {
 };
 
 exports.sendEventNotificationToCloseByVolunteers = sendEventNotificationToCloseByVolunteers;
+
+var formatNotification = function formatNotification(eventData) {
+  return ' ' + (Consts.CategoriesDisplay[eventData.details.category] || "לא ידוע") + ' \u05D1' + eventData.details.street_name + ' ' + eventData.details.street_number + ' ' + eventData.details.city + '. \u05E1\u05D5\u05D2 \u05E8\u05DB\u05D1 ' + eventData.details["car type"] + ' \u05DC\u05D7\u05E5 \u05DC\u05E4\u05E8\u05D8\u05D9\u05DD';
+};
+
+var haveToSendNotification = function haveToSendNotification(eventData, previousValue) {
+  return eventData.status === 'sent' && (previousValue === null || previousValue.status !== 'sent');
+};

@@ -40,12 +40,14 @@ exports.onEventIsOpenUpdate = (event, context, admin) => {
       ]);
     } else {
       try {
-        console.log("Archiving event " + eventId);
-        let eventRef = admin.database().ref(`events/${eventId}`);
-        let archiveRef = admin.database().ref(`events_archive/${eventId}`);
-        if (eventData) {
-          return Promise.all([archiveRef.set(eventData),
-            eventRef.remove()]);
+        if (eventData.status === 'completed') {
+          console.log("Archiving event " + eventId);
+          let eventRef = admin.database().ref(`events/${eventId}`);
+          let archiveRef = admin.database().ref(`events_archive/${eventId}`);
+          if (eventData) {
+            return Promise.all([archiveRef.set(eventData),
+              eventRef.remove()]);
+          }
         }
       } catch (e) {
         console.error("Error archiving event " + eventId);
