@@ -24,8 +24,8 @@ android {
   defaultConfig {
     applicationId 'com.startach.yedidim.dispatchers.detached'
     targetSdkVersion 26
-    versionCode 1
-    versionName '1.1.0'
+    versionCode 2
+    versionName '1.2.0'
     ndk {
       abiFilters 'armeabi-v7a', 'x86'
     }
