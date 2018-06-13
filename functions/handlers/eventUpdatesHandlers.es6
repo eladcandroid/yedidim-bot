@@ -6,12 +6,23 @@ exports.onEventStatusUpdate = (event, context) => {
   let currentStatus = event.after.val();
   let previousStatus = event.before.val();
   console.log("Status changed from " + previousStatus + " to " + currentStatus + " for event " + eventId);
+  let promises = [Promise.resolve()];
   let currentIsOpen = calculateIsOpen(currentStatus);
   let previousIsOpen = calculateIsOpen(previousStatus);
   if (currentIsOpen !== previousIsOpen) {
     console.log("Setting isOpen " + currentIsOpen + " for event " + eventId);
-    return event.after.ref.parent.child('isOpen').set(currentIsOpen);
+    promises.push(event.after.ref.parent.child('isOpen').set(currentIsOpen));
   }
+  if (shouldNotifyVolunteers(previousStatus, currentStatus)) {
+    promises.push(new Promise((resolve, reject) => {
+      return event.after.ref.parent.once("value").then(eventSnapshot => {
+        let eventData = eventSnapshot.val();
+        return notificationsHandler.sendEventNotificationToCloseByVolunteers(eventData, 'קריאה חדשה');
+      }).then(() => resolve()).catch(e => reject(e));
+    }))
+  }
+
+  return Promise.all(promises);
 };
 
 exports.onEventCreated = (snapshot, context) => {
@@ -35,7 +46,6 @@ exports.onEventIsOpenUpdate = (event, context, admin) => {
     let eventData = eventSnapshot.val();
     if (isOpen) {
       return Promise.all([
-        notificationsHandler.sendEventNotificationToCloseByVolunteers(eventData, 'קריאה חדשה'),
         addEventGeoIndex(eventId, eventData, admin)
       ]);
     } else {
@@ -62,7 +72,7 @@ exports.onEventDeleted = (snapshot, context, admin) => {
 };
 
 let addEventGeoIndex = (eventId, eventData, admin) => {
-  return geoHelper.saveLocation("event_location", admin, eventId,  [parseFloat(eventData.details.geo.lat),
+  return geoHelper.saveLocation("event_location", admin, eventId, [parseFloat(eventData.details.geo.lat),
     parseFloat(eventData.details.geo.lon)]);
 };
 
@@ -73,3 +83,7 @@ let removeEventGeoIndex = (eventId, admin) => {
 let calculateIsOpen = status => {
   return ['submitted', 'sent', 'assigned', 'taken'].indexOf(status) !== -1;
 };
+
+let shouldNotifyVolunteers = (previousStatus, currentStatus) => {
+  return currentStatus === 'sent' && previousStatus !== 'sent';
+}
