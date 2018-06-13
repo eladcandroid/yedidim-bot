@@ -3,17 +3,18 @@ const queue = require('async/queue')
 
 const flow = require('../lib/flow.json')
 const events = require('../lib/events')
-const { notifyAll } = require('../lib/onesignal')
+const { sendNotificationByUserIds } = require('../lib/onesignal')
 const geocoder = require('../lib/geocoder')
 const EventStatus = require('../lib/consts').EventStatus
 
 const sendAPIQueue = queue(callSendAPIAsync)
 
 let _tokens
-
+let _admin
 //Main http function to handle all webhook calls
 exports.handleHttp = (req, res, admin, tokens) => {
   _tokens = tokens
+  _admin = admin
   events.init(admin)
   geocoder.init(tokens.maps.apiKey)
   if (req.method === 'GET') {
@@ -212,7 +213,7 @@ function sendFollowUpResponse(event, context) {
               type: 'event'
             }
             promises.push(
-              notifyAll({
+              notifyBotHandlers({
                 appType: 'dispatchers',
                 title, message, data
               })
@@ -529,4 +530,43 @@ function getUserProfile(psid) {
       }
     )
   })
+}
+
+function notifyBotHandlers(notification) {
+  return new Promise((resolve, reject) => {
+    _admin.database().ref('/dispatchers')
+      .orderByChild('notifications')
+      .equalTo(true)
+      .once('value')
+      .then(snapshot => {
+        let tokens = []
+        let usersNotified = []
+        const dispatchers = snapshot.val()
+        if (!dispatchers) {
+          resolve();
+          return
+        }
+
+        Object.keys(dispatchers).forEach(dispatcherId => {
+          let dispatcher = dispatchers[dispatcherId];
+          if (dispatcher.token && dispatcher.handleBot) {
+            tokens.push(dispatcher.token)
+            usersNotified.push({name: dispatcher.name, id: dispatcherId})
+          }
+        });
+        if (tokens.length > 0) {
+          console.log("Notified bot event ", notification, " to ", usersNotified);
+          notification.userIds = tokens;
+          sendNotificationByUserIds(notification).then(() => {
+            resolve()
+          }).catch(e => reject(e));
+        } else {
+          resolve();
+        }
+      })
+      .catch(err => {
+        console.error('Failed to retrieve dispatchers : \n', err)
+        reject(err)
+      })
+  });
 }
