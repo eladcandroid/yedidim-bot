@@ -51,9 +51,14 @@ const sendNotificationByLocation = async (props) => {
 const sendNotificationByUserIds = async (props) => {
   console.log('[OneSignal] Sending event notification', props)
   const {title, message, data, userIds, appType} = props
+  let validatedUserIds = userIds.filter(id => id.length === 36 && !id.startsWith("ExponentPushToken"));
+  if (validatedUserIds.length !== userIds.length) {
+    let invalidIds = userIds.filter(id => validatedUserIds.indexOf(id) === -1);
+    console.warn(`[OneSignal]  Tried sending message to invalid tokens to ${appType}`, invalidIds);
+  }
   try {
     const results = await sendNotifications({
-      include_player_ids: userIds,
+      include_player_ids: validatedUserIds,
       title,
       message,
       data,
