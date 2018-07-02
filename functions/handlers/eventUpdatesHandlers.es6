@@ -14,6 +14,7 @@ exports.onEventStatusUpdate = (event, context) => {
     promises.push(event.after.ref.parent.child('isOpen').set(currentIsOpen));
   }
   if (shouldNotifyVolunteers(previousStatus, currentStatus)) {
+    console.log('Will notify volunteers of event ', eventId);
     promises.push(new Promise((resolve, reject) => {
       return event.after.ref.parent.once("value").then(eventSnapshot => {
         let eventData = eventSnapshot.val();

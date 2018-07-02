@@ -38,7 +38,7 @@ exports.onEventCreated = functions.database.ref('/events/{eventId}').onCreate((s
   return eventUpdatesHandlers.onEventCreated(snapshot, context);
 });
 
-exports.onStatusUpdated = functions.database.ref('/events/{eventId}/status').onUpdate((event, context) => {
+exports.onStatusUpdated = functions.database.ref('/events/{eventId}/status').onWrite((event, context) => {
   return eventUpdatesHandlers.onEventStatusUpdate(event, context);
 });
 
