@@ -26,3 +26,5 @@ functions/lib/onesignal.js
 */android/app/src/main/java/host/exp/exponent/generated/DetachBuildConstants.java
 *.apk
 *.jks
+
+administration-scripts/authenticators/credentials.json
