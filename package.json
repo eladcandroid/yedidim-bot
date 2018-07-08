@@ -1,0 +1,26 @@
+{
+  "name": "yedidim",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "install_administration_scripts": "cd administration-scripts && yarn install",
+    "install_dispatchers_app": "cd app && yarn install",
+    "install_functions": "cd functions && yarn install",
+    "install_volunteers_app": "cd volunteers-app && yarn install",
+    "install_all": "npm-run-all -s install_administration_scripts install_dispatchers_app install_functions install_volunteers_app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/startach/yedidim-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/startach/yedidim-bot/issues"
+  },
+  "homepage": "https://github.com/startach/yedidim-bot#readme",
+  "devDependencies": {
+    "npm-run-all": "^4.1.3",
+    "yarn": "^1.7.0"
+  }
+}
