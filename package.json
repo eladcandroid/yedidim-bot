@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "preinstall": "npm i -g yarn exp",
     "install_administration_scripts": "cd administration-scripts && yarn install",
     "install_dispatchers_app": "cd app && yarn install",
     "install_functions": "cd functions && yarn install",
     "install_volunteers_app": "cd volunteers-app && yarn install",
-    "install_all": "npm-run-all -s install_administration_scripts install_dispatchers_app install_functions install_volunteers_app"
+    "install_all": "npm-run-all -s install_administration_scripts install_dispatchers_app install_functions install_volunteers_app",
+    "postinstall": "yarn run install_all"
   },
   "repository": {
     "type": "git",
