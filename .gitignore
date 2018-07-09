@@ -28,3 +28,4 @@ functions/lib/onesignal.js
 *.jks
 
 **/ios/Pods
+**EXBuildConstants**
