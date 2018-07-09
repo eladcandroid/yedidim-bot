@@ -27,4 +27,4 @@ functions/lib/onesignal.js
 *.apk
 *.jks
 
-administration-scripts/authenticators/credentials.json
+**/ios/Pods
