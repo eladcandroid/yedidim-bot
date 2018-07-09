@@ -3,3 +3,4 @@ node_modules/
 npm-debug.*
 i18n/messages
 .tmp
+ios/Pods
