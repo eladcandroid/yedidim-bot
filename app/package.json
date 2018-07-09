@@ -9,7 +9,7 @@
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "start": "react-native-scripts start",
+    "start": "exp start --lan --dev",
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
@@ -27,8 +27,7 @@
     "firebase": "^4.9.1",
     "native-base": "^2.3.8",
     "react": "16.2.0",
-    "react-native":
-    "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
     "react-native-datepicker": "^1.6.0",
     "react-native-keyboard-aware-scroll-view": "^0.4.3",
     "react-native-onesignal": "^3.2.2",
