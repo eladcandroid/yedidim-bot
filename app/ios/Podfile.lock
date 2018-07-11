@@ -97,7 +97,7 @@ PODS:
   - OneSignal (2.8.5)
   - React (0.52.0):
     - React/Core (= 0.52.0)
-  - react-native-onesignal (3.2.4):
+  - react-native-onesignal (3.2.5):
     - OneSignal (= 2.8.5)
     - React
   - React/ART (0.52.0):

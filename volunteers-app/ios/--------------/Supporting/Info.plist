@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.startach.yedidim.volunteers.detached</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -37,7 +37,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -77,6 +77,10 @@
 	<string>Give ידידים מתנדבים permission to access your photos</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow ידידים מתנדבים to access your reminders</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -94,6 +94,12 @@ PODS:
   - GPUImage (0.1.7)
   - JKBigInteger2 (0.0.5)
   - lottie-ios (2.1.5)
+  - OneSignal (2.8.5)
+  - React (0.52.0):
+    - React/Core (= 0.52.0)
+  - react-native-onesignal (3.2.5):
+    - OneSignal (= 2.8.5)
+    - React
   - React/ART (0.52.0):
     - React/Core
   - React/Core (0.52.0):
@@ -148,6 +154,7 @@ DEPENDENCIES:
   - ExpoKit/CPP (from `http://github.com/expo/expo.git`, tag `ios/2.3.3`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - GLog (from `../node_modules/react-native/third-party-podspecs/GLog.podspec`)
+  - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - React/ART (from `../node_modules/react-native`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -175,6 +182,8 @@ EXTERNAL SOURCES:
     :podspec: ../node_modules/react-native/third-party-podspecs/GLog.podspec
   React:
     :path: ../node_modules/react-native
+  react-native-onesignal:
+    :path: ../node_modules/react-native-onesignal
   yoga:
     :path: ../node_modules/react-native/ReactCommon/yoga
 
@@ -212,9 +221,11 @@ SPEC CHECKSUMS:
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
   lottie-ios: 836cdbba92f62f3c6a00e37a4ce485321fe317cf
+  OneSignal: 42dae269c7eca517aee34963820e1eb922390031
   React: 43e97926f429d846050880666de1809e22dd5cc5
+  react-native-onesignal: 4f425b36d3edf595c93c1a8d3618a93b71a85a51
   yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: 37bcecd05216063a739cfb6ad43aaaaf82daeb72
+PODFILE CHECKSUM: 94981ebb0ce3f1f953fa801c36d59946f0ff958b
 
 COCOAPODS: 1.4.0

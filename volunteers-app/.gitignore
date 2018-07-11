@@ -4,3 +4,6 @@ npm-debug.*
 i18n/messages
 .tmp
 ios/Pods
+
+## User settings
+xcuserdata/
