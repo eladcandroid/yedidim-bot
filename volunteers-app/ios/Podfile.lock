@@ -94,11 +94,11 @@ PODS:
   - GPUImage (0.1.7)
   - JKBigInteger2 (0.0.5)
   - lottie-ios (2.1.5)
-  - OneSignal (2.8.4)
+  - OneSignal (2.8.5)
   - React (0.52.0):
     - React/Core (= 0.52.0)
-  - react-native-onesignal (3.2.2):
-    - OneSignal (= 2.8.4)
+  - react-native-onesignal (3.2.5):
+    - OneSignal (= 2.8.5)
     - React
   - React/ART (0.52.0):
     - React/Core
@@ -221,9 +221,9 @@ SPEC CHECKSUMS:
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
   lottie-ios: 836cdbba92f62f3c6a00e37a4ce485321fe317cf
-  OneSignal: 7218a5a787f6685de81bdb487e696439e8c8f59b
+  OneSignal: 42dae269c7eca517aee34963820e1eb922390031
   React: 43e97926f429d846050880666de1809e22dd5cc5
-  react-native-onesignal: 3284cb4d8db4ae85735d6f5f2aee5878475848f4
+  react-native-onesignal: 4f425b36d3edf595c93c1a8d3618a93b71a85a51
   yoga: 55da126afc384965b96bff46652464373b330add
 
 PODFILE CHECKSUM: 94981ebb0ce3f1f953fa801c36d59946f0ff958b

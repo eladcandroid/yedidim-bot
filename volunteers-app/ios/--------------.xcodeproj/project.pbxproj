@@ -423,7 +423,7 @@
 				DEVELOPMENT_TEAM = 8QN2Z2U2MC;
 				INFOPLIST_FILE = "$(SRCROOT)/--------------/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.startach.yedidim.volunteers.detached;
+				PRODUCT_BUNDLE_IDENTIFIER = com.startach.yedidim.volunteers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -438,7 +438,7 @@
 				DEVELOPMENT_TEAM = 8QN2Z2U2MC;
 				INFOPLIST_FILE = "$(SRCROOT)/--------------/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.startach.yedidim.volunteers.detached;
+				PRODUCT_BUNDLE_IDENTIFIER = com.startach.yedidim.volunteers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
