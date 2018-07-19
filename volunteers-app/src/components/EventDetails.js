@@ -144,7 +144,12 @@ const EventDetails = ({
               id="Dispatcher.phone"
               defaultMessage="Dispatcher's Phone"
             >
-              {label => <TextFieldRow label={label} value={dispatcher.phone} />}
+              {label => (
+                <TextFieldRow
+                  label={label}
+                  value={dispatcher.callCenterPhone}
+                />
+              )}
             </FormattedMessage>
           )}
         <Row>
@@ -196,7 +201,8 @@ const EventDetails = ({
                   <Button
                     block
                     success
-                    onPress={() => Linking.openURL(`tel:${dispatcher.phone}`)}
+                    onPress={() =>
+                      Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
                   >
                     <FormattedMessage
                       id="Dispatcher.button.callDispatcher"
