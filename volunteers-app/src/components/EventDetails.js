@@ -161,13 +161,13 @@ const EventDetails = ({
                 onPress={() =>
                   Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
               >
+                <Icon name="md-map" />
                 <FormattedMessage
                   id="Event.button.navigate"
                   defaultMessage="Navigate with Waze"
                 >
                   {txt => <Text>{txt}</Text>}
                 </FormattedMessage>
-                <Icon name="md-map" />
               </Button>
             </MarginView>
           </Col>
@@ -181,13 +181,13 @@ const EventDetails = ({
                   success
                   onPress={() => Linking.openURL(`tel:${phone}`)}
                 >
+                  <Icon name="md-call" />
                   <FormattedMessage
                     id="Event.button.callPerson"
                     defaultMessage="Call Person"
                   >
                     {txt => <Text>{txt}</Text>}
                   </FormattedMessage>
-                  <Icon name="md-call" />
                 </Button>
               </MarginView>
             </Col>
@@ -204,13 +204,13 @@ const EventDetails = ({
                     onPress={() =>
                       Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
                   >
+                    <Icon name="md-call" />
                     <FormattedMessage
                       id="Dispatcher.button.callDispatcher"
                       defaultMessage="Call Dispatcher"
                     >
                       {txt => <Text>{txt}</Text>}
                     </FormattedMessage>
-                    <Icon name="md-call" />
                   </Button>
                 </MarginView>
               </Col>
