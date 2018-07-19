@@ -21,6 +21,7 @@ const sendNotifications = async ({ title, message, appType, ...other }) => {
       headings: { en: title },
       contents: { en: message },
       ios_sound: 'notification.caf',
+      android_sound: 'notification',
       ...other
     },
     json: true // Automatically stringifies the body to JSON
