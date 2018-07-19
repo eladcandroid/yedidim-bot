@@ -368,11 +368,10 @@ export const acknowledgeReceivedEvent = async (eventId, userId) =>
       [userId]: true
     })
 
-export async function finaliseEvent(eventKey, userKey, feedback) {
+export async function finaliseEvent(eventKey, userKey) {
   // Update event to completed and make user free again
   const updates = {
     [`events/${eventKey}/status`]: 'completed',
-    [`events/${eventKey}/feedback`]: feedback,
     [`volunteer/${userKey}/EventKey`]: null
   }
 
@@ -382,15 +381,11 @@ export async function finaliseEvent(eventKey, userKey, feedback) {
     .update(updates)
 }
 
-export async function unacceptEvent(eventKey, userKey, feedback) {
+export async function unacceptEvent(eventKey, userKey) {
   // Update event to submitted, feedback and make user free again
   const updates = {
     [`events/${eventKey}/status`]: 'submitted',
     [`events/${eventKey}/assignedTo`]: null,
-    [`events/${eventKey}/unaccepted`]: {
-      feedback,
-      userKey
-    },
     [`volunteer/${userKey}/EventKey`]: null
   }
 

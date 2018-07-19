@@ -118,6 +118,7 @@ export default types
       })
       self.store.removeEvent(self.id)
     },
+    // TODO: Consolidate the 3 methods below in one method as the logic is the same
     accept: flow(function* accept() {
       // Retrieve current logged user id
       self.store.setLoading(true)
@@ -129,22 +130,22 @@ export default types
       })
       return results
     }),
-    finalise: flow(function* finalise(feedback) {
+    finalise: flow(function* finalise() {
       // Retrieve current logged user id
       self.store.setLoading(true)
       const currentUserId = getRoot(self).authStore.currentUser.id
-      const results = yield api.finaliseEvent(self.id, currentUserId, feedback)
+      const results = yield api.finaliseEvent(self.id, currentUserId)
       self.store.setLoading(false)
       trackEvent('FinaliseEvent', {
         eventId: self.id
       })
       return results
     }),
-    unaccept: flow(function* unaccept(feedback) {
+    unaccept: flow(function* unaccept() {
       // Retrieve current logged user id
       self.store.setLoading(true)
       const currentUserId = getRoot(self).authStore.currentUser.id
-      const results = yield api.unacceptEvent(self.id, currentUserId, feedback)
+      const results = yield api.unacceptEvent(self.id, currentUserId)
       self.store.setLoading(false)
       trackEvent('UnacceptEvent', {
         eventId: self.id

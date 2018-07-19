@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, defineMessages } from 'react-intl'
 import { I18nManager, Alert, View, ActivityIndicator } from 'react-native'
 import { trackEvent } from 'io/analytics'
+import { NavigationActions } from 'react-navigation'
 
 import {
   Button,
@@ -12,11 +13,35 @@ import {
   Left,
   Icon,
   Right,
-  Text
+  Text,
+  Toast
 } from 'native-base'
 import EventDetails from 'components/EventDetails'
 import ButtonsConfirmationBar from 'components/ButtonsConfirmationBar'
 import TakenEventButtons from 'components/TakenEventButtons'
+
+const toastMsgs = {
+  finalise: defineMessages({
+    text: {
+      id: 'Feedback.toast.finalise.text',
+      defaultMessage: 'Event was finalised'
+    },
+    buttonText: {
+      id: 'Feedback.toast.finalise.buttonText',
+      defaultMessage: 'OK'
+    }
+  }),
+  unaccept: defineMessages({
+    text: {
+      id: 'Feedback.toast.unaccept.text',
+      defaultMessage: 'Event was cancelled'
+    },
+    buttonText: {
+      id: 'Feedback.toast.unaccept.buttonText',
+      defaultMessage: 'OK'
+    }
+  })
+}
 
 const ignore = {
   modalMsgs: defineMessages({
@@ -226,10 +251,35 @@ class EventScreen extends Component {
     navigation.goBack()
   }
 
+  // supports finalise and cancel
+  handleCompleteEvent = async action => {
+    const { event, navigation, screenProps: { intl } } = this.props
+
+    // Execute action on event
+    await event[action]()
+    // Remove event from list of events
+    await event.remove()
+    // Navigate to home (resetting state)
+    trackEvent('Navigation', { page: 'Home' })
+    navigation.dispatch(
+      NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Home' })]
+      })
+    )
+    // Show toast
+    Toast.show({
+      text: intl.formatMessage(toastMsgs[action].text),
+      position: 'bottom',
+      type: action === 'finalise' ? 'success' : 'danger',
+      buttonText: intl.formatMessage(toastMsgs[action].buttonText),
+      duration: 5000
+    })
+  }
+
   render() {
     const {
       event,
-      navigation,
       screenProps: { intl },
       isAssigned,
       isTaken,
@@ -252,15 +302,12 @@ class EventScreen extends Component {
       onPress: isAssigned
         ? () => {
             trackEvent('Navigation', {
-              page: 'FinaliseFeedback',
+              page: 'Finalise',
               eventId: event.id
             })
 
-            // Finalise Event, navigate to Feedback screen
-            navigation.navigate('Feedback', {
-              eventId: event.id,
-              action: 'finalise'
-            })
+            // Finalise Event
+            this.handleCompleteEvent('finalise')
           }
         : () => {
             // Accept Event
@@ -300,15 +347,12 @@ class EventScreen extends Component {
       onPress: isAssigned
         ? () => {
             trackEvent('Navigation', {
-              page: 'UnacceptFeedback',
+              page: 'Unaccept',
               eventId: event.id
             })
 
-            // Navigate to feedback screen to explain why cancelling
-            navigation.navigate('Feedback', {
-              eventId: event.id,
-              action: 'unaccept'
-            })
+            // Unnacept event
+            this.handleCompleteEvent('unaccept')
           }
         : this.handleRemoveEvent
     }
