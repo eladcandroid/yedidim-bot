@@ -27,7 +27,7 @@ class EventsSearch extends Component {
     if (!this.props.events){
       return;
     }
-    const content = eventsToCSV(this.props.categories, this.props.events);
+    const content = eventsToCSV(this.props.categories, this.props.dispatchers, this.props.volunteers, this.props.events);
     console.log(content);
     const fileUri = Expo.FileSystem.cacheDirectory + 'yedidim-events.csv';
     await Expo.FileSystem.writeAsStringAsync(fileUri, content);
@@ -109,9 +109,13 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   const events = state.dataSource.searchEvents;
   const categories = state.dataSource.categories || [];
+  const dispatchers = state.dataSource.dispatchers || [];
+  const volunteers = state.dataSource.volunteers || [];
   return {
     events,
-    categories
+    categories,
+    dispatchers,
+    volunteers
   };
 };
 
@@ -121,7 +125,9 @@ EventsList.propTypes = {
   events: PropTypes.array,
   navigate: PropTypes.func.isRequired,
   searchEvents: PropTypes.func,
-  categories: PropTypes.array
+  categories: PropTypes.array,
+  dispatchers: PropTypes.array,
+  volunteers: PropTypes.array
 };
 
 const styles = StyleSheet.create({

@@ -55,13 +55,14 @@ export const getGoogleMapsUrl = (event) => {
   return 'https://www.google.com/maps/search/?api=1&query=' + event.details.geo.lat + ',' + event.details.geo.lon;
 };
 
-export const eventsToCSV = (categories, events) => {
-  let buffer = "זמן, כתובת, שם, רכב, מקרה, פרטים, טלפון, מקור";
+export const eventsToCSV = (categories, dispatchers, volunteers, events) => {
+  let buffer = "זמן, כתובת, שם, רכב, מקרה, פרטים, טלפון, מוקדן, כונן, מקור";
   buffer += '\n';
   events.map(event => {
     if (event.status === EventStatus.Completed) {
       const details = event.details;
       buffer += `${formatEventTime(event)},"${formatCSVCell(details.address)}",${formatCSVCell(details['caller name'])},${formatCSVCell(details['car type'])},${formatEventCategory(categories, event, true)},"${formatCSVCell(details['more'])}",${details['phone number']},` +
+        `${formatCSVCell(getEventDispatcher(dispatchers, event))},${formatCSVCell(getEventVolunteer(volunteers, event))},` +
         (event.source === EventSource.FB_BOT ? 'בוט' : 'אפליקציה') + '\n';
     }
   });
@@ -73,4 +74,14 @@ const formatCSVCell = (data) => {
     return '';
   }
   return data.replace(/(["])/g, "-").replace(/([\r\n])/g, ";");
+};
+
+const getEventDispatcher = (dispatchers, event) => {
+  const dispatcher = dispatchers.find(dispatcher => dispatcher.id === event.dispatcher);
+  return dispatcher ? dispatcher.name : '';
+};
+
+const getEventVolunteer = (volunteers, event) => {
+  const volunteer = volunteers.find(volunteer => volunteer.id === event.volunteer) || '';
+  return volunteer ? (volunteer.firstName + ' ' + volunteer.lastName) : '';
 };
