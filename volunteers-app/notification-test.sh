@@ -6,5 +6,7 @@ curl -H "Content-Type: application/json; charset=utf-8" -X POST https://onesigna
   "data": {
       "key": "-LDbbpzvdZWxljGGYbWO",
       "type": "event"
-  }
+  },
+  "ios_sound": "notification.caf",
+  "android_sound": "notification"
 }'
