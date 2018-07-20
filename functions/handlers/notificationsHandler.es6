@@ -139,7 +139,7 @@ let userMutedNotifications = (user) => {
 exports.sendEventNotificationToCloseByVolunteers = sendEventNotificationToCloseByVolunteers;
 
 let formatNotification = (eventData) => {
-  return ` ${Consts.CategoriesDisplay[eventData.details.category] || "לא ידוע"} ב${eventData.details.street_name} ${eventData.details.street_number} ${eventData.details.city}. סוג רכב ${eventData.details["car type"]} לחץ לפרטים`;
+  return ` ${Consts.CategoriesDisplay[eventData.details.category] || "לא ידוע"} ב${eventData.details.address} . סוג רכב ${eventData.details["car type"]} לחץ לפרטים`;
 };
 
 let haveToSendNotification = (eventData, previousValue) => {

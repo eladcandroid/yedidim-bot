@@ -26,7 +26,7 @@ export const  getTextStyle = (style) => {
 };
 
 export const getEventDetailsText = (event, categories) => {
-  return `*עיר:* ${event.details['city']}\r\n*כתובת:* ${event.details['address']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*בעיה:* ${formatEventCategory(categories, event, true)}`;
+  return `*כתובת:* ${event.details['address']}\r\n*סוג רכב:* ${event.details['car type']}\r\n*בעיה:* ${formatEventCategory(categories, event, true)}`;
 };
 
 export const getUserDetailsText = (event) => {

@@ -10,7 +10,7 @@ export const EventsListColumn = {
   Name: {id: 1, label: 'שם'},
   Phone: {id: 2, label: 'טלפון'},
   Case: {id: 3, label: 'בעיה'},
-  City: {id: 4, label: 'עיר'},
+  City: {id: 4, label: 'כתובת'},
   Source: {id: 5, label: ''}
 };
 
@@ -28,7 +28,7 @@ class EventsList extends Component {
             : col === EventsListColumn.Case ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{formatEventCategory(this.props.categories, event, false)}</Text>
             : col === EventsListColumn.City ?
-              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details.city}{event.details.street_name ? (' - ' + event.details.street_name) : ''}</Text>
+              <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details.address}</Text>
             : col === EventsListColumn.Name ?
               <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>{event.details['caller name']}</Text>
             : col === EventsListColumn.Phone ?
