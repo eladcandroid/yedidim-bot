@@ -93,9 +93,14 @@ export default types
         (yield calculateDistanceFromEvent(eventData))
       Object.assign(self, eventData)
 
-      if (!self.dispatcher && eventData.dispatcherId) {
+      const shouldFetchDispatcher =
+        !self.dispatcher && eventData.dispatcherId && self.isAssigned
+      if (shouldFetchDispatcher) {
+        self.isLoading = true
         self.dispatcher = yield api.fetchDispatcher(eventData.dispatcherId)
       }
+      // Not loading anymore (if it was loading)
+      self.isLoading = false
     }),
     afterCreate: () => {
       // If no data is provided with event, set it as loading
