@@ -132,12 +132,11 @@ const EventDetails = ({
             {label => <TextFieldRow label={label} value={carType} />}
           </FormattedMessage>
         )}
-        {isAssigned &&
-          dispatcher && (
-            <FormattedMessage id="Dispatcher.name" defaultMessage="Dispatcher">
-              {label => <TextFieldRow label={label} value={dispatcher.name} />}
-            </FormattedMessage>
-          )}
+        {dispatcher && (
+          <FormattedMessage id="Dispatcher.name" defaultMessage="Dispatcher">
+            {label => <TextFieldRow label={label} value={dispatcher.name} />}
+          </FormattedMessage>
+        )}
         {isAssigned &&
           dispatcher && (
             <FormattedMessage
@@ -193,29 +192,28 @@ const EventDetails = ({
             </Col>
           </Row>
         )}
-        {isAssigned &&
-          dispatcher && (
-            <Row>
-              <Col>
-                <MarginView>
-                  <Button
-                    block
-                    success
-                    onPress={() =>
-                      Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
+        {dispatcher && (
+          <Row>
+            <Col>
+              <MarginView>
+                <Button
+                  block
+                  success
+                  onPress={() =>
+                    Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
+                >
+                  <Icon name="md-call" />
+                  <FormattedMessage
+                    id="Dispatcher.button.callDispatcher"
+                    defaultMessage="Call Dispatcher"
                   >
-                    <Icon name="md-call" />
-                    <FormattedMessage
-                      id="Dispatcher.button.callDispatcher"
-                      defaultMessage="Call Dispatcher"
-                    >
-                      {txt => <Text>{txt}</Text>}
-                    </FormattedMessage>
-                  </Button>
-                </MarginView>
-              </Col>
-            </Row>
-          )}
+                    {txt => <Text>{txt}</Text>}
+                  </FormattedMessage>
+                </Button>
+              </MarginView>
+            </Col>
+          </Row>
+        )}
       </Grid>
     </Content>
     <View style={{ height: 70, backgroundColor: '#fff' }}>{children}</View>
