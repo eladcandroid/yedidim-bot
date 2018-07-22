@@ -122,11 +122,11 @@ function checkIsActive() {
   const day = date.getUTCDay()
   const hours = date.getUTCHours()
 
-  return !((day === 5 && hours >= 15) || (day === 6 && hours < 18))
+  return !((day === 5 && hours >= 17) || (day === 6 && hours < 20))
 }
 
 function sendNotActiveResponse(event) {
-  return sendMessage(event.sender.id, getTemplate(flow.messages['general']))
+  return sendMessage(event.sender.id, getTemplate(flow.messages['not_active']))
 }
 
 function sendInitialResponse(event) {

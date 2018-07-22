@@ -5,6 +5,11 @@
       "final": true,
       "error_next": "get_started"
     },
+    "not_active": {
+      "text": "\"ידידים סיוע בדרכים\" פועל 24 שעות ביממה למעט שבת וחג. נשמח לעמוד לרשותך מיד עם צאת השבת.",
+      "final": true,
+      "error_next": "get_started"
+    },
     "select_answer": {
       "text": "בבקשה בחר/י תשובה מהרשימה"
     },
