@@ -173,7 +173,7 @@ var userMutedNotifications = function userMutedNotifications(user) {
 exports.sendEventNotificationToCloseByVolunteers = sendEventNotificationToCloseByVolunteers;
 
 var formatNotification = function formatNotification(eventData) {
-  return ' ' + (Consts.CategoriesDisplay[eventData.details.category] || "לא ידוע") + ' \u05D1' + eventData.details.street_name + ' ' + eventData.details.street_number + ' ' + eventData.details.city + '. \u05E1\u05D5\u05D2 \u05E8\u05DB\u05D1 ' + eventData.details["car type"] + ' \u05DC\u05D7\u05E5 \u05DC\u05E4\u05E8\u05D8\u05D9\u05DD';
+  return ' ' + (Consts.CategoriesDisplay[eventData.details.category] || "לא ידוע") + ' \u05D1' + eventData.details.address + ' ' + eventData.details.street_number + ' ' + eventData.details.city + '. \u05E1\u05D5\u05D2 \u05E8\u05DB\u05D1 ' + eventData.details["car type"] + ' \u05DC\u05D7\u05E5 \u05DC\u05E4\u05E8\u05D8\u05D9\u05DD';
 };
 
 var haveToSendNotification = function haveToSendNotification(eventData, previousValue) {

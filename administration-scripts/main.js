@@ -172,13 +172,13 @@ async function updateHandleBot() {
   });
 };
 
-/*let usersImporter = require('./users/userImporter');
+let usersImporter = require('./users/userImporter');
 usersImporter.importFromFile('production', "C:\\Users\\dor\\Desktop\\users 2018_09_06\\" +
   "" +
   "users template - Sheet1.csv")
     .then(() => {
         console.log('Done');
-    });*/
+    });
 
 
 // updateUserLocation('+972526825255', 32.0778397, 34.7681266);
@@ -296,15 +296,12 @@ async function createEventAtLocation(x, y) {
           "caller name": "Daniel Halevi",
           "car type": "מזדה 3",
           "case": 1,
-          "city": "תל אביב יפו",
           "geo": {
             "lat": x,
             "lon": y
           },
           "more": "כן",
-          "phone number": "0542436119",
-          "street_name": "מבצע קדש",
-          "street_number": "34"
+          "phone number": "0542436119"
         },
         "key": eventKey,
         "lastMessage": "confirm_request",

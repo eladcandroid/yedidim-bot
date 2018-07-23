@@ -7,8 +7,9 @@ import { Picker, Form, Item, Label, Input, Button } from 'native-base';
 import { getTextStyle } from "../common/utils";
 import { EventCases, EventStatus, EventSource, ScreenType } from "../constants/consts";
 import { createEvent, updateEvent } from "../actions/dataSourceActions";
-import { geocodeAddress } from "../actions/geocodingActions";
+import {geocodeAddress, getAddressDetailsFromGoogleResult} from "../actions/geocodingActions";
 import { sendNotification } from "../actions/notificationsActions";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 class KeyboardAwareScrollViewComponent extends React.Component {
   render() {
@@ -31,7 +32,7 @@ class KeyboardAwareScrollViewComponent extends React.Component {
 class EventDetailsEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = {address: undefined, geo: undefined, category: 'Other', street_number: 0, needToValidateAddress: false};
+    this.state = {address: undefined, geo: undefined, category: 'Other', needToValidateAddress: false};
     this.updateEventData = this.updateEventData.bind(this);
     this.validateAddress = this.validateAddress.bind(this);
     this.createNewEvent = this.createNewEvent.bind(this);
@@ -206,16 +207,54 @@ class EventDetailsEditor extends Component {
     );
   }
 
+  GooglePlacesInput(){
+    return (
+      <GooglePlacesAutocomplete
+        placeholder='Search'
+        minLength={2} // minimum length of text to search
+        autoFocus={false}
+        returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+        listViewDisplayed='auto'    // true/false/undefined
+        fetchDetails={true}
+        renderDescription={row => row.description} // custom description render
+        onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+          let geoStateData = getAddressDetailsFromGoogleResult(details);
+          this.setState(geoStateData)
+        }}
+
+        getDefaultValue={() => ''}
+
+        query={{
+          // available options: https://developers.google.com/places/web-service/autocomplete
+          key: 'AIzaSyCcOFOs1z1nMIWrDvOuEimpwaezFX4h2TY',
+          language: 'he', // language of the results
+        }}
+
+        styles={{
+          textInputContainer: {
+            width: '100%'
+          },
+          description: {
+            fontWeight: 'bold'
+          },
+          predefinedPlacesDescription: {
+            color: '#1faadb'
+          }
+        }}
+
+        nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+        debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+      />
+    );
+  }
+
   render() {
     return (
       <KeyboardAwareScrollViewComponent>
         <View style={styles.container}>
           {this.showValidationError()}
           <Form>
-            {this.renderInput('כתובת', 'address')}
-            <Button primary style={styles.button} onPress={this.validateAddress} disabled={!this.state.needToValidateAddress}>
-              <Text style={styles.buttonText}>בדוק כתובת</Text>
-            </Button>
+            {this.GooglePlacesInput()}
             <Label style={getTextStyle(styles.pickerLabel)}>סוג אירוע</Label>
             {this.renderCategoryPicker()}
             {this.renderSubCategoryPicker()}
@@ -313,3 +352,4 @@ const styles = StyleSheet.create({
     alignSelf:'center'
   }
 });
+

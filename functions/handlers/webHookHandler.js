@@ -355,9 +355,6 @@ function setDetailsAndNextMessage(lastMessage, context, response) {
   } else if (lastMessage.validate === 'location') {
     context.details['geo'] = response.location.coordinates
     context.details['address'] = response.location.address.formattedAddress
-    context.details['city'] = response.location.address.city
-    context.details['street_name'] = response.location.address.streetName
-    context.details['street_number'] = response.location.address.streetNumber
     if (response.location.userAddress) {
       context.details['user_address'] = response.location.userAddress
     }
