@@ -1,6 +1,7 @@
 let rp = require('request-promise')
 let { instance, tokens } = require('../config')
 const admin = require('firebase-admin')
+const GeoFire = require('geofire')
 
 const buildFilters = filter => [
   ...filter,
