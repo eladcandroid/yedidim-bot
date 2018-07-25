@@ -2,7 +2,8 @@ const Consts = require('./consts')
 let NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
 const {
   sendNotificationByUserIds,
-  sendNotificationByOneSignalLocation
+  // sendNotificationByOneSignalLocation,
+  sendNotificationByGeoFireLocation
 } = require('../lib/onesignal')
 
 exports.handleUpdateEvent = (eventId, change) => {
@@ -154,7 +155,8 @@ let sendEventNotificationToCloseByVolunteers = (
     eventId: eventData.key,
     type: 'event'
   }
-  return sendNotificationByOneSignalLocation({
+  // return sendNotificationByOneSignalLocation({
+  return sendNotificationByGeoFireLocation({
     title,
     message,
     data,
@@ -163,13 +165,6 @@ let sendEventNotificationToCloseByVolunteers = (
     radius,
     appType: 'volunteers'
   })
-}
-let userMutedNotifications = user => {
-  if (!user.Muted) {
-    return false
-  }
-  let millisSinceMuted = new Date().getTime() - user.Muted
-  return millisSinceMuted < NOTIFICATION_MUTE_EXPIRATION_MILLIS
 }
 
 exports.sendEventNotificationToCloseByVolunteers = sendEventNotificationToCloseByVolunteers

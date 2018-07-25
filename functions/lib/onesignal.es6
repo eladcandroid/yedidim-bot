@@ -1,11 +1,23 @@
 let rp = require('request-promise')
 let { instance, tokens } = require('../config')
+const admin = require('firebase-admin')
 
 const buildFilters = filter => [
   ...filter,
   // Make filter always targets right environment
   { field: 'tag', key: 'environment', relation: '=', value: instance }
 ]
+
+const validToken = token =>
+  token.length === 36 && !token.startsWith('ExponentPushToken')
+
+const userMutedNotifications = user => {
+  if (!user.Muted) {
+    return false
+  }
+  let millisSinceMuted = new Date().getTime() - user.Muted
+  return millisSinceMuted < NOTIFICATION_MUTE_EXPIRATION_MILLIS
+}
 
 const sendNotifications = async ({ title, message, appType, ...other }) => {
   console.log('Using tokens ', tokens)
@@ -64,22 +76,24 @@ export const sendNotificationByGeoFireLocation = async props => {
     props
   )
 
+  const { title, message, data, appType, radius, latitude, longitude } = props
+
   return new Promise((resolve, reject) => {
-    let usersInRadius = []
-    let geoFire = new GeoFire(admin.database().ref('/user_location'))
+    const usersInRadius = []
+    const geoFire = new GeoFire(admin.database().ref('/user_location'))
 
     const userQueryParams = {
-      center: [eventData.details.geo.lat, eventData.details.geo.lon],
-      radius: searchRadius || Consts.NOTIFICATION_SEARCH_RADIUS_KM
+      center: [latitude, longitude],
+      radius
     }
 
     console.log(
-      `[sendNotificationToCloseByVolunteers] Querying users in location`,
+      `[sendNotificationByGeoFireLocation] Querying users in location`,
       userQueryParams,
-      eventData.key
+      data
     )
 
-    let geoQuery = geoFire.query(userQueryParams)
+    const geoQuery = geoFire.query(userQueryParams)
 
     geoQuery.on('key_entered', function(userId) {
       usersInRadius.push(userId)
@@ -88,11 +102,11 @@ export const sendNotificationByGeoFireLocation = async props => {
     geoQuery.on('ready', function() {
       geoQuery.cancel()
       console.log(
-        `[sendNotificationToCloseByVolunteers] Found ${
+        `[sendNotificationByGeoFireLocation] Found ${
           usersInRadius.length
         } in location`,
         usersInRadius,
-        eventData.key
+        data
       )
       admin
         .database()
@@ -102,64 +116,49 @@ export const sendNotificationByGeoFireLocation = async props => {
         .once('value', tokens => {
           if (!tokens.hasChildren()) {
             console.log(
-              `[sendNotificationToCloseByVolunteers] There are no notification tokens to send to, stopping`,
-              eventData.key
+              `[sendNotificationByGeoFireLocation] There are no notification tokens to send to, stopping`,
+              data
             )
             return resolve.resolve(400)
           }
 
           // Listing all tokens.
-          let usersById = tokens.val()
+          const usersById = tokens.val()
           console.log(
-            `[sendNotificationToCloseByVolunteers] Filtering original users list to validate tokens`,
+            `[sendNotificationByGeoFireLocation] Filtering original users list to validate tokens`,
             Object.keys(usersById),
-            eventData.key
+            data
           )
 
-          let recipients = Object.keys(usersById).filter(
-            userId =>
-              Expo.isExpoPushToken(usersById[userId].NotificationToken) &&
-              usersInRadius.indexOf(userId) > -1 &&
-              !userMutedNotifications(usersById[userId])
-          )
+          const userIds = Object.keys(usersById)
+            .filter(
+              userId =>
+                validToken(usersById[userId].NotificationToken) &&
+                usersInRadius.indexOf(userId) > -1 &&
+                !userMutedNotifications(usersById[userId])
+            )
+            .map(userId => usersById[userId].NotificationToken)
 
           console.log(
-            `[sendNotificationToCloseByVolunteers] After filter, users list for sending is`,
-            recipients,
-            eventData.key
+            `[sendNotificationByGeoFireLocation] After filter, users list for sending is`,
+            userIds,
+            data
           )
 
-          const notifications = recipients.map(function(userId) {
-            let token = usersById[userId].NotificationToken
-            return buildEventNotification(eventData, notificationTitle, token)
-          })
-
-          sendNotifications(notifications)
+          sendNotificationByUserIds({ title, message, data, appType, userIds })
             .then(receipts => {
               console.log(
-                `[sendNotificationToCloseByVolunteers] Finishing sending notifications, receipts are`,
-                receipts[0],
-                eventData.key
+                `[sendNotificationByGeoFireLocation] Finishing sending notifications, receipts are`,
+                receipts,
+                data
               )
 
-              // Save status of notifications for the event
-              updateEventNotificationStatus(
-                admin,
-                eventData.key,
-                recipients.filter(
-                  (recipient, idx) => receipts[0][idx].status === 'ok'
-                ),
-                recipients.filter(
-                  (recipient, idx) => receipts[0][idx].status === 'error'
-                )
-              ).then(() => {
-                resolve(recipients)
-              })
+              resolve(userIds)
             })
             .catch(err => {
               console.log(
-                `[sendNotificationToCloseByVolunteers] Error sending notifications`,
-                eventData.key,
+                `[sendNotificationByGeoFireLocation] Error sending notifications`,
+                data,
                 err
               )
               reject(err)
@@ -167,37 +166,14 @@ export const sendNotificationByGeoFireLocation = async props => {
         })
     })
   })
-  // const { title, message, data, appType } = props
-  // try {
-  //   let radiusMeters = props.radius * 1000
-  //   const results = await sendNotifications({
-  //     filters: [
-  //       {
-  //         field: 'location',
-  //         radius: radiusMeters,
-  //         lat: props.latitude,
-  //         long: props.longitude
-  //       }
-  //     ],
-  //     title,
-  //     message,
-  //     data,
-  //     appType
-  //   })
-  //   console.log('[OneSignal] Success event notifications', results)
-  //   return results
-  // } catch (error) {
-  //   console.log('[OneSignal] Fail event notifications', error)
-  //   throw error
-  // }
 }
 
 export const sendNotificationByUserIds = async props => {
   console.log('[OneSignal] Sending event notification', props)
   const { title, message, data, userIds, appType } = props
-  let validatedUserIds = userIds.filter(
-    id => id.length === 36 && !id.startsWith('ExponentPushToken')
-  )
+  // Validate tokens
+  let validatedUserIds = userIds.filter(validToken)
+
   if (validatedUserIds.length !== userIds.length) {
     let invalidIds = userIds.filter(id => validatedUserIds.indexOf(id) === -1)
     console.warn(
