@@ -215,7 +215,9 @@ function sendFollowUpResponse(event, context) {
             promises.push(
               notifyBotHandlers({
                 appType: 'dispatchers',
-                title, message, data
+                title,
+                message,
+                data
               })
             )
           }
@@ -531,7 +533,9 @@ function getUserProfile(psid) {
 
 function notifyBotHandlers(notification) {
   return new Promise((resolve, reject) => {
-    _admin.database().ref('/dispatchers')
+    _admin
+      .database()
+      .ref('/dispatchers')
       .orderByChild('notifications')
       .equalTo(true)
       .once('value')
@@ -540,30 +544,37 @@ function notifyBotHandlers(notification) {
         let usersNotified = []
         const dispatchers = snapshot.val()
         if (!dispatchers) {
-          resolve();
+          resolve()
           return
         }
 
         Object.keys(dispatchers).forEach(dispatcherId => {
-          let dispatcher = dispatchers[dispatcherId];
+          let dispatcher = dispatchers[dispatcherId]
           if (dispatcher.token && dispatcher.handleBot) {
             tokens.push(dispatcher.token)
-            usersNotified.push({name: dispatcher.name, id: dispatcherId})
+            usersNotified.push({ name: dispatcher.name, id: dispatcherId })
           }
-        });
+        })
         if (tokens.length > 0) {
-          console.log("Notified bot event ", notification, " to ", usersNotified);
-          notification.userIds = tokens;
-          sendNotificationByUserIds(notification).then(() => {
-            resolve()
-          }).catch(e => reject(e));
+          console.log(
+            'Notified bot event ',
+            notification,
+            ' to ',
+            usersNotified
+          )
+          notification.userIds = tokens
+          sendNotificationByUserIds(notification)
+            .then(() => {
+              resolve()
+            })
+            .catch(e => reject(e))
         } else {
-          resolve();
+          resolve()
         }
       })
       .catch(err => {
         console.error('Failed to retrieve dispatchers : \n', err)
         reject(err)
       })
-  });
+  })
 }
