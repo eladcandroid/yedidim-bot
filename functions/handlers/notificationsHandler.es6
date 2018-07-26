@@ -1,5 +1,5 @@
 const Consts = require('./consts')
-let NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
+
 const {
   sendNotificationByUserIds,
   // sendNotificationByOneSignalLocation,

@@ -2,6 +2,7 @@ let rp = require('request-promise')
 let { instance, tokens } = require('../config')
 const admin = require('firebase-admin')
 const GeoFire = require('geofire')
+const NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
 
 const buildFilters = filter => [
   ...filter,
