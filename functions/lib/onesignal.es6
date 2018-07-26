@@ -179,10 +179,21 @@ export const sendNotificationByUserIds = async props => {
   if (validatedUserIds.length !== userIds.length) {
     let invalidIds = userIds.filter(id => validatedUserIds.indexOf(id) === -1)
     console.warn(
-      `[OneSignal]  Tried sending message to invalid tokens to ${appType}`,
+      `[OneSignal] Tried sending message to invalid tokens to ${appType}`,
       invalidIds
     )
   }
+
+  if (validatedUserIds.length === 0) {
+    console.warn(
+      `[OneSignal] No valid tokens were found to send notification, ending without action`,
+      userIds,
+      validatedUserIds
+    )
+
+    return true
+  }
+
   try {
     const results = await sendNotifications({
       include_player_ids: validatedUserIds,
