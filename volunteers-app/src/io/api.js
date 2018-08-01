@@ -219,12 +219,18 @@ async function fetchLatestOpenEventsLocationBased(userId) {
           .database()
           .ref('events')
           .orderByChild('status')
-          .equalTo('sent')
+          .startAt('assigned')
+          .endAt('sent')
           .once('value', snapshot => {
             const eventsById = snapshot.val() || {}
             const fetchedEvents = Object.values(eventsById)
             const eventsToReturn = Object.keys(eventsById)
               .filter(eventId => !!nearEventIdToDistance[eventId])
+              .filter(
+                eventId =>
+                  eventsById[eventId].status === 'assigned' ||
+                  eventsById[eventId].status === 'sent'
+              )
               .map(eventId => {
                 const event = eventsById[eventId]
                 event.distance = nearEventIdToDistance[eventId]
@@ -273,10 +279,14 @@ async function fetchLatestOpenedEvents() {
         .database()
         .ref('events')
         .orderByChild('status')
-        .equalTo('sent')
+        .startAt('assigned')
+        .endAt('sent')
         .once('value', snapshot => {
           const events = Object.values(snapshot.val() || {})
             .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
+            .filter(
+              event => event.status === 'assigned' || event.status === 'sent'
+            )
             .slice(0, 25)
           resolve(events)
         })
