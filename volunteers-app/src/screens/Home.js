@@ -65,6 +65,7 @@ const EventItem = observer(
     isAdmin,
     event: {
       id,
+      carType,
       categoryName,
       categoryImg,
       displayAddress,
@@ -106,7 +107,7 @@ const EventItem = observer(
         </Left>
         <Body>
           <AlignedText>
-            {categoryName} - {displayAddress}
+            {categoryName} - {displayAddress} {carType && `(${carType})`}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
           {isAdmin && (
