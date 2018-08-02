@@ -15,7 +15,7 @@ import {
   Input,
   Icon
 } from 'native-base'
-import { View } from 'react-native'
+import { View, KeyboardAvoidingView } from 'react-native'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
@@ -68,73 +68,75 @@ class EmailPassAuthenticationScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-        <Content style={{ flex: 1 }}>
-          {authError ? (
-            <View>
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+          <Content style={{ flex: 1 }}>
+            {authError ? (
+              <View>
+                <FormattedMessage
+                  id="Authentication.error"
+                  defaultMessage="An error has occurred, unable to authenticate. Please try again later."
+                >
+                  {txt => <IntroText>{txt}</IntroText>}
+                </FormattedMessage>
+                <ErrorText>Error Code: {authError}</ErrorText>
+              </View>
+            ) : (
               <FormattedMessage
-                id="Authentication.error"
-                defaultMessage="An error has occurred, unable to authenticate. Please try again later."
+                id="Authentication.notauthenticated"
+                defaultMessage="You are not authenticated yet. Please authenticate to receive events."
               >
                 {txt => <IntroText>{txt}</IntroText>}
               </FormattedMessage>
-              <ErrorText>Error Code: {authError}</ErrorText>
-            </View>
-          ) : (
-            <FormattedMessage
-              id="Authentication.notauthenticated"
-              defaultMessage="You are not authenticated yet. Please authenticate to receive events."
-            >
-              {txt => <IntroText>{txt}</IntroText>}
-            </FormattedMessage>
-          )}
-          <VersionText>v{Constants.manifest.version}</VersionText>
-          <Form>
-            <Item floatingLabel>
-              <Label style={{ textAlign: 'left' }}>
-                <FormattedMessage
-                  id="Authentication.phonenumber"
-                  defaultMessage="Phone number"
-                >
-                  {txt => txt}
-                </FormattedMessage>
-              </Label>
-              <Input
-                keyboardType="numeric"
-                value={phoneNumber}
-                onChangeText={value => this.setState({ phoneNumber: value })}
-              />
-            </Item>
-            <Item floatingLabel>
-              <Label style={{ textAlign: 'left' }}>
-                <FormattedMessage id="Authentication.id" defaultMessage="ID">
-                  {txt => txt}
-                </FormattedMessage>
-              </Label>
-              <Input
-                keyboardType="numeric"
-                value={id}
-                onChangeText={value => this.setState({ id: value })}
-              />
-            </Item>
-          </Form>
-        </Content>
-        <Button
-          style={{ height: 70 }}
-          iconLeft
-          full
-          large
-          block
-          success
-          onPress={this.handleAuthentication}
-        >
-          <Icon style={{ fontSize: 40 }} name="ios-person" />
-          <FormattedMessage
-            id="Authentication.button"
-            defaultMessage="Authenticate me"
+            )}
+            <VersionText>v{Constants.manifest.version}</VersionText>
+            <Form>
+              <Item floatingLabel>
+                <Label style={{ textAlign: 'left' }}>
+                  <FormattedMessage
+                    id="Authentication.phonenumber"
+                    defaultMessage="Phone number"
+                  >
+                    {txt => txt}
+                  </FormattedMessage>
+                </Label>
+                <Input
+                  keyboardType="numeric"
+                  value={phoneNumber}
+                  onChangeText={value => this.setState({ phoneNumber: value })}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label style={{ textAlign: 'left' }}>
+                  <FormattedMessage id="Authentication.id" defaultMessage="ID">
+                    {txt => txt}
+                  </FormattedMessage>
+                </Label>
+                <Input
+                  keyboardType="numeric"
+                  value={id}
+                  onChangeText={value => this.setState({ id: value })}
+                />
+              </Item>
+            </Form>
+          </Content>
+          <Button
+            style={{ height: 70 }}
+            iconLeft
+            full
+            large
+            block
+            success
+            onPress={this.handleAuthentication}
           >
-            {txt => <Text>{txt}</Text>}
-          </FormattedMessage>
-        </Button>
+            <Icon style={{ fontSize: 40 }} name="ios-person" />
+            <FormattedMessage
+              id="Authentication.button"
+              defaultMessage="Authenticate me"
+            >
+              {txt => <Text>{txt}</Text>}
+            </FormattedMessage>
+          </Button>
+        </KeyboardAvoidingView>
       </Container>
     )
   }
