@@ -243,11 +243,9 @@ class EventScreen extends Component {
   }
 
   handleRemoveEvent = () => {
-    const { event, navigation } = this.props
+    const { navigation } = this.props
 
-    // Ignore Event
-    event.remove()
-    // Navigate back
+    // Navigate back without removing event from list
     navigation.goBack()
   }
 
