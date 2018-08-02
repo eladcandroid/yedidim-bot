@@ -65,6 +65,7 @@ const EventItem = observer(
     isAdmin,
     event: {
       id,
+      carType,
       categoryName,
       categoryImg,
       displayAddress,
@@ -75,7 +76,8 @@ const EventItem = observer(
       distance,
       sentNotification,
       receivedNotification,
-      errorNotification
+      errorNotification,
+      assignedTo
     }
   }) =>
     isLoading ? (
@@ -106,7 +108,7 @@ const EventItem = observer(
         </Left>
         <Body>
           <AlignedText>
-            {categoryName} - {displayAddress}
+            {categoryName} - {displayAddress} {carType && `(${carType})`}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
           {isAdmin && (
@@ -123,22 +125,19 @@ const EventItem = observer(
           </FormattedRelative>
           {distance && distanceToString(distance)}
           {isTaken && (
-            <FormattedMessage id="Home.event.taken" defaultMessage="TAKEN">
-              {txt => (
-                <AlignedText
-                  note
-                  style={{
-                    padding: 3,
-                    marginTop: 3,
-                    backgroundColor: 'red',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  {txt}
-                </AlignedText>
-              )}
-            </FormattedMessage>
+            <AlignedText
+              note
+              style={{
+                padding: 3,
+                marginTop: 3,
+                backgroundColor: 'red',
+                color: 'white',
+                fontWeight: 'bold'
+              }}
+            >
+              נלקח
+              {assignedTo && assignedTo.name && ` ע״י ${assignedTo.name}`}
+            </AlignedText>
           )}
         </Right>
       </ListItem>

@@ -3,6 +3,7 @@ import GeoFire from 'geofire'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
 import { categoryImg } from 'const'
+import User from 'stores/Users/User'
 import locationHandler from '../../phoneInterface/locationHandler'
 import Dispatcher from './Dispatcher'
 
@@ -32,7 +33,7 @@ export default types
     phone: types.maybe(types.string),
     privateInfo: types.maybe(types.string),
     status: types.maybe(types.string),
-    assignedTo: types.maybe(types.string),
+    assignedTo: types.maybe(User),
     timestamp: types.maybe(types.Date),
     distance: types.maybe(types.number),
     dispatcher: types.maybe(Dispatcher),
@@ -57,7 +58,8 @@ export default types
     get isTaken() {
       return (
         (self.status === 'assigned' &&
-          self.assignedTo !== getRoot(self).authStore.currentUser.id) ||
+          self.assignedTo &&
+          self.assignedTo.id !== getRoot(self).authStore.currentUser.id) ||
         self.status === 'completed'
       )
     },
@@ -122,8 +124,10 @@ export default types
     accept: flow(function* accept() {
       // Retrieve current logged user id
       self.store.setLoading(true)
-      const currentUserId = getRoot(self).authStore.currentUser.id
-      const results = yield api.acceptEvent(self.id, currentUserId)
+      const results = yield api.acceptEvent(
+        self.id,
+        getRoot(self).authStore.currentUser
+      )
       self.store.setLoading(false)
       trackEvent('AcceptEvent', {
         eventId: self.id
@@ -133,8 +137,10 @@ export default types
     finalise: flow(function* finalise() {
       // Retrieve current logged user id
       self.store.setLoading(true)
-      const currentUserId = getRoot(self).authStore.currentUser.id
-      const results = yield api.finaliseEvent(self.id, currentUserId)
+      const results = yield api.finaliseEvent(
+        self.id,
+        getRoot(self).authStore.currentUser
+      )
       self.store.setLoading(false)
       trackEvent('FinaliseEvent', {
         eventId: self.id
@@ -144,8 +150,10 @@ export default types
     unaccept: flow(function* unaccept() {
       // Retrieve current logged user id
       self.store.setLoading(true)
-      const currentUserId = getRoot(self).authStore.currentUser.id
-      const results = yield api.unacceptEvent(self.id, currentUserId)
+      const results = yield api.unacceptEvent(
+        self.id,
+        getRoot(self).authStore.currentUser.id
+      )
       self.store.setLoading(false)
       trackEvent('UnacceptEvent', {
         eventId: self.id

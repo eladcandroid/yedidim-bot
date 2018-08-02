@@ -150,7 +150,10 @@ async function saveUserLocation(userId, latitude, longitude) {
 const eventSnapshotToJSON = snapshot => ({
   id: snapshot.key,
   status: snapshot.status,
-  assignedTo: snapshot.assignedTo,
+  assignedTo:
+    typeof snapshot.assignedTo === 'string'
+      ? { id: snapshot.assignedTo, name: '', phone: snapshot.assignedTo }
+      : snapshot.assignedTo,
   timestamp: snapshot.timestamp,
   address: snapshot.details.address,
   caller: snapshot.details['caller name'],
@@ -219,12 +222,18 @@ async function fetchLatestOpenEventsLocationBased(userId) {
           .database()
           .ref('events')
           .orderByChild('status')
-          .equalTo('sent')
+          .startAt('assigned')
+          .endAt('sent')
           .once('value', snapshot => {
             const eventsById = snapshot.val() || {}
             const fetchedEvents = Object.values(eventsById)
             const eventsToReturn = Object.keys(eventsById)
               .filter(eventId => !!nearEventIdToDistance[eventId])
+              .filter(
+                eventId =>
+                  eventsById[eventId].status === 'assigned' ||
+                  eventsById[eventId].status === 'sent'
+              )
               .map(eventId => {
                 const event = eventsById[eventId]
                 event.distance = nearEventIdToDistance[eventId]
@@ -273,10 +282,14 @@ async function fetchLatestOpenedEvents() {
         .database()
         .ref('events')
         .orderByChild('status')
-        .equalTo('sent')
+        .startAt('assigned')
+        .endAt('sent')
         .once('value', snapshot => {
           const events = Object.values(snapshot.val() || {})
             .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
+            .filter(
+              event => event.status === 'assigned' || event.status === 'sent'
+            )
             .slice(0, 25)
           resolve(events)
         })
@@ -329,7 +342,7 @@ export function unsubscribeToEvent(eventKey, callback) {
     .off('value', callback)
 }
 
-export async function acceptEvent(eventKey, userKey) {
+export async function acceptEvent(eventKey, user) {
   const { committed } = await firebase
     .database()
     .ref(`events/${eventKey}`)
@@ -340,7 +353,7 @@ export async function acceptEvent(eventKey, userKey) {
         return {
           ...eventData,
           status: 'assigned',
-          assignedTo: userKey
+          assignedTo: user
         }
       }
       // Event is taken, return undefined
@@ -354,7 +367,7 @@ export async function acceptEvent(eventKey, userKey) {
   // Event was took successful, update volunteer side, don't need transactions
   return firebase
     .database()
-    .ref(`volunteer/${userKey}`)
+    .ref(`volunteer/${user.id}`)
     .update({
       EventKey: eventKey
     })
@@ -368,11 +381,11 @@ export const acknowledgeReceivedEvent = async (eventId, userId) =>
       [userId]: true
     })
 
-export async function finaliseEvent(eventKey, userKey) {
+export async function finaliseEvent(eventKey, user) {
   // Update event to completed and make user free again
   const updates = {
     [`events/${eventKey}/status`]: 'completed',
-    [`volunteer/${userKey}/EventKey`]: null
+    [`volunteer/${user.id}/EventKey`]: null
   }
 
   return firebase
@@ -381,12 +394,12 @@ export async function finaliseEvent(eventKey, userKey) {
     .update(updates)
 }
 
-export async function unacceptEvent(eventKey, userKey) {
+export async function unacceptEvent(eventKey, user) {
   // Update event to submitted, feedback and make user free again
   const updates = {
     [`events/${eventKey}/status`]: 'submitted',
     [`events/${eventKey}/assignedTo`]: null,
-    [`volunteer/${userKey}/EventKey`]: null
+    [`volunteer/${user.id}/EventKey`]: null
   }
 
   return firebase

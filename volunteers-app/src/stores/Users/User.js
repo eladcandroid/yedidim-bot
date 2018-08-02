@@ -8,14 +8,17 @@ const User = types.model('User', {
     types.enumeration('Role', ['volunteer', 'dispatcher', 'admin']),
     'volunteer'
   ),
-  notificationStatus: types.enumeration('NotificationStatus', [
-    'not-tested',
-    'pending',
-    'token-error',
-    'sending-error',
-    'sent',
-    'working'
-  ]),
+  notificationStatus: types.optional(
+    types.enumeration('NotificationStatus', [
+      'not-tested',
+      'pending',
+      'token-error',
+      'sending-error',
+      'sent',
+      'working'
+    ]),
+    'not-tested'
+  ),
   notificationTimestamp: types.maybe(types.Date)
 })
 
