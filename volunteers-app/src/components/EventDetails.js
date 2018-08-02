@@ -43,7 +43,8 @@ const EventDetails = ({
     dispatcher,
     sentNotification,
     errorNotification,
-    receivedNotification
+    receivedNotification,
+    assignedTo
   },
   children
 }) => (
@@ -130,6 +131,10 @@ const EventDetails = ({
         <FormattedMessage id="Event.carType" defaultMessage="Car type">
           {label => <TextFieldRow label={label} value={carType} />}
         </FormattedMessage>
+        {assignedTo &&
+          !!assignedTo.name && (
+            <TextFieldRow label="מתנדב" value={assignedTo.name} />
+          )}
         {isAssigned &&
           dispatcher && (
             <FormattedMessage id="Dispatcher.name" defaultMessage="Dispatcher">
