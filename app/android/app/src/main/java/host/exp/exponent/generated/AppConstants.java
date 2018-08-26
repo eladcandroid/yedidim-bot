@@ -12,7 +12,7 @@ import host.exp.exponent.Constants;
 public class AppConstants {
 
   public static final String VERSION_NAME = "2.3.0";
-  public static String INITIAL_URL = "exp://exp.host/@yedidimdispatchers/dispatcher";
+  public static String INITIAL_URL = "exp://exp.host/@startach/yedidim-dispatchers";
   public static final boolean IS_DETACHED = true;
   public static final String SHELL_APP_SCHEME = "expf2d929db42794c5ca64e076d905d21d0";
   public static final String RELEASE_CHANNEL = "default";
@@ -23,10 +23,12 @@ public class AppConstants {
     List<Constants.EmbeddedResponse> embeddedResponses = new ArrayList<>();
 
 
+        
+        
         // ADD EMBEDDED RESPONSES HERE
         // START EMBEDDED RESPONSES
-        embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@yedidimdispatchers/dispatcher/index.exp", "assets://shell-app-manifest.json", "application/json"));
-        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40yedidimdispatchers%2Fdispatcher%2F3.0.2%2F0fe548011819797522622fd7c35a638e-25.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@startach/yedidim-dispatchers/index.exp", "assets://shell-app-manifest.json", "application/json"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40startach%2Fyedidim-dispatchers%2F4.0.0%2F77f2942fd4a02c4ca4aa7475b3d6b6f9-25.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
         // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }
