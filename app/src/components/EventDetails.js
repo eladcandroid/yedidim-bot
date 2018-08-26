@@ -21,12 +21,17 @@ class EventDetails extends Component {
     this.completeEvent = this.completeEvent.bind(this);
     this.openVolunteerPhone = this.openVolunteerPhone.bind(this);
     this.openAddressInMaps = this.openAddressInMaps.bind(this);
+    this.openAddressInPlusCodeMaps = this.openAddressInPlusCodeMaps.bind(this);
     this.editEvent = this.editEvent.bind(this);
     this.openNotificationPrompt = this.openNotificationPrompt.bind(this);
   }
 
   openAddressInMaps() {
     Linking.openURL(getGoogleMapsUrl(this.props.event));
+  }
+
+  openAddressInPlusCodeMaps() {
+    Linking.openURL(getGoogleMapsUrl(this.props.event, true));
   }
 
   copyEventDetailsToClipboard() {
@@ -170,6 +175,10 @@ class EventDetails extends Component {
           <TouchableHighlight onPress={this.openAddressInMaps}>
             <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
           </TouchableHighlight>
+          {event.details.plus_code && <Text style={getTextStyle(styles.fieldName)}>מיקום דרך Plus Code</Text>}
+          {event.details.plus_code && <TouchableHighlight onPress={this.openAddressInPlusCodeMaps}>
+            <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.plus_code}</Text>
+          </TouchableHighlight>}
           <Text style={getTextStyle(styles.fieldName)}>סוג אירוע</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{formatEventCategory(this.props.categories, event, true)}</Text>
           <Text style={getTextStyle(styles.fieldName)}>סוג רכב</Text>

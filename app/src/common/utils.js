@@ -51,8 +51,9 @@ export const getEventStatus = (event) => {
   return event.status;
 };
 
-export const getGoogleMapsUrl = (event) => {
-  return 'https://www.google.com/maps/search/?api=1&query=' + event.details.geo.lat + ',' + event.details.geo.lon;
+export const getGoogleMapsUrl = (event, usePlusCode) => {
+  const { details: { geo, plus_code } } = event
+  return `https://www.google.com/maps/search/?api=1&query=${ usePlusCode ? encodeURIComponent(plus_code) : `${geo.lat},${geo.lon}` }`
 };
 
 export const eventsToCSV = (categories, dispatchers, volunteers, events) => {

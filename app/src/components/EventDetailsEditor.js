@@ -278,6 +278,7 @@ class EventDetailsEditor extends Component {
             {this.renderCategoryPicker()}
             {this.renderSubCategoryPicker()}
             {category !== 'SlammedDoor' && this.renderInput('סוג רכב', 'car type')}
+            {this.renderInput('Plus Code מיקום דרך', 'plus_code')}
             {this.renderInput('פרטים', 'more')}
             {this.renderInput('מידע פרטי', 'private_info')}
             {this.renderInput('טלפון', 'phone number', 'numeric')}
