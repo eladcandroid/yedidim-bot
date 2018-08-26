@@ -249,6 +249,8 @@ class EventDetailsEditor extends Component {
   }
 
   render() {
+    const { category } = this.state
+
     return (
       <KeyboardAwareScrollViewComponent>
         <View style={styles.container}>
@@ -258,7 +260,7 @@ class EventDetailsEditor extends Component {
             <Label style={getTextStyle(styles.pickerLabel)}>סוג אירוע</Label>
             {this.renderCategoryPicker()}
             {this.renderSubCategoryPicker()}
-            {this.renderInput('סוג רכב', 'car type')}
+            {category !== 'SlammedDoor' && this.renderInput('סוג רכב', 'car type')}
             {this.renderInput('פרטים', 'more')}
             {this.renderInput('מידע פרטי', 'private_info')}
             {this.renderInput('טלפון', 'phone number', 'numeric')}
