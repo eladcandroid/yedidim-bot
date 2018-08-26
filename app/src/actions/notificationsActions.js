@@ -3,7 +3,7 @@ import { storeNotificationToken, setError, getFunctionsUrl } from "./dataSourceA
 import { getInstance } from "../common/utils";
 import OneSignal from "react-native-onesignal";
 const oneSignalConfig = {
-  sandbox2: {
+  development: {
     appId: "9177d83e-8dc2-4501-aef8-c18697ca6f27"
   },
   production: {

@@ -26,9 +26,6 @@
       "publishManifestPath":
         "android\\app\\src\\main\\assets\\shell-app-manifest.json"
     },
-    "extra": {
-      "_instance": "sandbox2"
-    },
     "androidStatusBar": {
       "backgroundColor": "#4451B9",
       "barStyle": "light-content"

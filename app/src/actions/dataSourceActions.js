@@ -9,16 +9,7 @@ import { objectToArray, getInstance } from "../common/utils";
 import { EventStatus } from "../constants/consts";
 
 const firebaseConfig = {
-  sandbox: {
-    apiKey: "AIzaSyDp5-02CpUQ5gyquZt2ZHSfnRjCKY5lZis",
-    authDomain: "yedidim-sandbox.firebaseapp.com",
-    databaseURL: "https://yedidim-sandbox.firebaseio.com",
-    projectId: "yedidim-sandbox",
-    functionsURL: "https://us-central1-yedidim-sandbox.cloudfunctions.net",
-    storageBucket: "yedidim-sandbox.appspot.com",
-    messagingSenderId: "918819260524"
-  },
-  sandbox2: {
+  development: {
     apiKey: "AIzaSyAwKEsWodtnrprOhYXA5tFb9zbUnLqOBk4",
     authDomain: "yedidim-sandbox-2.firebaseapp.com",
     databaseURL: "https://yedidim-sandbox-2.firebaseio.com",

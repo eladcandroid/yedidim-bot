@@ -3,9 +3,8 @@ import { EventSource, EventStatus } from "../constants/consts";
 import { I18nManager } from "react-native";
 
 export const getInstance = () => {
-  return (Expo.Constants.manifest.extra && Expo.Constants.manifest.extra.instance) ?
-    Expo.Constants.manifest.extra.instance :
-      !Expo.Constants.manifest.releaseChannel || Expo.Constants.manifest.releaseChannel === 'default' ? 'production' : Expo.Constants.manifest.releaseChannel;
+  const channel = Constants.manifest.releaseChannel || 'development'
+  return !/(test|development|production)/.test(channel) ? 'production' : channel
 };
 
 export const objectToArray = (obj) => {
