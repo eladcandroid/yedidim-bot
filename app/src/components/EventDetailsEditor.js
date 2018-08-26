@@ -150,7 +150,7 @@ class EventDetailsEditor extends Component {
 
   setCategory(categoryId) {
     const category = this.props.categories.find(category => category.id === categoryId);
-    const subCategory = category && category.subCategories ? category.subCategories[0].id : undefined;
+    const subCategory = category && category.subCategories ? category.subCategories[0].id : null;
     this.setState({category: categoryId, subCategory, modified: true});
   }
 
