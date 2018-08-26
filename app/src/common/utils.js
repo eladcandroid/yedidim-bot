@@ -1,6 +1,7 @@
 import dateFormat from 'dateformat';
 import { EventSource, EventStatus } from "../constants/consts";
 import { I18nManager } from "react-native";
+import { Constants } from 'expo'
 
 export const getInstance = () => {
   const channel = Constants.manifest.releaseChannel || 'development'
