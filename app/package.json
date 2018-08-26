@@ -14,8 +14,8 @@
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
     "test": "jest",
-    "exp-login": "exp logout && exp login -u yedidimdispatchers -p startach1",
-    "deploy": "yarn exp-login && exp publish --release-channel sandbox2",
+    "exp-login": "exp logout && exp login -u startach -p startach1",
+    "deploy": "yarn exp-login && exp publish --release-channel development",
     "deploy:production": "yarn exp-login && exp publish"
   },
   "jest": {
