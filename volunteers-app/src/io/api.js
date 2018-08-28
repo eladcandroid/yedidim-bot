@@ -226,7 +226,12 @@ async function fetchLatestOpenEventsLocationBased(userId) {
           .endAt('sent')
           .once('value', snapshot => {
             const eventsById = snapshot.val() || {}
-            const fetchedEvents = Object.values(eventsById)
+            // The query above also retrieves draft events, we need to filter
+            // it out
+            const fetchedEvents = Object.values(eventsById).filter(
+              event => event.status === 'assigned' || event.status === 'sent'
+            )
+
             const eventsToReturn = Object.keys(eventsById)
               .filter(eventId => !!nearEventIdToDistance[eventId])
               .filter(
