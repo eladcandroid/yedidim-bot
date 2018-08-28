@@ -18,6 +18,8 @@ i18n/messages
 /app/android/local.properties
 /app/android/.gradle
 
+/generated/
+
 functions/handlers/*.js
 functions/config/index.js
 functions/lib/onesignal.js
