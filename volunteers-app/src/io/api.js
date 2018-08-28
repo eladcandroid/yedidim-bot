@@ -395,9 +395,9 @@ export async function finaliseEvent(eventKey, user) {
 }
 
 export async function unacceptEvent(eventKey, user) {
-  // Update event to submitted, feedback and make user free again
+  // Update event to sent (for including again in the user list), feedback and make user free again
   const updates = {
-    [`events/${eventKey}/status`]: 'submitted',
+    [`events/${eventKey}/status`]: 'sent',
     [`events/${eventKey}/assignedTo`]: null,
     [`volunteer/${user.id}/EventKey`]: null
   }

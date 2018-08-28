@@ -150,7 +150,7 @@ class EventDetailsEditor extends Component {
 
   setCategory(categoryId) {
     const category = this.props.categories.find(category => category.id === categoryId);
-    const subCategory = category && category.subCategories ? category.subCategories[0].id : undefined;
+    const subCategory = category && category.subCategories ? category.subCategories[0].id : null;
     this.setState({category: categoryId, subCategory, modified: true});
   }
 
@@ -210,7 +210,8 @@ class EventDetailsEditor extends Component {
   GooglePlacesInput(){
     return (
       <GooglePlacesAutocomplete
-        placeholder='Search'
+        placeholder='חיפוש בכתובת'
+        placeholderTextColor="#575757"
         minLength={2} // minimum length of text to search
         autoFocus={false}
         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
@@ -231,14 +232,29 @@ class EventDetailsEditor extends Component {
         }}
 
         styles={{
-          textInputContainer: {
-            width: '100%'
+          container: {
+            marginTop: 0,
+            marginBottom: 20,
           },
-          description: {
-            fontWeight: 'bold'
+          textInputContainer: {
+            backgroundColor: 'rgba(0,0,0,0)',
+            borderTopWidth: 0
+          },
+          textInput: {
+            marginLeft: 0,
+            marginRight: 0,
+            height: 38,
+            color: '#575757',
+            fontSize: 17,
+            borderBottomColor: '#D9D5DC',
+            borderBottomWidth: 1,
+            textAlign: 'right'
           },
           predefinedPlacesDescription: {
             color: '#1faadb'
+          },
+          description: {
+            fontWeight: 'bold'
           }
         }}
 
@@ -249,16 +265,20 @@ class EventDetailsEditor extends Component {
   }
 
   render() {
+    const { category } = this.state
+
     return (
       <KeyboardAwareScrollViewComponent>
         <View style={styles.container}>
           {this.showValidationError()}
           <Form>
+            <Label style={getTextStyle(styles.addressLabel)}>כתובת</Label>
             {this.GooglePlacesInput()}
             <Label style={getTextStyle(styles.pickerLabel)}>סוג אירוע</Label>
             {this.renderCategoryPicker()}
             {this.renderSubCategoryPicker()}
-            {this.renderInput('סוג רכב', 'car type')}
+            {category !== 'SlammedDoor' && this.renderInput('סוג רכב', 'car type')}
+            {this.renderInput('Plus Code מיקום דרך', 'plus_code')}
             {this.renderInput('פרטים', 'more')}
             {this.renderInput('מידע פרטי', 'private_info')}
             {this.renderInput('טלפון', 'phone number', 'numeric')}
@@ -335,6 +355,10 @@ const styles = StyleSheet.create({
   },
   pickerLabel: {
     paddingRight: 20
+  },
+  addressLabel: {
+    paddingRight: 20,
+    marginTop: 10
   },
   pickerItem: {
     flex: 1,

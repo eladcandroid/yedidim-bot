@@ -30,7 +30,7 @@ exports.onEventStatusUpdate = (event, context) => {
             let eventData = eventSnapshot.val()
             return notificationsHandler.sendEventNotificationToCloseByVolunteers(
               eventData,
-              'קריאה חדשה'
+              previousStatus === 'assigned' ? 'קריאה חוזרת' : 'קריאה חדשה'
             )
           })
           .then(() => resolve())
