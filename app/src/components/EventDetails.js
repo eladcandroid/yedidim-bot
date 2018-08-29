@@ -120,31 +120,9 @@ class EventDetails extends Component {
     );
   }
 
-  openVolunteerPhone() {
-    if (this.props.volunteer.phone) {
-      Linking.openURL('tel:' + this.props.volunteer.phone);
-    }
-  }
-
-  getVolunteerData(){
-    const volunteer = this.props.volunteer;
-    if (!volunteer) {
-      return '';
-    }
-    if (volunteer.assignedTo){
-      return volunteer.assignedTo;
-    }
-    return `${volunteer.firstName} ${volunteer.lastName} (${volunteer.code}) ${volunteer.phone}`
-  }
-
-  renderAssignedToVolunteer() {
-    if (this.props.volunteer){
-      return (
-        <View>
-          <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
-          <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone}>{this.getVolunteerData()}</Text>
-        </View>
-      )
+  openVolunteerPhone(phone) {
+    if (phone) {
+      Linking.openURL('tel:' + phone);
     }
   }
 
@@ -160,16 +138,20 @@ class EventDetails extends Component {
   }
 
   render() {
-    const event = this.props.event;
+    const { event, volunteer } = this.props;
     if (!event){
       return undefined;
     }
+
     return (
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
           <Text style={getTextStyle(styles.fieldName)}>זמן</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{formatEventTime(event)}</Text>
-          {this.renderAssignedToVolunteer()}
+          {volunteer && volunteer.assignedTo && <View>
+            <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
+            <Text style={getTextStyle(styles.linkFieldValue)} onPress={this.openVolunteerPhone.bind(this, volunteer.assignedTo.phone)}>{volunteer.assignedTo.name} {volunteer.assignedTo.phone}</Text>
+          </View>}
           {this.renderAssignedToDispatcher()}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
           <TouchableHighlight onPress={this.openAddressInMaps}>
@@ -297,6 +279,11 @@ const styles = StyleSheet.create({
   fieldValue: {
     maxHeight: 50,
     paddingTop: 5
+  },
+  linkFieldValue: {
+    maxHeight: 50,
+    paddingTop: 5,
+    textDecorationLine: 'underline'
   },
   addressFieldValue: {
     maxHeight: 50,
