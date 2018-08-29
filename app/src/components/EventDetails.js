@@ -120,9 +120,9 @@ class EventDetails extends Component {
     );
   }
 
-  openVolunteerPhone() {
-    if (this.props.volunteer.phone) {
-      Linking.openURL('tel:' + this.props.volunteer.phone);
+  openVolunteerPhone(phone) {
+    if (phone) {
+      Linking.openURL('tel:' + phone);
     }
   }
 
@@ -150,7 +150,7 @@ class EventDetails extends Component {
           <Text style={getTextStyle(styles.fieldValue)}>{formatEventTime(event)}</Text>
           {volunteer && volunteer.assignedTo && <View>
             <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
-            <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone}>{volunteer.assignedTo.name} {volunteer.assignedTo.phone}</Text>
+            <Text style={getTextStyle(styles.linkFieldValue)} onPress={this.openVolunteerPhone.bind(this, volunteer.assignedTo.phone)}>{volunteer.assignedTo.name} {volunteer.assignedTo.phone}</Text>
           </View>}
           {this.renderAssignedToDispatcher()}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
@@ -279,6 +279,11 @@ const styles = StyleSheet.create({
   fieldValue: {
     maxHeight: 50,
     paddingTop: 5
+  },
+  linkFieldValue: {
+    maxHeight: 50,
+    paddingTop: 5,
+    textDecorationLine: 'underline'
   },
   addressFieldValue: {
     maxHeight: 50,
