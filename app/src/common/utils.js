@@ -82,7 +82,4 @@ const getEventDispatcher = (dispatchers, event) => {
   return dispatcher ? dispatcher.name : '';
 };
 
-const getEventVolunteer = (volunteers, event) => {
-  const volunteer = volunteers.find(volunteer => volunteer.id === event.volunteer) || '';
-  return volunteer ? (volunteer.firstName + ' ' + volunteer.lastName) : '';
-};
+const getEventVolunteer = (volunteers, event) => event.assignedTo ? event.assignedTo.name : ''
