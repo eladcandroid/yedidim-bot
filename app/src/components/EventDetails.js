@@ -126,28 +126,6 @@ class EventDetails extends Component {
     }
   }
 
-  getVolunteerData(){
-    const volunteer = this.props.volunteer;
-    if (!volunteer) {
-      return '';
-    }
-    if (volunteer.assignedTo){
-      return volunteer.assignedTo;
-    }
-    return `${volunteer.firstName} ${volunteer.lastName} (${volunteer.code}) ${volunteer.phone}`
-  }
-
-  renderAssignedToVolunteer() {
-    if (this.props.volunteer){
-      return (
-        <View>
-          <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
-          <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone}>{this.getVolunteerData()}</Text>
-        </View>
-      )
-    }
-  }
-
   renderAssignedToDispatcher() {
     if (this.props.dispatcher){
       return (
@@ -160,16 +138,20 @@ class EventDetails extends Component {
   }
 
   render() {
-    const event = this.props.event;
+    const { event, volunteer } = this.props;
     if (!event){
       return undefined;
     }
+
     return (
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
           <Text style={getTextStyle(styles.fieldName)}>זמן</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{formatEventTime(event)}</Text>
-          {this.renderAssignedToVolunteer()}
+          {volunteer && volunteer.assignedTo && <View>
+            <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
+            <Text style={getTextStyle(styles.fieldValue)} onPress={this.openVolunteerPhone}>{volunteer.assignedTo.name} {volunteer.assignedTo.phone}</Text>
+          </View>}
           {this.renderAssignedToDispatcher()}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
           <TouchableHighlight onPress={this.openAddressInMaps}>
