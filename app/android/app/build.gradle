@@ -79,6 +79,8 @@ android {
       debuggable true
     }
     release {
+      // Enable the line below to disable notifications (Issue with Android 5 and React One Signal)
+      // minifyEnabled true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       zipAlignEnabled true
         signingConfig signingConfigs.release
