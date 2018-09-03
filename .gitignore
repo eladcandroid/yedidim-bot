@@ -23,6 +23,8 @@ i18n/messages
 functions/handlers/*.js
 functions/config/index.js
 functions/lib/onesignal.js
+functions/lib/email.js
+functions/firebase-debug.log
 
 *.iml
 */android/app/src/main/java/host/exp/exponent/generated/DetachBuildConstants.java

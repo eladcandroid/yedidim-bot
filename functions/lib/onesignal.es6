@@ -22,7 +22,6 @@ const userMutedNotifications = user => {
 }
 
 const sendNotifications = async ({ title, message, appType, ...other }) => {
-  console.log('Using tokens ', tokens)
   return rp({
     method: 'POST',
     headers: {
