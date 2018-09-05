@@ -1,7 +1,7 @@
 const admin = require('firebase-admin')
 const GeoFire = require('geofire')
-const sendPushNotifications = require('./onesignal')
-const sendEmailNotifications = require('./email')
+const { sendPushNotifications } = require('./onesignal')
+const { sendEmailNotifications } = require('./email')
 const NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
 
 const validToken = token =>

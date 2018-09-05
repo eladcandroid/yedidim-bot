@@ -1,7 +1,12 @@
 let rp = require('request-promise')
 let { tokens } = require('../config')
 
-const sendNotifications = async ({ title, message, appType, ...other }) => {
+export const sendPushNotifications = async ({
+  title,
+  message,
+  appType,
+  ...other
+}) => {
   return rp({
     method: 'POST',
     headers: {
@@ -20,5 +25,3 @@ const sendNotifications = async ({ title, message, appType, ...other }) => {
     json: true // Automatically stringifies the body to JSON
   })
 }
-
-export default sendNotifications
