@@ -1,7 +1,12 @@
 let rp = require('request-promise')
 let { tokens } = require('../config')
 
-const sendNotifications = async ({ title, message, appType, include_player_ids }) => {
+const sendNotifications = async ({
+  title,
+  message,
+  appType,
+  include_player_ids
+}) => {
   return rp({
     method: 'POST',
     headers: {
@@ -10,19 +15,21 @@ const sendNotifications = async ({ title, message, appType, include_player_ids }
     },
     uri: 'https://api.sendgrid.com/v3/mail/send',
     body: {
-      "personalizations": [
+      personalizations: [
         {
-          "to": include_player_ids.map(userId => ({ email: userId})),
-          "subject": `[${appType==='dispatchers' ? 'מוקדנים' : 'כוננים'}] ${title}`
+          to: include_player_ids.map(userId => ({ email: userId })),
+          subject: `[${
+            appType === 'dispatchers' ? 'מוקדנים' : 'כוננים'
+          }] ${title}`
         }
       ],
-      "from": {
-        "email": "startsach@gmail.com"
+      from: {
+        email: 'startsach@gmail.com'
       },
-      "content": [
+      content: [
         {
-          "type": "text/plain",
-          "value": message
+          type: 'text/plain',
+          value: message
         }
       ]
     },
