@@ -3,8 +3,7 @@ const queue = require('async/queue')
 
 const flow = require('../lib/flow.json')
 const events = require('../lib/events')
-const { sendNotificationByUserIds } = require('../lib/onesignal')
-const { sendEmailNotificationByEmails } = require('../lib/email')
+const { sendNotificationToUsers } = require('../lib/notifications')
 const geocoder = require('../lib/geocoder')
 const EventStatus = require('../lib/consts').EventStatus
 
@@ -541,10 +540,8 @@ function notifyBotHandlers(notification) {
       .equalTo(true)
       .once('value')
       .then(snapshot => {
-        let tokens = []
-        const emails = []
-        let usersNotified = []
-        let emailsNotified = []
+        const users = []
+        const usersNotified = []
         const dispatchers = snapshot.val()
         if (!dispatchers) {
           resolve()
@@ -553,32 +550,19 @@ function notifyBotHandlers(notification) {
 
         Object.keys(dispatchers).forEach(dispatcherId => {
           let dispatcher = dispatchers[dispatcherId]
-          if (dispatcher.token && dispatcher.handleBot) {
-            tokens.push(dispatcher.token)
+          if (dispatcher.handleBot) {
+            users.push(dispatcher)
             usersNotified.push({ name: dispatcher.name, id: dispatcherId })
           }
-          if (dispatcher.notificationEmail && dispatcher.handleBot) {
-            emails.push(dispatcher.notificationEmail)
-            emailsNotified.push({ name: dispatcher.name, id: dispatcherId })
-          }
         })
-        if (tokens.length > 0) {
-          console.log(
-            'Notified bot event ',
-            notification,
-            ' to [push]',
-            usersNotified,
-            ' to [email]',
-            emailsNotified,
-          )
-         
-          sendNotificationByUserIds({ ...notification, userIds: tokens })
-            .then(() => {
-              resolve()
-            })
-            .catch(e => reject(e))
 
-          sendEmailNotificationByEmails({ ...notification, userIds: emails })
+        if (users.length > 0) {
+          console.log('Notified bot event ', notification, ' to', usersNotified)
+
+          sendNotificationToUsers({
+            ...notification,
+            users
+          })
             .then(() => {
               resolve()
             })
