@@ -1,4 +1,4 @@
-const { sendNotificationByUserIds } = require('../lib/onesignal')
+const { sendNotificationToUsers } = require('../lib/notifications')
 
 const normalizePhone = phone =>
   phone.charAt(0) === '0' ? '+972' + phone.substr(1) : phone
@@ -62,13 +62,12 @@ exports.sendTestNotification = async (req, res, admin) => {
   )
 
   // {title, message, data, userIds, appType}
-  const receipt = await sendNotificationByUserIds({
-    userIds: [userInfo.token],
+  const receipt = await sendNotificationToUsers({
+    users: [user.val()],
     title: 'בדיקת התראות לישום',
     message: 'נא לפתוח התראה הזאת כדי לאשר קבלה. לא מדובר באירוע.',
     data: {
-      type: 'test',
-      userId: userInfo.key
+      type: 'test'
     },
     appType: userInfo.appType
   })

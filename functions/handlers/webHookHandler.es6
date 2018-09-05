@@ -3,7 +3,7 @@ const queue = require('async/queue')
 
 const flow = require('../lib/flow.json')
 const events = require('../lib/events')
-const { sendNotificationByUserIds } = require('../lib/onesignal')
+const { sendNotificationToUsers } = require('../lib/notifications')
 const geocoder = require('../lib/geocoder')
 const EventStatus = require('../lib/consts').EventStatus
 
@@ -540,8 +540,8 @@ function notifyBotHandlers(notification) {
       .equalTo(true)
       .once('value')
       .then(snapshot => {
-        let tokens = []
-        let usersNotified = []
+        const users = []
+        const usersNotified = []
         const dispatchers = snapshot.val()
         if (!dispatchers) {
           resolve()
@@ -550,20 +550,19 @@ function notifyBotHandlers(notification) {
 
         Object.keys(dispatchers).forEach(dispatcherId => {
           let dispatcher = dispatchers[dispatcherId]
-          if (dispatcher.token && dispatcher.handleBot) {
-            tokens.push(dispatcher.token)
+          if (dispatcher.handleBot) {
+            users.push(dispatcher)
             usersNotified.push({ name: dispatcher.name, id: dispatcherId })
           }
         })
-        if (tokens.length > 0) {
-          console.log(
-            'Notified bot event ',
-            notification,
-            ' to ',
-            usersNotified
-          )
-          notification.userIds = tokens
-          sendNotificationByUserIds(notification)
+
+        if (users.length > 0) {
+          console.log('Notified bot event ', notification, ' to', usersNotified)
+
+          sendNotificationToUsers({
+            ...notification,
+            users
+          })
             .then(() => {
               resolve()
             })

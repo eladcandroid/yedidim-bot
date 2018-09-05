@@ -1,10 +1,9 @@
 const Consts = require('./consts')
 
 const {
-  sendNotificationByUserIds,
-  // sendNotificationByOneSignalLocation,
+  sendNotificationToUsers,
   sendNotificationByGeoFireLocation
-} = require('../lib/onesignal')
+} = require('../lib/notifications')
 
 exports.handleUpdateEvent = (eventId, change) => {
   let eventData = change.after.val()
@@ -63,12 +62,12 @@ exports.sendNotificationToRecipient = async (req, res, admin) => {
           eventId: event.key,
           type: 'event'
         }
-        await sendNotificationByUserIds({
+        await sendNotificationToUsers({
           title,
           message,
           data,
           appType: 'volunteers',
-          userIds: [user.NotificationToken]
+          users: [user]
         })
       } else {
         let message = 'Did not find recipient ' + recipient
@@ -93,18 +92,18 @@ exports.sendDispatcherTestNotification = async (req, res, admin) => {
       .database()
       .ref('/dispatchers/' + dispatcherCode)
       .once('value')
-    let token = snapshot.val().token
+    const user = snapshot.val()
     let title = 'בדיקה'
     let message = 'בדיקה'
     let data = {
       type: 'test'
     }
-    await sendNotificationByUserIds({
+    await sendNotificationToUsers({
       title,
       message,
       data,
       appType: 'dispatchers',
-      userIds: [token]
+      users: [user]
     })
     res.status(200).send('')
   } catch (e) {
@@ -122,18 +121,18 @@ exports.sendVolunteerTestNotification = async (req, res, admin) => {
       .database()
       .ref('/volunteer/' + phone)
       .once('value')
-    let token = snapshot.val().NotificationToken
+    const user = snapshot.val()
     let title = 'בדיקה'
     let message = 'בדיקה'
     let data = {
       type: 'test'
     }
-    await sendNotificationByUserIds({
+    await sendNotificationToUsers({
       title,
       message,
       data,
       appType: 'volunteers',
-      userIds: [token]
+      users: [user]
     })
     res.status(200).send('')
   } catch (e) {
