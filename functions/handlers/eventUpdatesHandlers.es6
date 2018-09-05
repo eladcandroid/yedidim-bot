@@ -101,5 +101,8 @@ let calculateIsOpen = status => {
 }
 
 let shouldNotifyVolunteers = (previousStatus, currentStatus) => {
-  return currentStatus === 'sent' && previousStatus !== 'sent'
+  return (
+    currentStatus === 'sent' &&
+    (previousStatus !== 'sent' || previousStatus !== 'submitted')
+  )
 }
