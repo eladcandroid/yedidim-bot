@@ -41,36 +41,6 @@ const sendNotifications = async ({ title, message, appType, ...other }) => {
   })
 }
 
-export const sendNotificationByOneSignalLocation = async props => {
-  console.log(
-    '[OneSignal] [OneSignal Location] Sending event notification',
-    props
-  )
-  const { title, message, data, appType } = props
-  try {
-    let radiusMeters = props.radius * 1000
-    const results = await sendNotifications({
-      filters: [
-        {
-          field: 'location',
-          radius: radiusMeters,
-          lat: props.latitude,
-          long: props.longitude
-        }
-      ],
-      title,
-      message,
-      data,
-      appType
-    })
-    console.log('[OneSignal] Success event notifications', results)
-    return results
-  } catch (error) {
-    console.log('[OneSignal] Fail event notifications', error)
-    throw error
-  }
-}
-
 export const sendNotificationByGeoFireLocation = async props => {
   console.log(
     '[OneSignal] [Geofire Location] Sending event notification',
@@ -205,25 +175,6 @@ export const sendNotificationByUserIds = async props => {
     return results
   } catch (error) {
     console.log('[OneSignal] Fail test notifications', error)
-    throw error
-  }
-}
-
-export const notifyAll = async props => {
-  console.log('[OneSignal] Sending event notification', props)
-  const { title, message, data, appType } = props
-  try {
-    const results = await sendNotifications({
-      included_segments: ['All'],
-      title,
-      message,
-      data,
-      appType
-    })
-    console.log('[OneSignal] Success event notifications', results)
-    return results
-  } catch (error) {
-    console.log('[OneSignal] Fail event notifications', error)
     throw error
   }
 }
