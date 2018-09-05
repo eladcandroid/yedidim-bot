@@ -1,12 +1,7 @@
 let rp = require('request-promise')
 let { tokens } = require('../config')
 
-const sendNotifications = async ({
-  title,
-  message,
-  appType,
-  include_player_ids
-}) => {
+const sendNotifications = async ({ title, message, appType, emails }) => {
   return rp({
     method: 'POST',
     headers: {
@@ -17,7 +12,7 @@ const sendNotifications = async ({
     body: {
       personalizations: [
         {
-          to: include_player_ids.map(userId => ({ email: userId })),
+          to: emails.map(userId => ({ email: userId })),
           subject: `[${
             appType === 'dispatchers' ? 'מוקדנים' : 'כוננים'
           }] ${title}`
@@ -37,22 +32,4 @@ const sendNotifications = async ({
   })
 }
 
-export const sendEmailNotificationByEmails = async props => {
-  console.log('[Email] Sending event notification', props)
-  const { title, message, data, userIds, appType } = props
-
-  try {
-    const results = await sendNotifications({
-      include_player_ids: userIds,
-      title,
-      message,
-      data,
-      appType
-    })
-    console.log('[Email] Success test notifications', results)
-    return results
-  } catch (error) {
-    console.log('[Email] Fail test notifications', error)
-    throw error
-  }
-}
+export default sendNotifications
