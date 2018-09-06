@@ -122,7 +122,7 @@ function checkIsActive() {
   const day = date.getUTCDay()
   const hours = date.getUTCHours()
 
-  return !((day === 5 && hours >= 17) || (day === 6 && hours < 20))
+  return !((day === 5 && hours >= 14) || (day === 6 && hours < 17))
 }
 
 function sendNotActiveResponse(event) {
