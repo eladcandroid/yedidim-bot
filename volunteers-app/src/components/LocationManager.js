@@ -12,13 +12,13 @@ const withLocationManagement = WrappedComponent => {
       BackgroundGeolocation.on('location', this.onLocation, this.onError)
 
       // This handler fires when movement states changes (stationary->moving; moving->stationary)
-      BackgroundGeolocation.on('motionchange', this.onMotionChange)
+      // BackgroundGeolocation.on('motionchange', this.onMotionChange)
 
       // This event fires when a change in motion activity is detected
-      BackgroundGeolocation.on('activitychange', this.onActivityChange)
+      // BackgroundGeolocation.on('activitychange', this.onActivityChange)
 
       // This event fires when the user toggles location-services authorization
-      BackgroundGeolocation.on('providerchange', this.onProviderChange)
+      // BackgroundGeolocation.on('providerchange', this.onProviderChange)
 
       //
       // 2.  Execute #ready method (required)
@@ -27,8 +27,8 @@ const withLocationManagement = WrappedComponent => {
         {
           // Geolocation Config
           reset: true,
-          desiredAccuracy: 0,
-          distanceFilter: 10,
+          desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+          distanceFilter: 250,
           // Activity Recognition
           stopTimeout: 1,
           // Application config
@@ -77,15 +77,15 @@ const withLocationManagement = WrappedComponent => {
     onError = error => {
       console.warn('- [event] location error ', error)
     }
-    onActivityChange = activity => {
-      console.log('- [event] activitychange: ', activity) // eg: 'on_foot', 'still', 'in_vehicle'
-    }
-    onProviderChange = provider => {
-      console.log('- [event] providerchange: ', provider)
-    }
-    onMotionChange = location => {
-      console.log('- [event] motionchange: ', location.isMoving, location)
-    }
+    // onActivityChange = activity => {
+    //   console.log('- [event] activitychange: ', activity) // eg: 'on_foot', 'still', 'in_vehicle'
+    // }
+    // onProviderChange = provider => {
+    //   console.log('- [event] providerchange: ', provider)
+    // }
+    // onMotionChange = location => {
+    //   console.log('- [event] motionchange: ', location.isMoving, location)
+    // }
 
     render() {
       return <WrappedComponent {...this.props} />
