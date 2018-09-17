@@ -66,7 +66,7 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Allow ידידים מתנדבים to access your contacts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>CHANGEME: Location Always And When In Use Usage Description</string>
+	<string>This app requires background tracking</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app requires background tracking</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
