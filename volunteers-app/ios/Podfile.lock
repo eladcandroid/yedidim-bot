@@ -146,6 +146,11 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - RNBackgroundFetch (2.4.3):
+    - React
+  - RNBackgroundGeolocation (2.13.3):
+    - CocoaLumberjack (~> 3.0)
+    - React
   - yoga (0.52.0.React)
 
 DEPENDENCIES:
@@ -168,6 +173,8 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
+  - RNBackgroundGeolocation (from `../node_modules/react-native-background-geolocation`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 EXTERNAL SOURCES:
@@ -184,6 +191,10 @@ EXTERNAL SOURCES:
     :path: ../node_modules/react-native
   react-native-onesignal:
     :path: ../node_modules/react-native-onesignal
+  RNBackgroundFetch:
+    :path: ../node_modules/react-native-background-fetch
+  RNBackgroundGeolocation:
+    :path: ../node_modules/react-native-background-geolocation
   yoga:
     :path: ../node_modules/react-native/ReactCommon/yoga
 
@@ -224,8 +235,10 @@ SPEC CHECKSUMS:
   OneSignal: 42dae269c7eca517aee34963820e1eb922390031
   React: 43e97926f429d846050880666de1809e22dd5cc5
   react-native-onesignal: 4f425b36d3edf595c93c1a8d3618a93b71a85a51
+  RNBackgroundFetch: 8c4f77f83c398c659bce82af2f0a885079417b9e
+  RNBackgroundGeolocation: c9bbf69b9aa277f0b46754cc5f853bd26051a18f
   yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: 94981ebb0ce3f1f953fa801c36d59946f0ff958b
+PODFILE CHECKSUM: 0fcf06cc67dc1a7fe6ef3b9aa9acd01fea27d145
 
 COCOAPODS: 1.4.0

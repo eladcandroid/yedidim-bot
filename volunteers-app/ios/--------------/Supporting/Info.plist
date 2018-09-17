@@ -65,14 +65,16 @@
 	<string>Allow ידידים מתנדבים to use your camera</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Allow ידידים מתנדבים to access your contacts</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>CHANGEME: Location Always And When In Use Usage Description</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location is needed to detect user location and coordinate the events around user</string>
+	<string>This app requires background tracking</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow ידידים מתנדבים to use your location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow ידידים מתנדבים to access your microphone</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Allow ידידים מתנדבים to access your device's accelerometer</string>
+	<string>Accelerometer use increases battery efficiency by intelligently toggling location-tracking	</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give ידידים מתנדבים permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -81,6 +83,9 @@
 	<string>Allow ידידים מתנדבים to access your reminders</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
+		<string>fetch</string>
+		<string>location</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

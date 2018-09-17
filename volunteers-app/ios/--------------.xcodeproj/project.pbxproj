@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		612FBA9EF0D24F9CB201A877 /* libCocoaLumberjack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F372CCD1E6C04581AED66C7E /* libCocoaLumberjack.a */; };
+		7A2C09BCE6D742C69E705EC6 /* TSLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BC8B3C4AF5C408483AC2422 /* TSLocationManager.framework */; };
 		B501732B1DC01252003445D9 /* EXShell.plist in Resources */ = {isa = PBXBuildFile; fileRef = B501732A1DC01252003445D9 /* EXShell.plist */; };
 		B56386491DB9693800A0598C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B56386481DB9693800A0598C /* AppDelegate.m */; };
 		B56386511DB9693800A0598C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B56386501DB9693800A0598C /* Assets.xcassets */; };
@@ -20,10 +22,23 @@
 		B5DB04801F3A684600E91581 /* shell-app-manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = B5DB047E1F3A684600E91581 /* shell-app-manifest.json */; };
 		B5DB04811F3A684600E91581 /* shell-app.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B5DB047F1F3A684600E91581 /* shell-app.bundle */; };
 		D3B34FE62100C6C000027416 /* notification.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B34FE52100C6C000027416 /* notification.caf */; };
+		D3C8B54A21503C7B00DBC8F5 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D3C8B54921503C7A00DBC8F5 /* RNBackgroundFetch+AppDelegate.m */; };
 		EBB8117C1BFA0514F79CAF74 /* libPods---------------.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4A88D15726AD99E8A257BC7 /* libPods---------------.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D3F1E6CF21503AB30007D6B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12C51F44747947B183F68592 /* Lumberjack.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 18F3BFD71A81E06E00692297;
+			remoteInfo = "CocoaLumberjack-iOS-Static";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		0BC8B3C4AF5C408483AC2422 /* TSLocationManager.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = TSLocationManager.framework; path = "../node_modules/react-native-background-geolocation/ios/RNBackgroundGeolocation/TSLocationManager.framework"; sourceTree = SDKROOT; };
+		12C51F44747947B183F68592 /* Lumberjack.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = Lumberjack.xcodeproj; path = "../node_modules/cocoa-lumberjack/CocoaLumberjack/Lumberjack.xcodeproj"; sourceTree = "<group>"; };
 		2C1548D9E4CB1AEFA5CCAE6D /* Pods---------------.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods---------------.debug.xcconfig"; path = "Pods/Target Support Files/Pods---------------/Pods---------------.debug.xcconfig"; sourceTree = "<group>"; };
 		A47FE4D7F70906B7DC8CE39B /* Pods---------------.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods---------------.release.xcconfig"; path = "Pods/Target Support Files/Pods---------------/Pods---------------.release.xcconfig"; sourceTree = "<group>"; };
 		B501732A1DC01252003445D9 /* EXShell.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = EXShell.plist; sourceTree = "<group>"; };
@@ -43,7 +58,9 @@
 		B5DB047F1F3A684600E91581 /* shell-app.bundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "shell-app.bundle"; sourceTree = "<group>"; };
 		C4A88D15726AD99E8A257BC7 /* libPods---------------.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods---------------.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3B34FE52100C6C000027416 /* notification.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notification.caf; sourceTree = "<group>"; };
+		D3C8B54921503C7A00DBC8F5 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		D3FF11B820F4FFBD0078A4DC /* --------------.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "--------------.entitlements"; sourceTree = "<group>"; };
+		F372CCD1E6C04581AED66C7E /* libCocoaLumberjack.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCocoaLumberjack.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +69,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBB8117C1BFA0514F79CAF74 /* libPods---------------.a in Frameworks */,
+				7A2C09BCE6D742C69E705EC6 /* TSLocationManager.framework in Frameworks */,
+				612FBA9EF0D24F9CB201A877 /* libCocoaLumberjack.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				C4A88D15726AD99E8A257BC7 /* libPods---------------.a */,
+				0BC8B3C4AF5C408483AC2422 /* TSLocationManager.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -75,6 +95,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		A7B98B19A2954DF8A079742A /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				12C51F44747947B183F68592 /* Lumberjack.xcodeproj */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
 		B56386381DB9693800A0598C = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +111,8 @@
 				B56386421DB9693800A0598C /* Products */,
 				5B29BC350A332C58878A9F13 /* Pods */,
 				1A42804E64B7E9E0AB8B6799 /* Frameworks */,
+				A7B98B19A2954DF8A079742A /* Libraries */,
+				D3F1E6CB21503AB20007D6B8 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,6 +127,7 @@
 		B56386431DB9693800A0598C /* -------------- */ = {
 			isa = PBXGroup;
 			children = (
+				D3C8B54921503C7A00DBC8F5 /* RNBackgroundFetch+AppDelegate.m */,
 				D3FF11B820F4FFBD0078A4DC /* --------------.entitlements */,
 				B56386471DB9693800A0598C /* AppDelegate.h */,
 				B56386481DB9693800A0598C /* AppDelegate.m */,
@@ -122,6 +153,22 @@
 				B563865E1DB96A5E00A0598C /* main.m */,
 			);
 			path = Supporting;
+			sourceTree = "<group>";
+		};
+		D3F1E6CB21503AB20007D6B8 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				F372CCD1E6C04581AED66C7E /* libCocoaLumberjack.a */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		D3F1E6CC21503AB30007D6B8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D3F1E6D021503AB30007D6B8 /* libCocoaLumberjack.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,7 +201,7 @@
 		B56386391DB9693800A0598C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 900;
 				ORGANIZATIONNAME = "650 Industries, Inc.";
 				TargetAttributes = {
 					B56386401DB9693800A0598C = {
@@ -163,7 +210,7 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = true;
 							};
 							com.apple.Push = {
 								enabled = 1;
@@ -183,12 +230,28 @@
 			mainGroup = B56386381DB9693800A0598C;
 			productRefGroup = B56386421DB9693800A0598C /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D3F1E6CC21503AB30007D6B8 /* Products */;
+					ProjectRef = 12C51F44747947B183F68592 /* Lumberjack.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				B56386401DB9693800A0598C /* -------------- */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D3F1E6D021503AB30007D6B8 /* libCocoaLumberjack.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCocoaLumberjack.a;
+			remoteRef = D3F1E6CF21503AB30007D6B8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B563863F1DB9693800A0598C /* Resources */ = {
@@ -308,6 +371,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3C8B54A21503C7B00DBC8F5 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 				B56386611DB96A5E00A0598C /* main.m in Sources */,
 				B56386491DB9693800A0598C /* AppDelegate.m in Sources */,
 			);
@@ -427,6 +491,10 @@
 				DEVELOPMENT_TEAM = 8QN2Z2U2MC;
 				INFOPLIST_FILE = "$(SRCROOT)/--------------/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.startach.yedidim.volunteers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -442,6 +510,10 @@
 				DEVELOPMENT_TEAM = 8QN2Z2U2MC;
 				INFOPLIST_FILE = "$(SRCROOT)/--------------/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.startach.yedidim.volunteers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

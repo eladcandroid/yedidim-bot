@@ -8,6 +8,8 @@ import java.util.List;
 
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
+import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
 import com.geektime.rnonesignalandroid.*;
 
 public class MainApplication extends ExpoApplication {
@@ -25,6 +27,8 @@ public class MainApplication extends ExpoApplication {
 
         // Needed for `react-native link`
         // new MainReactPackage(),
+            new RNBackgroundFetchPackage(),
+            new RNBackgroundGeolocation(),
             new ReactNativeOneSignalPackage()
     );
   }
