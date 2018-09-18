@@ -1,0 +1,14 @@
+import * as geoHelper from './geoHelper'
+
+exports.saveUserLocation = async (req, res, admin) => {
+  const { location: { coords: { latitude, longitude } }, authToken } = req.body
+
+  const decodedToken = await admin.auth().verifyIdToken(authToken)
+
+  console.log('@@@@ [SAVE USER LOCATION]', latitude, longitude, decodedToken, authToken)
+
+  return geoHelper.saveLocation('user_location', admin, decodedToken.phone_number, [
+    latitude,
+    longitude
+  ])
+}

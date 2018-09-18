@@ -2,6 +2,7 @@ import React from 'react'
 import BackgroundGeolocation from 'react-native-background-geolocation'
 import { getUserIdToken } from 'io/api'
 import Sentry from 'sentry-expo'
+import { config } from 'config'
 
 // TODO Create function to retrieve and update the geolocation for the user
 // TODO Pass the user token from the client to the backend to ensure security
@@ -48,12 +49,12 @@ const withLocationManagement = WrappedComponent => {
             stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
             startOnBoot: true, // <-- Auto start tracking when device is powered-up.
             // HTTP / SQLite config
-            url: 'http://yourserver.com/locations',
+            url: `${config().functionsUrl}/saveUserLocation`,
             batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
             autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
             params: {
               // <-- Optional HTTP params
-              auth_token: userIdToken
+              authToken: userIdToken
             }
           },
           state => {
