@@ -87,6 +87,11 @@ export function onAuthenticationChanged(onAuthentication, onError) {
   })
 }
 
+export async function getUserIdToken() {
+  // As described at https://firebase.google.com/docs/auth/admin/verify-id-tokens
+  return firebase.auth().currentUser.getIdToken(true)
+}
+
 export async function signInWithPhone({ verificationId, code }) {
   try {
     await firebase

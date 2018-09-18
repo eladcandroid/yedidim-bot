@@ -1,9 +1,16 @@
 import React from 'react'
 import BackgroundGeolocation from 'react-native-background-geolocation'
+import { getUserIdToken } from 'io/api'
+import Sentry from 'sentry-expo'
+
+// TODO Create function to retrieve and update the geolocation for the user
+// TODO Pass the user token from the client to the backend to ensure security
+// TODO Make it work on Android
+// https://firebase.google.com/docs/auth/admin/verify-id-tokens
 
 const withLocationManagement = WrappedComponent => {
   const Component = class extends React.Component {
-    componentWillMount() {
+    async componentWillMount() {
       //
       // 1.  Wire up event-listeners
       //
@@ -20,51 +27,59 @@ const withLocationManagement = WrappedComponent => {
       // This event fires when the user toggles location-services authorization
       // BackgroundGeolocation.on('providerchange', this.onProviderChange)
 
-      //
-      // 2.  Execute #ready method (required)
-      //
-      BackgroundGeolocation.ready(
-        {
-          // Geolocation Config
-          reset: true,
-          desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-          distanceFilter: 250,
-          // Activity Recognition
-          stopTimeout: 1,
-          // Application config
-          debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
-          logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-          stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
-          startOnBoot: true, // <-- Auto start tracking when device is powered-up.
-          // HTTP / SQLite config
-          url: 'http://yourserver.com/locations',
-          batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-          autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
-          headers: {
-            // <-- Optional HTTP headers
-            'X-FOO': 'bar'
-          },
-          params: {
-            // <-- Optional HTTP params
-            auth_token: 'maybe_your_server_authenticates_via_token_YES?'
-          }
-        },
-        state => {
-          console.log(
-            '- BackgroundGeolocation is configured and ready: ',
-            state.enabled
-          )
+      try {
+        // Assuming we are already authenticated
+        const userIdToken = await getUserIdToken()
 
-          if (!state.enabled) {
-            //
-            // 3. Start tracking!
-            //
-            BackgroundGeolocation.start(() => {
-              console.log('- Start success')
-            })
+        //
+        // 2.  Execute #ready method (required)
+        //
+        BackgroundGeolocation.ready(
+          {
+            // Geolocation Config
+            reset: true,
+            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+            distanceFilter: 250,
+            // Activity Recognition
+            stopTimeout: 1,
+            // Application config
+            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+            stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
+            startOnBoot: true, // <-- Auto start tracking when device is powered-up.
+            // HTTP / SQLite config
+            url: 'http://yourserver.com/locations',
+            batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+            autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
+            params: {
+              // <-- Optional HTTP params
+              auth_token: userIdToken
+            }
+          },
+          state => {
+            console.log(
+              '- BackgroundGeolocation is configured and ready: ',
+              state.enabled,
+              userIdToken
+            )
+
+            if (!state.enabled) {
+              //
+              // 3. Start tracking!
+              //
+              BackgroundGeolocation.start(() => {
+                console.log('- Start success', userIdToken)
+              })
+            }
           }
-        }
-      )
+        )
+      } catch (error) {
+        console.warn(
+          'Unable to retrieve user token, background location not started',
+          error
+        )
+        Sentry.captureException(error)
+      }
     }
 
     componentWillUnmount() {
@@ -75,6 +90,7 @@ const withLocationManagement = WrappedComponent => {
       console.log('- [event] location: ', location)
     }
     onError = error => {
+      Sentry.captureMessage(`- [event] location error: ${error}`)
       console.warn('- [event] location error ', error)
     }
     // onActivityChange = activity => {
