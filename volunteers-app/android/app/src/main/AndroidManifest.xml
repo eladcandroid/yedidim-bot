@@ -48,7 +48,7 @@
     android:largeHeap="true">
 
     <!-- react-native-background-geolocation licence -->
-    <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="YOUR_LICENCE_KEY_HERE" />
+    <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="ec8689829695cad7d6b9551b3038d03ecce9a4a91ea826ff951c1e3d559bec59" />
 
     <activity
       android:name=".LauncherActivity"

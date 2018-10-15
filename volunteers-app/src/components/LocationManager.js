@@ -42,7 +42,7 @@ const withLocationManagement = WrappedComponent => {
             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
             distanceFilter: 250,
             // Activity Recognition
-            stopTimeout: 1,
+            stopTimeout: 5,
             // Application config
             debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
