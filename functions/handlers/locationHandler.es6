@@ -14,10 +14,12 @@ exports.saveUserLocation = async (req, res, admin) => {
 
   console.log('@@@ [DECODED TOKEN]', decodedToken)
 
-  return geoHelper.saveLocation(
+  await geoHelper.saveLocation(
     'user_location',
     admin,
     decodedToken.phone_number,
     [latitude, longitude]
   )
+
+  return null
 }
