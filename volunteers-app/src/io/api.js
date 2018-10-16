@@ -89,7 +89,14 @@ export function onAuthenticationChanged(onAuthentication, onError) {
 
 export async function getUserIdToken() {
   // As described at https://firebase.google.com/docs/auth/admin/verify-id-tokens
-  return firebase.auth().currentUser.getIdToken(true)
+  // firebase.auth().currentUser.getIdToken(true)
+  if (currentUserInfoSubscription && currentUserInfoSubscription.userKey) {
+    return Promise.resolve(
+      currentUserInfoSubscription && currentUserInfoSubscription.userKey
+    )
+  }
+
+  throw new Error('Unable to retrieve user id')
 }
 
 export async function signInWithPhone({ verificationId, code }) {
