@@ -44,10 +44,14 @@ const withLocationManagement = WrappedComponent => {
             // Activity Recognition
             stopTimeout: 5,
             // Application config
-            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+            debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
             stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
             startOnBoot: true, // <-- Auto start tracking when device is powered-up.
+            foregroundService: true,
+            notificationPriority:
+              BackgroundGeolocation.NOTIFICATION_PRIORITY_LOW,
+            notificationText: 'מבצע עדכון מיקום בשרת',
             // HTTP / SQLite config
             url: `${config().functionsUrl}/saveUserLocation`,
             batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
