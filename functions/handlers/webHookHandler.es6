@@ -117,12 +117,12 @@ function handleMessage(event) {
 }
 
 function checkIsActive() {
-  //The Bot is not active from Friday at 17:00 until Saturday at 20:00
+  //The Bot is not active from Friday at 15:00 until Saturday at 18:00
   const date = new Date()
   const day = date.getUTCDay()
   const hours = date.getUTCHours()
 
-  return !((day === 5 && hours >= 14) || (day === 6 && hours < 17))
+  return !((day === 5 && hours >= 13) || (day === 6 && hours < 16))
 }
 
 function sendNotActiveResponse(event) {
