@@ -159,50 +159,56 @@ async function saveUserLocation(userId, latitude, longitude) {
   }
 }
 
-const eventSnapshotToJSON = snapshot => ({
-  id: snapshot.key,
-  status: snapshot.status,
-  assignedTo:
-    typeof snapshot.assignedTo === 'string'
-      ? { id: snapshot.assignedTo, name: '', phone: snapshot.assignedTo }
-      : snapshot.assignedTo,
-  timestamp: snapshot.timestamp,
-  address: snapshot.details.address,
-  caller: snapshot.details['caller name'],
-  carType: snapshot.details['car type'],
-  category: snapshot.details.category,
-  subCategory: snapshot.details.subCategory,
-  city: snapshot.details.city,
-  lat: snapshot.details.geo.lat,
-  lon: snapshot.details.geo.lon,
-  more: snapshot.details.more,
-  phone: snapshot.details['phone number'],
-  privateInfo: snapshot.details.private_info,
-  distance: snapshot.distance,
-  dispatcherId: snapshot.dispatcher,
-  sentNotification:
-    snapshot.notifications &&
-    snapshot.notifications.volunteers &&
-    snapshot.notifications.volunteers.sent
-      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
-          userId => !snapshot.notifications.volunteers.sent[userId]
-        )
-      : [],
-  receivedNotification:
-    snapshot.notifications &&
-    snapshot.notifications.volunteers &&
-    snapshot.notifications.volunteers.sent
-      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
-          userId => snapshot.notifications.volunteers.sent[userId]
-        )
-      : [],
-  errorNotification:
-    snapshot.notifications &&
-    snapshot.notifications.volunteers &&
-    snapshot.notifications.volunteers.error
-      ? Object.keys(snapshot.notifications.volunteers.error)
-      : []
-})
+const eventSnapshotToJSON = snapshot => {
+  if (!snapshot.details) {
+    snapshot.details = {}
+  }
+
+  return {
+    id: snapshot.key,
+    status: snapshot.status,
+    assignedTo:
+      typeof snapshot.assignedTo === 'string'
+        ? { id: snapshot.assignedTo, name: '', phone: snapshot.assignedTo }
+        : snapshot.assignedTo,
+    timestamp: snapshot.timestamp,
+    address: snapshot.details.address,
+    caller: snapshot.details['caller name'],
+    carType: snapshot.details['car type'],
+    category: snapshot.details.category,
+    subCategory: snapshot.details.subCategory,
+    city: snapshot.details.city,
+    lat: snapshot.details.geo.lat,
+    lon: snapshot.details.geo.lon,
+    more: snapshot.details.more,
+    phone: snapshot.details['phone number'],
+    privateInfo: snapshot.details.private_info,
+    distance: snapshot.distance,
+    dispatcherId: snapshot.dispatcher,
+    sentNotification:
+      snapshot.notifications &&
+      snapshot.notifications.volunteers &&
+      snapshot.notifications.volunteers.sent
+        ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+            userId => !snapshot.notifications.volunteers.sent[userId]
+          )
+        : [],
+    receivedNotification:
+      snapshot.notifications &&
+      snapshot.notifications.volunteers &&
+      snapshot.notifications.volunteers.sent
+        ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+            userId => snapshot.notifications.volunteers.sent[userId]
+          )
+        : [],
+    errorNotification:
+      snapshot.notifications &&
+      snapshot.notifications.volunteers &&
+      snapshot.notifications.volunteers.error
+        ? Object.keys(snapshot.notifications.volunteers.error)
+        : []
+  }
+}
 
 async function fetchLatestOpenEventsLocationBased(userId) {
   return new Promise(async (resolve, reject) => {
