@@ -161,7 +161,9 @@ async function saveUserLocation(userId, latitude, longitude) {
 
 const eventSnapshotToJSON = snapshot => {
   if (!snapshot.details) {
-    snapshot.details = {}
+    snapshot.details = {
+      geo: {}
+    }
   }
 
   return {
