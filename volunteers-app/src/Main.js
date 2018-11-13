@@ -44,8 +44,8 @@ const mute = {
 
 @observer
 class Main extends Component {
-  componentWillMount() {
-    const { intl } = this.props
+  async componentWillMount() {
+    const { intl, isAuthenticated, initAfterAuth } = this.props
 
     if (this.props.isOffline) {
       Alert.alert(
@@ -53,10 +53,15 @@ class Main extends Component {
         intl.formatMessage(offline.description)
       )
     }
+
+    if (isAuthenticated) {
+      // If going authenticated, initalise Events store
+      await initAfterAuth()
+    }
   }
 
-  componentDidUpdate(prevProps) {
-    const { isMuted, intl } = this.props
+  async componentDidUpdate(prevProps) {
+    const { isMuted, intl, isAuthenticated, initAfterAuth } = this.props
     if (
       typeof isMuted === 'boolean' &&
       typeof prevProps.isMuted === 'boolean' &&
@@ -70,6 +75,11 @@ class Main extends Component {
         duration: 10000,
         type: isMuted ? 'danger' : 'success'
       })
+    }
+
+    if (isAuthenticated && !prevProps.isAuthenticated) {
+      // If going authenticated, initalise Events store
+      await initAfterAuth()
     }
   }
 
@@ -95,6 +105,7 @@ export default inject(({ stores }) => ({
     stores.authStore.currentUser && stores.authStore.currentUser.toggleMute,
   isMuted: stores.authStore.currentUser && stores.authStore.currentUser.isMuted,
   isLoading: stores.isLoading,
+  initAfterAuth: stores.eventStore.initAfterAuth,
   isOffline: stores.authStore.isOffline,
   drawerLockMode:
     stores.authStore.currentUser &&

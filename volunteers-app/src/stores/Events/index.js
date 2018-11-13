@@ -74,7 +74,7 @@ export default types
       setCategories: categories => {
         self.categories.replace(categories)
       },
-      afterCreate: async () => {
+      initAfterAuth: async () => {
         // Load categories from API
         self.setCategories(await loadCategories())
       }
