@@ -48,7 +48,8 @@ export const environment = () => {
   return !/(test|development|production)/.test(channel) ? 'production' : channel
 }
 
-export const defaultLanguage = () => 'he'
+export const defaultLanguage = () =>
+  environment() === 'development' ? 'en' : 'he'
 
 export const firebaseCredentials = () =>
   configByEnvironment[environment()].authCredentials
