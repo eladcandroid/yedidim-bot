@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Asset, Font, AppLoading, Constants } from 'expo'
 import createRootStore from 'stores'
 import { Image } from 'react-native'
-import { Provider } from 'mobx-react/native'
+import { Provider, observer } from 'mobx-react/native'
 import categoriesImages from 'const'
 import Sentry from 'sentry-expo'
 import { initAnalyticsTracking } from 'io/analytics'
@@ -64,4 +64,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default observer(App)
