@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Asset, Font, AppLoading, Constants } from 'expo'
 import createRootStore from 'stores'
-import { Image } from 'react-native'
+import { Image, I18nManager } from 'react-native'
 import { Provider, observer } from 'mobx-react/native'
 import categoriesImages from 'const'
 import Sentry from 'sentry-expo'
@@ -23,8 +23,14 @@ function cacheImages(images) {
 }
 
 class App extends Component {
-  state = {
-    isReady: false
+  constructor(props) {
+    super(props)
+    I18nManager.allowRTL(true)
+    I18nManager.forceRTL(true)
+
+    this.state = {
+      isReady: false
+    }
   }
 
   async componentWillMount() {

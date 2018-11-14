@@ -21,8 +21,8 @@ import packageJson from '../../package.json'
 const SideBar = ({
   signOut,
   currentUser: { id, name, phone, role, isAdmin },
-  nextLanguage,
-  toggleLanguage,
+  // nextLanguage,
+  // toggleLanguage,
   navigation
 }) => (
   <Container>
@@ -49,14 +49,14 @@ const SideBar = ({
         <ListItem>
           <AlignedText>v{packageJson.version}</AlignedText>
         </ListItem>
-        <ListItem
+        {/* <ListItem
           button
           onPress={async () => {
             await toggleLanguage()
           }}
         >
           <AlignedText>{nextLanguage}</AlignedText>
-        </ListItem>
+        </ListItem> */}
         <ListItem
           button
           onPress={() => {
