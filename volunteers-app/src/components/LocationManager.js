@@ -48,7 +48,7 @@ const withLocationManagement = WrappedComponent => {
             logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
             stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
             startOnBoot: true, // <-- Auto start tracking when device is powered-up.
-            foregroundService: true,
+            foregroundService: false,
             notificationPriority:
               BackgroundGeolocation.NOTIFICATION_PRIORITY_LOW,
             notificationText: 'מבצע עדכון מיקום בשרת',
