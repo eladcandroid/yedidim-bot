@@ -338,9 +338,9 @@ export async function loadLatestOpenEvents(userId) {
     fetchedEvents = await fetchLatestOpenedEvents()
   }
 
-  const events = fetchedEvents.map(childSnapshot =>
-    eventSnapshotToJSON(childSnapshot)
-  )
+  const events = fetchedEvents
+    .filter(childSnapshot => !!childSnapshot.key) // Remove events without a key
+    .map(childSnapshot => eventSnapshotToJSON(childSnapshot))
   return events
 }
 
