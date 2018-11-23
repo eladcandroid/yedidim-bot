@@ -212,6 +212,27 @@ const eventSnapshotToJSON = snapshot => {
   }
 }
 
+const filteredEvents = status =>
+  new Promise((resolve, reject) => {
+    firebase
+      .database()
+      .ref('events')
+      .orderByChild('status')
+      .equalTo(status)
+      .once(
+        'value',
+        snapshot => {
+          resolve(snapshot.val() || {})
+        },
+        error => reject(error)
+      )
+  })
+
+const relevantEvents = () =>
+  Promise.all(['assigned', 'sent'].map(filteredEvents)).then(results =>
+    Object.assign({}, ...results)
+  )
+
 async function fetchLatestOpenEventsLocationBased(userId) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -238,20 +259,10 @@ async function fetchLatestOpenEventsLocationBased(userId) {
 
       geoQuery.on('ready', () => {
         geoQuery.cancel()
-        firebase
-          .database()
-          .ref('events')
-          .orderByChild('status')
-          .startAt('assigned')
-          .endAt('sent')
-          .once('value', snapshot => {
-            const eventsById = snapshot.val() || {}
+        relevantEvents()
+          .then(eventsById => {
             // The query above also retrieves draft events, we need to filter
             // it out
-            const fetchedEvents = Object.values(eventsById).filter(
-              event => event.status === 'assigned' || event.status === 'sent'
-            )
-
             const eventsToReturn = Object.keys(eventsById)
               .filter(eventId => !!nearEventIdToDistance[eventId])
               .filter(
@@ -267,7 +278,7 @@ async function fetchLatestOpenEventsLocationBased(userId) {
               .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
               .slice(0, 25)
             if (eventsToReturn.length < 25) {
-              const oldestEventsFirst = fetchedEvents.sort(
+              const oldestEventsFirst = Object.values(eventsById).sort(
                 (a, b) => (a.timestamp < b.timestamp ? -1 : 1)
               )
               let i = 0
@@ -293,6 +304,7 @@ async function fetchLatestOpenEventsLocationBased(userId) {
             }
             resolve(eventsToReturn)
           })
+          .catch(error => reject(error))
       })
     } catch (error) {
       reject(error)
@@ -329,12 +341,15 @@ export async function loadLatestOpenEvents(userId) {
   const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
   if (hasLocationPermission) {
     try {
+      console.log('>>>>1', userId)
       fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
     } catch (error) {
+      console.log('>>>>2', userId)
       // User has given permissions but disabled temporary location or location is unavailable
       fetchedEvents = await fetchLatestOpenedEvents()
     }
   } else {
+    console.log('>>>>3', userId)
     fetchedEvents = await fetchLatestOpenedEvents()
   }
 
