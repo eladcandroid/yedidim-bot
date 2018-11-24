@@ -6,7 +6,8 @@ This is the a Facebook Bot that communicates with the user, collects all details
 
 [Firebase Tools](https://github.com/firebase/firebase-tools)
 
-## Running the app locally
+## Create development work space
+To create a work space for development, **run only the following commands**
 
 ```
 npm install expo-cli --global
