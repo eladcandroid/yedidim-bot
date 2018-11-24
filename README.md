@@ -6,6 +6,15 @@ This is the a Facebook Bot that communicates with the user, collects all details
 
 [Firebase Tools](https://github.com/firebase/firebase-tools)
 
+## Running the app locally
+
+```
+npm install expo-cli --global
+npm install
+cd app
+npm start
+```
+
 ### Installing
 
 Run npn install in the functions directory and in the app directory
@@ -17,13 +26,6 @@ Copy the json key files to the functions directory
 ```
 cd functions
 firebase serve --only functions
-```
-
-### Running the app locally
-
-```
-cd app
-npm start
 ```
 
 ### Deploying to Firebase
