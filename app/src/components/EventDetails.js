@@ -27,8 +27,8 @@ class EventDetails extends Component {
   }
 
   checkToLoadDispatcherInfo = () => {
-    if((this.props.event && this.props.event.dispatcher && !this.props.dispatcher) /*|| 
-      (this.props.event && this.props.dispatcher && this.props.event.dispatcher !== this.props.dispatcher.id)*/) {
+    if((this.props.event && this.props.event.dispatcher && !this.props.dispatcher) || 
+      (this.props.event && this.props.dispatcher && this.props.event.dispatcher !== this.props.dispatcher.id)) {
       this.props.loadDispatcher(this.props.event.dispatcher)
     }
   }
@@ -38,7 +38,7 @@ class EventDetails extends Component {
   }
 
   componentDidUpdate() {
-    // this.checkToLoadDispatcherInfo()
+    this.checkToLoadDispatcherInfo()
   }
 
   openAddressInMaps() {
@@ -147,7 +147,7 @@ class EventDetails extends Component {
     if (!event){
       return undefined;
     }
-    
+
     return (
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
