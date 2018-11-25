@@ -4,6 +4,7 @@ export const SET_EVENTS = 'SET_EVENTS';
 export const SET_EVENT = 'SET_EVENT';
 export const ADD_EVENT = 'ADD_EVENT';
 export const SET_DISPATCHERS = 'SET_DISPATCHERS';
+export const SET_DISPATCHER = 'SET_DISPATCHER';
 export const SET_VOLUNTEERS = 'SET_VOLUNTEERS';
 export const SET_CATEGORIES = 'SET_CATEGORIES';
 export const SET_SEARCH_EVENTS = 'SET_SEARCH_EVENTS';

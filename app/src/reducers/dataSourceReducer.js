@@ -1,10 +1,12 @@
 import {
-  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_CATEGORIES,
+  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_DISPATCHER, SET_VOLUNTEERS, SET_SEARCH_EVENTS, SET_CATEGORIES,
   SET_NOTIFICATIONS, SET_LATEST_VERSION, SET_ERROR
 } from "../constants/actionTypes";
 import {EventSource} from "../constants/consts";
 
-export function dataSourceReducer(state = {}, action) {
+export function dataSourceReducer(state = {
+  dispatchers: {}
+}, action) {
   switch (action.type) {
     case SET_USER: {
       return Object.assign({}, state, {user: action.user, events: filterBotEvents(action.user, state.events)});
@@ -42,6 +44,10 @@ export function dataSourceReducer(state = {}, action) {
     }
     case SET_DISPATCHERS: {
       return Object.assign({}, state, {dispatchers: action.dispatchers});
+    }
+    case SET_DISPATCHER: {
+      const dispatchers = Object.assign({}, state.dispatchers, {[action.dispatcher.id]: action.dispatcher})
+      return Object.assign({}, state, {dispatchers});
     }
     case SET_VOLUNTEERS: {
       return Object.assign({}, state, {volunteers: action.volunteers});

@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import {
-  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHERS, SET_VOLUNTEERS, SET_CATEGORIES,
+  SET_USER, REMOVE_USER, SET_EVENTS, SET_EVENT, ADD_EVENT, SET_DISPATCHER, SET_DISPATCHERS, SET_VOLUNTEERS, SET_CATEGORIES,
   SET_SEARCH_EVENTS, SET_NOTIFICATIONS,
   SET_ERROR, SET_LATEST_VERSION
 } from '../constants/actionTypes';
@@ -227,8 +227,8 @@ function handleSignedInUser(user) {
   return (dispatch => {
     dispatch(loadUserData(user));
     dispatch(loadEvents());
-    dispatch(loadVolunteers());
-    dispatch(loadDispatchers());
+    // dispatch(loadVolunteers());
+    // dispatch(loadDispatchers());
     dispatch(loadCategories());
   });
 }
@@ -396,21 +396,19 @@ function loadVolunteers() {
   });
 }
 
-function loadDispatchers() {
+export function loadDispatcher(dispatcherId) {
   return ((dispatch) => {
-    firebase.database().ref('/dispatchers').once('value')
+    firebase.database().ref(`/dispatchers/${dispatcherId}`).once('value')
       .then((snapshot) => {
-        const dispatchers = objectToArray(snapshot.val()).map(dispatcher => {
-          return {
-            id: dispatcher.key,
-            name: dispatcher.name
-          };
-        });
-        dispatch(setDispatchers(dispatchers));
+        const dispatcher = snapshot.val()
+        dispatch(setDispatcher({
+          id: dispatcherId,
+          name: dispatcher.name
+        }));
       })
       .catch(err => {
         if (err) {
-          dispatch(setError('Failed to load data!', err));
+          dispatch(setError('Failed to load dispatcher data!', err));
         }
       });
   });
@@ -484,6 +482,13 @@ function setDispatchers(dispatchers){
   return {
     type: SET_DISPATCHERS,
     dispatchers
+  }
+}
+
+function setDispatcher(dispatcher){
+  return {
+    type: SET_DISPATCHER,
+    dispatcher
   }
 }
 
