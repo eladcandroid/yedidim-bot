@@ -157,9 +157,9 @@ class EventDetails extends Component {
             <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
             <Text style={getTextStyle(styles.linkFieldValue)} onPress={this.openVolunteerPhone.bind(this, volunteer.assignedTo.phone)}>{volunteer.assignedTo.name} {volunteer.assignedTo.phone}</Text>
           </View>}
-          {dispatcher && <View>
+          {event.dispatcher && <View>
             <Text style={getTextStyle(styles.fieldName)}>מוקדן</Text>
-            <Text style={getTextStyle(styles.fieldValue)}>{dispatcher.name}</Text>
+            <Text style={getTextStyle(styles.fieldValue)}>{dispatcher ? dispatcher.name : `טוען...`}</Text>
           </View>}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
           <TouchableHighlight onPress={this.openAddressInMaps}>
