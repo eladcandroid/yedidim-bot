@@ -147,7 +147,7 @@ class EventDetails extends Component {
     if (!event){
       return undefined;
     }
-
+    
     return (
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.container}>
@@ -181,6 +181,8 @@ class EventDetails extends Component {
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['phone number']}</Text>
           <Text style={getTextStyle(styles.fieldName)}>שם</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['caller name']}</Text>
+          <Text style={getTextStyle(styles.fieldName)}>קוד אירוע</Text>
+          <Text style={getTextStyle(styles.fieldValue)}>{event.key}</Text>
           {this.renderButtonsRow()}
         </View>
         <Prompt
