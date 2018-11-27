@@ -289,17 +289,23 @@ export function updateUserVersion(user) {
   );
 }
 
+const relevantEvent = event => (event.status === EventStatus.Sent) || (event.status === EventStatus.Submitted) || (event.status === EventStatus.Assigned)
+
 export function loadEvents(onLoad) {
   return ((dispatch, getState) => {
     firebase.database().ref('/events').orderByChild('isOpen').equalTo(true).once('value')
       .then((snapshot) => {
-        let events = objectToArray(snapshot.val());
+        let events = objectToArray(snapshot.val()).filter(relevantEvent);
         sortEventsDescending(events);
         dispatch(setEvents(events));
         if (onLoad) {
           onLoad();
         }
-        const timestamp = events.length > 0 ? events[0].timestamp + 1 : 0;
+        const timestamp = events.length > 0 ? events[0].timestamp + 1 : new Date().getTime();
+        
+        // Detach previous callback (we are reattaching it further)
+        firebase.database().ref('/events').off()
+        
         firebase.database().ref('/events').orderByChild('timestamp').startAt(timestamp).on('child_added', (data) => {
           //In case the event already exists ignore it
           if (!getState().dataSource.events.find(event => event.key === data.key)) {
@@ -310,6 +316,9 @@ export function loadEvents(onLoad) {
         });
         firebase.database().ref('/events').orderByChild('isOpen').equalTo(true).on('child_changed', (data) => {
           let event = data.val();
+          if(!relevantEvent(event)) {
+            return;
+          }
           event.key = data.key;
           dispatch(setEvent(event));
         });
