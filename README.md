@@ -12,7 +12,7 @@ To create a work space for development, **run only the following commands**
 ```
 npm install expo-cli --global
 npm install
-cd app
+cd app || any of the other projects
 npm start
 ```
 
