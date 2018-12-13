@@ -81,8 +81,12 @@ async function subscribeToUserInfo(
 export function onAuthenticationChanged(onAuthentication, onError) {
   return firebase.auth().onAuthStateChanged(async userAuth => {
     subscribeToUserInfo(userAuth, onAuthentication, onError)
-    if (userAuth && userAuth.phoneNumber) {
-      await registerForPushNotificationsAsync(userAuth.phoneNumber)
+
+    if (userAuth && (userAuth.phoneNumber || userAuth.email)) {
+      const phoneNumber =
+        userAuth.phoneNumber || userAuth.email.replace('@yedidim.org', '')
+
+      await registerForPushNotificationsAsync(phoneNumber)
     }
   })
 }
