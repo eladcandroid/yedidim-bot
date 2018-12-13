@@ -25,8 +25,8 @@ android {
   defaultConfig {
     applicationId 'com.startach.yedidim.volunteers.detached'
     targetSdkVersion rootProject.targetSdkVersion
-    versionCode 5
-    versionName '5.0.0'
+    versionCode 8
+    versionName '5.3.0'
     ndk {
       abiFilters 'armeabi-v7a', 'x86'
     }
@@ -101,7 +101,12 @@ android {
 //     force 'org.webkit:android-jsc:r216113'
 //   }
 // }
-
+configurations.all {
+    resolutionStrategy {
+        // force certain versions of dependencies (including transitive)
+        force 'com.squareup.okhttp3:okhttp:3.4.1'
+    }
+}
 
 task exponentPrebuildStep(type: Exec) {
   workingDir '../'

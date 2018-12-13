@@ -22,9 +22,21 @@ public class AppConstants {
   static {
     List<Constants.EmbeddedResponse> embeddedResponses = new ArrayList<>();
 
-    // ADD EMBEDDED RESPONSES HERE
-    // START EMBEDDED RESPONSES
-    // END EMBEDDED RESPONSES
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        // ADD EMBEDDED RESPONSES HERE
+        // START EMBEDDED RESPONSES
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@startach/yedidim-volunteers/index.exp", "assets://shell-app-manifest.json", "application/json"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40startach%2Fyedidim-volunteers%2F5.0.10%2Fc7ef44c3ded5561463b6b0fd2a15109f-25.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+        // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }
 

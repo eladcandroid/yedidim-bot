@@ -34,3 +34,5 @@ functions/firebase-debug.log
 
 **/ios/Pods
 **EXBuildConstants**
+
+credentials.json
