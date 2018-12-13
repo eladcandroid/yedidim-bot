@@ -1,6 +1,6 @@
 {
   "name": "yedidim-volunteer",
-  "version": "5.0.10",
+  "version": "5.1.0",
   "private": true,
   "devDependencies": {
     "babel-eslint": "^8.0.1",
