@@ -2,7 +2,7 @@
   "expo": {
     "name": "ידידים מתנדבים",
     "slug": "yedidim-volunteers",
-    "sdkVersion": "25.0.0",
+    "sdkVersion": "30.0.0",
     "splash": {
       "resizeMode": "cover",
       "image": "./assets/icons/splash.png",
