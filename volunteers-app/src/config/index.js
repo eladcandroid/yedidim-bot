@@ -43,9 +43,9 @@ const configByEnvironment = {
 // If releaseChannel is not set, then application is not published, then use development
 // If releaseChannel is set, application is published, use it if it is a valid channel (default means no releaseChannel defined which is production)
 export const environment = () => {
-  const channel = Constants.manifest.releaseChannel || 'development'
+  // const channel = Constants.manifest.releaseChannel || 'development'
 
-  return !/(test|development|production)/.test(channel) ? 'production' : channel
+  return 'production' //!/(test|development|production)/.test(channel) ? 'production' : channel
 }
 
 export const defaultLanguage = () => 'he'

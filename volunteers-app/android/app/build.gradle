@@ -2,14 +2,17 @@ buildscript {
   repositories {
     google()
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://plugins.gradle.org/m2/' }
   }
 
   dependencies {
     classpath 'io.fabric.tools:gradle:1.+'
+    classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.1, 0.99.99]'
   }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 
 repositories {
   maven { url 'https://maven.fabric.io/public' }
@@ -21,8 +24,8 @@ android {
 
   defaultConfig {
     applicationId 'com.startach.yedidim.volunteers'
-    targetSdkVersion 26
-    versionCode 1
+    targetSdkVersion 27
+    versionCode 10
     versionName '5.1.0'
     ndk {
       abiFilters 'armeabi-v7a', 'x86'
@@ -99,7 +102,7 @@ apply from: 'expo.gradle'
 
 
 dependencies {
-    compile project(':react-native-onesignal')
+  implementation project(':react-native-onesignal')
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation 'com.android.support:multidex:1.0.1'

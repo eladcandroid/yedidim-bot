@@ -29,6 +29,7 @@ allprojects {
     maven {
       url 'https://maven.google.com'
     }
+    maven { url "https://google.bintray.com/exoplayer" }
     jcenter()
     maven {
       // Local Maven repo containing AARs with JSC built for Android
