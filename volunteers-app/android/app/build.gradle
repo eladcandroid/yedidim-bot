@@ -18,12 +18,17 @@ repositories {
   maven { url 'https://maven.fabric.io/public' }
 }
 
+configurations.all {
+  // OkHttp 3.5.0+ includes the websockets API, so we need this to prevent a conflict
+  exclude module: 'okhttp-ws'
+}
+
 android {
   compileSdkVersion 27
   buildToolsVersion '27.0.3'
 
   defaultConfig {
-    applicationId 'com.startach.yedidim.volunteers'
+    applicationId 'com.startach.yedidim.volunteers.detached'
     targetSdkVersion 27
     versionCode 10
     versionName '5.1.0'
@@ -102,6 +107,8 @@ apply from: 'expo.gradle'
 
 
 dependencies {
+  implementation project(':react-native-background-fetch')
+  implementation project(':react-native-background-geolocation')
   implementation project(':react-native-onesignal')
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 

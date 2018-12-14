@@ -6822,22 +6822,22 @@ react-lifecycles-compat@^1.0.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-1.1.4.tgz#fc005c72849b7ed364de20a0f64ff58ebdc2009a"
 
-react-native-background-fetch@~2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.4.3.tgz#4621cca2a8f9e96edbf0556afcd04873bd698f37"
+react-native-background-fetch@~2.4.4:
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-2.4.5.tgz#ddf201d1e9799957e20068a8ca19b98d3e25e7ce"
   dependencies:
     fast-plist "^0.1.2"
     plist "^2.0.1"
     xcode "^0.9.1"
 
-react-native-background-geolocation@^2.13.3:
-  version "2.13.3"
-  resolved "https://registry.yarnpkg.com/react-native-background-geolocation/-/react-native-background-geolocation-2.13.3.tgz#5bd22a454afd29ffffa2adb9f08bd9ab13b7d063"
+react-native-background-geolocation@^2.14.2:
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/react-native-background-geolocation/-/react-native-background-geolocation-2.14.2.tgz#a95ded5fb12f0cd02035fc6031eeeb2d9a8eebf7"
   dependencies:
     cocoa-lumberjack "^3.0.5"
     fast-plist "^0.1.2"
     plist "^2.0.1"
-    react-native-background-fetch "~2.4.3"
+    react-native-background-fetch "~2.4.4"
     xcode "^0.9.1"
 
 react-native-branch@2.2.5:
