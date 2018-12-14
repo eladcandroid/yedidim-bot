@@ -1,8 +1,8 @@
 import React from 'react'
-// import BackgroundGeolocation from 'react-native-background-geolocation'
-// import { getUserIdToken } from 'io/api'
+import BackgroundGeolocation from 'react-native-background-geolocation'
+import { getUserIdToken } from 'io/api'
 import Sentry from 'sentry-expo'
-// import { config } from 'config'
+import { config } from 'config'
 
 // TODO Create function to retrieve and update the geolocation for the user
 // TODO Pass the user token from the client to the backend to ensure security
@@ -17,7 +17,7 @@ const withLocationManagement = WrappedComponent => {
       //
 
       // This handler fires whenever bgGeo receives a location update.
-      // BackgroundGeolocation.on('location', this.onLocation, this.onError)
+      BackgroundGeolocation.on('location', this.onLocation, this.onError)
 
       // This handler fires when movement states changes (stationary->moving; moving->stationary)
       // BackgroundGeolocation.on('motionchange', this.onMotionChange)
@@ -30,52 +30,52 @@ const withLocationManagement = WrappedComponent => {
 
       try {
         // Assuming we are already authenticated
-        // const userIdToken = await getUserIdToken()
+        const userIdToken = await getUserIdToken()
         //
         // 2.  Execute #ready method (required)
         //
-        // BackgroundGeolocation.ready(
-        //   {
-        //     // Geolocation Config
-        //     reset: true,
-        //     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-        //     distanceFilter: 250,
-        //     // Activity Recognition
-        //     stopTimeout: 5,
-        //     // Application config
-        //     debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
-        //     logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-        //     stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
-        //     startOnBoot: true, // <-- Auto start tracking when device is powered-up.
-        //     foregroundService: false,
-        //     notificationPriority:
-        //       BackgroundGeolocation.NOTIFICATION_PRIORITY_LOW,
-        //     notificationText: 'מבצע עדכון מיקום בשרת',
-        //     // HTTP / SQLite config
-        //     url: `${config().functionsUrl}/saveUserLocation`,
-        //     batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-        //     autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
-        //     params: {
-        //       // <-- Optional HTTP params
-        //       authToken: userIdToken
-        //     }
-        //   },
-        //   state => {
-        //     console.log(
-        //       '- BackgroundGeolocation is configured and ready: ',
-        //       state.enabled,
-        //       userIdToken
-        //     )
-        //     if (!state.enabled) {
-        //       //
-        //       // 3. Start tracking!
-        //       //
-        //       BackgroundGeolocation.start(() => {
-        //         console.log('- Start success', userIdToken)
-        //       })
-        //     }
-        //   }
-        // )
+        BackgroundGeolocation.ready(
+          {
+            // Geolocation Config
+            reset: true,
+            desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+            distanceFilter: 250,
+            // Activity Recognition
+            stopTimeout: 5,
+            // Application config
+            debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+            logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+            stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
+            startOnBoot: true, // <-- Auto start tracking when device is powered-up.
+            foregroundService: false,
+            notificationPriority:
+              BackgroundGeolocation.NOTIFICATION_PRIORITY_LOW,
+            notificationText: 'מבצע עדכון מיקום בשרת',
+            // HTTP / SQLite config
+            url: `${config().functionsUrl}/saveUserLocation`,
+            batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+            autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
+            params: {
+              // <-- Optional HTTP params
+              authToken: userIdToken
+            }
+          },
+          state => {
+            console.log(
+              '- BackgroundGeolocation is configured and ready: ',
+              state.enabled,
+              userIdToken
+            )
+            if (!state.enabled) {
+              //
+              // 3. Start tracking!
+              //
+              BackgroundGeolocation.start(() => {
+                console.log('- Start success', userIdToken)
+              })
+            }
+          }
+        )
       } catch (error) {
         console.warn(
           'Unable to retrieve user token, background location not started',
@@ -86,7 +86,7 @@ const withLocationManagement = WrappedComponent => {
     }
 
     componentWillUnmount() {
-      // BackgroundGeolocation.removeListeners()
+      BackgroundGeolocation.removeListeners()
     }
 
     onLocation = location => {
