@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "33558411934",
+    "firebase_url": "https://yedidim-production.firebaseio.com",
+    "project_id": "yedidim-production",
+    "storage_bucket": "yedidim-production.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33558411934:android:c9bf5bfd69621ed0",
+        "android_client_info": {
+          "package_name": "com.startach.yedidim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33558411934-fuu55efvv333h725dba0a70an9vhgn1h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.startach.yedidim",
+            "certificate_hash": "95e566edd0a6fded6bc2ce6550908a7a3e7a46c6"
+          }
+        },
+        {
+          "client_id": "33558411934-dvvdepie4l89nflh5vjgrlrngfmhpilc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNqbiOXVDNXnY-KDVVndbZYS0RuD0H2es"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33558411934-dvvdepie4l89nflh5vjgrlrngfmhpilc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33558411934:android:10af06319a128c3d",
+        "android_client_info": {
+          "package_name": "com.startach.yedidim.dispatchers.detached"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33558411934-dvvdepie4l89nflh5vjgrlrngfmhpilc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNqbiOXVDNXnY-KDVVndbZYS0RuD0H2es"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "ידידים - מוקדן",
+    "description": "ידידים - מוקדן",
+    "slug": "yedidim-dispatchers",
+    "privacy": "public",
+    "sdkVersion": "31.0.0",
+    "platforms": ["ios", "android"],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "notification": {
+      "icon": "./assets/notification/icon.png"
+    },
+    "splash": {
+      "resizeMode": "cover",
+      "image": "./assets/splash.png",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "package": "com.startach.yedidim.dispatchers.detached",
+      "googleServicesFile": "./google-services.json",
+      "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
+      "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#4451B9",
+      "barStyle": "light-content"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "startach",
+            "project": "yedidim-dispatcher",
+            "authToken": "480786f7e02a4b15b0c5bc0416abc510302409d4a0f84547873a47564b2765ab"
+          }
+        }
+      ]
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.startach.yedidim.dispatchers",
+      "supportsTablet": true,
+      "publishBundlePath": "ios/--------------/Supporting/shell-app.bundle",
+      "publishManifestPath": "ios/--------------/Supporting/shell-app-manifest.json"
+    },
+    "isDetached": true,
+    "detach": {
+      "iosExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/ios-v2.9.0-sdk31.0.0-250a3991-b623-4f9c-b07f-0b9ed7e8c4c9.tar.gz",
+      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.9.2-sdk31.0.0-d1776f37-d524-4fee-872d-6807b0fd83ff.tar.gz"
+    },
+    "scheme": "exp6536a75feba64afdb9908dd757780c77"
+  }
+}

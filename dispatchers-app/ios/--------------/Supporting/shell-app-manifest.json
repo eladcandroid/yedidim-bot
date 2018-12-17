@@ -1,0 +1,74 @@
+{
+  "android": {
+    "googleServicesFile": "{\n  \"project_info\": {\n    \"project_number\": \"33558411934\",\n    \"firebase_url\": \"https://yedidim-production.firebaseio.com\",\n    \"project_id\": \"yedidim-production\",\n    \"storage_bucket\": \"yedidim-production.appspot.com\"\n  },\n  \"client\": [\n    {\n      \"client_info\": {\n        \"mobilesdk_app_id\": \"1:33558411934:android:c9bf5bfd69621ed0\",\n        \"android_client_info\": {\n          \"package_name\": \"com.startach.yedidim\"\n        }\n      },\n      \"oauth_client\": [\n        {\n          \"client_id\": \"33558411934-fuu55efvv333h725dba0a70an9vhgn1h.apps.googleusercontent.com\",\n          \"client_type\": 1,\n          \"android_info\": {\n            \"package_name\": \"com.startach.yedidim\",\n            \"certificate_hash\": \"95e566edd0a6fded6bc2ce6550908a7a3e7a46c6\"\n          }\n        },\n        {\n          \"client_id\": \"33558411934-dvvdepie4l89nflh5vjgrlrngfmhpilc.apps.googleusercontent.com\",\n          \"client_type\": 3\n        }\n      ],\n      \"api_key\": [\n        {\n          \"current_key\": \"AIzaSyDNqbiOXVDNXnY-KDVVndbZYS0RuD0H2es\"\n        }\n      ],\n      \"services\": {\n        \"analytics_service\": {\n          \"status\": 1\n        },\n        \"appinvite_service\": {\n          \"status\": 2,\n          \"other_platform_oauth_client\": [\n            {\n              \"client_id\": \"33558411934-dvvdepie4l89nflh5vjgrlrngfmhpilc.apps.googleusercontent.com\",\n              \"client_type\": 3\n            }\n          ]\n        },\n        \"ads_service\": {\n          \"status\": 2\n        }\n      }\n    },\n    {\n      \"client_info\": {\n        \"mobilesdk_app_id\": \"1:33558411934:android:10af06319a128c3d\",\n        \"android_client_info\": {\n          \"package_name\": \"com.startach.yedidim.dispatchers\"\n        }\n      },\n      \"oauth_client\": [\n        {\n          \"client_id\": \"33558411934-dvvdepie4l89nflh5vjgrlrngfmhpilc.apps.googleusercontent.com\",\n          \"client_type\": 3\n        }\n      ],\n      \"api_key\": [\n        {\n          \"current_key\": \"AIzaSyDNqbiOXVDNXnY-KDVVndbZYS0RuD0H2es\"\n        }\n      ],\n      \"services\": {\n        \"analytics_service\": {\n          \"status\": 1\n        },\n        \"appinvite_service\": {\n          \"status\": 1,\n          \"other_platform_oauth_client\": []\n        },\n        \"ads_service\": {\n          \"status\": 2\n        }\n      }\n    }\n  ],\n  \"configuration_version\": \"1\"\n}",
+    "package": "com.startach.yedidim.dispatchers",
+    "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
+    "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
+  },
+  "androidStatusBar": {
+    "backgroundColor": "#4451B9",
+    "barStyle": "light-content"
+  },
+  "bundledAssets": [
+    "asset_3a2ba31570920eeb9b1d217cabe58315.ttf",
+    "asset_744ce60078c17d86006dd0edabcd59a7.ttf",
+    "asset_140c53a7643ea949007aa9a282153849.ttf",
+    "asset_6beba7e6834963f7f171d3bdd075c915.ttf",
+    "asset_b06871f281fee6b241d60582ae9369b9.ttf",
+    "asset_e20945d7c929279ef7a6f1db184a4470.ttf",
+    "asset_b2e0fc821c6886fb3940f85a3320003e.ttf",
+    "asset_d15c1216957060fac577af6151fb8cfe.ttf",
+    "asset_a37b0c01c0baf1888ca812cc0508f6e2.ttf",
+    "asset_73b8cff012825060b308d2162f31dbb2.ttf",
+    "asset_d2285965fe34b05465047401b8595dd0.ttf",
+    "asset_5cdf883b18a5651a29a4d1ef276d2457.ttf",
+    "asset_7144a7fdab6453352f4016ed9ce8e101.png",
+    "asset_f127e368d62ad92dacab340de5af50e8.png",
+    "asset_60e8a8323a1f5c9dc59c6783d5974123.png",
+    "asset_40bc3ae5444eae0b9228d83bfd865158.png",
+    "asset_1edd5017f455b09c608e175b1285c06d.png",
+    "asset_54a91b0619ccf9373d525109268219dc.ttf",
+    "asset_99fc0816a09395454061301fefa42bf1.ttf"
+  ],
+  "description": "ידידים - מוקדן",
+  "detach": {
+    "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.9.2-sdk31.0.0-d1776f37-d524-4fee-872d-6807b0fd83ff.tar.gz",
+    "iosExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/ios-v2.9.0-sdk31.0.0-250a3991-b623-4f9c-b07f-0b9ed7e8c4c9.tar.gz"
+  },
+  "icon": "./assets/icon.png",
+  "iconUrl": "https://d1wp6m56sqw74a.cloudfront.net/~assets/278be9f1cae32ae3296bb57eabf2fc2c",
+  "ios": {
+    "bundleIdentifier": "com.startach.yedidim.dispatchers",
+    "publishBundlePath": "ios/--------------/Supporting/shell-app.bundle",
+    "publishManifestPath": "ios/--------------/Supporting/shell-app-manifest.json",
+    "supportsTablet": true
+  },
+  "isDetached": true,
+  "locales": {},
+  "name": "ידידים - מוקדן",
+  "notification": {
+    "icon": "./assets/notification/icon.png",
+    "iconUrl": "https://d1wp6m56sqw74a.cloudfront.net/~assets/65efe4c69781c4e8743b08533d69257e"
+  },
+  "orientation": "portrait",
+  "platforms": ["ios", "android"],
+  "privacy": "public",
+  "scheme": "exp6536a75feba64afdb9908dd757780c77",
+  "sdkVersion": "31.0.0",
+  "slug": "yedidim-dispatchers",
+  "splash": {
+    "backgroundColor": "#ffffff",
+    "image": "./assets/splash.png",
+    "imageUrl": "https://d1wp6m56sqw74a.cloudfront.net/~assets/e76142f0a838a6b887544085d83475ba",
+    "resizeMode": "cover"
+  },
+  "updates": { "fallbackToCacheTimeout": 0 },
+  "version": "6.0.0",
+  "id": "@startach/yedidim-dispatchers",
+  "revisionId": "6.0.0-r.Lkl1WEbjRe",
+  "publishedTime": "2018-12-16T22:30:47.497Z",
+  "commitTime": "2018-12-16T22:30:47.533Z",
+  "bundleUrl": "https://d1wp6m56sqw74a.cloudfront.net/%40startach%2Fyedidim-dispatchers%2F6.0.0%2F6218b85fcc60b01a71de27c4405fe315-31.0.0-ios.js",
+  "releaseChannel": "default",
+  "hostUri": "exp.host/@startach/yedidim-dispatchers"
+}
