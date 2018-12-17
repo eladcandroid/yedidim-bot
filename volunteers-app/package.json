@@ -24,16 +24,16 @@
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "start": "exp start --lan --dev",
+    "start": "expo start",
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
     "test": "node node_modules/jest/bin/jest.js --watch",
     "lint": "eslint --ext .js .",
     "flow": "flow",
-    "exp-login": "exp logout && exp login -u startach -p startach1",
-    "deploy": "yarn exp-login && exp publish --release-channel development",
-    "deploy:production": "yarn exp-login && exp publish"
+    "exp-login": "expo logout && expo login -u startach -p startach1",
+    "deploy": "yarn exp-login && expo publish --release-channel development",
+    "deploy:production": "yarn exp-login && expo publish"
   },
   "jest": {
     "preset": "jest-expo"
