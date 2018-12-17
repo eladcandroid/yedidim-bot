@@ -1,5 +1,6 @@
 import { StackNavigator } from 'react-navigation'
 import withNotificationManager from 'components/NotificationManager'
+import withLocationManager from 'components/LocationManager'
 import Home from 'screens/Home'
 import Event from 'screens/Event'
 import AboutStartach from 'screens/AboutStartach'
@@ -12,4 +13,4 @@ const AuthenticatedStack = StackNavigator({
   NotificationReport: { screen: NotificationTest }
 })
 
-export default withNotificationManager(AuthenticatedStack)
+export default withLocationManager(withNotificationManager(AuthenticatedStack))

@@ -23,7 +23,7 @@ const configByEnvironment = {
       messagingSenderId: '1011917548573'
     },
     functionsUrl: 'https://us-central1-yedidim-sandbox-2.cloudfunctions.net',
-    oneSignalAppId: "e5ef1cdc-a50b-430f-8fac-b7702740c59a"
+    oneSignalAppId: 'e5ef1cdc-a50b-430f-8fac-b7702740c59a'
   },
   production: {
     // production
@@ -36,25 +36,31 @@ const configByEnvironment = {
       messagingSenderId: '33558411934'
     },
     functionsUrl: 'https://us-central1-yedidim-production.cloudfunctions.net',
-    oneSignalAppId: "3d5d3aa3-eeda-473f-90dd-62691388f475"
+    oneSignalAppId: '3d5d3aa3-eeda-473f-90dd-62691388f475'
   }
 }
 
 // If releaseChannel is not set, then application is not published, then use development
 // If releaseChannel is set, application is published, use it if it is a valid channel (default means no releaseChannel defined which is production)
 export const environment = () => {
-  const channel = Constants.manifest.releaseChannel || 'development'
+  // const channel = Constants.manifest.releaseChannel || 'development'
 
-  return !/(test|development|production)/.test(channel) ? 'production' : channel
+  return 'production' //!/(test|development|production)/.test(channel) ? 'production' : channel
 }
 
-export const defaultLanguage = () =>
-  environment() === 'development' ? 'en' : 'he'
+export const defaultLanguage = () => 'he'
 
-export const firebaseCredentials = () => configByEnvironment[environment()].authCredentials
-export const firebaseFunctionsUrl = () => configByEnvironment[environment()].functionsUrl
+export const firebaseCredentials = () =>
+  configByEnvironment[environment()].authCredentials
+export const firebaseFunctionsUrl = () =>
+  configByEnvironment[environment()].functionsUrl
 export const config = () => configByEnvironment[environment()]
 export const hostingDomain = () =>
   environment() === 'production' ? 'yedidim-production' : 'yedidim-sandbox-2'
 
-export default { firebaseCredentials, environment, firebaseFunctionsUrl, config }
+export default {
+  firebaseCredentials,
+  environment,
+  firebaseFunctionsUrl,
+  config
+}

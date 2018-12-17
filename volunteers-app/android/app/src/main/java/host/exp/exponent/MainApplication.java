@@ -6,9 +6,13 @@ import com.facebook.react.ReactPackage;
 import java.util.Arrays;
 import java.util.List;
 
+import expolib_v1.okhttp3.OkHttpClient;
+
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
-import com.geektime.rnonesignalandroid.*;
+import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.transistorsoft.rnbackgroundgeolocation.RNBackgroundGeolocation;
+import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 
 public class MainApplication extends ExpoApplication {
 
@@ -25,6 +29,8 @@ public class MainApplication extends ExpoApplication {
 
         // Needed for `react-native link`
         // new MainReactPackage(),
+            new RNBackgroundFetchPackage(),
+            new RNBackgroundGeolocation(),
             new ReactNativeOneSignalPackage()
     );
   }
@@ -37,5 +43,10 @@ public class MainApplication extends ExpoApplication {
   @Override
   public boolean shouldUseInternetKernel() {
     return BuildVariantConstants.USE_INTERNET_KERNEL;
+  }
+
+  public static OkHttpClient.Builder okHttpClientBuilder(OkHttpClient.Builder builder) {
+    // Customize/override OkHttp client here
+    return builder;
   }
 }

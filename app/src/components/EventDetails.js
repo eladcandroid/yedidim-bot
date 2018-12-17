@@ -6,7 +6,7 @@ import { Button } from 'native-base';
 import { Prompt } from './Prompt';
 import { getTextStyle, formatEventCategory, formatEventTime, getEventStatus, getEventDetailsText, getUserDetailsText, getGoogleMapsUrl } from "../common/utils";
 import { EventSource, EventStatus, ScreenType } from "../constants/consts";
-import { updateEventStatus, takeEvent, assignEvent } from "../actions/dataSourceActions";
+import { updateEventStatus, takeEvent, assignEvent, loadDispatcher } from "../actions/dataSourceActions";
 import { sendNotification } from "../actions/notificationsActions";
 
 class EventDetails extends Component {
@@ -24,6 +24,21 @@ class EventDetails extends Component {
     this.openAddressInPlusCodeMaps = this.openAddressInPlusCodeMaps.bind(this);
     this.editEvent = this.editEvent.bind(this);
     this.openNotificationPrompt = this.openNotificationPrompt.bind(this);
+  }
+
+  checkToLoadDispatcherInfo = () => {
+    if((this.props.event && this.props.event.dispatcher && !this.props.dispatcher) || 
+      (this.props.event && this.props.dispatcher && this.props.event.dispatcher !== this.props.dispatcher.id)) {
+      this.props.loadDispatcher(this.props.event.dispatcher)
+    }
+  }
+
+  componentDidMount() {
+    this.checkToLoadDispatcherInfo()
+  }
+
+  componentDidUpdate() {
+    this.checkToLoadDispatcherInfo()
   }
 
   openAddressInMaps() {
@@ -126,19 +141,9 @@ class EventDetails extends Component {
     }
   }
 
-  renderAssignedToDispatcher() {
-    if (this.props.dispatcher){
-      return (
-        <View>
-          <Text style={getTextStyle(styles.fieldName)}>מוקדן</Text>
-          <Text style={getTextStyle(styles.fieldValue)}>{this.props.dispatcher.name}</Text>
-        </View>
-      )
-    }
-  }
-
   render() {
-    const { event, volunteer } = this.props;
+    const { event, volunteer, dispatcher } = this.props;
+
     if (!event){
       return undefined;
     }
@@ -152,7 +157,10 @@ class EventDetails extends Component {
             <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
             <Text style={getTextStyle(styles.linkFieldValue)} onPress={this.openVolunteerPhone.bind(this, volunteer.assignedTo.phone)}>{volunteer.assignedTo.name} {volunteer.assignedTo.phone}</Text>
           </View>}
-          {this.renderAssignedToDispatcher()}
+          {event.dispatcher && <View>
+            <Text style={getTextStyle(styles.fieldName)}>מוקדן</Text>
+            <Text style={getTextStyle(styles.fieldValue)}>{dispatcher ? dispatcher.name : `טוען...`}</Text>
+          </View>}
           <Text style={getTextStyle(styles.fieldName)}>כתובת</Text>
           <TouchableHighlight onPress={this.openAddressInMaps}>
             <Text style={getTextStyle(styles.addressFieldValue)}>{event.details.address}</Text>
@@ -173,6 +181,8 @@ class EventDetails extends Component {
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['phone number']}</Text>
           <Text style={getTextStyle(styles.fieldName)}>שם</Text>
           <Text style={getTextStyle(styles.fieldValue)}>{event.details['caller name']}</Text>
+          <Text style={getTextStyle(styles.fieldName)}>קוד אירוע</Text>
+          <Text style={getTextStyle(styles.fieldValue)}>{event.key}</Text>
           {this.renderButtonsRow()}
         </View>
         <Prompt
@@ -211,6 +221,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     sendNotification: (eventKey, distance) => {
       dispatch(sendNotification(eventKey, distance));
+    },
+    loadDispatcher: (dispatcherId) => {
+      dispatch(loadDispatcher(dispatcherId))
     }
   };
 };
@@ -226,8 +239,9 @@ const mapStateToProps = (state, ownProps) => {
   if (!volunteer){
     volunteer = {assignedTo: event.assignedTo};
   }
+
   let dispatcher = (event && event.dispatcher && state.dataSource.dispatchers) ?
-    state.dataSource.dispatchers.find(dispatcher => dispatcher.id === event.dispatcher)
+    state.dataSource.dispatchers[event.dispatcher]
     : undefined;
 
   const currentDispatcher = state.dataSource.user ? state.dataSource.user.id : undefined;

@@ -1,6 +1,6 @@
 {
   "name": "yedidim-volunteer",
-  "version": "4.0.1",
+  "version": "6.0.0",
   "private": true,
   "devDependencies": {
     "babel-eslint": "^8.0.1",
@@ -16,7 +16,7 @@
     "flow-bin": "0.49.1",
     "google-translate-api": "^2.3.0",
     "husky": "^0.14.3",
-    "jest-expo": "^25.0.0",
+    "jest-expo": "^30.0.0",
     "lint-staged": "^4.3.0",
     "prettier": "^1.7.4",
     "react-native-scripts": "1.11.1",
@@ -24,22 +24,23 @@
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "start": "exp start --lan --dev",
+    "start": "expo start",
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
     "test": "node node_modules/jest/bin/jest.js --watch",
     "lint": "eslint --ext .js .",
     "flow": "flow",
-    "exp-login": "exp logout && exp login -u startach -p startach1",
-    "deploy": "yarn exp-login && exp publish --release-channel development",
-    "deploy:production": "yarn exp-login && exp publish"
+    "exp-login": "expo logout && expo login -u startach -p startach1",
+    "deploy": "yarn exp-login && expo publish --release-channel development",
+    "deploy:production": "yarn exp-login && expo publish"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
-    "expo": "^25.0.0",
+    "expo": "^30.0.0",
+    "expokit": "1.7.1",
     "firebase": "^4.6.0",
     "geofire": "^4.1.2",
     "intl": "^1.2.5",
@@ -50,10 +51,11 @@
     "native-base": "^2.3.5",
     "react": "16.3.1",
     "react-intl": "^2.4.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
-    "react-native-onesignal": "^3.2.2",
-    "react-navigation": "1.5.11",
-    "sentry-expo": "~1.7.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
+    "react-native-background-geolocation": "^2.14.2",
+    "react-native-onesignal": "^3.2.11",
+    "react-navigation": "1.5.8",
+    "sentry-expo": "~1.9.0",
     "styled-components": "^2.2.1"
   },
   "lint-staged": {

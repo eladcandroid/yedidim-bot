@@ -9,7 +9,8 @@ const categoriesImage = {
   NotIdentified2: require('images/case6.jpg'),
   NotIdentified3: require('images/case7.jpg'),
   Other: require('images/case8.jpg'),
-  SlammedDoor: require('images/case9.jpg')
+  SlammedDoor: require('images/case9.jpg'),
+  Logo: require('images/startach-logo.jpg')
 }
 /* eslint-enable */
 export default Object.values(categoriesImage)

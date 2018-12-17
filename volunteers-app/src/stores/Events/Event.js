@@ -1,4 +1,4 @@
-import { types, flow, getRoot, getParent } from 'mobx-state-tree'
+import { types, flow, getRoot, getParent, getSnapshot } from 'mobx-state-tree'
 import GeoFire from 'geofire'
 import * as api from 'io/api'
 import { trackEvent } from 'io/analytics'
@@ -93,7 +93,7 @@ export default types
         eventData.distance ||
         self.distance ||
         (yield calculateDistanceFromEvent(eventData))
-      Object.assign(self, eventData)
+      Object.assign(self, { ...getSnapshot(self), ...eventData })
 
       const shouldFetchDispatcher =
         !self.dispatcher && eventData.dispatcherId && self.isAssigned

@@ -11,20 +11,26 @@ import host.exp.exponent.Constants;
 @DoNotStrip
 public class AppConstants {
 
-  public static final String VERSION_NAME = "2.3.0";
+  public static final String VERSION_NAME = "2.8.1";
   public static String INITIAL_URL = "exp://exp.host/@startach/yedidim-volunteers";
   public static final boolean IS_DETACHED = true;
   public static final String SHELL_APP_SCHEME = "yddmva";
   public static final String RELEASE_CHANNEL = "default";
   public static boolean SHOW_LOADING_VIEW_IN_SHELL_APP = true;
+  public static boolean ARE_REMOTE_UPDATES_ENABLED = true;
   public static final List<Constants.EmbeddedResponse> EMBEDDED_RESPONSES;
+  public static boolean FCM_ENABLED = false;
+  public static boolean ANALYTICS_ENABLED = true;
 
   static {
     List<Constants.EmbeddedResponse> embeddedResponses = new ArrayList<>();
 
-    // ADD EMBEDDED RESPONSES HERE
-    // START EMBEDDED RESPONSES
-    // END EMBEDDED RESPONSES
+    
+        // ADD EMBEDDED RESPONSES HERE
+        // START EMBEDDED RESPONSES
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@startach/yedidim-volunteers", "assets://shell-app-manifest.json", "application/json"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40startach%2Fyedidim-volunteers%2F6.0.0%2F2bf80ec88ac4a6ff4f279a9a5d97eca3-30.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+        // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }
 
@@ -37,8 +43,11 @@ public class AppConstants {
     constants.SHELL_APP_SCHEME = SHELL_APP_SCHEME;
     constants.RELEASE_CHANNEL = RELEASE_CHANNEL;
     constants.SHOW_LOADING_VIEW_IN_SHELL_APP = SHOW_LOADING_VIEW_IN_SHELL_APP;
+    constants.ARE_REMOTE_UPDATES_ENABLED = ARE_REMOTE_UPDATES_ENABLED;
     constants.EMBEDDED_RESPONSES = EMBEDDED_RESPONSES;
     constants.ANDROID_VERSION_CODE = BuildConfig.VERSION_CODE;
+    constants.FCM_ENABLED = FCM_ENABLED;
+    constants.ANALYTICS_ENABLED = ANALYTICS_ENABLED;
     return constants;
   }
 }

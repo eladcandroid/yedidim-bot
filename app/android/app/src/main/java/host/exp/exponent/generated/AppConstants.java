@@ -25,10 +25,12 @@ public class AppConstants {
 
         
         
+        
+        
         // ADD EMBEDDED RESPONSES HERE
         // START EMBEDDED RESPONSES
         embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@startach/yedidim-dispatchers/index.exp", "assets://shell-app-manifest.json", "application/json"));
-        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40startach%2Fyedidim-dispatchers%2F4.0.0%2F77f2942fd4a02c4ca4aa7475b3d6b6f9-25.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+        embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40startach%2Fyedidim-dispatchers%2F4.0.3%2F940ddce45da22e8ab19c08930c398e64-25.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
         // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }

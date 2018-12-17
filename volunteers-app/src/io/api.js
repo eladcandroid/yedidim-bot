@@ -81,10 +81,26 @@ async function subscribeToUserInfo(
 export function onAuthenticationChanged(onAuthentication, onError) {
   return firebase.auth().onAuthStateChanged(async userAuth => {
     subscribeToUserInfo(userAuth, onAuthentication, onError)
-    if (userAuth && userAuth.phoneNumber) {
-      await registerForPushNotificationsAsync(userAuth.phoneNumber)
+
+    if (userAuth && (userAuth.phoneNumber || userAuth.email)) {
+      const phoneNumber =
+        userAuth.phoneNumber || userAuth.email.replace('@yedidim.org', '')
+
+      await registerForPushNotificationsAsync(phoneNumber)
     }
   })
+}
+
+export async function getUserIdToken() {
+  // As described at https://firebase.google.com/docs/auth/admin/verify-id-tokens
+  // firebase.auth().currentUser.getIdToken(true)
+  if (currentUserInfoSubscription && currentUserInfoSubscription.userKey) {
+    return Promise.resolve(
+      currentUserInfoSubscription && currentUserInfoSubscription.userKey
+    )
+  }
+
+  throw new Error('Unable to retrieve user id')
 }
 
 export async function signInWithPhone({ verificationId, code }) {
@@ -147,50 +163,79 @@ async function saveUserLocation(userId, latitude, longitude) {
   }
 }
 
-const eventSnapshotToJSON = snapshot => ({
-  id: snapshot.key,
-  status: snapshot.status,
-  assignedTo:
-    typeof snapshot.assignedTo === 'string'
-      ? { id: snapshot.assignedTo, name: '', phone: snapshot.assignedTo }
-      : snapshot.assignedTo,
-  timestamp: snapshot.timestamp,
-  address: snapshot.details.address,
-  caller: snapshot.details['caller name'],
-  carType: snapshot.details['car type'],
-  category: snapshot.details.category,
-  subCategory: snapshot.details.subCategory,
-  city: snapshot.details.city,
-  lat: snapshot.details.geo.lat,
-  lon: snapshot.details.geo.lon,
-  more: snapshot.details.more,
-  phone: snapshot.details['phone number'],
-  privateInfo: snapshot.details.private_info,
-  distance: snapshot.distance,
-  dispatcherId: snapshot.dispatcher,
-  sentNotification:
-    snapshot.notifications &&
-    snapshot.notifications.volunteers &&
-    snapshot.notifications.volunteers.sent
-      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
-          userId => !snapshot.notifications.volunteers.sent[userId]
-        )
-      : [],
-  receivedNotification:
-    snapshot.notifications &&
-    snapshot.notifications.volunteers &&
-    snapshot.notifications.volunteers.sent
-      ? Object.keys(snapshot.notifications.volunteers.sent).filter(
-          userId => snapshot.notifications.volunteers.sent[userId]
-        )
-      : [],
-  errorNotification:
-    snapshot.notifications &&
-    snapshot.notifications.volunteers &&
-    snapshot.notifications.volunteers.error
-      ? Object.keys(snapshot.notifications.volunteers.error)
-      : []
-})
+const eventSnapshotToJSON = snapshot => {
+  if (!snapshot.details) {
+    snapshot.details = {
+      geo: {}
+    }
+  }
+
+  return {
+    id: snapshot.key,
+    status: snapshot.status,
+    assignedTo:
+      typeof snapshot.assignedTo === 'string'
+        ? { id: snapshot.assignedTo, name: '', phone: snapshot.assignedTo }
+        : snapshot.assignedTo,
+    timestamp: snapshot.timestamp,
+    address: snapshot.details.address,
+    caller: snapshot.details['caller name'],
+    carType: snapshot.details['car type'],
+    category: snapshot.details.category,
+    subCategory: snapshot.details.subCategory,
+    city: snapshot.details.city,
+    lat: snapshot.details.geo.lat,
+    lon: snapshot.details.geo.lon,
+    more: snapshot.details.more,
+    phone: snapshot.details['phone number'],
+    privateInfo: snapshot.details.private_info,
+    distance: snapshot.distance,
+    dispatcherId: snapshot.dispatcher,
+    sentNotification:
+      snapshot.notifications &&
+      snapshot.notifications.volunteers &&
+      snapshot.notifications.volunteers.sent
+        ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+            userId => !snapshot.notifications.volunteers.sent[userId]
+          )
+        : [],
+    receivedNotification:
+      snapshot.notifications &&
+      snapshot.notifications.volunteers &&
+      snapshot.notifications.volunteers.sent
+        ? Object.keys(snapshot.notifications.volunteers.sent).filter(
+            userId => snapshot.notifications.volunteers.sent[userId]
+          )
+        : [],
+    errorNotification:
+      snapshot.notifications &&
+      snapshot.notifications.volunteers &&
+      snapshot.notifications.volunteers.error
+        ? Object.keys(snapshot.notifications.volunteers.error)
+        : []
+  }
+}
+
+const filteredEvents = status =>
+  new Promise((resolve, reject) => {
+    firebase
+      .database()
+      .ref('events')
+      .orderByChild('status')
+      .equalTo(status)
+      .once(
+        'value',
+        snapshot => {
+          resolve(snapshot.val() || {})
+        },
+        error => reject(error)
+      )
+  })
+
+const relevantEvents = () =>
+  Promise.all(['assigned', 'sent'].map(filteredEvents)).then(results =>
+    Object.assign({}, ...results)
+  )
 
 async function fetchLatestOpenEventsLocationBased(userId) {
   return new Promise(async (resolve, reject) => {
@@ -218,20 +263,10 @@ async function fetchLatestOpenEventsLocationBased(userId) {
 
       geoQuery.on('ready', () => {
         geoQuery.cancel()
-        firebase
-          .database()
-          .ref('events')
-          .orderByChild('status')
-          .startAt('assigned')
-          .endAt('sent')
-          .once('value', snapshot => {
-            const eventsById = snapshot.val() || {}
+        relevantEvents()
+          .then(eventsById => {
             // The query above also retrieves draft events, we need to filter
             // it out
-            const fetchedEvents = Object.values(eventsById).filter(
-              event => event.status === 'assigned' || event.status === 'sent'
-            )
-
             const eventsToReturn = Object.keys(eventsById)
               .filter(eventId => !!nearEventIdToDistance[eventId])
               .filter(
@@ -247,7 +282,7 @@ async function fetchLatestOpenEventsLocationBased(userId) {
               .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
               .slice(0, 25)
             if (eventsToReturn.length < 25) {
-              const oldestEventsFirst = fetchedEvents.sort(
+              const oldestEventsFirst = Object.values(eventsById).sort(
                 (a, b) => (a.timestamp < b.timestamp ? -1 : 1)
               )
               let i = 0
@@ -273,6 +308,7 @@ async function fetchLatestOpenEventsLocationBased(userId) {
             }
             resolve(eventsToReturn)
           })
+          .catch(error => reject(error))
       })
     } catch (error) {
       reject(error)
@@ -309,18 +345,21 @@ export async function loadLatestOpenEvents(userId) {
   const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
   if (hasLocationPermission) {
     try {
+      console.log('>>>>1', userId)
       fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
     } catch (error) {
+      console.log('>>>>2', userId)
       // User has given permissions but disabled temporary location or location is unavailable
       fetchedEvents = await fetchLatestOpenedEvents()
     }
   } else {
+    console.log('>>>>3', userId)
     fetchedEvents = await fetchLatestOpenedEvents()
   }
 
-  const events = fetchedEvents.map(childSnapshot =>
-    eventSnapshotToJSON(childSnapshot)
-  )
+  const events = fetchedEvents
+    .filter(childSnapshot => !!childSnapshot.key) // Remove events without a key
+    .map(childSnapshot => eventSnapshotToJSON(childSnapshot))
   return events
 }
 
