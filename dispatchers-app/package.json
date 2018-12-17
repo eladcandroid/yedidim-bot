@@ -1,0 +1,42 @@
+{
+  "name": "empty-project-template",
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject",
+    "exp-login": "expo logout && expo login -u startach -p startach1",
+    "deploy": "yarn exp-login && expo publish --release-channel development",
+    "deploy:production": "yarn exp-login && expo publish"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^8.0.0",
+    "dateformat": "^3.0.3",
+    "expo": "^31.0.2",
+    "expokit": "31.0.2",
+    "firebase": "^4.9.1",
+    "native-base": "^2.3.8",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react-native-datepicker": "^1.6.0",
+    "react-native-google-places-autocomplete": "^1.3.9",
+    "react-native-keyboard-aware-scroll-view": "^0.4.3",
+    "react-native-onesignal": "^3.2.11",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "sentry-expo": "^1.7.0"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^5.0.0",
+    "eslint": "^5.9.0",
+    "eslint-config-universe": "^1.0.7",
+    "prettier": "^1.15.2"
+  },
+  "eslintConfig": {
+    "extends": "universe/native"
+  },
+  "version": "6.0.0"
+}
