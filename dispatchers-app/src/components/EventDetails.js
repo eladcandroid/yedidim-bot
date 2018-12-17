@@ -276,12 +276,12 @@ class EventDetails extends Component {
               {event.details.address}
             </Text>
           </TouchableHighlight>
-          {event.details.plus_code && (
+          {!!event.details.plus_code && (
             <Text style={getTextStyle(styles.fieldName)}>
               מיקום דרך Plus Code
             </Text>
           )}
-          {event.details.plus_code && (
+          {!!event.details.plus_code && (
             <TouchableHighlight onPress={this.openAddressInPlusCodeMaps}>
               <Text style={getTextStyle(styles.addressFieldValue)}>
                 {event.details.plus_code}
