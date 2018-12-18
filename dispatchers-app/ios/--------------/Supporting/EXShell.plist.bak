@@ -9,6 +9,6 @@
 	<key>manifestUrl</key>
 	<string>exp://exp.host/@startach/yedidim-dispatchers</string>
 	<key>releaseChannel</key>
-	<string>development</string>
+	<string>default</string>
 </dict>
 </plist>
