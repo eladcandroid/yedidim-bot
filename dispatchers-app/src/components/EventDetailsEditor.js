@@ -52,11 +52,10 @@ class EventDetailsEditor extends Component {
       address: undefined,
       geo: undefined,
       category: 'Other',
-      needToValidateAddress: false,
       listViewDisplayed: 'auto'
     }
     this.updateEventData = this.updateEventData.bind(this)
-    this.validateAddress = this.validateAddress.bind(this)
+    this.validatePlusCode = this.validatePlusCode.bind(this)
     this.createNewEvent = this.createNewEvent.bind(this)
     this.updateExistingEvent = this.updateExistingEvent.bind(this)
   }
@@ -84,22 +83,22 @@ class EventDetailsEditor extends Component {
 
   updateEventData(field, value) {
     if (field === 'address') {
-      this.setState({ geo: undefined, needToValidateAddress: true })
+      this.setState({ geo: undefined})
     }
     this.setState({ [field]: value, modified: true })
   }
 
   getDetailsFromState() {
     let details = Object.assign({}, this.state)
-    delete details['needToValidateAddress']
     delete details['error']
     delete details['modified']
     return details
   }
-  createNewEvent() {
-    if (!this.validateEventData()) {
+  async createNewEvent() {
+    if (!await this.validateEventData()) {
       return
     }
+    this.setState({modified: false})
     const event = {
       status: EventStatus.Sent,
       source: EventSource.App,
@@ -123,28 +122,33 @@ class EventDetailsEditor extends Component {
     this.props.navigate(ScreenType.EventsList)
   }
 
-  async validateAddress() {
-    if (!this.state.address) {
-      this.setState({ error: { message: 'לא הוזנה כתובת', field: 'address' } })
+  async validatePlusCode() {
+    const plusCode = this.state.plus_code;
+    if (plusCode.length < 11 || !plusCode.includes(' ') || !plusCode.includes('+')) {
+      this.setState({error: {message: 'צריך להזין plus code וכתובת', field: 'plus_code'}})
       return false
     }
-    this.setState({ needToValidateAddress: false })
-    const location = await geocodeAddress(this.state.address)
+    let location = await geocodeAddress(plusCode, true)
     if (!location) {
-      this.setState({
-        error: {
-          message: 'כתובת לא חוקית',
-          field: 'address',
-          needToValidateAddress: true
-        }
-      })
+      this.setState({error: {message: 'Plus Code לא חוקי', field: 'plus_code'}})
       return false
     }
+    location.address = this.state.plus_code.slice(8)
     this.setState(location)
     return true
   }
 
-  validateEventData() {
+  async validateEventData() {
+    if (!this.state.address && !this.state.plus_code) {
+      this.setState({ error: { message: 'לא הוזנה כתובת', field: 'address' } })
+      return false
+    }
+
+    if (!this.state.geo && this.state.plus_code){
+      if (!await this.validatePlusCode()) {
+        return false;
+      }
+    }
     if (!this.state.geo) {
       this.setState({ error: { message: 'כתובת לא נבדקה', field: 'address' } })
       return false
