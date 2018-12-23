@@ -1,7 +1,11 @@
 const MAP_KEY = 'AIzaSyA-cT9Okhw7DA97YPLxlAVoFPQDe61VdwA'
 
-export async function geocodeAddress(address) {
+export async function geocodeAddress(address, isPlusCode) {
   try {
+    if (isPlusCode){
+
+      address = encodeURIComponent(address)
+    }
     let response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?key=${MAP_KEY}&address=${address}&language=iw&&components=:country=IL`
     )
@@ -13,16 +17,16 @@ export async function geocodeAddress(address) {
     if (results.length === 0) {
       return undefined
     }
-    return getAddressDetailsFromGoogleResult(results[0])
+    return getAddressDetailsFromGoogleResult(results[0], isPlusCode)
   } catch (error) {
     console.error(error)
     return undefined
   }
 }
 
-export function getAddressDetailsFromGoogleResult(result) {
+export function getAddressDetailsFromGoogleResult(result, isPlusCode) {
   const addressComponents = result.address_components
-  if (!addressComponents || addressComponents.length === 0) {
+  if (!isPlusCode && (!addressComponents || addressComponents.length === 0)) {
     return undefined
   }
   const location = result.geometry.location
