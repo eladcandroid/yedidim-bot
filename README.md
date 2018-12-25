@@ -48,7 +48,7 @@ After the development server starts sucessfully, open Android Studio. Open the p
 
 After the development server starts sucessfully, open XCode. Open the project inside dispatchers-app(volunteers-app)/ios folder.
 
-You need to install the libraries using CocoaPods:
+The first time you install the project (or if a library has been updated), you need to install the libraries using CocoaPods:
 
 ```
 cd ios
