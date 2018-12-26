@@ -9,7 +9,8 @@ export default types
   .model('EventStore', {
     events: types.map(Event),
     categories: types.array(Category),
-    isLoading: false
+    isLoading: false,
+    lastUpdatedDate: new Date().getTime()
   })
   .views(self => ({
     findById(eventId) {
@@ -20,6 +21,9 @@ export default types
     },
     get hasEvents() {
       return self.events.size > 0
+    },
+    get lastUpdated() {
+      return self.lastUpdatedDate
     },
     get sortedEventsByStatusAndTimestamp() {
       return self.allEvents.slice().sort((a, b) => {
@@ -36,6 +40,7 @@ export default types
       if (!self.events.get(eventJSON.id)) {
         self.events.put(eventJSON)
       }
+      self.lastUpdatedDate = new Date().getTime()
     }
 
     return {

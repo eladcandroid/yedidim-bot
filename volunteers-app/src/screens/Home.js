@@ -13,12 +13,14 @@ import {
   Icon,
   Right,
   Text,
+  View,
   List,
   ListItem,
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator, RefreshControl } from 'react-native'
 import debounce from 'lodash.debounce'
+import moment from 'moment'
 import { trackEvent } from 'io/analytics'
 
 import AlignedText from 'components/AlignedText'
@@ -29,6 +31,15 @@ const MessageView = styled.View`
   align-items: center;
   justify-content: center;
   padding: 15px 0;
+`
+
+const LastUpdatedView = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0;
+  border-bottom-width: 1px
+  border-bottom-color: #D3D3D3; 
 `
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
@@ -202,7 +213,25 @@ class HomeScreen extends Component {
       this.setState(() => ({ refreshing: true }))
       await this.props.eventStore.loadLatestOpenEvents()
     } finally {
-      this.setState(() => ({ refreshing: false }))
+      this.setState(() => ({ refreshing: false, lastUpdated: new Date().getTime() }))
+    }
+  }
+
+  getLastUpdatedHeader = () => {
+    const propsLastUpdated = this.props.eventStore && this.props.eventStore.lastUpdated
+    const stateLastUpdated = this.state.lastUpdated
+    const lastUpdated =
+      !stateLastUpdated && !propsLastUpdated ? undefined :
+        stateLastUpdated && !propsLastUpdated ? stateLastUpdated :
+          !stateLastUpdated && propsLastUpdated ? propsLastUpdated :
+            stateLastUpdated > propsLastUpdated ? stateLastUpdated :
+              propsLastUpdated
+    if (lastUpdated) {
+      return (
+        <LastUpdatedView>
+          <Text>מעודכן ל {moment(lastUpdated).format('H:mm')}</Text>
+        </LastUpdatedView>
+      )
     }
   }
 
@@ -225,6 +254,8 @@ class HomeScreen extends Component {
           style={{ backgroundColor: '#fff' }}
         >
           {hasEvents && (
+            <Content>
+              {this.getLastUpdatedHeader()}
             <List
               dataArray={sortedEventsByStatusAndTimestamp}
               renderRow={event => (
@@ -235,9 +266,12 @@ class HomeScreen extends Component {
                 />
               )}
             />
+            </Content>
           )}
           {!hasEvents &&
             !refreshing && (
+            <Content>
+              {this.getLastUpdatedHeader()}
               <MessageView>
                 <FormattedMessage
                   id="Home.noevents"
@@ -246,6 +280,7 @@ class HomeScreen extends Component {
                   {txt => <Text>{txt}</Text>}
                 </FormattedMessage>
               </MessageView>
+            </Content>
             )}
         </Content>
       </Container>
