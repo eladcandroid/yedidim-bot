@@ -19,6 +19,7 @@ import {
 } from 'native-base'
 import { ActivityIndicator, RefreshControl } from 'react-native'
 import debounce from 'lodash.debounce'
+import format from 'date-fns/format'
 import { trackEvent } from 'io/analytics'
 
 import AlignedText from 'components/AlignedText'
@@ -29,6 +30,15 @@ const MessageView = styled.View`
   align-items: center;
   justify-content: center;
   padding: 15px 0;
+`
+
+const LastUpdatedView = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0;
+  border-bottom-width: 1px
+  border-bottom-color: #D3D3D3; 
 `
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
@@ -188,6 +198,17 @@ class HomeScreen extends Component {
     this.handleRefresh()
   }
 
+  handleRefresh = async () => {
+    try {
+      this.setState(() => ({ refreshing: true }))
+      await this.props.eventStore.loadLatestOpenEvents()
+    } finally {
+      this.setState(() => ({
+        refreshing: false
+      }))
+    }
+  }
+
   handleEventItemPress = debounce(
     eventId => {
       trackEvent('Navigation', { page: 'EventPage', eventId })
@@ -197,18 +218,13 @@ class HomeScreen extends Component {
     { leading: true, trailing: false }
   )
 
-  handleRefresh = async () => {
-    try {
-      this.setState(() => ({ refreshing: true }))
-      await this.props.eventStore.loadLatestOpenEvents()
-    } finally {
-      this.setState(() => ({ refreshing: false }))
-    }
-  }
-
   render() {
     const {
-      eventStore: { hasEvents, sortedEventsByStatusAndTimestamp },
+      eventStore: {
+        hasEvents,
+        sortedEventsByStatusAndTimestamp,
+        lastUpdatedDate
+      },
       currentUser
     } = this.props
     const { refreshing } = this.state
@@ -224,6 +240,11 @@ class HomeScreen extends Component {
           }
           style={{ backgroundColor: '#fff' }}
         >
+          {!refreshing && (
+            <LastUpdatedView>
+              <Text>מעודכן ל{format(lastUpdatedDate, 'H:mm')}</Text>
+            </LastUpdatedView>
+          )}
           {hasEvents && (
             <List
               dataArray={sortedEventsByStatusAndTimestamp}
