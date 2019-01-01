@@ -13,14 +13,12 @@ import {
   Icon,
   Right,
   Text,
-  View,
   List,
   ListItem,
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator, RefreshControl } from 'react-native'
-import debounce from 'lodash.debounce'
-import moment from 'moment'
+import format from 'date-fns/format'
 import { trackEvent } from 'io/analytics'
 
 import AlignedText from 'components/AlignedText'
@@ -199,37 +197,36 @@ class HomeScreen extends Component {
     this.handleRefresh()
   }
 
-  handleEventItemPress = debounce(
-    eventId => {
-      trackEvent('Navigation', { page: 'EventPage', eventId })
-      this.props.navigation.navigate('Event', { eventId })
-    },
-    1000,
-    { leading: true, trailing: false }
-  )
-
   handleRefresh = async () => {
     try {
       this.setState(() => ({ refreshing: true }))
       await this.props.eventStore.loadLatestOpenEvents()
     } finally {
-      this.setState(() => ({ refreshing: false, lastUpdated: new Date().getTime() }))
+      this.setState(() => ({
+        refreshing: false,
+        lastUpdated: new Date().getTime()
+      }))
     }
   }
 
   getLastUpdatedHeader = () => {
-    const propsLastUpdated = this.props.eventStore && this.props.eventStore.lastUpdated
+    const propsLastUpdated =
+      this.props.eventStore && this.props.eventStore.lastUpdated
     const stateLastUpdated = this.state.lastUpdated
     const lastUpdated =
-      !stateLastUpdated && !propsLastUpdated ? undefined :
-        stateLastUpdated && !propsLastUpdated ? stateLastUpdated :
-          !stateLastUpdated && propsLastUpdated ? propsLastUpdated :
-            stateLastUpdated > propsLastUpdated ? stateLastUpdated :
-              propsLastUpdated
+      !stateLastUpdated && !propsLastUpdated
+        ? undefined
+        : stateLastUpdated && !propsLastUpdated
+          ? stateLastUpdated
+          : !stateLastUpdated && propsLastUpdated
+            ? propsLastUpdated
+            : stateLastUpdated > propsLastUpdated
+              ? stateLastUpdated
+              : propsLastUpdated
     if (lastUpdated) {
       return (
         <LastUpdatedView>
-          <Text>מעודכן ל {moment(lastUpdated).format('H:mm')}</Text>
+          <Text>מעודכן ל {format(lastUpdated, 'H:mm')}</Text>
         </LastUpdatedView>
       )
     }
@@ -256,31 +253,31 @@ class HomeScreen extends Component {
           {hasEvents && (
             <Content>
               {this.getLastUpdatedHeader()}
-            <List
-              dataArray={sortedEventsByStatusAndTimestamp}
-              renderRow={event => (
-                <EventItem
-                  event={event}
-                  onPress={this.handleEventItemPress}
-                  isAdmin={currentUser.isAdmin}
-                />
-              )}
-            />
+              <List
+                dataArray={sortedEventsByStatusAndTimestamp}
+                renderRow={event => (
+                  <EventItem
+                    event={event}
+                    onPress={this.handleEventItemPress}
+                    isAdmin={currentUser.isAdmin}
+                  />
+                )}
+              />
             </Content>
           )}
           {!hasEvents &&
             !refreshing && (
-            <Content>
-              {this.getLastUpdatedHeader()}
-              <MessageView>
-                <FormattedMessage
-                  id="Home.noevents"
-                  defaultMessage="Sorry, no events were found"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-              </MessageView>
-            </Content>
+              <Content>
+                {this.getLastUpdatedHeader()}
+                <MessageView>
+                  <FormattedMessage
+                    id="Home.noevents"
+                    defaultMessage="Sorry, no events were found"
+                  >
+                    {txt => <Text>{txt}</Text>}
+                  </FormattedMessage>
+                </MessageView>
+              </Content>
             )}
         </Content>
       </Container>
