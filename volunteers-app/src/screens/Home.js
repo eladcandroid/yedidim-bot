@@ -18,6 +18,7 @@ import {
   Thumbnail
 } from 'native-base'
 import { ActivityIndicator, RefreshControl } from 'react-native'
+import debounce from 'lodash.debounce'
 import format from 'date-fns/format'
 import { trackEvent } from 'io/analytics'
 
@@ -197,44 +198,33 @@ class HomeScreen extends Component {
     this.handleRefresh()
   }
 
-  getLastUpdatedHeader = () => {
-    const propsLastUpdated =
-      this.props.eventStore && this.props.eventStore.lastUpdated
-    const stateLastUpdated = this.state.lastUpdated
-    const lastUpdated =
-      !stateLastUpdated && !propsLastUpdated
-        ? undefined
-        : stateLastUpdated && !propsLastUpdated
-          ? stateLastUpdated
-          : !stateLastUpdated && propsLastUpdated
-            ? propsLastUpdated
-            : stateLastUpdated > propsLastUpdated
-              ? stateLastUpdated
-              : propsLastUpdated
-    if (lastUpdated) {
-      return (
-        <LastUpdatedView>
-          <Text>מעודכן ל{format(lastUpdated, 'H:mm')}</Text>
-        </LastUpdatedView>
-      )
-    }
-  }
-
   handleRefresh = async () => {
     try {
       this.setState(() => ({ refreshing: true }))
       await this.props.eventStore.loadLatestOpenEvents()
     } finally {
       this.setState(() => ({
-        refreshing: false,
-        lastUpdated: new Date().getTime()
+        refreshing: false
       }))
     }
   }
 
+  handleEventItemPress = debounce(
+    eventId => {
+      trackEvent('Navigation', { page: 'EventPage', eventId })
+      this.props.navigation.navigate('Event', { eventId })
+    },
+    1000,
+    { leading: true, trailing: false }
+  )
+
   render() {
     const {
-      eventStore: { hasEvents, sortedEventsByStatusAndTimestamp },
+      eventStore: {
+        hasEvents,
+        sortedEventsByStatusAndTimestamp,
+        lastUpdatedDate
+      },
       currentUser
     } = this.props
     const { refreshing } = this.state
@@ -250,7 +240,11 @@ class HomeScreen extends Component {
           }
           style={{ backgroundColor: '#fff' }}
         >
-          {!refreshing && this.getLastUpdatedHeader()}
+          {!refreshing && (
+            <LastUpdatedView>
+              <Text>מעודכן ל{format(lastUpdatedDate, 'H:mm')}</Text>
+            </LastUpdatedView>
+          )}
           {hasEvents && (
             <List
               dataArray={sortedEventsByStatusAndTimestamp}

@@ -22,9 +22,6 @@ export default types
     get hasEvents() {
       return self.events.size > 0
     },
-    get lastUpdated() {
-      return self.lastUpdatedDate
-    },
     get sortedEventsByStatusAndTimestamp() {
       return self.allEvents.slice().sort((a, b) => {
         if (a.isTaken === b.isTaken) {
@@ -49,6 +46,7 @@ export default types
         const events = yield api.loadLatestOpenEvents(currentUserId)
         self.removeAllEvents()
         events.forEach(addEvent)
+        self.lastUpdatedDate = new Date().getTime()
       }),
       removeEvent(eventId) {
         destroy(self.events.get(eventId))
