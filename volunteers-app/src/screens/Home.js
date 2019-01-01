@@ -197,18 +197,6 @@ class HomeScreen extends Component {
     this.handleRefresh()
   }
 
-  handleRefresh = async () => {
-    try {
-      this.setState(() => ({ refreshing: true }))
-      await this.props.eventStore.loadLatestOpenEvents()
-    } finally {
-      this.setState(() => ({
-        refreshing: false,
-        lastUpdated: new Date().getTime()
-      }))
-    }
-  }
-
   getLastUpdatedHeader = () => {
     const propsLastUpdated =
       this.props.eventStore && this.props.eventStore.lastUpdated
@@ -226,9 +214,21 @@ class HomeScreen extends Component {
     if (lastUpdated) {
       return (
         <LastUpdatedView>
-          <Text>מעודכן ל {format(lastUpdated, 'H:mm')}</Text>
+          <Text>מעודכן ל{format(lastUpdated, 'H:mm')}</Text>
         </LastUpdatedView>
       )
+    }
+  }
+
+  handleRefresh = async () => {
+    try {
+      this.setState(() => ({ refreshing: true }))
+      await this.props.eventStore.loadLatestOpenEvents()
+    } finally {
+      this.setState(() => ({
+        refreshing: false,
+        lastUpdated: new Date().getTime()
+      }))
     }
   }
 
@@ -250,34 +250,29 @@ class HomeScreen extends Component {
           }
           style={{ backgroundColor: '#fff' }}
         >
+          {!refreshing && this.getLastUpdatedHeader()}
           {hasEvents && (
-            <Content>
-              {this.getLastUpdatedHeader()}
-              <List
-                dataArray={sortedEventsByStatusAndTimestamp}
-                renderRow={event => (
-                  <EventItem
-                    event={event}
-                    onPress={this.handleEventItemPress}
-                    isAdmin={currentUser.isAdmin}
-                  />
-                )}
-              />
-            </Content>
+            <List
+              dataArray={sortedEventsByStatusAndTimestamp}
+              renderRow={event => (
+                <EventItem
+                  event={event}
+                  onPress={this.handleEventItemPress}
+                  isAdmin={currentUser.isAdmin}
+                />
+              )}
+            />
           )}
           {!hasEvents &&
             !refreshing && (
-              <Content>
-                {this.getLastUpdatedHeader()}
-                <MessageView>
-                  <FormattedMessage
-                    id="Home.noevents"
-                    defaultMessage="Sorry, no events were found"
-                  >
-                    {txt => <Text>{txt}</Text>}
-                  </FormattedMessage>
-                </MessageView>
-              </Content>
+              <MessageView>
+                <FormattedMessage
+                  id="Home.noevents"
+                  defaultMessage="Sorry, no events were found"
+                >
+                  {txt => <Text>{txt}</Text>}
+                </FormattedMessage>
+              </MessageView>
             )}
         </Content>
       </Container>
