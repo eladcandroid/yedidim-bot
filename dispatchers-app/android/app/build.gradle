@@ -34,8 +34,9 @@ android {
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     // Deprecated. Used by net.openid:appauth
     manifestPlaceholders = [
-      'appAuthRedirectScheme': 'host.exp.exponent'
+            'appAuthRedirectScheme': 'host.exp.exponent'
     ]
+    minSdkVersion 27
   }
   dexOptions {
     javaMaxHeapSize System.getenv("DISABLE_DEX_MAX_HEAP") ? null : "8g"
@@ -45,6 +46,7 @@ android {
   productFlavors {
     devKernel {
       dimension 'remoteKernel'
+      minSdkVersion 27
     }
     prodKernel {
       dimension 'remoteKernel'
@@ -54,7 +56,7 @@ android {
       // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
       // to pre-dex each module and produce an APK that can be tested on
       // Android Lollipop without time consuming dex merging processes.
-      minSdkVersion 21
+      minSdkVersion 27
     }
     prodMinSdk {
       dimension 'minSdk'
