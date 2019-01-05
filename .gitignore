@@ -4,6 +4,8 @@ npm-debug.*
 i18n/messages
 .tmp
 
+.DS_Store
+
 .idea/
 /functions/_tokens.json
 /webApp/dist/
@@ -35,3 +37,6 @@ functions/firebase-debug.log
 **EXBuildConstants**
 
 credentials.json
+
+# Firebase
+functions/firebase-debug.log

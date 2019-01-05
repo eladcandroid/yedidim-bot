@@ -46,6 +46,7 @@ android/.idea/vcs.xml
 
 # Android
 *.apk
+android/app/src/main/java/host/exp/exponent/generated
 /android/**/build
 /android/**/local.properties
 /android/captures
@@ -94,3 +95,6 @@ shellAppWorkspaces
 
 # Expo Client builds
 /client-builds
+
+# Firebase
+functions/firebase-debug.log
