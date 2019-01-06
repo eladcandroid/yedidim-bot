@@ -20,7 +20,7 @@ import {
 } from './notificationsActions'
 import { objectToArray, getInstance } from '../common/utils'
 import { EventStatus } from '../constants/consts'
-import {logger} from '../Logger'
+import { logger } from '../Logger'
 
 const firebaseConfig = {
   development: {
@@ -163,7 +163,7 @@ export function createEvent(event) {
         if (err) {
           dispatch(setError('Failed to create event!', err))
         } else {
-          logger.logEvent('create event', event.details);
+          logger.logEvent('create event', event.details)
         }
       })
   }
