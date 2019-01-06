@@ -20,6 +20,7 @@ import {
 } from './notificationsActions'
 import { objectToArray, getInstance } from '../common/utils'
 import { EventStatus } from '../constants/consts'
+import {logger} from '../Logger'
 
 const firebaseConfig = {
   development: {

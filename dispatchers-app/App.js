@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Logger } from './src/Logger'
 import { Provider } from 'react-redux'
 import Sentry from 'sentry-expo'
 import { Font, Constants } from 'expo'
