@@ -162,6 +162,8 @@ export function createEvent(event) {
       .set(event, err => {
         if (err) {
           dispatch(setError('Failed to create event!', err))
+        } else {
+          logger.logEvent('create event', event.details);
         }
       })
   }
