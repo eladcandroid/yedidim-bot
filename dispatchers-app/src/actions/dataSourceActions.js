@@ -19,7 +19,7 @@ import {
   sendTestNotificationToDispatcher
 } from './notificationsActions'
 import { objectToArray, getInstance } from '../common/utils'
-import { EventStatus } from '../constants/consts'
+import { EventStatus, LOG_EVENTS } from '../constants/consts'
 import { logger } from '../Logger'
 
 const firebaseConfig = {
@@ -70,8 +70,9 @@ export function signIn(id, phone, onError) {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, phone)
-      .catch(function(err) {
-        console.log('failed to sign in', err)
+      .catch(function(error) {
+        logger.logEvent(LOG_EVENTS.LOGIN_FAIL, {error})
+        console.log('failed to sign in', error)
         onError('פרטים שגויים. נסה שנית')
       })
   }
@@ -93,8 +94,10 @@ export function storeNotificationToken(token) {
         },
         err => {
           if (err) {
+            logger.logEvent(LOG_EVENTS.TOKEN_STORE_FAIL, {error: err})
             dispatch(setError('Unable to set token. ', err))
           } else {
+            logger.logEvent(LOG_EVENTS.TOKEN_STORE_SUCCESS, {token})
             dispatch(setNotifications(true))
             console.log('Token was set', token)
           }
@@ -163,7 +166,7 @@ export function createEvent(event) {
         if (err) {
           dispatch(setError('Failed to create event!', err))
         } else {
-          logger.logEvent('create event', event.details)
+          logger.logEvent(LOG_EVENTS.EVENT_CREATED, event.details)
         }
       })
   }
@@ -336,6 +339,7 @@ function loadUserData(user) {
         user.name = data.name
         user.notifications = data.notifications
         user.handleBot = data.handleBot
+        logger.setUserId(user.id)
         dispatch(setUser(user))
         dispatch(registerForPushNotifications())
       })

@@ -10,6 +10,7 @@ import expolib_v1.okhttp3.OkHttpClient;
 
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
+import com.sudoplz.reactnativeamplitudeanalytics.RNAmplitudeSDKPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.sudoplz.reactnativeamplitudeanalytics.RNAmplitudeSDKPackage;
 
@@ -28,6 +29,7 @@ public class MainApplication extends ExpoApplication {
 
         // Needed for `react-native link`
         // new MainReactPackage(),
+            new RNAmplitudeSDKPackage(),
             new ReactNativeOneSignalPackage(),
             new RNAmplitudeSDKPackage(MainApplication.this)
     );

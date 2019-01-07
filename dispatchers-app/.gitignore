@@ -46,7 +46,6 @@ android/.idea/vcs.xml
 
 # Android
 *.apk
-android/app/src/main/java/host/exp/exponent/generated
 /android/**/build
 /android/**/local.properties
 /android/captures
