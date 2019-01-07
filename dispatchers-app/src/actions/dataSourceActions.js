@@ -179,7 +179,7 @@ export function createEvent(event) {
   }
 }
 
-export function updateEvent(event) {
+export function updateEvent(event, changes) {
   return (dispatch, getState) => {
     const dispatcher = getState().dataSource.user.id
     firebase
@@ -194,6 +194,7 @@ export function updateEvent(event) {
         if (!result.committed) {
           dispatch(setError('האירוע כבר בטיפול'))
         } else if (result.snapshot) {
+          logger.logEvent(LOG_EVENTS.EVENT_EDITED, {event: event.key, changes})
           dispatch(setEvent(result.snapshot.val()))
         }
       })
