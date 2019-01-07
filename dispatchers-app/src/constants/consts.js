@@ -23,6 +23,7 @@ export const ScreenType = {
 
 export const LOG_EVENTS = {
   EVENT_CREATED: 'event created',
+  LOGIN_SUCCESS: 'logged in',
   LOGIN_FAIL: 'login failed',
   TOKEN_STORE_SUCCESS: 'token stored in db',
   TOKEN_STORE_FAIL: 'token failed to store in db',

@@ -70,7 +70,12 @@ export function signIn(id, phone, onError) {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, phone)
+      .then(() => {
+        logger.setUserId(id);
+        logger.logEvent(LOG_EVENTS.LOGIN_SUCCESS)
+      })
       .catch(function(error) {
+        logger.setUserId(id);
         logger.logEvent(LOG_EVENTS.LOGIN_FAIL, {error})
         console.log('failed to sign in', error)
         onError('פרטים שגויים. נסה שנית')
@@ -139,6 +144,8 @@ export function signOutUser() {
         .signOut()
         .then(() => {
           dispatch(handleSignedOutUser())
+          logger.setUserId(null);
+          logger.regenerateDeviceId();
         })
     })
   }
@@ -339,7 +346,7 @@ function loadUserData(user) {
         user.name = data.name
         user.notifications = data.notifications
         user.handleBot = data.handleBot
-        logger.setUserId(user.id)
+        logger.setUserPropertyOnce('Name', data.name)
         dispatch(setUser(user))
         dispatch(registerForPushNotifications())
       })
