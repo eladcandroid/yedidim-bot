@@ -5,6 +5,8 @@ import {
   getFunctionsUrl
 } from './dataSourceActions'
 import { getInstance } from '../common/utils'
+import {LOG_EVENTS} from '../constants/consts'
+import logger from '../Logger'
 const oneSignalConfig = {
   development: {
     appId: '9177d83e-8dc2-4501-aef8-c18697ca6f27'
@@ -18,6 +20,7 @@ export function registerForPushNotifications() {
   return async dispatch => {
     OneSignal.init(oneSignalConfig[getInstance()].appId)
     OneSignal.addEventListener('received', notification => {
+      logger.logEvent(LOG_EVENTS.NOTIFICATION_RECEIVED, {notification})
       console.log('Notification received: ', notification)
     })
     OneSignal.addEventListener('opened', openResult => {
