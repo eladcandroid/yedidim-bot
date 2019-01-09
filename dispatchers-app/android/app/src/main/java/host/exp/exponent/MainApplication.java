@@ -29,7 +29,6 @@ public class MainApplication extends ExpoApplication {
 
         // Needed for `react-native link`
         // new MainReactPackage(),
-            new RNAmplitudeSDKPackage(),
             new ReactNativeOneSignalPackage(),
             new RNAmplitudeSDKPackage(MainApplication.this)
     );
