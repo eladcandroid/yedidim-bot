@@ -5,8 +5,8 @@ import {
   getFunctionsUrl
 } from './dataSourceActions'
 import { getInstance } from '../common/utils'
-import {LOG_EVENTS} from '../constants/consts'
-import {logger} from '../Logger'
+import { LOG_EVENTS } from '../constants/consts'
+import { logger } from '../Logger'
 const oneSignalConfig = {
   development: {
     // yedidim-dispatchers-dev
@@ -21,7 +21,9 @@ export function registerForPushNotifications() {
   return async dispatch => {
     OneSignal.init(oneSignalConfig[getInstance()].appId)
     OneSignal.addEventListener('received', notification => {
-      logger.logEvent(LOG_EVENTS.NOTIFICATION_RECEIVED, {notification})
+      logger.logEventWithProperties(LOG_EVENTS.NOTIFICATION_RECEIVED, {
+        notification
+      })
       // console.log('Notification received: ', notification)
     })
     OneSignal.addEventListener('opened', openResult => {

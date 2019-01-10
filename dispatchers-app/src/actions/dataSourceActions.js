@@ -71,12 +71,12 @@ export function signIn(id, phone, onError) {
       .auth()
       .signInWithEmailAndPassword(email, phone)
       .then(() => {
-        logger.setUserId(id);
+        logger.setUserId(id)
         logger.logEvent(LOG_EVENTS.LOGIN_SUCCESS)
       })
       .catch(function(error) {
-        logger.setUserId(id);
-        logger.logEvent(LOG_EVENTS.LOGIN_FAIL, {error})
+        logger.setUserId(id)
+        logger.logEventWithProperties(LOG_EVENTS.LOGIN_FAIL, { error })
         console.log('failed to sign in', error)
         onError('פרטים שגויים. נסה שנית')
       })
@@ -99,10 +99,14 @@ export function storeNotificationToken(token) {
         },
         err => {
           if (err) {
-            logger.logEvent(LOG_EVENTS.TOKEN_STORE_FAIL, {error: err})
+            logger.logEventWithProperties(LOG_EVENTS.TOKEN_STORE_FAIL, {
+              error: err
+            })
             dispatch(setError('Unable to set token. ', err))
           } else {
-            logger.logEvent(LOG_EVENTS.TOKEN_STORE_SUCCESS, {token})
+            logger.logEventWithProperties(LOG_EVENTS.TOKEN_STORE_SUCCESS, {
+              token
+            })
             dispatch(setNotifications(true))
             console.log('Token was set', token)
           }
@@ -144,8 +148,8 @@ export function signOutUser() {
         .signOut()
         .then(() => {
           dispatch(handleSignedOutUser())
-          logger.setUserId(null);
-          logger.regenerateDeviceId();
+          logger.setUserId(null)
+          // logger.regenerateDeviceId()
         })
     })
   }
@@ -173,7 +177,7 @@ export function createEvent(event) {
         if (err) {
           dispatch(setError('Failed to create event!', err))
         } else {
-          logger.logEvent(LOG_EVENTS.EVENT_CREATED, event.details)
+          logger.logEventWithProperties(LOG_EVENTS.EVENT_CREATED, event.details)
         }
       })
   }
@@ -194,7 +198,10 @@ export function updateEvent(event, changes) {
         if (!result.committed) {
           dispatch(setError('האירוע כבר בטיפול'))
         } else if (result.snapshot) {
-          logger.logEvent(LOG_EVENTS.EVENT_EDITED, {event: event.key, changes})
+          logger.logEventWithProperties(LOG_EVENTS.EVENT_EDITED, {
+            event: event.key,
+            changes
+          })
           dispatch(setEvent(result.snapshot.val()))
         }
       })
@@ -347,7 +354,7 @@ function loadUserData(user) {
         user.name = data.name
         user.notifications = data.notifications
         user.handleBot = data.handleBot
-        logger.setUserPropertyOnce('Name', data.name)
+        logger.setUserProperties({ Name: data.name })
         dispatch(setUser(user))
         dispatch(registerForPushNotifications())
       })

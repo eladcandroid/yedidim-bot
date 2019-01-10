@@ -1,7 +1,4 @@
-import React from 'react'
-
-import RNAmplitude from 'react-native-amplitude-analytics'
-import { withContext } from 'with-context'
+import { Amplitude } from 'expo'
 import { getInstance } from './common/utils'
 
 const amplitudeConfig = {
@@ -13,7 +10,6 @@ const amplitudeConfig = {
   }
 }
 
-export const logger = new RNAmplitude(amplitudeConfig[getInstance()].apiKey)
+Amplitude.initialize(amplitudeConfig[getInstance()].apiKey)
 
-export const Logger = React.createContext(logger)
-export const withLogger = withContext(Logger, 'logger')
+export const logger = Amplitude
