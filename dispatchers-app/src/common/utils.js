@@ -4,8 +4,9 @@ import { I18nManager } from 'react-native'
 import { Constants } from 'expo'
 
 export const getInstance = () => {
+  return process.env.NODE_ENV === 'development' ? 'development' : 'production'
   //const channel = Constants.manifest.releaseChannel || 'development'
-  return 'production' // !/(test|development|production)/.test(channel) ? 'production' : channel
+  // !/(test|development|production)/.test(channel) ? 'production' : channel
 }
 
 export const objectToArray = obj => {

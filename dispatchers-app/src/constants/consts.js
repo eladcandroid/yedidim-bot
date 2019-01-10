@@ -20,3 +20,15 @@ export const ScreenType = {
   EventsSearch: 'EventsSearch',
   ProfileScreen: 'ProfileScreen'
 }
+
+export const LOG_EVENTS = {
+  EVENT_CREATED: 'event created',
+  EVENT_EDITED: 'event edited',
+  NOTIFICATION_RECEIVED: 'notification received',
+  LOGIN_SUCCESS: 'logged in',
+  LOGIN_FAIL: 'login failed',
+  TOKEN_STORE_SUCCESS: 'token stored in db',
+  TOKEN_STORE_FAIL: 'token failed to store in db',
+  EVENT_CHANGED: 'event changed',
+  LOCATION_UPDATED: 'location updated'
+}

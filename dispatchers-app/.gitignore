@@ -94,3 +94,6 @@ shellAppWorkspaces
 
 # Expo Client builds
 /client-builds
+
+# Firebase
+functions/firebase-debug.log

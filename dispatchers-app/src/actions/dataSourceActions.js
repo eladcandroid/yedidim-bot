@@ -19,7 +19,8 @@ import {
   sendTestNotificationToDispatcher
 } from './notificationsActions'
 import { objectToArray, getInstance } from '../common/utils'
-import { EventStatus } from '../constants/consts'
+import { EventStatus, LOG_EVENTS } from '../constants/consts'
+import { logger } from '../Logger'
 
 const firebaseConfig = {
   development: {
@@ -69,8 +70,14 @@ export function signIn(id, phone, onError) {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, phone)
-      .catch(function(err) {
-        console.log('failed to sign in', err)
+      .then(() => {
+        logger.setUserId(id)
+        logger.logEvent(LOG_EVENTS.LOGIN_SUCCESS)
+      })
+      .catch(function(error) {
+        logger.setUserId(id)
+        logger.logEventWithProperties(LOG_EVENTS.LOGIN_FAIL, { error })
+        console.log('failed to sign in', error)
         onError('פרטים שגויים. נסה שנית')
       })
   }
@@ -92,8 +99,14 @@ export function storeNotificationToken(token) {
         },
         err => {
           if (err) {
+            logger.logEventWithProperties(LOG_EVENTS.TOKEN_STORE_FAIL, {
+              error: err
+            })
             dispatch(setError('Unable to set token. ', err))
           } else {
+            logger.logEventWithProperties(LOG_EVENTS.TOKEN_STORE_SUCCESS, {
+              token
+            })
             dispatch(setNotifications(true))
             console.log('Token was set', token)
           }
@@ -135,6 +148,8 @@ export function signOutUser() {
         .signOut()
         .then(() => {
           dispatch(handleSignedOutUser())
+          logger.setUserId(null)
+          // logger.regenerateDeviceId()
         })
     })
   }
@@ -161,12 +176,14 @@ export function createEvent(event) {
       .set(event, err => {
         if (err) {
           dispatch(setError('Failed to create event!', err))
+        } else {
+          logger.logEventWithProperties(LOG_EVENTS.EVENT_CREATED, event.details)
         }
       })
   }
 }
 
-export function updateEvent(event) {
+export function updateEvent(event, changes) {
   return (dispatch, getState) => {
     const dispatcher = getState().dataSource.user.id
     firebase
@@ -181,6 +198,10 @@ export function updateEvent(event) {
         if (!result.committed) {
           dispatch(setError('האירוע כבר בטיפול'))
         } else if (result.snapshot) {
+          logger.logEventWithProperties(LOG_EVENTS.EVENT_EDITED, {
+            event: event.key,
+            changes
+          })
           dispatch(setEvent(result.snapshot.val()))
         }
       })
@@ -333,6 +354,7 @@ function loadUserData(user) {
         user.name = data.name
         user.notifications = data.notifications
         user.handleBot = data.handleBot
+        logger.setUserProperties({ Name: data.name })
         dispatch(setUser(user))
         dispatch(registerForPushNotifications())
       })
