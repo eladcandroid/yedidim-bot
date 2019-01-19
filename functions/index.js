@@ -4,6 +4,7 @@ admin.initializeApp();
 
 const webhook = require('./handlers/webHookHandler');
 const manage = require('./handlers/manageHandler');
+const manageDB = require('./handlers/manageDBHandler');
 const sendExpoFollowerNotification = require('./handlers/notificationsHandler');
 const locationHandler = require('./handlers/locationHandler');
 const testNotificationHandler = require('./handlers/testNotificationHandler');
@@ -74,4 +75,9 @@ exports.sendTestNotification = functions.https.onRequest((req, res) => {
 exports.saveUserLocation = functions.https.onRequest((req, res) => {
   return locationHandler.saveUserLocation(req, res, admin);
 });
+
+exports.manageDB = functions.https.onRequest((req, res) => {
+  return manageDB.handleHttp(req, res, admin);
+});
+
 
