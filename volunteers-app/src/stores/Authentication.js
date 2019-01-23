@@ -1,7 +1,14 @@
-import { types, getParent, flow } from 'mobx-state-tree'
+import { types, getParent, flow, getSnapshot } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackUserLogin, trackEvent } from 'io/analytics'
 import { acknowledgeTestNotification } from 'io/notifications'
+
+const Location = types.model('Location', {
+  id: types.identifier(types.string),
+  name: types.string,
+  latitude: types.number,
+  longitude: types.number
+})
 
 const CurrentUser = types
   .model('CurrentUser', {
@@ -13,7 +20,8 @@ const CurrentUser = types
     role: types.optional(
       types.enumeration('Role', ['volunteer', 'dispatcher', 'admin']),
       'volunteer'
-    )
+    ),
+    locations: types.optional(types.array(Location), [])
   })
   .views(self => ({
     get isMuted() {
@@ -44,7 +52,29 @@ const CurrentUser = types
     }),
     acknowledgeTestNotification: () => {
       acknowledgeTestNotification(self.id)
-    }
+    },
+    addLocation: flow(function* addLocation(addedLocation) {
+      // Optmistic push location to user
+      self.locations.push(addedLocation)
+
+      trackEvent('AddLocation', { location: addedLocation })
+
+      yield api.updateUser(self.id, {
+        locations: getSnapshot(self.locations)
+      })
+    }),
+    removeLocation: flow(function* addLocation(removedLocation) {
+      // Optmistic push location to user
+      self.locations = self.locations.filter(
+        location => location.id !== removedLocation.id
+      )
+
+      trackEvent('RemoveLocation', { location: removedLocation })
+
+      yield api.updateUser(self.id, {
+        locations: getSnapshot(self.locations)
+      })
+    })
   }))
 
 const AuthenticationStore = types
