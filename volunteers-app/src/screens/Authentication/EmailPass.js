@@ -158,6 +158,33 @@ class EmailPassAuthenticationScreen extends React.Component {
                   {txt => <Text>{txt}</Text>}
                 </FormattedMessage>
               </Button>
+              <View style={{ backgroundColor: 'grey', height: 10, width: 200 }} />
+              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%' }}>
+                <Button
+                  style={{ width: 1, height: 1 }}
+                  onPress={() => Linking.openURL(`https://yedidim-il.org/`)}
+                >
+                  <Image
+                    source={require('../../../assets/icons/icon_website.png')}
+                  />
+                </Button>
+                <Button
+                  style={{ width: 1, height: 1 }}
+                  onPress={() =>
+                    Linking.openURL(`https://www.facebook.com/yedidim.il/`)}
+                >
+                  <Image
+                    source={require('../../../assets/icons/icon_facebook.png')}
+                  />
+                </Button>
+                <Button style={{width:1, height: 1}}
+                    onPress={() => Linking.openURL(`tel:${'0533131310'}`)}
+                >
+                  <Image
+                    source={require('../../../assets/icons/icon_call.png')}
+                  />
+                </Button>
+              </View>
             </Form>
             <FormattedMessage id="Authentication.stillNotVolunteers">
               {txt => <IntroText>{txt}</IntroText>}
