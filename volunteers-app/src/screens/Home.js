@@ -3,6 +3,10 @@ import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
 import {
+  Image,
+  View
+} from 'react-native'
+import {
   Button,
   Container,
   Body,
@@ -268,6 +272,10 @@ class HomeScreen extends Component {
                 </FormattedMessage>
               </MessageView>
             )}
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%' }}>
+            <Image style={{width:'50%', resizeMode: 'contain'}} source={require('../../assets/buttons/guide.png')} />
+            <Image style={{width:'50%',resizeMode: 'contain'}} source={require('../../assets/buttons/history.png')} />
+          </View>
         </Content>
       </Container>
     )
