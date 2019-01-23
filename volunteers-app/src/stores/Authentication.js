@@ -6,8 +6,8 @@ import { acknowledgeTestNotification } from 'io/notifications'
 const Location = types.model('Location', {
   id: types.identifier(types.string),
   name: types.string,
-  latitude: types.number,
-  longitude: types.number
+  lat: types.number,
+  lon: types.number
 })
 
 const CurrentUser = types
@@ -54,16 +54,34 @@ const CurrentUser = types
       acknowledgeTestNotification(self.id)
     },
     addLocation: flow(function* addLocation(addedLocation) {
+      // Check if location is valid and is not in the list yet
+      if (
+        !addedLocation ||
+        !addedLocation.id ||
+        self.locations.find(location => location.id === addedLocation.id)
+      ) {
+        return
+      }
+
       // Optmistic push location to user
       self.locations.push(addedLocation)
 
       trackEvent('AddLocation', { location: addedLocation })
 
       yield api.updateUser(self.id, {
-        locations: getSnapshot(self.locations)
+        Locations: getSnapshot(self.locations)
       })
     }),
     removeLocation: flow(function* addLocation(removedLocation) {
+      // Check if location is valid and is in the list already
+      if (
+        !removedLocation ||
+        !removedLocation.id ||
+        !self.locations.find(location => location.id === removedLocation.id)
+      ) {
+        return
+      }
+
       // Optmistic push location to user
       self.locations = self.locations.filter(
         location => location.id !== removedLocation.id
@@ -72,7 +90,7 @@ const CurrentUser = types
       trackEvent('RemoveLocation', { location: removedLocation })
 
       yield api.updateUser(self.id, {
-        locations: getSnapshot(self.locations)
+        Locations: getSnapshot(self.locations)
       })
     })
   }))
