@@ -26,6 +26,7 @@ functions/handlers/*.js
 functions/config/index.js
 functions/lib/onesignal.js
 functions/lib/email.js
+functions/lib/logger.js
 functions/lib/notifications.js
 functions/firebase-debug.log
 
