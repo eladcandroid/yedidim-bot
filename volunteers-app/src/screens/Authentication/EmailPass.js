@@ -66,8 +66,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
-    height: 450,
-    marginTop: '2%'
+    height: '40%'
   },
   imgBtn: {
     height: 40,

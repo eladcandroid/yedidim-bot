@@ -5,12 +5,17 @@ import Home from 'screens/Home'
 import Event from 'screens/Event'
 import AboutStartach from 'screens/AboutStartach'
 import NotificationTest from 'screens/Admin/NotificationTest'
+import MyCities from 'screens/MyCities'
+import AddCity from 'screens/AddCity'
 
 const AuthenticatedStack = StackNavigator({
   Home: { screen: Home },
   Event: { screen: Event },
   AboutStartach: { screen: AboutStartach },
-  NotificationReport: { screen: NotificationTest }
+  MyCities: { screen: MyCities },
+  NotificationReport: { screen: NotificationTest },
+  AddCity: { screen: AddCity }
+
 })
 
 export default withLocationManager(withNotificationManager(AuthenticatedStack))
