@@ -2,7 +2,14 @@ import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Image, Linking, View, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native'
+import {
+  Image,
+  Linking,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl
+} from 'react-native'
 import {
   Button,
   Container,
@@ -16,7 +23,9 @@ import {
   Text,
   List,
   ListItem,
-  Thumbnail
+  Thumbnail,
+  Grid,
+  Row
 } from 'native-base'
 import debounce from 'lodash.debounce'
 import format from 'date-fns/format'
@@ -24,7 +33,6 @@ import { trackEvent } from 'io/analytics'
 
 import AlignedText from 'components/AlignedText'
 import NotificationBadge from 'components/NotificationBadge'
-import { Col, Grid, Row } from '../components/ButtonsConfirmationBar'
 
 const MessageView = styled.View`
   flex: 1;
@@ -49,6 +57,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     height: 35
+  },
+  guideButton: {
+    backgroundColor: 'orange'
   },
   footer: {
     marginBottom: 20,
@@ -134,7 +145,7 @@ const EventItem = observer(
           width: '90%',
           backgroundColor: 'white',
           borderBottomWidth: 3,
-          borderBottomColor: 'red',
+          borderBottomColor: isTaken ? 'grey' : 'red',
           marginTop: 10,
           marginRight: 'auto',
           marginBottom: 0,
@@ -146,7 +157,7 @@ const EventItem = observer(
             style={{
               width: 50,
               height: 50,
-              borderColor: 'red',
+              borderColor: isTaken ? 'grey' : 'red',
               borderWidth: 1,
               borderRadius: 25,
               flexDirection: 'row',
@@ -162,7 +173,7 @@ const EventItem = observer(
         </Left>
         <Body>
           <AlignedText>
-            <Text style={{ fontWeight: 'bold' }}>
+            <Text style={{ fontWeight: 'bold', fontFamily: 'Alef' }}>
               {' '}
               {categoryName} {'\n'}{' '}
             </Text>{' '}
@@ -177,7 +188,16 @@ const EventItem = observer(
             />
           )}
         </Body>
-        <Right>
+        <Right
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            paddingBottom: 0,
+            paddingRight: 0
+          }}
+        >
           <FormattedRelative value={timestamp}>
             {relative => <AlignedText note>{relative}</AlignedText>}
           </FormattedRelative>
@@ -188,9 +208,10 @@ const EventItem = observer(
               style={{
                 padding: 3,
                 marginTop: 3,
-                backgroundColor: 'red',
+                backgroundColor: 'grey',
                 color: 'white',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                fontFamily: 'Alef'
               }}
             >
               נלקח
@@ -280,13 +301,13 @@ class HomeScreen extends Component {
     return (
       <Container>
         <Content
+          style={{ flex: 1 }}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={this.handleRefresh}
             />
           }
-          style={{ backgroundColor: '#f9f9f9' }}
         >
           {!refreshing && (
             <LastUpdatedView>
@@ -294,16 +315,18 @@ class HomeScreen extends Component {
             </LastUpdatedView>
           )}
           {hasEvents && (
-            <List
-              dataArray={sortedEventsByStatusAndTimestamp}
-              renderRow={event => (
-                <EventItem
-                  event={event}
-                  onPress={this.handleEventItemPress}
-                  isAdmin={currentUser.isAdmin}
-                />
-              )}
-            />
+            <Content style={{ flex: 1 }}>
+              <List
+                dataArray={sortedEventsByStatusAndTimestamp}
+                renderRow={event => (
+                  <EventItem
+                    event={event}
+                    onPress={this.handleEventItemPress}
+                    isAdmin={currentUser.isAdmin}
+                  />
+                )}
+              />
+            </Content>
           )}
           {!hasEvents &&
             !refreshing && (
@@ -316,8 +339,32 @@ class HomeScreen extends Component {
                 </FormattedMessage>
               </MessageView>
             )}
-
+          {/* add button here */}
         </Content>
+        <Row
+          style={[
+            styles.footer,
+            {
+              backgroundColor: '#f9f9f9',
+              paddingTop: 20,
+              flex: 0,
+              paddingBottom: 20
+            }
+          ]}
+        >
+          <Button
+            block
+            large
+            style={[styles.btn, styles.cancel,{display: 'flex', alignItems: 'center', borderBottomWidth: 1}]}
+            onPress={() => {
+              Linking.openURL('https://yedidim-il.org/חוברת-הדרכה-למתנדבים/')
+            }}
+          >
+            <FormattedMessage id="Event.button.guide" defaultMessage="Guide">
+              {txt => <Text style={{fontFamily: 'Alef', lineHeight: 22}}>{txt}</Text>}
+            </FormattedMessage>
+          </Button>
+        </Row>
       </Container>
     )
   }
