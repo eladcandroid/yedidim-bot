@@ -2,10 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import {
-  Image,
-  View
-} from 'react-native'
+import { Image, Linking, View, StyleSheet, ActivityIndicator, RefreshControl } from 'react-native'
 import {
   Button,
   Container,
@@ -21,13 +18,13 @@ import {
   ListItem,
   Thumbnail
 } from 'native-base'
-import { ActivityIndicator, RefreshControl } from 'react-native'
 import debounce from 'lodash.debounce'
 import format from 'date-fns/format'
 import { trackEvent } from 'io/analytics'
 
 import AlignedText from 'components/AlignedText'
 import NotificationBadge from 'components/NotificationBadge'
+import { Col, Grid, Row } from '../components/ButtonsConfirmationBar'
 
 const MessageView = styled.View`
   flex: 1;
@@ -44,6 +41,23 @@ const LastUpdatedView = styled.View`
   border-bottom-width: 1px
   border-bottom-color: #D3D3D3; 
 `
+
+const styles = StyleSheet.create({
+  btn: {
+    borderRadius: 10,
+    marginHorizontal: 15,
+    flex: 1,
+    paddingHorizontal: 20,
+    height: 35
+  },
+  footer: {
+    marginBottom: 20,
+    marginTop: 10,
+    width: '100%',
+    flex: 1,
+    justifyContent: 'space-between'
+  }
+})
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
@@ -116,14 +130,43 @@ const EventItem = observer(
         onPress={() => {
           onPress(id)
         }}
-        style={{ width: '90%', backgroundColor: 'white', borderBottomWidth: 3, borderBottomColor: 'red', marginTop: 10, marginRight: 'auto', marginBottom: 0, marginLeft: 'auto' }}
+        style={{
+          width: '90%',
+          backgroundColor: 'white',
+          borderBottomWidth: 3,
+          borderBottomColor: 'red',
+          marginTop: 10,
+          marginRight: 'auto',
+          marginBottom: 0,
+          marginLeft: 'auto'
+        }}
       >
         <Left>
-          <Image style={{ width: 50, height: 50, borderColor: 'red', borderWidth: 2 }} source={categoryImg} />
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              borderColor: 'red',
+              borderWidth: 1,
+              borderRadius: 25,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Image
+              style={{ width: 30, resizeMode: 'contain' }}
+              source={categoryImg}
+            />
+          </View>
         </Left>
         <Body>
           <AlignedText>
-            <Text style={{ fontWeight: 'bold' }}> {categoryName} {"\n"} </Text> {displayAddress} {carType && `(${carType})`}
+            <Text style={{ fontWeight: 'bold' }}>
+              {' '}
+              {categoryName} {'\n'}{' '}
+            </Text>{' '}
+            {displayAddress} {carType && `(${carType})`}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
           {isAdmin && (
@@ -273,10 +316,7 @@ class HomeScreen extends Component {
                 </FormattedMessage>
               </MessageView>
             )}
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%' }}>
-            <Image style={{width:'50%', resizeMode: 'contain'}} source={require('../../assets/buttons/guide.png')} />
-            <Image style={{width:'50%',resizeMode: 'contain'}} source={require('../../assets/buttons/history.png')} />
-          </View>
+
         </Content>
       </Container>
     )

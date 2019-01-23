@@ -82,6 +82,8 @@
   "Event.button.cancel": "Cancel",
   "Event.button.accept": "Accept",
   "Event.button.finalise": "Finalise",
+  "Event.button.guide": "Guide",
+  "Event.button.history": "History",
   "About.Startach.facebook": "Visit our Facebook page",
   "About.Startach.title": "Startach",
   "About.MyCities.title": "My Cities",
