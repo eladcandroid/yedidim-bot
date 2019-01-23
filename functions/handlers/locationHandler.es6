@@ -1,5 +1,5 @@
 import * as geoHelper from './geoHelper'
-import { track } from './logger'
+import logger from '../lib/logger'
 
 exports.saveUserLocation = async (req, res, admin) => {
   const {
@@ -15,7 +15,7 @@ exports.saveUserLocation = async (req, res, admin) => {
 
   // console.log('@@@ [DECODED TOKEN]', decodedToken)
 
-  track({
+  logger.track({
     eventType: 'user located', // required
     userId: authToken,
     eventProperties: {
