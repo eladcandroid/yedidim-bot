@@ -39,7 +39,7 @@ const withLocationManagement = WrappedComponent => {
             // Geolocation Config
             reset: true,
             desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-            distanceFilter: 250,
+            distanceFilter: 2500,
             // Activity Recognition
             stopTimeout: 5,
             // Application config

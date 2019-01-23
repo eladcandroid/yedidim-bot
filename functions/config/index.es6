@@ -6,7 +6,7 @@ const instance =
 
 const tokens = require('../_tokens.json')[instance]
 
-console.log('Took tokens for ', instance)
+console.log('[TOKENS] Took tokens for ', instance)
 
 module.exports = {
   instance,
