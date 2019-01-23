@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Linking, View } from 'react-native'
+import { Linking, StyleSheet, View } from 'react-native'
 
 import {
   Button,
@@ -22,8 +22,40 @@ import NotificationBadge from 'components/NotificationBadge'
 import TextFieldRow from './TextFieldRow'
 import AlignedText from './AlignedText'
 
+const styles = StyleSheet.create({
+  textBold: {
+    fontFamily: 'AlefBold'
+  },
+  detailsSection: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  EventDetailsContainer: {
+    marginVertical: 20,
+    flex: 1,
+    flexDirection: 'row'
+  },
+  middleSection: {
+    borderRightColor: 'gray',
+    borderLeftColor: 'gray',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    padding: 3
+  },
+  noteWithUpperBorder: {
+    borderTopColor: 'gray',
+    borderTopWidth: 1
+  }
+})
+
 const MarginView = styled.View`
   margin: 10px 10px;
+`
+
+const LabelText = styled.Text`
+  text-align: center;
+  font-family: 'Alef';
+  font-size: 18px;
 `
 const EventDetails = ({
   isAdmin,
@@ -59,7 +91,15 @@ const EventDetails = ({
           </Col>
           <Col size={3}>
             <MarginView>
-              <H2 style={{ textAlign: 'left' }}>{categoryName}</H2>
+              <LabelText
+                style={{
+                  textAlign: 'left',
+                  borderBottomColor: 'gray',
+                  borderBottomWidth: 2
+                }}
+              >
+                {categoryName}
+              </LabelText>
               <FormattedRelative value={timestamp}>
                 {relative => <AlignedText note>{relative}</AlignedText>}
               </FormattedRelative>
@@ -83,6 +123,26 @@ const EventDetails = ({
             </Col>
           </Row>
         )}
+        <View style={styles.EventDetailsContainer}>
+          <View style={styles.detailsSection}>
+            <FormattedMessage id="Event.description">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{more}</LabelText>
+          </View>
+          <View style={[styles.detailsSection, styles.middleSection]}>
+            <FormattedMessage id="Event.location">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{displayAddress}</LabelText>
+          </View>
+          <View style={styles.detailsSection}>
+            <FormattedMessage id="Event.carType">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{carType}</LabelText>
+          </View>
+        </View>
         <Row>
           <Col>
             <MapView
@@ -104,12 +164,6 @@ const EventDetails = ({
             </MapView>
           </Col>
         </Row>
-        <FormattedMessage id="Event.description" defaultMessage="Description">
-          {label => <TextFieldRow label={label} value={more} />}
-        </FormattedMessage>
-        <FormattedMessage id="Event.location" defaultMessage="Location">
-          {label => <TextFieldRow label={label} value={displayAddress} />}
-        </FormattedMessage>
         {isAssigned && (
           <FormattedMessage id="Event.caller" defaultMessage="Name">
             {label => <TextFieldRow label={label} value={caller} />}
@@ -128,9 +182,6 @@ const EventDetails = ({
             {label => <TextFieldRow label={label} value={privateInfo} />}
           </FormattedMessage>
         )}
-        <FormattedMessage id="Event.carType" defaultMessage="Car type">
-          {label => <TextFieldRow label={label} value={carType} />}
-        </FormattedMessage>
         {assignedTo &&
           !!assignedTo.name && (
             <TextFieldRow label="מתנדב" value={assignedTo.name} />
@@ -159,6 +210,7 @@ const EventDetails = ({
           <Col>
             <MarginView>
               <Button
+                style={{ height: 40 }}
                 block
                 info
                 onPress={() =>

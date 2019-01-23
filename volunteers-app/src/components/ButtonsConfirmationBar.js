@@ -1,9 +1,42 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Alert } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 
 import { Button, Icon, Grid, Col, Row, Text } from 'native-base'
 
+const styles = StyleSheet.create({
+  btn: {
+    borderRadius: 10,
+    marginHorizontal: 15,
+    flex: 1,
+    paddingHorizontal: 20,
+    height: 35
+  },
+  accept: {
+    backgroundColor: 'green'
+  },
+  cancel: {
+    backgroundColor: 'red'
+  },
+  footer: {
+    marginBottom: 20,
+    marginTop: 10,
+    width: '100%',
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  personIcon: {
+    fontSize: 20,
+    marginRight: 20,
+    marginLeft: 20,
+    textAlign: 'left'
+  },
+  logo: {
+    width: '100%',
+    height: 250,
+    marginTop: 20
+  }
+})
 class ButtonsConfirmationBar extends Component {
   handleClick = type => {
     const { intl } = this.props
@@ -39,18 +72,22 @@ class ButtonsConfirmationBar extends Component {
 
     return (
       <Grid>
-        <Row style={{ marginTop: 10 }}>
+        <Row style={styles.footer}>
           <Col>
-            <Button full large block success onPress={this.handleOkClick}>
-              <Icon name="md-checkmark-circle" />
+            <Button block large
+              style={[styles.btn, styles.accept]}
+              onPress={this.handleOkClick}
+            >
               <FormattedMessage {...ok.modalMsgs.buttonMsgs}>
                 {txt => <Text>{txt}</Text>}
               </FormattedMessage>
             </Button>
           </Col>
           <Col>
-            <Button full large block danger onPress={this.handleCancelClick}>
-              <Icon name="md-close-circle" />
+            <Button block large
+              style={[styles.btn, styles.cancel]}
+              onPress={this.handleCancelClick}
+            >
               <FormattedMessage {...cancel.modalMsgs.buttonMsgs}>
                 {txt => <Text>{txt}</Text>}
               </FormattedMessage>
