@@ -110,5 +110,8 @@
   "NotificationReport.button.text": "בדוק התראות של כולם",
   "NotificationReport.volunteers": "מתנדבים",
   "NotificationReport.dispatchers": "מוקדנים",
-  "NotificationReport.admins": "מנהלים"
+  "NotificationReport.admins": "מנהלים",
+  "Locations.add": "הוספת ישוב חדש",
+  "Locations.add.confirm": "הוספת ישוב",
+  "Locations.remove": "מחיקת ישוב"
 }

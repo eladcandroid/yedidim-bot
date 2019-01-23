@@ -3,9 +3,8 @@ import styled from 'styled-components/native'
 import { FormattedMessage } from 'react-intl'
 import { I18nManager, Linking, Image, View } from 'react-native'
 import { trackEvent } from 'io/analytics'
-import StartachLogo from 'images/startach-logo.jpg'
 import AlignedText from 'components/AlignedText'
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import {
   geocodeAddress,
   getAddressDetailsFromGoogleResult
@@ -27,22 +26,28 @@ import {
   Col,
   Row
 } from 'native-base'
+import { inject, observer } from 'mobx-react/native'
+import { NavigationActions } from 'react-navigation'
 
 const MarginView = styled.View`
   margin: 10px 10px;
 `
+@observer
 class AddCity extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      details: {
-        address: undefined,
-        geo: undefined,
-        category: 'Other'
-      },
       listViewDisplayed: 'auto',
+      location: {
+        id: undefined,
+        name: undefined,
+        lat: undefined,
+        lon: undefined
+      }
     }
-    this.hideGooglePlacesSuggestions = this.hideGooglePlacesSuggestions.bind(this)
+    this.hideGooglePlacesSuggestions = this.hideGooglePlacesSuggestions.bind(
+      this
+    )
   }
   static navigationOptions = ({ navigation }) => ({
     header: (
@@ -59,22 +64,24 @@ class AddCity extends Component {
           </Button>
         </Left>
         <Body>
-        <FormattedMessage id="About.AddCity.title" defaultMessage="הוספת ישוב">
-          {txt => <Title>{txt}</Title>}
-        </FormattedMessage>
+          <FormattedMessage
+            id="About.AddCity.title"
+            defaultMessage="הוספת ישוב"
+          >
+            {txt => <Title>{txt}</Title>}
+          </FormattedMessage>
         </Body>
         <Right />
       </Header>
     )
   })
 
-
   hideGooglePlacesSuggestions() {
-    this.setState({listViewDisplayed: false})
+    this.setState({ listViewDisplayed: false })
   }
 
   GooglePlacesInput() {
-    const {details, listViewDisplayed} = this.state
+    const { listViewDisplayed } = this.state
     // Fixed issues with list not closing on selection by applying
     // https://github.com/FaridSafi/react-native-google-places-autocomplete/issues/329#issuecomment-434664874
     return (
@@ -83,19 +90,26 @@ class AddCity extends Component {
         placeholderTextColor="#575757"
         minLength={2} // minimum length of text to search
         autoFocus={false}
-        returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+        returnKeyType="search" // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
         listViewDisplayed={listViewDisplayed} // true/false/undefined
         fetchDetails
         renderDescription={row => row.description} // custom description render
         onFocus={() => {
-          this.setState({listViewDisplayed: 'auto'})
+          this.setState({ listViewDisplayed: 'auto' })
         }}
         onPress={(data, _details = null) => {
           // 'details' is provided when fetchDetails = true
-          const {address, geo} = getAddressDetailsFromGoogleResult(_details)
-          console.log("Details=",_details)
-          console.log("address=",address)
-          console.log("geo=",geo)
+          const { address, geo } = getAddressDetailsFromGoogleResult(_details)
+
+          this.setState({
+            location: {
+              id: _details.id,
+              name: address,
+              lat: geo.lat,
+              lon: geo.lon
+          }}
+          )
+
           this.hideGooglePlacesSuggestions()
         }}
         getDefaultValue={() => ''}
@@ -114,8 +128,8 @@ class AddCity extends Component {
             borderTopWidth: 0
           },
           textInput: {
-            marginLeft: 0,
-            marginRight: 0,
+            marginLeft: 30,
+            marginRight: 30,
             height: 38,
             color: '#575757',
             fontSize: 17,
@@ -140,15 +154,45 @@ class AddCity extends Component {
   render() {
     return (
       <Container>
-        <Content style={{ flex: 1, backgroundColor: '#fff' }}>
-          <View style={{margin:30}}>
+        <Content style={{ flex: 1, backgroundColor: '#fff', paddingTop: 30 }}>
           <AlignedText>כתובת:</AlignedText>
           {this.GooglePlacesInput()}
-          </View>
         </Content>
+<View style={{
+  position: 'absolute',
+  bottom: 50,
+  width: '100%',
+}}>
+        <Button
+          block
+          large
+          style={{
+            borderRadius: 0,
+            flex: 1,
+            height: 40,
+            marginLeft: '25%',
+            marginRight: '25%'
+          }}
+          onPress={() => {
+            this.props.currentUser.addLocation({
+              id: this.state.location.id,
+              name: this.state.location.name,
+              lat: this.state.location.lat,
+              lon: this.state.location.lon
+            })
+            this.props.navigation.goBack()
+          }}
+        >
+          <FormattedMessage id="Locations.add.confirm">
+            {txt => <Text>{txt}</Text>}
+          </FormattedMessage>
+        </Button>
+</View>
       </Container>
     )
   }
 }
 
-export default AddCity
+export default inject(({ stores }) => ({
+  currentUser: stores.authStore.currentUser
+}))(AddCity)

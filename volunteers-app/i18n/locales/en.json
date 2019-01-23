@@ -110,5 +110,8 @@
   "NotificationReport.button.text": "Test notifications for everyone",
   "NotificationReport.volunteers": "Volunteers",
   "NotificationReport.dispatchers": "Dispatchers",
-  "NotificationReport.admins": "Administrators"
+  "NotificationReport.admins": "Administrators",
+  "Locations.add": "Add New Location",
+  "Locations.add.confirm": "Add",
+  "Locations.remove": "Remove Location"
 }
