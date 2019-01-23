@@ -15,30 +15,74 @@ import {
   Input,
   Icon
 } from 'native-base'
-import { View, KeyboardAvoidingView } from 'react-native'
+import {
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Linking,
+  View
+} from 'react-native'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { trackEvent } from 'io/analytics'
 import { Constants } from 'expo'
 
+const styles = StyleSheet.create({
+  bigblue: {
+    color: 'blue',
+    fontWeight: 'bold',
+    fontSize: 30
+  },
+  red: {
+    color: 'red'
+  },
+  mainContent: {
+    flex: 1,
+    marginTop: -45
+  },
+  inputField: {
+    marginRight: 30,
+    textAlign: 'left',
+    marginLeft: 30
+  },
+  authBtn: {
+    margin: 40,
+    height: 60,
+    backgroundColor: '#191970',
+    borderRadius: 10
+  },
+  personIcon: {
+    fontSize: 20,
+    marginRight: 20,
+    marginLeft: 20,
+    textAlign: 'left'
+  },
+  logo: {
+    width: '100%',
+    height: 250,
+    marginTop: 20
+  }
+})
+
 const IntroText = styled.Text`
   text-align: center;
   font-weight: bold;
-  margin: 30px 10px 30px;
+  color: darkgray;
+`
+
+const RegisterBtn = styled.Text`
+  text-align: center;
+  font-weight: bold;
   font-size: 16px;
+  margin-top: 8px;
 `
 
 const ErrorText = styled.Text`
   text-align: center;
   color: red;
   font-weight: bold;
-  margin-bottom: 10px;
-`
-
-const VersionText = styled.Text`
-  text-align: center;
-  font-weight: bold;
+  margin-top: 10px;
 `
 
 @observer
@@ -56,39 +100,9 @@ class EmailPassAuthenticationScreen extends React.Component {
 
     return (
       <Container>
-        <Header>
-          <Left />
-          <Body>
-            <FormattedMessage
-              id="Authentication.title"
-              defaultMessage="Authentication"
-            >
-              {txt => <Title>{txt}</Title>}
-            </FormattedMessage>
-          </Body>
-          <Right />
-        </Header>
+        <Image source={require('../loginLogo.png')} style={styles.logo} />
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-          <Content style={{ flex: 1 }}>
-            {authError ? (
-              <View>
-                <FormattedMessage
-                  id="Authentication.error"
-                  defaultMessage="An error has occurred, unable to authenticate. Please try again later."
-                >
-                  {txt => <IntroText>{txt}</IntroText>}
-                </FormattedMessage>
-                <ErrorText>Error Code: {authError}</ErrorText>
-              </View>
-            ) : (
-              <FormattedMessage
-                id="Authentication.notauthenticated"
-                defaultMessage="You are not authenticated yet. Please authenticate to receive events."
-              >
-                {txt => <IntroText>{txt}</IntroText>}
-              </FormattedMessage>
-            )}
-            <VersionText>v{Constants.manifest.version}</VersionText>
+          <Content style={styles.mainContent}>
             <Form>
               <Item floatingLabel>
                 <Label style={{ textAlign: 'left' }}>
@@ -107,9 +121,13 @@ class EmailPassAuthenticationScreen extends React.Component {
               </Item>
               <Item floatingLabel>
                 <Label style={{ textAlign: 'left' }}>
+                  <Icon style={{ color: 'white' }} name="ios-person" />
                   <FormattedMessage id="Authentication.id" defaultMessage="ID">
                     {txt => txt}
                   </FormattedMessage>
+                  {false && (
+                    <Icon style={styles.personIcon} name="ios-person" />
+                  )}
                 </Label>
                 <Input
                   keyboardType="numeric"
@@ -117,25 +135,44 @@ class EmailPassAuthenticationScreen extends React.Component {
                   onChangeText={value => this.setState({ id: value })}
                 />
               </Item>
+              {authError && (
+                <View>
+                  <FormattedMessage id="Authentication.error">
+                    {txt => <ErrorText>{txt}</ErrorText>}
+                  </FormattedMessage>
+                </View>
+              )}
+              <Button
+                style={styles.authBtn}
+                iconLeft
+                full
+                large
+                block
+                success
+                onPress={this.handleAuthentication}
+              >
+                <FormattedMessage
+                  id="Authentication.button"
+                  defaultMessage="Authenticate me"
+                >
+                  {txt => <Text>{txt}</Text>}
+                </FormattedMessage>
+              </Button>
             </Form>
-          </Content>
-          <Button
-            style={{ height: 70 }}
-            iconLeft
-            full
-            large
-            block
-            success
-            onPress={this.handleAuthentication}
-          >
-            <Icon style={{ fontSize: 40 }} name="ios-person" />
-            <FormattedMessage
-              id="Authentication.button"
-              defaultMessage="Authenticate me"
-            >
-              {txt => <Text>{txt}</Text>}
+            <FormattedMessage id="Authentication.stillNotVolunteers">
+              {txt => <IntroText>{txt}</IntroText>}
             </FormattedMessage>
-          </Button>
+            <FormattedMessage id="Authentication.pressForSignup">
+              {txt => (
+                <RegisterBtn
+                  onPress={() =>
+                    Linking.openURL('https://yedidim-il.org/הצטרפו-אלינו/')}
+                >
+                  {txt}{' '}
+                </RegisterBtn>
+              )}
+            </FormattedMessage>
+          </Content>
         </KeyboardAvoidingView>
       </Container>
     )
