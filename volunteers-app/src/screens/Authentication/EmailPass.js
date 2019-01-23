@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-mount-set-state */
 import React from 'react'
 import {
   Button,
@@ -26,7 +27,7 @@ import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { trackEvent } from 'io/analytics'
-import { Constants } from 'expo'
+import { Font } from 'expo'
 
 const styles = StyleSheet.create({
   bigblue: {
@@ -87,11 +88,18 @@ const ErrorText = styled.Text`
 
 @observer
 class EmailPassAuthenticationScreen extends React.Component {
-  state = { phoneNumber: '', id: '' }
+  state = { phoneNumber: '', id: '', fontLoaded: false }
 
   handleAuthentication = async () => {
     trackEvent('Navigation', { page: 'EmailPassAuthentication' })
     this.props.signIn(this.state)
+  }
+
+  componentDidMount() {
+    Font.loadAsync({
+      yedidim: require('../../../assets/fonts/yedidim-font.otf')
+    })
+    this.setState({ fontLoaded: true })
   }
 
   render() {
@@ -103,89 +111,105 @@ class EmailPassAuthenticationScreen extends React.Component {
         <Image source={require('../loginLogo.png')} style={styles.logo} />
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
           <Content style={styles.mainContent}>
-            <Form>
-              <Item floatingLabel>
-                <Label style={{ textAlign: 'left' }}>
+            {this.state.fontLoaded && (
+              <Form>
+                <Item floatingLabel>
+                  <Label style={{ textAlign: 'left' }}>
+                    <FormattedMessage
+                      id="Authentication.phonenumber"
+                      defaultMessage="Phone number"
+                    >
+                      {txt => txt}
+                    </FormattedMessage>
+                  </Label>
+                  <Input
+                    keyboardType="numeric"
+                    value={phoneNumber}
+                    onChangeText={value =>
+                      this.setState({ phoneNumber: value })}
+                  />
+                </Item>
+                <Item floatingLabel>
+                  <Label style={{ textAlign: 'left' }}>
+                    <Icon style={{ color: 'white' }} name="ios-person" />
+                    <FormattedMessage
+                      id="Authentication.id"
+                      defaultMessage="ID"
+                    >
+                      {txt => txt}
+                    </FormattedMessage>
+                    {false && (
+                      <Icon style={styles.personIcon} name="ios-person" />
+                    )}
+                  </Label>
+                  <Input
+                    keyboardType="numeric"
+                    value={id}
+                    onChangeText={value => this.setState({ id: value })}
+                  />
+                </Item>
+                {authError && (
+                  <View>
+                    <FormattedMessage id="Authentication.error">
+                      {txt => <ErrorText>{txt}</ErrorText>}
+                    </FormattedMessage>
+                  </View>
+                )}
+                <Button
+                  style={styles.authBtn}
+                  iconLeft
+                  full
+                  large
+                  block
+                  success
+                  onPress={this.handleAuthentication}
+                >
                   <FormattedMessage
-                    id="Authentication.phonenumber"
-                    defaultMessage="Phone number"
+                    id="Authentication.button"
+                    defaultMessage="Authenticate me"
                   >
-                    {txt => txt}
+                    {txt => <Text>{txt}</Text>}
                   </FormattedMessage>
-                </Label>
-                <Input
-                  keyboardType="numeric"
-                  value={phoneNumber}
-                  onChangeText={value => this.setState({ phoneNumber: value })}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label style={{ textAlign: 'left' }}>
-                  <Icon style={{ color: 'white' }} name="ios-person" />
-                  <FormattedMessage id="Authentication.id" defaultMessage="ID">
-                    {txt => txt}
-                  </FormattedMessage>
-                  {false && (
-                    <Icon style={styles.personIcon} name="ios-person" />
-                  )}
-                </Label>
-                <Input
-                  keyboardType="numeric"
-                  value={id}
-                  onChangeText={value => this.setState({ id: value })}
-                />
-              </Item>
-              {authError && (
-                <View>
-                  <FormattedMessage id="Authentication.error">
-                    {txt => <ErrorText>{txt}</ErrorText>}
-                  </FormattedMessage>
-                </View>
-              )}
-              <Button
-                style={styles.authBtn}
-                iconLeft
-                full
-                large
-                block
-                success
-                onPress={this.handleAuthentication}
-              >
-                <FormattedMessage
-                  id="Authentication.button"
-                  defaultMessage="Authenticate me"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-              </Button>
-              <View style={{ backgroundColor: 'grey', height: 10, width: 200 }} />
-              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%' }}>
-                <Button
-                  style={{ width: 1, height: 1 }}
-                  onPress={() => Linking.openURL(`https://yedidim-il.org/`)}
-                >
-                  <Image
-                    source={require('../../../assets/icons/icon_website.png')}
-                  />
                 </Button>
-                <Button
-                  style={{ width: 1, height: 1 }}
-                  onPress={() =>
-                    Linking.openURL(`https://www.facebook.com/yedidim.il/`)}
+                <View
+                  style={{ backgroundColor: 'grey', height: 10, width: 200 }}
+                />
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    width: '100%'
+                  }}
                 >
-                  <Image
-                    source={require('../../../assets/icons/icon_facebook.png')}
-                  />
-                </Button>
-                <Button style={{width:1, height: 1}}
+                  <Button
+                    style={{ width: 1, height: 1 }}
+                    onPress={() => Linking.openURL(`https://yedidim-il.org/`)}
+                  >
+                    <Image
+                      source={require('../../../assets/icons/icon_website.png')}
+                    />
+                  </Button>
+                  <Button
+                    style={{ width: 1, height: 1 }}
+                    onPress={() =>
+                      Linking.openURL(`https://www.facebook.com/yedidim.il/`)}
+                  >
+                    <Image
+                      source={require('../../../assets/icons/icon_facebook.png')}
+                    />
+                  </Button>
+                  <Button
+                    style={{ width: 1, height: 1 }}
                     onPress={() => Linking.openURL(`tel:${'0533131310'}`)}
-                >
-                  <Image
-                    source={require('../../../assets/icons/icon_call.png')}
-                  />
-                </Button>
-              </View>
-            </Form>
+                  >
+                    <Image
+                      source={require('../../../assets/icons/icon_call.png')}
+                    />
+                  </Button>
+                </View>
+              </Form>
+            )}
             <FormattedMessage id="Authentication.stillNotVolunteers">
               {txt => <IntroText>{txt}</IntroText>}
             </FormattedMessage>
