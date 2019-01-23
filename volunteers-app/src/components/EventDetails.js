@@ -24,17 +24,27 @@ import AlignedText from './AlignedText'
 
 const styles = StyleSheet.create({
   textBold: {
-    fontWeight: 'bold'
+    fontFamily: 'AlefBold'
   },
   detailsSection: {
     flex: 1,
-    flexDirection: 'column',
-    width: '100%'
+    flexDirection: 'column'
   },
   EventDetailsContainer: {
-    marginTop: 20,
+    marginVertical: 20,
     flex: 1,
     flexDirection: 'row'
+  },
+  middleSection: {
+    borderRightColor: 'gray',
+    borderLeftColor: 'gray',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    padding: 3
+  },
+  noteWithUpperBorder: {
+    borderTopColor: 'gray',
+    borderTopWidth: 1
   }
 })
 
@@ -44,6 +54,8 @@ const MarginView = styled.View`
 
 const LabelText = styled.Text`
   text-align: center;
+  font-family: 'Alef';
+  font-size: 18px;
 `
 const EventDetails = ({
   isAdmin,
@@ -79,7 +91,15 @@ const EventDetails = ({
           </Col>
           <Col size={3}>
             <MarginView>
-              <H2 style={{ textAlign: 'left' }}>{categoryName}</H2>
+              <LabelText
+                style={{
+                  textAlign: 'left',
+                  borderBottomColor: 'gray',
+                  borderBottomWidth: 2
+                }}
+              >
+                {categoryName}
+              </LabelText>
               <FormattedRelative value={timestamp}>
                 {relative => <AlignedText note>{relative}</AlignedText>}
               </FormattedRelative>
@@ -103,6 +123,26 @@ const EventDetails = ({
             </Col>
           </Row>
         )}
+        <View style={styles.EventDetailsContainer}>
+          <View style={styles.detailsSection}>
+            <FormattedMessage id="Event.description">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{more}</LabelText>
+          </View>
+          <View style={[styles.detailsSection, styles.middleSection]}>
+            <FormattedMessage id="Event.location">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{displayAddress}</LabelText>
+          </View>
+          <View style={styles.detailsSection}>
+            <FormattedMessage id="Event.carType">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{carType}</LabelText>
+          </View>
+        </View>
         <Row>
           <Col>
             <MapView
@@ -124,27 +164,6 @@ const EventDetails = ({
             </MapView>
           </Col>
         </Row>
-        <View style={styles.EventDetailsContainer}>
-          <View style={styles.detailsSection}>
-            <FormattedMessage id="Event.description">
-              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-            </FormattedMessage>
-            <LabelText>HELLO STAV</LabelText>
-          </View>
-          <View style={styles.detailsSection}>
-            <FormattedMessage id="Event.location">
-              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-            </FormattedMessage>
-            <LabelText>{displayAddress}</LabelText>
-          </View>
-          <View style={styles.detailsSection}>
-            <FormattedMessage id="Event.carType">
-              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-            </FormattedMessage>
-            <LabelText>{carType}</LabelText>
-          </View>
-        </View>
-
         {isAssigned && (
           <FormattedMessage id="Event.caller" defaultMessage="Name">
             {label => <TextFieldRow label={label} value={caller} />}
@@ -191,6 +210,7 @@ const EventDetails = ({
           <Col>
             <MarginView>
               <Button
+                style={{ height: 40 }}
                 block
                 info
                 onPress={() =>
