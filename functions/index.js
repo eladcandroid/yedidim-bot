@@ -33,6 +33,12 @@ exports.onStatusUpdated = functions.database
     return eventUpdatesHandlers.onEventStatusUpdate(event, context)
   })
 
+exports.onVolunteersLocationsUpdated = functions.database
+  .ref('/volunteer/{volunteerId}/Locations')
+  .onWrite((event, context) => {
+    return eventUpdatesHandlers.onVolunteersLocationsUpdated(event, context)
+  })
+
 exports.onIsOpenUpdated = functions.database
   .ref('/events/{eventId}/isOpen')
   .onWrite((event, context) => {

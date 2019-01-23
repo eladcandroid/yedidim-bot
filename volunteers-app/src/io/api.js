@@ -38,7 +38,8 @@ const userSnapshotToJSON = snapshot => ({
   phone: snapshot.MobilePhone,
   muted: snapshot.Muted,
   acceptedEventId: snapshot.EventKey,
-  role: snapshot.Role
+  role: snapshot.Role,
+  locations: snapshot.Locations
 })
 
 // Store subscription so to be able to unsubscribe on logoff
@@ -345,15 +346,12 @@ export async function loadLatestOpenEvents(userId) {
   const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
   if (hasLocationPermission) {
     try {
-      console.log('>>>>1', userId)
       fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
     } catch (error) {
-      console.log('>>>>2', userId)
       // User has given permissions but disabled temporary location or location is unavailable
       fetchedEvents = await fetchLatestOpenedEvents()
     }
   } else {
-    console.log('>>>>3', userId)
     fetchedEvents = await fetchLatestOpenedEvents()
   }
 
