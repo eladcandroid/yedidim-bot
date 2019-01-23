@@ -3,6 +3,7 @@ const GeoFire = require('geofire')
 const { sendPushNotifications } = require('./onesignal')
 const { sendEmailNotifications } = require('./email')
 const NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
+const logger = require('./logger')
 
 const validToken = token =>
   token.length === 36 && !token.startsWith('ExponentPushToken')
@@ -53,6 +54,23 @@ export const sendNotificationByGeoFireLocation = async props => {
         usersInRadius,
         data
       )
+      // Logging found users for location
+      logger.track(
+        usersInRadius.map(userId => ({
+          eventType: 'event notification by radius (search)', // required
+          userId,
+          eventProperties: {
+            origin: 'server',
+            event: {
+              id: data.eventId,
+              latitude,
+              longitude
+            },
+            radius
+          }
+        }))
+      )
+
       admin
         .database()
         .ref('/volunteer')
@@ -74,12 +92,28 @@ export const sendNotificationByGeoFireLocation = async props => {
                 usersInRadius.indexOf(userId) > -1 &&
                 !userMutedNotifications(usersById[userId])
             )
-            .map(userId => usersById[userId])
+            .map(userId => ({ userId, ...usersById[userId] }))
 
           console.log(
             `[sendNotificationByGeoFireLocation] After filter by location, users list for sending notification is`,
             users.map(({ MobilePhone }) => MobilePhone),
             data
+          )
+
+          logger.track(
+            users.map(userId => ({
+              eventType: 'event notification by radius (send)', // required
+              userId,
+              eventProperties: {
+                origin: 'server',
+                event: {
+                  id: data.eventId,
+                  latitude,
+                  longitude
+                },
+                radius
+              }
+            }))
           )
 
           sendNotificationToUsers({ title, message, data, appType, users })
