@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMotionUsageDescription</key>
-	<string>Accelerometer use increases battery efficiency by intelligently toggling location-tracking</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires background tracking</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -21,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>6.0.0</string>
+	<string>7.0.0</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -40,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6</string>
+	<string>8</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -69,11 +65,15 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Allow ידידים מתנדבים to access your contacts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>CHANGEME: Location Always And When In Use Usage Description</string>
+	<string>This allow us to track your location in the background so we could send notifications to you about events closer to your location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This allow us to track your location in the background so we could send notifications to you about events closer to your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow ידידים מתנדבים to use your location</string>
+	<string>This allow us to use your location to be able to notify you about events close to your location and show more relevant events to you in the home screen, making them more actionable</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow ידידים מתנדבים to access your microphone</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This allow us to track your location in the background so we could send notifications to you about events closer to your location</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give ידידים מתנדבים permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
