@@ -34,12 +34,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30
   },
+  linkBtn: {
+    backgroundColor: 'white',
+    width: 40,
+    height: 40
+  },
   red: {
     color: 'red'
   },
   mainContent: {
     flex: 1,
-    marginTop: -45
+    display: 'flex',
+    marginTop: '-15%'
   },
   inputField: {
     marginRight: 30,
@@ -49,7 +55,7 @@ const styles = StyleSheet.create({
   authBtn: {
     margin: 40,
     height: 60,
-    backgroundColor: '#191970',
+    backgroundColor: '#0b445f',
     borderRadius: 10
   },
   personIcon: {
@@ -60,8 +66,16 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
-    height: 250,
-    marginTop: 20
+    height: 450,
+    marginTop: '2%'
+  },
+  imgBtn: {
+    height: 40,
+    width: 40
+  },
+  centerBtn: {
+    marginLeft: 20,
+    marginRight: 20
   }
 })
 
@@ -104,37 +118,39 @@ class EmailPassAuthenticationScreen extends React.Component {
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
           <Content style={styles.mainContent}>
             <Form>
-              <Item floatingLabel>
-                <Label style={{ textAlign: 'left' }}>
-                  <FormattedMessage
-                    id="Authentication.phonenumber"
-                    defaultMessage="Phone number"
-                  >
-                    {txt => txt}
-                  </FormattedMessage>
-                </Label>
-                <Input
-                  keyboardType="numeric"
-                  value={phoneNumber}
-                  onChangeText={value => this.setState({ phoneNumber: value })}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label style={{ textAlign: 'left' }}>
-                  <Icon style={{ color: 'white' }} name="ios-person" />
-                  <FormattedMessage id="Authentication.id" defaultMessage="ID">
-                    {txt => txt}
-                  </FormattedMessage>
-                  {false && (
-                    <Icon style={styles.personIcon} name="ios-person" />
-                  )}
-                </Label>
-                <Input
-                  keyboardType="numeric"
-                  value={id}
-                  onChangeText={value => this.setState({ id: value })}
-                />
-              </Item>
+              <View style={{ width: '100%', paddingLeft: 40, paddingRight: 40 }}>
+                <Item floatingLabel>
+                  <Label style={{ textAlign: 'left' }}>
+                    <FormattedMessage
+                      id="Authentication.phonenumber"
+                      defaultMessage="Phone number"
+                    >
+                      {txt => txt}
+                    </FormattedMessage>
+                  </Label>
+                  <Input
+                    keyboardType="numeric"
+                    value={phoneNumber}
+                    onChangeText={value => this.setState({ phoneNumber: value })}
+                  />
+                </Item>
+                <Item floatingLabel>
+                  <Label style={{ textAlign: 'left' }}>
+                    <Icon style={{ color: 'white' }} name="ios-person" />
+                    <FormattedMessage id="Authentication.id" defaultMessage="ID">
+                      {txt => txt}
+                    </FormattedMessage>
+                    {false && (
+                      <Icon style={styles.personIcon} name="ios-person" />
+                    )}
+                  </Label>
+                  <Input
+                    keyboardType="numeric"
+                    value={id}
+                    onChangeText={value => this.setState({ id: value })}
+                  />
+                </Item>
+              </View>
               {authError && (
                 <View>
                   <FormattedMessage id="Authentication.error">
@@ -158,47 +174,51 @@ class EmailPassAuthenticationScreen extends React.Component {
                   {txt => <Text>{txt}</Text>}
                 </FormattedMessage>
               </Button>
-              <View style={{ backgroundColor: 'grey', height: 10, width: 200 }} />
-              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%' }}>
+              <FormattedMessage id="Authentication.stillNotVolunteers">
+                {txt => <IntroText>{txt}</IntroText>}
+              </FormattedMessage>
+              <FormattedMessage id="Authentication.pressForSignup">
+                {txt => (
+                  <RegisterBtn
+                    onPress={() =>
+                      Linking.openURL('https://yedidim-il.org/הצטרפו-אלינו/')}
+                  >
+                    {txt}{' '}
+                  </RegisterBtn>
+                )}
+              </FormattedMessage>
+              <View style={{ backgroundColor: '#e0e0e0', height: 3, width: 250, marginTop: 10, marginRight: 'auto', marginBottom: 0, marginLeft: 'auto' }} />
+              <View style={{ display: 'flex', flexDirection: 'row', marginTop: '5%', justifyContent: 'center', width: '100%' }}>
                 <Button
-                  style={{ width: 1, height: 1 }}
+                  style={styles.linkBtn}
                   onPress={() => Linking.openURL(`https://yedidim-il.org/`)}
                 >
                   <Image
+                    style={styles.imgBtn}
                     source={require('../../../assets/icons/icon_website.png')}
                   />
                 </Button>
                 <Button
-                  style={{ width: 1, height: 1 }}
+                  style={[styles.linkBtn, styles.centerBtn]}
                   onPress={() =>
                     Linking.openURL(`https://www.facebook.com/yedidim.il/`)}
                 >
                   <Image
+                    style={styles.imgBtn}
                     source={require('../../../assets/icons/icon_facebook.png')}
                   />
                 </Button>
-                <Button style={{width:1, height: 1}}
-                    onPress={() => Linking.openURL(`tel:${'0533131310'}`)}
+                <Button
+                  style={styles.linkBtn}
+                  onPress={() => Linking.openURL(`tel:${'0533131310'}`)}
                 >
                   <Image
+                    style={styles.imgBtn}
                     source={require('../../../assets/icons/icon_call.png')}
                   />
                 </Button>
               </View>
             </Form>
-            <FormattedMessage id="Authentication.stillNotVolunteers">
-              {txt => <IntroText>{txt}</IntroText>}
-            </FormattedMessage>
-            <FormattedMessage id="Authentication.pressForSignup">
-              {txt => (
-                <RegisterBtn
-                  onPress={() =>
-                    Linking.openURL('https://yedidim-il.org/הצטרפו-אלינו/')}
-                >
-                  {txt}{' '}
-                </RegisterBtn>
-              )}
-            </FormattedMessage>
           </Content>
         </KeyboardAvoidingView>
       </Container>
