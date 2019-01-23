@@ -11,6 +11,7 @@
     "deploy:production": "firebase use yedidim-production && yarn fb-deploy"
   },
   "dependencies": {
+    "amplitude": "^3.5.0",
     "async": "^2.6.0",
     "babel-runtime": "^6.23.0",
     "bunyan": "^1.8.12",
