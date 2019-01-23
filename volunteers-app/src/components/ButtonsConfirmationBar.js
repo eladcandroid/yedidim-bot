@@ -8,7 +8,9 @@ const styles = StyleSheet.create({
   btn: {
     borderRadius: 10,
     marginHorizontal: 15,
-    flex: 1
+    flex: 1,
+    paddingHorizontal: 20,
+    height: 35
   },
   accept: {
     backgroundColor: 'green'
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
   footer: {
-    paddingHorizontal: 15,
+    marginBottom: 20,
     marginTop: 10,
     width: '100%',
     flex: 1,
@@ -76,7 +78,6 @@ class ButtonsConfirmationBar extends Component {
               style={[styles.btn, styles.accept]}
               onPress={this.handleOkClick}
             >
-              <Icon name="md-checkmark-circle" />
               <FormattedMessage {...ok.modalMsgs.buttonMsgs}>
                 {txt => <Text>{txt}</Text>}
               </FormattedMessage>
@@ -87,7 +88,6 @@ class ButtonsConfirmationBar extends Component {
               style={[styles.btn, styles.cancel]}
               onPress={this.handleCancelClick}
             >
-              <Icon name="md-close-circle" />
               <FormattedMessage {...cancel.modalMsgs.buttonMsgs}>
                 {txt => <Text>{txt}</Text>}
               </FormattedMessage>

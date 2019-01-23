@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Linking, View } from 'react-native'
+import { Linking, StyleSheet, View } from 'react-native'
 
 import {
   Button,
@@ -22,8 +22,28 @@ import NotificationBadge from 'components/NotificationBadge'
 import TextFieldRow from './TextFieldRow'
 import AlignedText from './AlignedText'
 
+const styles = StyleSheet.create({
+  textBold: {
+    fontWeight: 'bold'
+  },
+  detailsSection: {
+    flex: 1,
+    flexDirection: 'column',
+    width: '100%'
+  },
+  EventDetailsContainer: {
+    marginTop: 20,
+    flex: 1,
+    flexDirection: 'row'
+  }
+})
+
 const MarginView = styled.View`
   margin: 10px 10px;
+`
+
+const LabelText = styled.Text`
+  text-align: center;
 `
 const EventDetails = ({
   isAdmin,
@@ -104,12 +124,27 @@ const EventDetails = ({
             </MapView>
           </Col>
         </Row>
-        <FormattedMessage id="Event.description" defaultMessage="Description">
-          {label => <TextFieldRow label={label} value={more} />}
-        </FormattedMessage>
-        <FormattedMessage id="Event.location" defaultMessage="Location">
-          {label => <TextFieldRow label={label} value={displayAddress} />}
-        </FormattedMessage>
+        <View style={styles.EventDetailsContainer}>
+          <View style={styles.detailsSection}>
+            <FormattedMessage id="Event.description">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>HELLO STAV</LabelText>
+          </View>
+          <View style={styles.detailsSection}>
+            <FormattedMessage id="Event.location">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{displayAddress}</LabelText>
+          </View>
+          <View style={styles.detailsSection}>
+            <FormattedMessage id="Event.carType">
+              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+            </FormattedMessage>
+            <LabelText>{carType}</LabelText>
+          </View>
+        </View>
+
         {isAssigned && (
           <FormattedMessage id="Event.caller" defaultMessage="Name">
             {label => <TextFieldRow label={label} value={caller} />}
@@ -128,9 +163,6 @@ const EventDetails = ({
             {label => <TextFieldRow label={label} value={privateInfo} />}
           </FormattedMessage>
         )}
-        <FormattedMessage id="Event.carType" defaultMessage="Car type">
-          {label => <TextFieldRow label={label} value={carType} />}
-        </FormattedMessage>
         {assignedTo &&
           !!assignedTo.name && (
             <TextFieldRow label="מתנדב" value={assignedTo.name} />
