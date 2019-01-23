@@ -60,10 +60,14 @@ const SideBar = ({
         <ListItem
           button
           onPress={() => {
-            sendTestNotificationWithFeedback(id, role)
+            navigation.dispatch(
+              NavigationActions.navigate({
+                routeName: 'MyCities'
+              })
+            )
           }}
         >
-          <AlignedText>בדוק התראות</AlignedText>
+          <AlignedText>הישובים שלי</AlignedText>
         </ListItem>
         <ListItem button onPress={signOut}>
           <FormattedMessage
