@@ -116,13 +116,14 @@ const EventItem = observer(
         onPress={() => {
           onPress(id)
         }}
+        style={{ width: '90%', backgroundColor: 'white', borderBottomWidth: 3, borderBottomColor: 'red', marginTop: 10, marginRight: 'auto', marginBottom: 0, marginLeft: 'auto' }}
       >
         <Left>
-          <Thumbnail small source={categoryImg} />
+          <Image style={{ width: 50, height: 50, borderColor: 'red', borderWidth: 2 }} source={categoryImg} />
         </Left>
         <Body>
           <AlignedText>
-            {categoryName} - {displayAddress} {carType && `(${carType})`}
+            <Text style={{ fontWeight: 'bold' }}> {categoryName} {"\n"} </Text> {displayAddress} {carType && `(${carType})`}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
           {isAdmin && (
@@ -242,7 +243,7 @@ class HomeScreen extends Component {
               onRefresh={this.handleRefresh}
             />
           }
-          style={{ backgroundColor: '#fff' }}
+          style={{ backgroundColor: '#f9f9f9' }}
         >
           {!refreshing && (
             <LastUpdatedView>

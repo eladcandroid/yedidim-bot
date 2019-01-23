@@ -26,7 +26,6 @@ import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { trackEvent } from 'io/analytics'
-import { Constants } from 'expo'
 
 const styles = StyleSheet.create({
   bigblue: {
@@ -66,8 +65,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
-    height: 450,
-    marginTop: '2%'
+    height: '40%'
   },
   imgBtn: {
     height: 40,
@@ -76,6 +74,9 @@ const styles = StyleSheet.create({
   centerBtn: {
     marginLeft: 20,
     marginRight: 20
+  },
+  defaultFont: {
+    fontFamily: 'Alef'
   }
 })
 
@@ -83,6 +84,7 @@ const IntroText = styled.Text`
   text-align: center;
   font-weight: bold;
   color: darkgray;
+  font-family: 'Alef';
 `
 
 const RegisterBtn = styled.Text`
@@ -90,6 +92,8 @@ const RegisterBtn = styled.Text`
   font-weight: bold;
   font-size: 16px;
   margin-top: 8px;
+  font-family: 'AlefBold';
+  font-size: 20px;
 `
 
 const ErrorText = styled.Text`
@@ -113,12 +117,14 @@ class EmailPassAuthenticationScreen extends React.Component {
     const { phoneNumber, id } = this.state
 
     return (
-      <Container>
+      <Container style={styles.defaultFont}>
         <Image source={require('../loginLogo.png')} style={styles.logo} />
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
           <Content style={styles.mainContent}>
             <Form>
-              <View style={{ width: '100%', paddingLeft: 40, paddingRight: 40 }}>
+              <View
+                style={{ width: '100%', paddingLeft: 40, paddingRight: 40 }}
+              >
                 <Item floatingLabel>
                   <Label style={{ textAlign: 'left' }}>
                     <FormattedMessage
@@ -131,13 +137,17 @@ class EmailPassAuthenticationScreen extends React.Component {
                   <Input
                     keyboardType="numeric"
                     value={phoneNumber}
-                    onChangeText={value => this.setState({ phoneNumber: value })}
+                    onChangeText={value =>
+                      this.setState({ phoneNumber: value })}
                   />
                 </Item>
                 <Item floatingLabel>
                   <Label style={{ textAlign: 'left' }}>
                     <Icon style={{ color: 'white' }} name="ios-person" />
-                    <FormattedMessage id="Authentication.id" defaultMessage="ID">
+                    <FormattedMessage
+                      id="Authentication.id"
+                      defaultMessage="ID"
+                    >
                       {txt => txt}
                     </FormattedMessage>
                     {false && (
@@ -187,8 +197,26 @@ class EmailPassAuthenticationScreen extends React.Component {
                   </RegisterBtn>
                 )}
               </FormattedMessage>
-              <View style={{ backgroundColor: '#e0e0e0', height: 3, width: 250, marginTop: 10, marginRight: 'auto', marginBottom: 0, marginLeft: 'auto' }} />
-              <View style={{ display: 'flex', flexDirection: 'row', marginTop: '5%', justifyContent: 'center', width: '100%' }}>
+              <View
+                style={{
+                  backgroundColor: '#e0e0e0',
+                  height: 3,
+                  width: 250,
+                  marginTop: 10,
+                  marginRight: 'auto',
+                  marginBottom: 0,
+                  marginLeft: 'auto'
+                }}
+              />
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  marginTop: '5%',
+                  justifyContent: 'center',
+                  width: '100%'
+                }}
+              >
                 <Button
                   style={styles.linkBtn}
                   onPress={() => Linking.openURL(`https://yedidim-il.org/`)}

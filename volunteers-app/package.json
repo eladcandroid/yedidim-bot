@@ -22,6 +22,11 @@
     "react-native-scripts": "1.11.1",
     "react-test-renderer": "16.0.0-alpha.12"
   },
+  "rnpm": {
+    "assets": [
+    "assets/fonts/yedidim-font"
+    ]
+},
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
     "start": "expo start",
