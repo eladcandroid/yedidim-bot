@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import styled from 'styled-components/native'
 import { FormattedMessage } from 'react-intl'
 import { I18nManager, Linking, Image, View } from 'react-native'
 import { trackEvent } from 'io/analytics'
-import StartachLogo from 'images/startach-logo.jpg'
-import AlignedText from 'components/AlignedText'
+import styled from 'styled-components/native'
+import { inject, observer } from 'mobx-react/native'
 
 import {
   Button,
@@ -27,8 +26,15 @@ import { ListItem } from './SideBar'
 const MarginView = styled.View`
   margin: 10px 10px;
 `
-const zeroStateText = 'קבלת התראות מישובים קבועים, גם כשאינך בקרבת מקום';
+const LabelText = styled.Text`
+  text-align: center;
+  font-family: 'Alef';
+  font-size: 18px;
+  margin: 10%;
+`
+const zeroStateText = 'קבלת התראות מישובים קבועים, גם כשאינך בקרבת מקום'
 
+@observer
 class MyCities extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
@@ -45,9 +51,12 @@ class MyCities extends Component {
           </Button>
         </Left>
         <Body>
-        <FormattedMessage id="About.MyCities.title" defaultMessage="הישובים שלי">
-          {txt => <Title>{txt}</Title>}
-        </FormattedMessage>
+          <FormattedMessage
+            id="About.MyCities.title"
+            defaultMessage="הישובים שלי"
+          >
+            {txt => <Title>{txt}</Title>}
+          </FormattedMessage>
         </Body>
         <Right />
       </Header>
@@ -58,9 +67,23 @@ class MyCities extends Component {
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>
-          <AlignedText>{zeroStateText}</AlignedText>
+          <View style={{ alignItems: 'center', marginTop: 30 }}>
+            <LabelText>{zeroStateText}</LabelText>
+            {this.props.currentUser.locations.map(location => {
+              console.log('!!!!!', location)
+            })}
+          </View>
+
           <Button
-            style={{ width: 100, height: 20 }}
+            block
+            large
+            style={{
+              borderRadius: 0,
+              flex: 1,
+              height: 40,
+              marginLeft: '25%',
+              marginRight: '25%'
+            }}
             onPress={() => {
               this.props.navigation.dispatch(
                 NavigationActions.navigate({
@@ -69,12 +92,16 @@ class MyCities extends Component {
               )
             }}
           >
+            <FormattedMessage id="Locations.add">
+              {txt => <Text>{txt}</Text>}
+            </FormattedMessage>
           </Button>
-
         </Content>
       </Container>
     )
   }
 }
 
-export default MyCities
+export default inject(({ stores }) => ({
+  currentUser: stores.authStore.currentUser
+}))(MyCities)

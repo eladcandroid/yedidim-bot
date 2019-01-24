@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Linking, StyleSheet, View } from 'react-native'
+import { Image, Linking, StyleSheet, View } from 'react-native'
 
 import {
   Button,
@@ -13,7 +13,6 @@ import {
   Col,
   Row,
   Text,
-  H2,
   Thumbnail
 } from 'native-base'
 import { MapView } from 'expo'
@@ -24,38 +23,42 @@ import AlignedText from './AlignedText'
 
 const styles = StyleSheet.create({
   textBold: {
-    fontFamily: 'AlefBold'
+    fontFamily: 'AlefBold',
+    marginBottom: 5
   },
   detailsSection: {
-    flex: 1,
-    flexDirection: 'column'
+    width: '100%',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+    paddingBottom: 6,
+    height: 'auto'
   },
   EventDetailsContainer: {
-    marginVertical: 20,
+    marginBottom: 20,
+    paddingLeft: 25,
+    paddingTop: 15,
     flex: 1,
-    flexDirection: 'row'
-  },
-  middleSection: {
-    borderRightColor: 'gray',
-    borderLeftColor: 'gray',
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    padding: 3
+    flexDirection: 'column'
   },
   noteWithUpperBorder: {
     borderTopColor: 'gray',
     borderTopWidth: 1
+  },
+  waze: {
+    width: 40,
+    height: 40,
+    borderRadius: 20
   }
 })
 
 const MarginView = styled.View`
-  margin: 10px 10px;
+  margin: 10px 0;
 `
 
 const LabelText = styled.Text`
-  text-align: center;
+  text-align: left;
   font-family: 'Alef';
-  font-size: 18px;
+  font-size: 16px;
 `
 const EventDetails = ({
   isAdmin,
@@ -91,15 +94,18 @@ const EventDetails = ({
           </Col>
           <Col size={3}>
             <MarginView>
-              <LabelText
+              <Text
                 style={{
                   textAlign: 'left',
                   borderBottomColor: 'gray',
-                  borderBottomWidth: 2
+                  borderBottomWidth: 2,
+                  fontWeight: 'bold',
+                  fontFamily: 'AlefBold',
+                  marginTop: 10
                 }}
               >
                 {categoryName}
-              </LabelText>
+              </Text>
               <FormattedRelative value={timestamp}>
                 {relative => <AlignedText note>{relative}</AlignedText>}
               </FormattedRelative>
@@ -123,26 +129,6 @@ const EventDetails = ({
             </Col>
           </Row>
         )}
-        <View style={styles.EventDetailsContainer}>
-          <View style={styles.detailsSection}>
-            <FormattedMessage id="Event.description">
-              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-            </FormattedMessage>
-            <LabelText>{more}</LabelText>
-          </View>
-          <View style={[styles.detailsSection, styles.middleSection]}>
-            <FormattedMessage id="Event.location">
-              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-            </FormattedMessage>
-            <LabelText>{displayAddress}</LabelText>
-          </View>
-          <View style={styles.detailsSection}>
-            <FormattedMessage id="Event.carType">
-              {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-            </FormattedMessage>
-            <LabelText>{carType}</LabelText>
-          </View>
-        </View>
         <Row>
           <Col>
             <MapView
@@ -164,6 +150,81 @@ const EventDetails = ({
             </MapView>
           </Col>
         </Row>
+        <Row
+          style={{
+            flex: 1,
+            width: '100%',
+            marginTop: 10
+          }}
+        >
+          <Col>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginLeft: 7
+              }}
+            >
+              <View>
+                <Image
+                  style={styles.waze}
+                  source={require('../images/waze-logo.png')}
+                />
+              </View>
+              <View>
+                <Button
+                  style={{
+                    height: 30,
+                    borderRadius: 20,
+                    backgroundColor: '#4285f4',
+                    padding: 0,
+                    marginLeft: 4,
+                    marginTop: 3
+                  }}
+                  onPress={() =>
+                    Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
+                >
+                  <FormattedMessage id="Event.button.check.time">
+                    {txt => (
+                      <Text style={{ fontSize: 14, fontFamily: 'AlefBold' }}>
+                        {txt}
+                      </Text>
+                    )}
+                  </FormattedMessage>
+                </Button>
+              </View>
+            </View>
+          </Col>
+        </Row>
+        <View style={styles.EventDetailsContainer}>
+          <FormattedMessage id="Event.description">
+            {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+          </FormattedMessage>
+          <LabelText>{displayAddress}</LabelText>
+          <LabelText>{carType}</LabelText>
+          <LabelText>{more}</LabelText>
+        </View>
+        {false && (
+          <View style={styles.EventDetailsContainer}>
+            <View style={styles.detailsSection}>
+              <FormattedMessage id="Event.description">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+              <LabelText>{more}</LabelText>
+            </View>
+            <View style={[styles.detailsSection, styles.middleSection]}>
+              <FormattedMessage id="Event.location">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+              <LabelText>{displayAddress}</LabelText>
+            </View>
+            <View style={styles.detailsSection}>
+              <FormattedMessage id="Event.carType">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+            </View>
+          </View>
+        )}
         {isAssigned && (
           <FormattedMessage id="Event.caller" defaultMessage="Name">
             {label => <TextFieldRow label={label} value={caller} />}
@@ -206,27 +267,6 @@ const EventDetails = ({
               )}
             </FormattedMessage>
           )}
-        <Row>
-          <Col>
-            <MarginView>
-              <Button
-                style={{ height: 40 }}
-                block
-                info
-                onPress={() =>
-                  Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
-              >
-                <Icon name="md-map" />
-                <FormattedMessage
-                  id="Event.button.navigate"
-                  defaultMessage="Navigate with Waze"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-              </Button>
-            </MarginView>
-          </Col>
-        </Row>
         {isAssigned && (
           <Row>
             <Col>
