@@ -137,6 +137,7 @@ class MyCities extends Component {
             )}
             {userLocations.slice(0, 3).map(location => (
               <LocationItem
+                key={location.id}
                 location={location}
                 currentUser={this.props.currentUser}
                 onDeleteLocation={() => {
