@@ -3,7 +3,7 @@ const GeoFire = require('geofire')
 const { sendPushNotifications } = require('./onesignal')
 const { sendEmailNotifications } = require('./email')
 const NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
-const logger = require('./logger')
+import logger from './logger'
 
 const validToken = token =>
   token.length === 36 && !token.startsWith('ExponentPushToken')
@@ -101,7 +101,7 @@ export const sendNotificationByGeoFireLocation = async props => {
           )
 
           logger.track(
-            users.map(userId => ({
+            users.map(({ userId }) => ({
               eventType: 'event notification by radius (send)', // required
               userId,
               eventProperties: {

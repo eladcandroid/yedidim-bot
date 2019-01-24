@@ -1,22 +1,21 @@
 import * as notificationsHandler from './notificationsHandler'
 import * as geoHelper from './geoHelper'
 
-exports.onVolunteersLocationsUpdated = (event, content) => {
+exports.onVolunteersLocationsUpdated = (event, context) => {
   const volunteerId = context.params.volunteerId
   const currentLocations = event.after.val()
   const previousLocations = event.before.val()
 
   console.log(
-    'Locations changed from ' +
-      previousLocations +
-      ' to ' +
-      currentLocations +
-      ' for volunteer ' +
-      volunteerId
+    'Locations changed:',
+    previousLocations,
+    currentLocations,
+    volunteerId
   )
 
-  // TODO Update geofire with new added / removed
-  // TODO Search by radius, normalise keys to get only userId
+  // TODO [Here] Update geofire with new added / removed, key is userId-placeId
+  // TODO [On send notification by radius] Search by radius, normalise keys to get only userId
+  return Promise.resolve()
 }
 
 exports.onEventStatusUpdate = (event, context) => {
