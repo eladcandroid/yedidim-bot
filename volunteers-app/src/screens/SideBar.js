@@ -18,7 +18,7 @@ import AlignedText from 'components/AlignedText'
 import Logo from './logo.png'
 import packageJson from '../../package.json'
 
-const share_url = 'https://yedidim-il.org/הצטרפו-אלינו/'
+const SHARE_URL = 'https://yedidim-il.org/הצטרפו-אלינו/'
 
 const SideBar = ({
   signOut,
@@ -84,11 +84,19 @@ const SideBar = ({
 
         <ListItem
           button
-          onPress={() => Share.share({ message: 'Share.msg', url: share_url })}
+          onPress={() => Share.share({ message: 'Share.msg', url: SHARE_URL })}
         >
           <FormattedMessage id="Authentication.share" defaultMessage="Share">
             {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
+        </ListItem>
+        <ListItem
+          button
+          onPress={() => {
+            sendTestNotificationWithFeedback(id, role)
+          }}
+        >
+          <AlignedText>בדוק התראות</AlignedText>
         </ListItem>
         <ListItem button onPress={signOut}>
           <FormattedMessage
