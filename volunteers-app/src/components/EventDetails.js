@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Image, Linking, StyleSheet, View } from 'react-native'
+import { Image, Linking, StyleSheet, View, ScrollView } from 'react-native'
 
 import {
   Button,
@@ -27,18 +27,17 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   detailsSection: {
-    width: '100%',
-    borderBottomColor: 'gray',
-    borderBottomWidth: 1,
-    paddingBottom: 6,
-    height: 'auto'
+    flex: 1,
+    flexDirection: 'column',
+    width: '100%'
   },
   EventDetailsContainer: {
     marginBottom: 20,
     paddingLeft: 25,
     paddingTop: 15,
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   noteWithUpperBorder: {
     borderTopColor: 'gray',
@@ -48,6 +47,17 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20
+  },
+  imgBtn: {
+    height: 40,
+    width: 40
+  },
+  linkBtn: {
+    backgroundColor: 'white',
+    width: 40,
+    height: 40,
+    flex: 1,
+    flexDirection: 'column'
   }
 })
 
@@ -62,6 +72,8 @@ const LabelText = styled.Text`
 `
 const EventDetails = ({
   isAdmin,
+  isAssignedToMe,
+  cancelHandler,
   event: {
     categoryName,
     categoryImg,
@@ -85,7 +97,7 @@ const EventDetails = ({
 }) => (
   <Container>
     <Content style={{ flex: 1, backgroundColor: '#fff' }}>
-      <Grid>
+      <View>
         <Row>
           <Col size={1}>
             <MarginView>
@@ -184,7 +196,11 @@ const EventDetails = ({
                   onPress={() =>
                     Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
                 >
-                  <FormattedMessage id="Event.button.check.time">
+                  <FormattedMessage
+                    id={
+                      isAssigned ? 'Event.button.check.time' : 'Event.navigate'
+                    }
+                  >
                     {txt => (
                       <Text style={{ fontSize: 14, fontFamily: 'AlefBold' }}>
                         {txt}
@@ -196,122 +212,75 @@ const EventDetails = ({
             </View>
           </Col>
         </Row>
-        <View style={styles.EventDetailsContainer}>
-          <FormattedMessage id="Event.description">
-            {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-          </FormattedMessage>
-          <LabelText>{displayAddress}</LabelText>
-          <LabelText>{carType}</LabelText>
-          <LabelText>{more}</LabelText>
-        </View>
-        {false && (
+        {!isAssignedToMe && (
           <View style={styles.EventDetailsContainer}>
             <View style={styles.detailsSection}>
               <FormattedMessage id="Event.description">
                 {text => <LabelText style={styles.textBold}>{text}</LabelText>}
               </FormattedMessage>
-              <LabelText>{more}</LabelText>
-            </View>
-            <View style={[styles.detailsSection, styles.middleSection]}>
-              <FormattedMessage id="Event.location">
-                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-              </FormattedMessage>
               <LabelText>{displayAddress}</LabelText>
-            </View>
-            <View style={styles.detailsSection}>
-              <FormattedMessage id="Event.carType">
-                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
-              </FormattedMessage>
+              <LabelText>{carType}</LabelText>
+              <LabelText>{more}</LabelText>
             </View>
           </View>
         )}
-        {isAssigned && (
-          <FormattedMessage id="Event.caller" defaultMessage="Name">
-            {label => <TextFieldRow label={label} value={caller} />}
-          </FormattedMessage>
+        {isAssignedToMe && (
+          <View style={styles.EventDetailsContainer}>
+            <View style={styles.detailsSection}>
+              <FormattedMessage id="Event.caller">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+              <LabelText>{displayAddress}</LabelText>
+              <LabelText>{caller}</LabelText>
+              <LabelText>{phone}</LabelText>
+            </View>
+            <View style={styles.detailsSection}>
+              <FormattedMessage id="Event.description">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+              <LabelText>{carType}</LabelText>
+              {privateInfo && <LabelText>{privateInfo}</LabelText>}
+              <LabelText>{more}</LabelText>
+            </View>
+          </View>
         )}
-        {isAssigned && (
-          <FormattedMessage id="Event.phone" defaultMessage="Phone">
-            {label => <TextFieldRow label={label} value={phone} />}
-          </FormattedMessage>
-        )}
-        {isAssigned && (
-          <FormattedMessage
-            id="Event.privateInfo"
-            defaultMessage="Private Info"
+        {isAssignedToMe && (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '65%',
+              alignSelf: 'center'
+            }}
           >
-            {label => <TextFieldRow label={label} value={privateInfo} />}
-          </FormattedMessage>
-        )}
-        {assignedTo &&
-          !!assignedTo.name && (
-            <TextFieldRow label="מתנדב" value={assignedTo.name} />
-          )}
-        {isAssigned &&
-          dispatcher && (
-            <FormattedMessage id="Dispatcher.name" defaultMessage="Dispatcher">
-              {label => <TextFieldRow label={label} value={dispatcher.name} />}
-            </FormattedMessage>
-          )}
-        {isAssigned &&
-          dispatcher && (
-            <FormattedMessage
-              id="Dispatcher.phone"
-              defaultMessage="Dispatcher's Phone"
+            <Button
+              style={[styles.linkBtn, styles.centerBtn]}
+              onPress={cancelHandler}
             >
-              {label => (
-                <TextFieldRow
-                  label={label}
-                  value={dispatcher.callCenterPhone}
-                />
-              )}
-            </FormattedMessage>
-          )}
-        {isAssigned && (
-          <Row>
-            <Col>
-              <MarginView>
-                <Button
-                  block
-                  success
-                  onPress={() => Linking.openURL(`tel:${phone}`)}
-                >
-                  <Icon name="md-call" />
-                  <FormattedMessage
-                    id="Event.button.callPerson"
-                    defaultMessage="Call Person"
-                  >
-                    {txt => <Text>{txt}</Text>}
-                  </FormattedMessage>
-                </Button>
-              </MarginView>
-            </Col>
-          </Row>
+              <Image
+                style={styles.imgBtn}
+                source={require('../../assets/icons/cancel.png')}
+              />
+              <FormattedMessage id="Event.button.cancel">
+                {text => <LabelText>{text}</LabelText>}
+              </FormattedMessage>
+            </Button>
+            <Button
+              style={styles.linkBtn}
+              onPress={() => Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
+            >
+              <Image
+                style={styles.imgBtn}
+                source={require('../../assets/icons/icon_call.png')}
+              />
+              <FormattedMessage id="Dispatcher.button.callDispatcher">
+                {text => <LabelText>{text}</LabelText>}
+              </FormattedMessage>
+            </Button>
+          </View>
         )}
-        {isAssigned &&
-          dispatcher && (
-            <Row>
-              <Col>
-                <MarginView>
-                  <Button
-                    block
-                    success
-                    onPress={() =>
-                      Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
-                  >
-                    <Icon name="md-call" />
-                    <FormattedMessage
-                      id="Dispatcher.button.callDispatcher"
-                      defaultMessage="Call Dispatcher"
-                    >
-                      {txt => <Text>{txt}</Text>}
-                    </FormattedMessage>
-                  </Button>
-                </MarginView>
-              </Col>
-            </Row>
-          )}
-      </Grid>
+      </View>
     </Content>
     <View style={{ height: 70, backgroundColor: '#fff' }}>{children}</View>
   </Container>

@@ -282,10 +282,10 @@ class EventScreen extends Component {
       event,
       screenProps: { intl },
       isAssigned,
+      isAssignedToMe,
       isTaken,
       isAdmin
     } = this.props
-
     if (!event || !event.id) {
       return (
         <FormattedMessage
@@ -298,7 +298,7 @@ class EventScreen extends Component {
     }
 
     const okBtn = {
-      ...(isAssigned ? finalise : accept),
+      ...(isAssignedToMe ? finalise : accept),
       onPress: isAssigned
         ? () => {
             trackEvent('Navigation', {
@@ -343,7 +343,7 @@ class EventScreen extends Component {
     }
 
     const cancelBtn = {
-      ...(isAssigned ? cancel : ignore),
+      ...(isAssignedToMe ? cancel : ignore),
       onPress: isAssigned
         ? () => {
             trackEvent('Navigation', {
@@ -377,13 +377,17 @@ class EventScreen extends Component {
         </View>
       )
     }
-
     return (
-      <EventDetails event={event} isAdmin={isAdmin}>
-        {isTaken ? (
+      <EventDetails
+        event={event}
+        isAdmin={isAdmin}
+        isAssignedToMe={isAssignedToMe}
+        cancelHandler={cancelBtn}
+      >
+        {isTaken && isAssigned && !isAssignedToMe ? (
           <TakenEventButtons onPress={this.handleRemoveEvent} />
         ) : (
-          <ButtonsConfirmationBar ok={okBtn} cancel={cancelBtn} />
+          <ButtonsConfirmationBar ok={okBtn} />
         )}
       </EventDetails>
     )
@@ -397,6 +401,10 @@ export default inject(
       // Return isAssigned because we need mobx to refresh the view
       //  if it changes
       isAssigned: event && event.isAssigned,
+      isAssignedToMe:
+        event &&
+        event.isAssigned ,//&&
+        // event.assignedTo.id === stores.authStore.currentUser.id,
       isTaken: event && event.isTaken,
       isAdmin: stores.authStore.currentUser.isAdmin,
       event
