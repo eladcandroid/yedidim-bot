@@ -3,25 +3,14 @@ import {
   Button,
   Text,
   Container,
-  Body,
   Content,
-  Header,
-  Title,
-  Left,
-  Right,
   Form,
   Item,
   Label,
   Input,
   Icon
 } from 'native-base'
-import {
-  Image,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Linking,
-  View
-} from 'react-native'
+import { Image, StyleSheet, Linking, View } from 'react-native'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
@@ -119,7 +108,7 @@ class EmailPassAuthenticationScreen extends React.Component {
     return (
       <Container>
         <Image source={require('../loginLogo.png')} style={styles.logo} />
-        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <View behavior="padding" style={{ flex: 1 }}>
           <Content style={styles.mainContent}>
             <Form>
               <View
@@ -248,7 +237,7 @@ class EmailPassAuthenticationScreen extends React.Component {
               </View>
             </Form>
           </Content>
-        </KeyboardAvoidingView>
+        </View>
       </Container>
     )
   }
