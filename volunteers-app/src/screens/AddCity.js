@@ -107,8 +107,8 @@ class AddCity extends Component {
               name: address,
               lat: geo.lat,
               lon: geo.lon
-          }}
-          )
+            }
+          })
 
           this.hideGooglePlacesSuggestions()
         }}
@@ -158,36 +158,38 @@ class AddCity extends Component {
           <AlignedText>כתובת:</AlignedText>
           {this.GooglePlacesInput()}
         </Content>
-<View style={{
-  position: 'absolute',
-  bottom: 50,
-  width: '100%',
-}}>
-        <Button
-          block
-          large
+        <View
           style={{
-            borderRadius: 0,
-            flex: 1,
-            height: 40,
-            marginLeft: '25%',
-            marginRight: '25%'
-          }}
-          onPress={() => {
-            this.props.currentUser.addLocation({
-              id: this.state.location.id,
-              name: this.state.location.name,
-              lat: this.state.location.lat,
-              lon: this.state.location.lon
-            })
-            this.props.navigation.goBack()
+            position: 'absolute',
+            bottom: 50,
+            width: '100%'
           }}
         >
-          <FormattedMessage id="Locations.add.confirm">
-            {txt => <Text>{txt}</Text>}
-          </FormattedMessage>
-        </Button>
-</View>
+          <Button
+            block
+            large
+            style={{
+              borderRadius: 0,
+              flex: 1,
+              height: 40,
+              marginLeft: '25%',
+              marginRight: '25%'
+            }}
+            onPress={() => {
+              this.props.currentUser.addLocation({
+                id: this.state.location.id,
+                name: this.state.location.name,
+                lat: this.state.location.lat,
+                lon: this.state.location.lon
+              })
+              this.props.navigation.goBack()
+            }}
+          >
+            <FormattedMessage id="Locations.add.confirm">
+              {txt => <Text>{txt}</Text>}
+            </FormattedMessage>
+          </Button>
+        </View>
       </Container>
     )
   }
