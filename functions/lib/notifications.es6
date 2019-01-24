@@ -116,7 +116,7 @@ export const sendNotificationByGeoFireLocation = async props => {
           )
 
           logger.track(
-            users.map(userId => ({
+            users.map(({ userId }) => ({
               eventType: 'event notification by radius (send)', // required
               userId,
               eventProperties: {

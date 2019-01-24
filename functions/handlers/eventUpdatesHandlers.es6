@@ -7,12 +7,10 @@ exports.onVolunteersLocationsUpdated = (event, context, admin) => {
   const previousLocations = event.before.val() || [] // 3
 
   console.log(
-    'Locations changed from ' +
-      previousLocations +
-      ' to ' +
-      currentLocations +
-      ' for volunteer ' +
-      volunteerId
+    'Locations changed:',
+    previousLocations,
+    currentLocations,
+    volunteerId
   )
 
   const addedLocations = currentLocations.filter(
@@ -38,8 +36,6 @@ exports.onVolunteersLocationsUpdated = (event, context, admin) => {
       geoHelper.removeLocation('user_location', admin, `${volunteerId}-${id}`)
     )
   ])
-
-  // TODO Search by radius, normalise keys to get only userId
 }
 
 exports.onEventStatusUpdate = (event, context) => {
