@@ -1,10 +1,10 @@
 import * as notificationsHandler from './notificationsHandler'
 import * as geoHelper from './geoHelper'
 
-exports.onVolunteersLocationsUpdated = (event, content) => {
+exports.onVolunteersLocationsUpdated = (event, context, admin) => {
   const volunteerId = context.params.volunteerId
-  const currentLocations = event.after.val()
-  const previousLocations = event.before.val()
+  const currentLocations = event.after.val() || [] // 2
+  const previousLocations = event.before.val() || [] // 3
 
   console.log(
     'Locations changed from ' +
@@ -15,7 +15,30 @@ exports.onVolunteersLocationsUpdated = (event, content) => {
       volunteerId
   )
 
-  // TODO Update geofire with new added / removed
+  const addedLocations = currentLocations.filter(
+    x => !previousLocations.map(x => x.id).includes(x.id)
+  )
+
+  const removedLocations = previousLocations.filter(
+    x => !currentLocations.map(x => x.id).includes(x.id)
+  )
+
+  console.log('Added Location', addedLocations, volunteerId)
+  console.log('Removed Location', removedLocations, volunteerId)
+
+  // Remove or Add Locations
+  return Promise.all([
+    ...addedLocations.map(({ id, lat, lon }) =>
+      geoHelper.saveLocation('user_location', admin, `${volunteerId}-${id}`, [
+        lat,
+        lon
+      ])
+    ),
+    ...removedLocations.map(({ id }) =>
+      geoHelper.removeLocation('user_location', admin, `${volunteerId}-${id}`)
+    )
+  ])
+
   // TODO Search by radius, normalise keys to get only userId
 }
 
