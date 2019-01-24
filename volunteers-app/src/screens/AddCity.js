@@ -71,7 +71,7 @@ class AddCity extends Component {
         <Body>
           <FormattedMessage
             id="About.AddCity.title"
-            defaultMessage="הוספת ישוב"
+            defaultMessage="הוספת ישוב חדש"
           >
             {txt => (
               <Title style={[appStyles.appFont, appStyles.headerTitle]}>
@@ -95,7 +95,7 @@ class AddCity extends Component {
     // https://github.com/FaridSafi/react-native-google-places-autocomplete/issues/329#issuecomment-434664874
     return (
       <GooglePlacesAutocomplete
-        placeholder="חיפוש בכתובת"
+        placeholder="חיפוש כתובת"
         placeholderTextColor="#575757"
         minLength={2} // minimum length of text to search
         autoFocus={false}
@@ -164,7 +164,7 @@ class AddCity extends Component {
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff', paddingTop: 30 }}>
-          <AlignedText>כתובת:</AlignedText>
+          <AlignedText style={{fontSize: 18, marginLeft:25, marginBottom: 10}}>כתובת:</AlignedText>
           {this.GooglePlacesInput()}
         </Content>
         <View
