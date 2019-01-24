@@ -32,13 +32,14 @@ import { inject, observer } from 'mobx-react/native'
 import appStyles, { AppText } from '../global-styles'
 
 import AlignedText from 'components/AlignedText'
-import debounce from 'lodash.debounce'
 import styled from 'styled-components/native'
 
 const LabelText = styled.Text`
   text-align: left;
   font-family: 'Alef';
-  font-size: 16px;
+  font-size: 18px;
+  margin: 20px;
+  text-align: center;
 `
 
 const ListItemContainer = styled.View`
@@ -56,7 +57,11 @@ const ListItemContainer = styled.View`
 const zeroStateText = 'קבלת התראות מישובים קבועים, גם כשאינך בקרבת מקום'
 
 const LocationItem = observer(
-  ({ onPress, location: { id, name, lat, lon, isLoading } }) =>
+  ({
+    onPress,
+    location: { id, name, lat, lon, isLoading },
+    onDeleteLocation
+  }) =>
     isLoading ? (
       <ListItem avatar>
         <Left>
@@ -74,18 +79,12 @@ const LocationItem = observer(
         <Right />
       </ListItem>
     ) : (
-      <ListItem
-        avatar
-        onPress={() => {
-          onPress(location)
-        }}
-      >
+      <ListItem avatar>
         <ListItemContainer>
           <AppText style={{ fontWeight: 'bold', fontSize: 18 }}>{name}</AppText>
-          <Icon
-            style={{ color: 'black' }}
-            name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
-          />
+          <Button transparent onPress={onDeleteLocation}>
+            <Icon style={{ color: 'black' }} name="trash" />
+          </Button>
         </ListItemContainer>
       </ListItem>
     )
@@ -127,48 +126,54 @@ class MyCities extends Component {
     )
   })
 
-  handleLocationItemPress = debounce(
-    location => {
-      trackEvent('Navigation', { page: 'EditCity', location })
-      this.props.navigation.navigate('EditCity', { location })
-    },
-    1000,
-    { leading: true, trailing: false }
-  )
-
   render() {
+    const userLocations = this.props.currentUser.locations;
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>
           <View style={{ alignItems: 'center', marginTop: 30 }}>
-            <LabelText>{zeroStateText}</LabelText>
-            {this.props.currentUser.locations.map(location => {
-              console.log('!!!!!', location)
-              return (
-                <LocationItem
-                  location={location}
-                  onPress={this.handleLocationItemPress}
-                />
-              )
-            })}
+            {userLocations.length === 0 && (
+              <LabelText>{zeroStateText}</LabelText>
+            )}
+            {userLocations.slice(0, 3).map(location => (
+              <LocationItem
+                location={location}
+                currentUser={this.props.currentUser}
+                onDeleteLocation={() => {
+                  this.props.currentUser.removeLocation(location)
+                }}
+              />
+            ))}
           </View>
-          <Button
-            style={{ width: 100, height: 20 }}
-            onPress={() => {
-              this.props.navigation.dispatch(
-                NavigationActions.navigate({
-                  routeName: 'AddCity'
-                })
-              )
-            }}
-          >
-            <FormattedMessage
-              id="About.AddCity.title"
-              defaultMessage="Add City"
+          {userLocations.length < 3 ? (
+            <Button
+              block
+              large
+              style={{
+                borderRadius: 0,
+                flex: 1,
+                height: 40,
+                marginLeft: '25%',
+                marginRight: '25%',
+                marginTop: 10
+              }}
+              onPress={() => {
+                this.props.navigation.dispatch(
+                  NavigationActions.navigate({
+                    routeName: 'AddCity'
+                  })
+                )
+              }}
             >
-              {txt => <AppText>{txt}</AppText>}
-            </FormattedMessage>
-          </Button>
+              <FormattedMessage id="Locations.add">
+                {txt => <Text>{txt}</Text>}
+              </FormattedMessage>
+            </Button>
+          ) : (
+            <Text style={{ textAlign: 'center', marginTop: 10 }}>
+              ניתן להוסיף עד שלושה ישובים
+            </Text>
+          )}
         </Content>
       </Container>
     )
