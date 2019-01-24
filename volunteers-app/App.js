@@ -13,8 +13,6 @@ import I18nApp from './src/I18nApp'
 
 Sentry.config(Constants.manifest.extra.SentryAPI).install()
 
-
-
 function cacheImages(images) {
   return images.map(image => {
     if (typeof image === 'string') {

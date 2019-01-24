@@ -17,7 +17,6 @@ const AuthenticatedStack = StackNavigator({
   NotificationReport: { screen: NotificationTest },
   AddCity: { screen: AddCity },
   EditCity: { screen: EditCity }
-
 })
 
 export default withLocationManager(withNotificationManager(AuthenticatedStack))

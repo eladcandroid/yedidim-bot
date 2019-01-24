@@ -73,12 +73,7 @@ class ButtonsConfirmationBar extends Component {
 
     return (
       <View style={styles.footer}>
-        <Button
-          block
-          large
-          style={styles.accept}
-          onPress={this.handleOkClick}
-        >
+        <Button block large style={styles.accept} onPress={this.handleOkClick}>
           <FormattedMessage {...ok.modalMsgs.buttonMsgs}>
             {txt => <Text style={styles.font}>{txt}</Text>}
           </FormattedMessage>

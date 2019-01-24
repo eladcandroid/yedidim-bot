@@ -59,10 +59,8 @@ class EditCity extends Component {
     )
   })
 
-
   render() {
-
-console.log(this.props)
+    console.log(this.props)
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff', paddingTop: 30 }}>

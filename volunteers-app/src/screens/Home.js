@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import appStyles  from '../global-styles'
+import appStyles from '../global-styles'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
@@ -252,7 +252,11 @@ class HomeScreen extends Component {
         </Left>
         <Body>
           <FormattedMessage id="Home.title" defaultMessage="Home">
-            {txt => <Title style={[appStyles.appFont, appStyles.headerTitle]}>{txt}</Title>}
+            {txt => (
+              <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                {txt}
+              </Title>
+            )}
           </FormattedMessage>
         </Body>
         <Right>

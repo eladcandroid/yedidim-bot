@@ -268,7 +268,8 @@ const EventDetails = ({
             </Button>
             <Button
               style={styles.linkBtn}
-              onPress={() => Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
+              onPress={() =>
+                Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
             >
               <Image
                 style={styles.imgBtn}

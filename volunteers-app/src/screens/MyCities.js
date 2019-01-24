@@ -127,7 +127,7 @@ class MyCities extends Component {
   })
 
   render() {
-    const userLocations = this.props.currentUser.locations;
+    const userLocations = this.props.currentUser.locations
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>

@@ -164,7 +164,11 @@ class AddCity extends Component {
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff', paddingTop: 30 }}>
-          <AlignedText style={{fontSize: 18, marginLeft:25, marginBottom: 10}}>כתובת:</AlignedText>
+          <AlignedText
+            style={{ fontSize: 18, marginLeft: 25, marginBottom: 10 }}
+          >
+            כתובת:
+          </AlignedText>
           {this.GooglePlacesInput()}
         </Content>
         <View

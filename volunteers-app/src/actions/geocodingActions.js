@@ -2,8 +2,7 @@ const MAP_KEY = 'AIzaSyA-cT9Okhw7DA97YPLxlAVoFPQDe61VdwA'
 
 export async function geocodeAddress(address, isPlusCode) {
   try {
-    if (isPlusCode){
-
+    if (isPlusCode) {
       address = encodeURIComponent(address)
     }
     let response = await fetch(

@@ -10,7 +10,7 @@ const createRootStore = async () => {
       language
     },
     {
-      logger: m => console.log(m), // eslint-disable-line
+      logger: m => console.log(m) // eslint-disable-line
     }
   )
 }

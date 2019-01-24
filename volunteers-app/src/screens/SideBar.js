@@ -9,7 +9,7 @@ import {
   Left,
   Separator
 } from 'native-base'
-import {Image, Linking, Share} from 'react-native'
+import { Image, Linking, Share } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { NavigationActions } from 'react-navigation'
@@ -59,50 +59,47 @@ const SideBar = ({
         >
           <AlignedText>{nextLanguage}</AlignedText>
         </ListItem> */}
-          <ListItem
-              button
-              onPress={() => {
-                  navigation.dispatch(
-                      NavigationActions.navigate({
-                          routeName: 'MyCities'
-                      })
-                  )
-              }}
+        <ListItem
+          button
+          onPress={() => {
+            navigation.dispatch(
+              NavigationActions.navigate({
+                routeName: 'MyCities'
+              })
+            )
+          }}
+        >
+          <AlignedText>הישובים שלי</AlignedText>
+        </ListItem>
+
+        <ListItem
+          button
+          onPress={() =>
+            Linking.openURL('https://yedidim-il.org/חוברת-הדרכה-למתנדבים/')}
+        >
+          <FormattedMessage id="Event.button.guide" defaultMessage="Guide">
+            {txt => <AlignedText>{txt}</AlignedText>}
+          </FormattedMessage>
+        </ListItem>
+
+        <ListItem
+          button
+          onPress={() => Share.share({ message: 'Share.msg', url: share_url })}
+        >
+          <FormattedMessage id="Authentication.share" defaultMessage="Share">
+            {txt => <AlignedText>{txt}</AlignedText>}
+          </FormattedMessage>
+        </ListItem>
+        <ListItem button onPress={signOut}>
+          <FormattedMessage
+            id="Authentication.signout"
+            defaultMessage="Sign out"
           >
-              <AlignedText>הישובים שלי</AlignedText>
-          </ListItem>
+            {txt => <AlignedText>{txt}</AlignedText>}
+          </FormattedMessage>
+        </ListItem>
 
-          <ListItem button onPress={() =>
-              Linking.openURL('https://yedidim-il.org/חוברת-הדרכה-למתנדבים/')}>
-              <FormattedMessage
-                  id="Event.button.guide"
-                  defaultMessage="Guide"
-              >
-                  {txt => <AlignedText>{txt}</AlignedText>}
-              </FormattedMessage>
-          </ListItem>
-
-          <ListItem button
-
-                    onPress={() =>
-                        Share.share({message:"Share.msg", url:share_url})}>
-              <FormattedMessage
-                  id="Authentication.share"
-                  defaultMessage="Share"
-              >
-                  {txt => <AlignedText>{txt}</AlignedText>}
-              </FormattedMessage>
-          </ListItem>
-          <ListItem button onPress={signOut}>
-              <FormattedMessage
-                  id="Authentication.signout"
-                  defaultMessage="Sign out"
-              >
-                  {txt => <AlignedText>{txt}</AlignedText>}
-              </FormattedMessage>
-          </ListItem>
-
-          <ListItem
+        <ListItem
           button
           onPress={() => {
             navigation.dispatch(

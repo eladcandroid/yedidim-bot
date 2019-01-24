@@ -114,7 +114,6 @@ const withNotificationManager = WrappedComponent => {
       }
     }
 
-
     handleEventNotification = (isAppInFocus, data, isOpenEvent) => {
       if (!data || !data.eventId) {
         throw new Error(
