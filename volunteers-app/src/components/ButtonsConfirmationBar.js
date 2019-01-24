@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: '100%',
     flex: 1,
-    justifyContent: 'space-between',
     height: '100%'
   },
   logo: {
@@ -34,7 +33,7 @@ const styles = StyleSheet.create({
   font: {
     fontFamily: 'AlefBold',
     textAlign: 'center',
-    fontSize: 21,
+    fontSize: 23,
     marginTop: 10
   }
 })
@@ -76,7 +75,8 @@ class ButtonsConfirmationBar extends Component {
       <View style={styles.footer}>
         <Button
           block
-          style={[styles.btn, styles.accept]}
+          large
+          style={styles.accept}
           onPress={this.handleOkClick}
         >
           <FormattedMessage {...ok.modalMsgs.buttonMsgs}>
