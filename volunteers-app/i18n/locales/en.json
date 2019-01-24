@@ -33,6 +33,8 @@
     "You are not authenticated yet. Please authenticate to receive events.",
   "Authentication.button": "Authenticate me",
   "Authentication.signout": "Sign out",
+  "Authentication.share": "Share app",
+  "Share.msg": "Click the link to join Yedidim",
   "Event.alert.ignore.title": "Ignore Event",
   "Event.alert.ignore.text": "I'm not interested in accepting the event",
   "Event.alert.ignore.confirm": "Confirm",

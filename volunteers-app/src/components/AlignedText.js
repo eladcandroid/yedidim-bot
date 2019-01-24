@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'native-base'
+import { AppText } from '../global-styles'
 
 const AlignedText = ({ children, style = {}, ...props }) => {
   const alignedStyle = {
@@ -7,9 +7,9 @@ const AlignedText = ({ children, style = {}, ...props }) => {
     textAlign: 'left'
   }
   return (
-    <Text {...props} style={alignedStyle}>
+    <AppText {...props} style={alignedStyle}>
       {children}
-    </Text>
+    </AppText>
   )
 }
 
