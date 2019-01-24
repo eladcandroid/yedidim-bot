@@ -9,7 +9,7 @@ import {
   Left,
   Separator
 } from 'native-base'
-import { Image } from 'react-native'
+import {Image, Linking, Share} from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { NavigationActions } from 'react-navigation'
@@ -17,6 +17,8 @@ import sendTestNotificationWithFeedback from 'components/SendTestNotificationWit
 import AlignedText from 'components/AlignedText'
 import Logo from './logo.png'
 import packageJson from '../../package.json'
+
+const share_txt = 'https://yedidim-il.org/הצטרפו-אלינו/'
 
 const SideBar = ({
   signOut,
@@ -69,14 +71,27 @@ const SideBar = ({
         >
           <AlignedText>הישובים שלי</AlignedText>
         </ListItem>
-        <ListItem button onPress={signOut}>
-          <FormattedMessage
-            id="Authentication.signout"
-            defaultMessage="Sign out"
-          >
-            {txt => <AlignedText>{txt}</AlignedText>}
-          </FormattedMessage>
-        </ListItem>
+
+          <ListItem button onPress={signOut}>
+              <FormattedMessage
+                  id="Authentication.signout"
+                  defaultMessage="Sign out"
+              >
+                  {txt => <AlignedText>{txt}</AlignedText>}
+              </FormattedMessage>
+          </ListItem>
+
+          <ListItem button
+
+                    onPress={() =>
+                        Share.share({share_txt})}>
+              <FormattedMessage
+                  id="Authentication.share"
+                  defaultMessage="Share"
+              >
+                  {txt => <AlignedText>{txt}</AlignedText>}
+              </FormattedMessage>
+          </ListItem>
         <ListItem
           button
           onPress={() => {
