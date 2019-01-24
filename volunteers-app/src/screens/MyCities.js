@@ -161,7 +161,14 @@ class MyCities extends Component {
                 })
               )
             }}
-          />
+          >
+            <FormattedMessage
+              id="About.AddCity.title"
+              defaultMessage="Add City"
+            >
+              {txt => <AppText>{txt}</AppText>}
+            </FormattedMessage>
+          </Button>
         </Content>
       </Container>
     )
