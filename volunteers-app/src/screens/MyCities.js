@@ -29,11 +29,11 @@ import {
 } from 'native-base'
 import { NavigationActions } from 'react-navigation'
 import { inject, observer } from 'mobx-react/native'
-import appStyles  from '../global-styles'
+import appStyles, { AppText } from '../global-styles'
 
 import AlignedText from 'components/AlignedText'
-import debounce from "lodash.debounce";
-import styled from "styled-components/native";
+import debounce from 'lodash.debounce'
+import styled from 'styled-components/native'
 
 const LabelText = styled.Text`
   text-align: left;
@@ -41,19 +41,22 @@ const LabelText = styled.Text`
   font-size: 16px;
 `
 
+const ListItemContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  background-color: white;
+  border-bottom-width: 1;
+  border-bottom-color: lightgray;
+  margin-top: 10;
+  margin-bottom: 0;
+  padding: 15px 15px;
+`
 const zeroStateText = 'קבלת התראות מישובים קבועים, גם כשאינך בקרבת מקום'
 
 const LocationItem = observer(
-  ({
-    onPress,
-    location: {
-        id,
-        name,
-        lat,
-        lon,
-        isLoading
-    }
-  }) =>
+  ({ onPress, location: { id, name, lat, lon, isLoading } }) =>
     isLoading ? (
       <ListItem avatar>
         <Left>
@@ -76,33 +79,17 @@ const LocationItem = observer(
         onPress={() => {
           onPress(location)
         }}
-        style={{
-          width: '90%',
-          backgroundColor: 'white',
-          borderBottomWidth: 1,
-          borderBottomColor: 'grey',
-          marginTop: 10,
-          marginRight: 'auto',
-          marginBottom: 0,
-          marginLeft: 'auto'
-        }}
       >
-        <Body>
-          <AlignedText>
-            <Text style={{ fontWeight: 'bold' }}>
-              {name}
-            </Text>
-          </AlignedText>
+        <ListItemContainer>
+          <AppText style={{ fontWeight: 'bold', fontSize: 18 }}>{name}</AppText>
           <Icon
-              style={{color: 'black'}}
-              name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
+            style={{ color: 'black' }}
+            name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
           />
-
-        </Body>
+        </ListItemContainer>
       </ListItem>
     )
 )
-
 
 @observer
 class MyCities extends Component {
@@ -140,32 +127,31 @@ class MyCities extends Component {
     )
   })
 
-    handleLocationItemPress = debounce(
-        location => {
-            trackEvent('Navigation', { page: 'EditCity', location })
-            this.props.navigation.navigate('EditCity', { location:location })
-        },
-        1000,
-        { leading: true, trailing: false }
-    )
+  handleLocationItemPress = debounce(
+    location => {
+      trackEvent('Navigation', { page: 'EditCity', location })
+      this.props.navigation.navigate('EditCity', { location })
+    },
+    1000,
+    { leading: true, trailing: false }
+  )
 
-
-    render() {
+  render() {
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>
           <View style={{ alignItems: 'center', marginTop: 30 }}>
-              <LabelText>{zeroStateText}</LabelText>
+            <LabelText>{zeroStateText}</LabelText>
             {this.props.currentUser.locations.map(location => {
               console.log('!!!!!', location)
-                return <LocationItem
-                    location={location}
-                    onPress={this.handleLocationItemPress}
-
+              return (
+                <LocationItem
+                  location={location}
+                  onPress={this.handleLocationItemPress}
                 />
+              )
             })}
           </View>
-
           <Button
             style={{ width: 100, height: 20 }}
             onPress={() => {

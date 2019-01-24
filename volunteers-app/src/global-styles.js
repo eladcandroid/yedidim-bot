@@ -1,3 +1,6 @@
+import styled from 'styled-components/native'
+
+
 
 const appStyles = {
   navigationHeaderStyles: {
@@ -12,7 +15,10 @@ const appStyles = {
   appFont: {
     fontFamily: 'Alef'
   }
-}
+};
 
+export const AppText = styled.Text`
+  font-family: 'Alef';
+`;
 
 export default appStyles
