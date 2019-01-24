@@ -358,38 +358,6 @@ class HomeScreen extends Component {
             )}
           {/* add button here */}
         </Content>
-        <Row
-          style={[
-            styles.footer,
-            {
-              backgroundColor: '#f9f9f9',
-              paddingTop: 20,
-              flex: 0,
-              paddingBottom: 20
-            }
-          ]}
-        >
-          <Button
-            block
-            large
-            style={[
-              styles.btn,
-              styles.cancel,
-              { display: 'flex', alignItems: 'center', borderBottomWidth: 1 }
-            ]}
-            onPress={() => {
-              Linking.openURL('https://yedidim-il.org/חוברת-הדרכה-למתנדבים/')
-            }}
-          >
-            <FormattedMessage id="Event.button.guide" defaultMessage="Guide">
-              {txt => (
-                <Text style={{ fontFamily: 'Alef', lineHeight: 22 }}>
-                  {txt}
-                </Text>
-              )}
-            </FormattedMessage>
-          </Button>
-        </Row>
       </Container>
     )
   }

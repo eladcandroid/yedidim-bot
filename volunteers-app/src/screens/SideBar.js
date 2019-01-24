@@ -59,23 +59,24 @@ const SideBar = ({
         >
           <AlignedText>{nextLanguage}</AlignedText>
         </ListItem> */}
-        <ListItem
-          button
-          onPress={() => {
-            navigation.dispatch(
-              NavigationActions.navigate({
-                routeName: 'MyCities'
-              })
-            )
-          }}
-        >
-          <AlignedText>הישובים שלי</AlignedText>
-        </ListItem>
+          <ListItem
+              button
+              onPress={() => {
+                  navigation.dispatch(
+                      NavigationActions.navigate({
+                          routeName: 'MyCities'
+                      })
+                  )
+              }}
+          >
+              <AlignedText>הישובים שלי</AlignedText>
+          </ListItem>
 
-          <ListItem button onPress={signOut}>
+          <ListItem button onPress={() =>
+              Linking.openURL('https://yedidim-il.org/חוברת-הדרכה-למתנדבים/')}>
               <FormattedMessage
-                  id="Authentication.signout"
-                  defaultMessage="Sign out"
+                  id="Event.button.guide"
+                  defaultMessage="Guide"
               >
                   {txt => <AlignedText>{txt}</AlignedText>}
               </FormattedMessage>
@@ -92,7 +93,16 @@ const SideBar = ({
                   {txt => <AlignedText>{txt}</AlignedText>}
               </FormattedMessage>
           </ListItem>
-        <ListItem
+          <ListItem button onPress={signOut}>
+              <FormattedMessage
+                  id="Authentication.signout"
+                  defaultMessage="Sign out"
+              >
+                  {txt => <AlignedText>{txt}</AlignedText>}
+              </FormattedMessage>
+          </ListItem>
+
+          <ListItem
           button
           onPress={() => {
             navigation.dispatch(
