@@ -7,6 +7,7 @@ import AboutStartach from 'screens/AboutStartach'
 import NotificationTest from 'screens/Admin/NotificationTest'
 import MyCities from 'screens/MyCities'
 import AddCity from 'screens/AddCity'
+import EditCity from 'screens/EditCity'
 
 const AuthenticatedStack = StackNavigator({
   Home: { screen: Home },
@@ -14,7 +15,8 @@ const AuthenticatedStack = StackNavigator({
   AboutStartach: { screen: AboutStartach },
   MyCities: { screen: MyCities },
   NotificationReport: { screen: NotificationTest },
-  AddCity: { screen: AddCity }
+  AddCity: { screen: AddCity },
+  EditCity: { screen: EditCity }
 
 })
 

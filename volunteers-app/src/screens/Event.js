@@ -19,6 +19,7 @@ import {
 import EventDetails from 'components/EventDetails'
 import ButtonsConfirmationBar from 'components/ButtonsConfirmationBar'
 import TakenEventButtons from 'components/TakenEventButtons'
+import appStyles from '../global-styles'
 
 const toastMsgs = {
   finalise: defineMessages({
@@ -185,7 +186,7 @@ class EventScreen extends Component {
     // Make sure when isAssigned is not defined we don't show arrows
     return {
       header: (
-        <Header>
+        <Header style={appStyles.navigationHeaderStyles}>
           <Left>
             {typeof isAssigned !== 'undefined' &&
               !isAssigned && (
@@ -197,6 +198,7 @@ class EventScreen extends Component {
                   }}
                 >
                   <Icon
+                    style={appStyles.headerTitle}
                     name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
                   />
                 </Button>
@@ -208,14 +210,14 @@ class EventScreen extends Component {
                 id="Event.title.active"
                 defaultMessage="Active event"
               >
-                {txt => <Title>{txt}</Title>}
+                {txt => <Title style={[appStyles.appFont, appStyles.headerTitle]}>{txt}</Title>}
               </FormattedMessage>
             ) : (
               <FormattedMessage
                 id="Event.title.inactive"
                 defaultMessage="Event"
               >
-                {txt => <Title>{txt}</Title>}
+                {txt => <Title style={[appStyles.appFont, appStyles.headerTitle]}>{txt}</Title>}
               </FormattedMessage>
             )}
           </Body>

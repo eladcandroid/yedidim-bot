@@ -7,7 +7,7 @@ import { DrawerNavigator } from 'react-navigation'
 
 const AuthenticatedDrawer = DrawerNavigator(
   {
-    Home: { screen: AuthenticatedStack }
+    Home: { screen: AuthenticatedStack },
   },
   {
     contentComponent: props => <SideBar {...props} />,

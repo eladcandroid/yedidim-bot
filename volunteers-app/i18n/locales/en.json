@@ -88,6 +88,7 @@
   "About.Startach.title": "Startach",
   "About.MyCities.title": "My Cities",
   "About.AddCity.title": "Add City",
+  "About.EditCity.title": "Edit City",
   "About.Startach.p1":
     "Startach is a social initiative aimed at developing technological solutions to contribute to and assist different audiences in Israeli society.",
   "About.Startach.p2":
@@ -110,5 +111,8 @@
   "NotificationReport.button.text": "Test notifications for everyone",
   "NotificationReport.volunteers": "Volunteers",
   "NotificationReport.dispatchers": "Dispatchers",
-  "NotificationReport.admins": "Administrators"
+  "NotificationReport.admins": "Administrators",
+  "Locations.add": "Add New Location",
+  "Locations.add.confirm": "Add",
+  "Locations.remove.confirm": "Remove Location"
 }
