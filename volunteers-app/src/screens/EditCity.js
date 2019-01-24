@@ -4,11 +4,6 @@ import { FormattedMessage } from 'react-intl'
 import { I18nManager, Linking, Image, View } from 'react-native'
 import { trackEvent } from 'io/analytics'
 import AlignedText from 'components/AlignedText'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import {
-  geocodeAddress,
-  getAddressDetailsFromGoogleResult
-} from '../actions/geocodingActions'
 
 import {
   Button,

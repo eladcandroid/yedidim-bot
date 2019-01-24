@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import  appStyles  from '../global-styles'
+import appStyles  from '../global-styles'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'

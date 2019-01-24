@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import { trackEvent } from 'io/analytics'
 import StartachLogo from 'images/startach-logo.jpg'
-import AlignedText from 'components/AlignedText'
 
 import {
   Button,
@@ -29,12 +28,19 @@ import {
   ListItem
 } from 'native-base'
 import { NavigationActions } from 'react-navigation'
+import { inject, observer } from 'mobx-react/native'
+import appStyles  from '../global-styles'
+
 import AlignedText from 'components/AlignedText'
 import debounce from "lodash.debounce";
+import styled from "styled-components/native";
 
-const MarginView = styled.View`
-  margin: 10px 10px;
+const LabelText = styled.Text`
+  text-align: left;
+  font-family: 'Alef';
+  font-size: 16px;
 `
+
 const zeroStateText = 'קבלת התראות מישובים קבועים, גם כשאינך בקרבת מקום'
 
 const LocationItem = observer(
