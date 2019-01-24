@@ -88,6 +88,7 @@
   "About.Startach.title": "סטארטאח",
   "About.MyCities.title": "הישובים שלי",
   "About.AddCity.title": "הוספת ישוב",
+  "About.EditCity.title": "עריכת ישוב",
   "About.Startach.p1":
     "סטארטאח הוא מיזם חברתי שמטרתו לפתח פתרונות טכנולוגיים על מנת לתרום ולסייע לקהלים שונים בחברה הישראלית.",
   "About.Startach.p2":
@@ -113,5 +114,5 @@
   "NotificationReport.admins": "מנהלים",
   "Locations.add": "הוספת ישוב חדש",
   "Locations.add.confirm": "הוספת ישוב",
-  "Locations.remove": "מחיקת ישוב"
+  "Locations.remove.confirm": "מחיקת ישוב"
 }
