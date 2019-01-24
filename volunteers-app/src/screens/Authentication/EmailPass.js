@@ -117,7 +117,7 @@ class EmailPassAuthenticationScreen extends React.Component {
     const { phoneNumber, id } = this.state
 
     return (
-      <Container style={styles.defaultFont}>
+      <Container>
         <Image source={require('../loginLogo.png')} style={styles.logo} />
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
           <Content style={styles.mainContent}>
