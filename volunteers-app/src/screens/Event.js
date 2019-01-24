@@ -210,14 +210,22 @@ class EventScreen extends Component {
                 id="Event.title.active"
                 defaultMessage="Active event"
               >
-                {txt => <Title style={[appStyles.appFont, appStyles.headerTitle]}>{txt}</Title>}
+                {txt => (
+                  <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                    {txt}
+                  </Title>
+                )}
               </FormattedMessage>
             ) : (
               <FormattedMessage
                 id="Event.title.inactive"
                 defaultMessage="Event"
               >
-                {txt => <Title style={[appStyles.appFont, appStyles.headerTitle]}>{txt}</Title>}
+                {txt => (
+                  <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                    {txt}
+                  </Title>
+                )}
               </FormattedMessage>
             )}
           </Body>
@@ -403,8 +411,9 @@ export default inject(
       isAssigned: event && event.isAssigned,
       isAssignedToMe:
         event &&
-        event.isAssigned ,//&&
-        // event.assignedTo.id === stores.authStore.currentUser.id,
+        event.isAssigned &&
+        event.assignedTo &&
+        event.assignedTo.id === stores.authStore.currentUser.id,
       isTaken: event && event.isTaken,
       isAdmin: stores.authStore.currentUser.isAdmin,
       event

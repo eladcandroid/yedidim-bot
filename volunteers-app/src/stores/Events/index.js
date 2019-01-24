@@ -16,64 +16,11 @@ export default types
     findById(eventId) {
       return self.events.get(eventId)
     },
-    /*    get allEvents() {
-      return [
-        {
-          id: 1,
-          address: 'Rothschild 3',
-          caller: 'Ariel',
-          carType: 'Pick up',
-          category: 'Random',
-          subCategory: 'Random',
-          city: 'Tel Aviv',
-          lat: '1111111111',
-          lon: '2222222222',
-          more: 'Flat tire in the street',
-          phone: '5566557766',
-          privateInfo: '',
-          status: '',
-          assignedTo: 'John Johnson',
-          timestamp: new Date(2018, 1, 1),
-          distance: '',
-          dispatcher: '',
-          isLoading: false
-        }
-      ]
+    get allEvents() {
+      return self.events.values()
     },
     get hasEvents() {
       return self.events.size > 0
-    }, */
-    get allEvents() {
-      if (self.events.values().length > 0) {
-        return self.events.values()
-      }
-      return [
-        {
-          id: 1,
-          address: 'Rothschild 3',
-          caller: 'Ariel',
-          carType: 'Pick up',
-          category: 'Random',
-          subCategory: 'Random',
-          city: 'Tel Aviv',
-          lat: '1111111111',
-          lon: '2222222222',
-          more: 'Flat tire in the street',
-          phone: '5566557766',
-          privateInfo: '',
-          status: '',
-          assignedTo: 'John Johnson',
-          timestamp: new Date(2018, 1, 1),
-          distance: '',
-          dispatcher: '',
-          isLoading: false,
-          isTaken: true
-        }
-      ]
-    },
-    get hasEvents() {
-      // return self.events.size > 0
-      return true
     },
     get sortedEventsByStatusAndTimestamp() {
       return self.allEvents.slice().sort((a, b) => {

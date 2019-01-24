@@ -256,7 +256,7 @@ const EventDetails = ({
           >
             <Button
               style={[styles.linkBtn, styles.centerBtn]}
-              onPress={cancelHandler}
+              onPress={cancelHandler.onPress}
             >
               <Image
                 style={styles.imgBtn}
