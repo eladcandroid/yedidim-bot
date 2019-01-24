@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import appStyles from '../global-styles'
 import styled from 'styled-components/native'
 import { FormattedMessage } from 'react-intl'
 import { I18nManager, Linking, Image, View } from 'react-native'
@@ -50,8 +51,9 @@ class AddCity extends Component {
     )
   }
   static navigationOptions = ({ navigation }) => ({
+    headerStyle: appStyles.navigationHeaderStyles,
     header: (
-      <Header>
+      <Header style={appStyles.navigationHeaderStyles}>
         <Left>
           <Button
             transparent
@@ -60,7 +62,10 @@ class AddCity extends Component {
               navigation.goBack()
             }}
           >
-            <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
+            <Icon
+              style={appStyles.headerTitle}
+              name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
+            />
           </Button>
         </Left>
         <Body>
@@ -68,7 +73,11 @@ class AddCity extends Component {
             id="About.AddCity.title"
             defaultMessage="הוספת ישוב"
           >
-            {txt => <Title>{txt}</Title>}
+            {txt => (
+              <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                {txt}
+              </Title>
+            )}
           </FormattedMessage>
         </Body>
         <Right />

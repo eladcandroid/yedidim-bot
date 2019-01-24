@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import appStyles from '../global-styles'
 import styled from 'styled-components/native'
 import { FormattedMessage } from 'react-intl'
 import { I18nManager, Linking, Image } from 'react-native'
@@ -29,7 +30,7 @@ const MarginView = styled.View`
 class AboutStartach extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
-      <Header>
+      <Header style={appStyles.navigationHeaderStyles}>
         <Left>
           <Button
             transparent
@@ -38,12 +39,19 @@ class AboutStartach extends Component {
               navigation.goBack()
             }}
           >
-            <Icon name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'} />
+            <Icon
+              style={appStyles.headerTitle}
+              name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
+            />
           </Button>
         </Left>
         <Body>
           <FormattedMessage id="About.Startach.title" defaultMessage="Startach">
-            {txt => <Title>{txt}</Title>}
+            {txt => (
+              <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                {txt}
+              </Title>
+            )}
           </FormattedMessage>
         </Body>
         <Right />
