@@ -79,8 +79,8 @@ const LocationItem = observer(
         style={{
           width: '90%',
           backgroundColor: 'white',
-          borderBottomWidth: 3,
-          borderBottomColor: 'red',
+          borderBottomWidth: 1,
+          borderBottomColor: 'grey',
           marginTop: 10,
           marginRight: 'auto',
           marginBottom: 0,
@@ -90,10 +90,14 @@ const LocationItem = observer(
         <Body>
           <AlignedText>
             <Text style={{ fontWeight: 'bold' }}>
-              {' '}
-              {name} {'\n'}{' '}
-            </Text>{' '}
+              {name}
+            </Text>
           </AlignedText>
+          <Icon
+              style={{color: 'black'}}
+              name={I18nManager.isRTL ? 'arrow-back' : 'arrow-forward'}
+          />
+
         </Body>
       </ListItem>
     )
@@ -151,7 +155,7 @@ class MyCities extends Component {
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>
           <View style={{ alignItems: 'center', marginTop: 30 }}>
-            <LabelText>{zeroStateText}</LabelText>
+              <LabelText>{zeroStateText}</LabelText>
             {this.props.currentUser.locations.map(location => {
               console.log('!!!!!', location)
                 return <LocationItem
