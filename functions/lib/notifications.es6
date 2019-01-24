@@ -3,7 +3,7 @@ const GeoFire = require('geofire')
 const { sendPushNotifications } = require('./onesignal')
 const { sendEmailNotifications } = require('./email')
 const NOTIFICATION_MUTE_EXPIRATION_MILLIS = 24 * 60 * 60 * 1000
-const logger = require('./logger')
+import logger from './logger'
 
 const validToken = token =>
   token.length === 36 && !token.startsWith('ExponentPushToken')
@@ -54,9 +54,24 @@ export const sendNotificationByGeoFireLocation = async props => {
         usersInRadius,
         data
       )
+
+      // Extract userIds from 'userId-locationId' entries
+      // And remove duplicated using set
+      const uniqueUserIdsInRadius = [
+        ...new Set(usersInRadius.map(userId => userId.split('-')[0]))
+      ]
+
+      console.log(
+        `[sendNotificationByGeoFireLocation] Found unique userIds ${
+          uniqueUserIdsInRadius.length
+        } in location`,
+        uniqueUserIdsInRadius,
+        data
+      )
+
       // Logging found users for location
       logger.track(
-        usersInRadius.map(userId => ({
+        uniqueUserIdsInRadius.map(userId => ({
           eventType: 'event notification by radius (search)', // required
           userId,
           eventProperties: {
@@ -89,7 +104,7 @@ export const sendNotificationByGeoFireLocation = async props => {
           const users = Object.keys(usersById)
             .filter(
               userId =>
-                usersInRadius.indexOf(userId) > -1 &&
+                uniqueUserIdsInRadius.indexOf(userId) > -1 &&
                 !userMutedNotifications(usersById[userId])
             )
             .map(userId => ({ userId, ...usersById[userId] }))
