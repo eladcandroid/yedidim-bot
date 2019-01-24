@@ -188,21 +188,20 @@ class EventScreen extends Component {
       header: (
         <Header style={appStyles.navigationHeaderStyles}>
           <Left>
-            {typeof isAssigned !== 'undefined' &&
-              !isAssigned && (
-                <Button
-                  transparent
-                  onPress={() => {
-                    trackEvent('Navigation', { page: 'Home' })
-                    navigation.navigate({ routeName: 'Home' })
-                  }}
-                >
-                  <Icon
-                    style={appStyles.headerTitle}
-                    name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
-                  />
-                </Button>
-              )}
+            {!isAssigned && (
+              <Button
+                transparent
+                onPress={() => {
+                  trackEvent('Navigation', { page: 'Home' })
+                  navigation.navigate({ routeName: 'Home' })
+                }}
+              >
+                <Icon
+                  style={appStyles.headerTitle}
+                  name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
+                />
+              </Button>
+            )}
           </Left>
           <Body>
             {isAssigned ? (
@@ -290,7 +289,6 @@ class EventScreen extends Component {
       event,
       screenProps: { intl },
       isAssigned,
-      isAssignedToMe,
       isTaken,
       isAdmin
     } = this.props
@@ -306,7 +304,7 @@ class EventScreen extends Component {
     }
 
     const okBtn = {
-      ...(isAssignedToMe ? finalise : accept),
+      ...(isAssigned ? finalise : accept),
       onPress: isAssigned
         ? () => {
             trackEvent('Navigation', {
@@ -351,7 +349,7 @@ class EventScreen extends Component {
     }
 
     const cancelBtn = {
-      ...(isAssignedToMe ? cancel : ignore),
+      ...(isAssigned ? cancel : ignore),
       onPress: isAssigned
         ? () => {
             trackEvent('Navigation', {
@@ -386,13 +384,8 @@ class EventScreen extends Component {
       )
     }
     return (
-      <EventDetails
-        event={event}
-        isAdmin={isAdmin}
-        isAssignedToMe={isAssignedToMe}
-        cancelHandler={cancelBtn}
-      >
-        {isTaken && isAssigned && !isAssignedToMe ? (
+      <EventDetails event={event} isAdmin={isAdmin} cancelHandler={cancelBtn}>
+        {isTaken && !isAssigned ? (
           <TakenEventButtons onPress={this.handleRemoveEvent} />
         ) : (
           <ButtonsConfirmationBar ok={okBtn} />
@@ -409,11 +402,6 @@ export default inject(
       // Return isAssigned because we need mobx to refresh the view
       //  if it changes
       isAssigned: event && event.isAssigned,
-      isAssignedToMe:
-        event &&
-        event.isAssigned &&
-        event.assignedTo &&
-        event.assignedTo.id === stores.authStore.currentUser.id,
       isTaken: event && event.isTaken,
       isAdmin: stores.authStore.currentUser.isAdmin,
       event

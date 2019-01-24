@@ -72,7 +72,6 @@ const LabelText = styled.Text`
 `
 const EventDetails = ({
   isAdmin,
-  isAssignedToMe,
   cancelHandler,
   event: {
     categoryName,
@@ -89,9 +88,9 @@ const EventDetails = ({
     isAssigned,
     dispatcher,
     sentNotification,
-    errorNotification,
-    receivedNotification,
-    assignedTo
+    errorNotification
+    // receivedNotification,
+    // assignedTo
   },
   children
 }) => (
@@ -212,7 +211,7 @@ const EventDetails = ({
             </View>
           </Col>
         </Row>
-        {!isAssignedToMe && (
+        {!isAssigned && (
           <View style={styles.EventDetailsContainer}>
             <View style={styles.detailsSection}>
               <FormattedMessage id="Event.description">
@@ -224,7 +223,7 @@ const EventDetails = ({
             </View>
           </View>
         )}
-        {isAssignedToMe && (
+        {isAssigned && (
           <View style={styles.EventDetailsContainer}>
             <View style={styles.detailsSection}>
               <FormattedMessage id="Event.caller">
@@ -244,7 +243,7 @@ const EventDetails = ({
             </View>
           </View>
         )}
-        {isAssignedToMe && (
+        {isAssigned && (
           <View
             style={{
               flex: 1,

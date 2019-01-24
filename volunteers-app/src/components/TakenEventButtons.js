@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Button, Icon, Grid, Col, Row, Text } from 'native-base'
+import { Button, Grid, Col, Row, Text } from 'native-base'
 
 const TakenEventButtons = ({ onPress }) => (
   <Grid>
@@ -12,9 +12,19 @@ const TakenEventButtons = ({ onPress }) => (
             id="Event.taken.button"
             defaultMessage="Event was taken already"
           >
-            {txt => <Text>{txt}</Text>}
+            {txt => (
+              <Text
+                style={{
+                  fontFamily: 'AlefBold',
+                  textAlign: 'center',
+                  fontSize: 23,
+                  marginTop: 10
+                }}
+              >
+                {txt}
+              </Text>
+            )}
           </FormattedMessage>
-          <Icon name="ios-hand" />
         </Button>
       </Col>
     </Row>
