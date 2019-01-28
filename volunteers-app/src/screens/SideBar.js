@@ -84,7 +84,11 @@ const SideBar = ({
 
         <ListItem
           button
-          onPress={() => Share.share({ message: 'Share.msg', url: SHARE_URL })}
+          onPress={() =>
+            Share.share({
+              message: 'לחץ על הקישור להצטרפות לארגון ידידים בדרכים',
+              url: SHARE_URL
+            })}
         >
           <FormattedMessage id="Authentication.share" defaultMessage="Share">
             {txt => <AlignedText>{txt}</AlignedText>}
