@@ -38,7 +38,7 @@ exports.onVolunteersLocationsUpdated = (event, context, admin) => {
   ])
 }
 
-exports.onEventStatusUpdate = (event, context) => {
+exports.onEventStatusUpdate = (event, context, admin) => {
   let eventId = context.params.eventId
   let currentStatus = event.after.val()
   let previousStatus = event.before.val()
@@ -67,7 +67,8 @@ exports.onEventStatusUpdate = (event, context) => {
             let eventData = eventSnapshot.val()
             return notificationsHandler.sendEventNotificationToCloseByVolunteers(
               eventData,
-              previousStatus === 'assigned' ? 'קריאה חוזרת' : 'קריאה חדשה'
+              previousStatus === 'assigned' ? 'קריאה חוזרת' : 'קריאה חדשה',
+              admin
             )
           })
           .then(() => resolve())

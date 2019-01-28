@@ -1,10 +1,10 @@
-exports.CategoriesDisplay = {
-  Starting: 'הנעה',
-  FlatTire: "פנצ'ר",
-  LockedCar: 'דלת נעולה',
-  OilWaterFuel: 'דלק/שמן/מים',
-  Extraction: 'חילוץ שטח',
-  Other: 'אחר',
-  SlammedDoor: 'דלת טרוקה'
+export const NOTIFICATION_SEARCH_RADIUS_KM = 5
+
+export const CategoriesDisplay = async admin => {
+  const snapshot = await admin
+    .database()
+    .ref('eventCategories')
+    .once('value')
+
+  return snapshot.val() || []
 }
-exports.NOTIFICATION_SEARCH_RADIUS_KM = 5
