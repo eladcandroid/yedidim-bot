@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     display: 'flex',
-    marginTop: '-15%'
+    marginTop: '-7%'
   },
   inputField: {
     marginRight: 30,
