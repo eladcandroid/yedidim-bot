@@ -267,16 +267,13 @@ const EventDetails = ({
             </Button>
             <Button
               style={styles.linkBtn}
-              onPress={() =>
-                Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
+              onPress={() => Linking.openURL(`tel:${phone}`)}
             >
               <Image
                 style={styles.imgBtn}
                 source={require('../../assets/icons/icon_call.png')}
               />
-              <FormattedMessage id="Dispatcher.button.callDispatcher">
-                {text => <LabelText>{text}</LabelText>}
-              </FormattedMessage>
+              <LabelText>התקשר למזעיק הסיוע</LabelText>
             </Button>
           </View>
         )}
