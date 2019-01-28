@@ -87,7 +87,7 @@ const EventDetails = ({
     privateInfo,
     carType,
     isAssigned,
-    dispatcher,
+    dispatcher: { callCenterPhone },
     sentNotification,
     errorNotification
     // receivedNotification,
@@ -245,39 +245,62 @@ const EventDetails = ({
           </View>
         )}
         {isAssigned && (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: '80%',
-              alignSelf: 'center',
-              paddingBottom: 70
-            }}
-          >
-            <Button
-              style={[styles.linkBtn, styles.centerBtn]}
-              onPress={cancelHandler.onPress}
+          <View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '80%',
+                alignSelf: 'center',
+                paddingBottom: 90
+              }}
             >
-              <Image
-                style={styles.imgBtn}
-                source={require('../../assets/icons/cancel.png')}
-              />
-              <FormattedMessage id="Event.button.cancel">
-                {text => <LabelText>{text}</LabelText>}
-              </FormattedMessage>
-            </Button>
-            <Button
-              style={styles.linkBtn}
-              onPress={() => Linking.openURL(`tel:${phone}`)}
+              <Button
+                style={[styles.linkBtn, styles.centerBtn]}
+                onPress={cancelHandler.onPress}
+              >
+                <Image
+                  style={styles.imgBtn}
+                  source={require('../../assets/icons/cancel.png')}
+                />
+                <FormattedMessage id="Event.button.cancel">
+                  {text => <LabelText>{text}</LabelText>}
+                </FormattedMessage>
+              </Button>
+              <Button
+                style={styles.linkBtn}
+                onPress={() => Linking.openURL(`tel:${phone}`)}
+              >
+                <Image
+                  style={styles.imgBtn}
+                  source={require('../../assets/icons/icon_call.png')}
+                />
+                <LabelText>התקשר</LabelText>
+                <LabelText>למזעיק הסיוע</LabelText>
+              </Button>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '80%',
+                alignSelf: 'center',
+                paddingBottom: 70
+              }}
             >
-              <Image
-                style={styles.imgBtn}
-                source={require('../../assets/icons/icon_call.png')}
-              />
-              <LabelText>התקשר</LabelText>
-              <LabelText>למזעיק הסיוע</LabelText>
-            </Button>
+              <Button
+                style={styles.linkBtn}
+                onPress={() => Linking.openURL(`tel:${callCenterPhone}`)}
+              >
+                <Image
+                  style={styles.imgBtn}
+                  source={require('../../assets/icons/icon_call.png')}
+                />
+                <LabelText>התקשר למוקד</LabelText>
+              </Button>
+            </View>
           </View>
         )}
       </View>
