@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
   },
   imgBtn: {
     height: 40,
-    width: 40
+    width: 40,
+    marginBottom: 5
   },
   linkBtn: {
     backgroundColor: 'white',
@@ -249,8 +250,9 @@ const EventDetails = ({
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
-              width: '65%',
-              alignSelf: 'center'
+              width: '80%',
+              alignSelf: 'center',
+              paddingBottom: 70
             }}
           >
             <Button
@@ -273,7 +275,8 @@ const EventDetails = ({
                 style={styles.imgBtn}
                 source={require('../../assets/icons/icon_call.png')}
               />
-              <LabelText>התקשר למזעיק הסיוע</LabelText>
+              <LabelText>התקשר</LabelText>
+              <LabelText>למזעיק הסיוע</LabelText>
             </Button>
           </View>
         )}
