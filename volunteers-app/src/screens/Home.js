@@ -352,12 +352,7 @@ class HomeScreen extends Component {
           {!hasEvents &&
             !refreshing && (
               <MessageView>
-                <FormattedMessage
-                  id="Home.noevents"
-                  defaultMessage="Sorry, no events were found"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
+                <Text>לא קיימים כעת אירועים פעילים</Text>
               </MessageView>
             )}
           {/* add button here */}
