@@ -197,7 +197,7 @@ const EventDetails = ({
                 >
                   <FormattedMessage
                     id={
-                      isAssigned ? 'Event.button.check.time' : 'Event.navigate'
+                      isAssigned ? 'Event.navigate' : 'Event.button.check.time'
                     }
                   >
                     {txt => (
