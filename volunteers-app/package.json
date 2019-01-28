@@ -1,6 +1,6 @@
 {
   "name": "yedidim-volunteer",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "private": true,
   "devDependencies": {
     "babel-eslint": "^8.0.1",
@@ -24,9 +24,9 @@
   },
   "rnpm": {
     "assets": [
-    "assets/fonts/yedidim-font"
+      "assets/fonts/yedidim-font"
     ]
-},
+  },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
     "start": "expo start",
