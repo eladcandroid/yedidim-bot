@@ -56,9 +56,12 @@ const styles = StyleSheet.create({
   linkBtn: {
     backgroundColor: 'white',
     width: 40,
-    height: 40,
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    height: '100%',
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 0
   }
 })
 
@@ -253,7 +256,7 @@ const EventDetails = ({
                 justifyContent: 'space-between',
                 width: '80%',
                 alignSelf: 'center',
-                paddingBottom: 90
+                paddingBottom: 20
               }}
             >
               <Button
@@ -289,7 +292,7 @@ const EventDetails = ({
                     justifyContent: 'space-between',
                     width: '80%',
                     alignSelf: 'center',
-                    paddingBottom: 70
+                    paddingBottom: 20
                   }}
                 >
                   <Button
