@@ -86,8 +86,7 @@ const SideBar = ({
           button
           onPress={() =>
             Share.share({
-              message: 'לחץ על הקישור להצטרפות לארגון ידידים בדרכים',
-              url: SHARE_URL
+              message: `לחץ על הקישור להצטרפות לארגון ידידים בדרכים ${SHARE_URL}`
             })}
         >
           <FormattedMessage id="Authentication.share" defaultMessage="Share">
