@@ -1,10 +1,10 @@
 import * as notificationsHandler from './notificationsHandler'
 import * as geoHelper from './geoHelper'
 
-exports.onVolunteersLocationsUpdated = (event, context) => {
+exports.onVolunteersLocationsUpdated = (event, context, admin) => {
   const volunteerId = context.params.volunteerId
-  const currentLocations = event.after.val()
-  const previousLocations = event.before.val()
+  const currentLocations = event.after.val() || [] // 2
+  const previousLocations = event.before.val() || [] // 3
 
   console.log(
     'Locations changed:',
@@ -13,12 +13,32 @@ exports.onVolunteersLocationsUpdated = (event, context) => {
     volunteerId
   )
 
-  // TODO [Here] Update geofire with new added / removed, key is userId-placeId
-  // TODO [On send notification by radius] Search by radius, normalise keys to get only userId
-  return Promise.resolve()
+  const addedLocations = currentLocations.filter(
+    x => !previousLocations.map(x => x.id).includes(x.id)
+  )
+
+  const removedLocations = previousLocations.filter(
+    x => !currentLocations.map(x => x.id).includes(x.id)
+  )
+
+  console.log('Added Location', addedLocations, volunteerId)
+  console.log('Removed Location', removedLocations, volunteerId)
+
+  // Remove or Add Locations
+  return Promise.all([
+    ...addedLocations.map(({ id, lat, lon }) =>
+      geoHelper.saveLocation('user_location', admin, `${volunteerId}-${id}`, [
+        lat,
+        lon
+      ])
+    ),
+    ...removedLocations.map(({ id }) =>
+      geoHelper.removeLocation('user_location', admin, `${volunteerId}-${id}`)
+    )
+  ])
 }
 
-exports.onEventStatusUpdate = (event, context) => {
+exports.onEventStatusUpdate = (event, context, admin) => {
   let eventId = context.params.eventId
   let currentStatus = event.after.val()
   let previousStatus = event.before.val()
@@ -47,7 +67,8 @@ exports.onEventStatusUpdate = (event, context) => {
             let eventData = eventSnapshot.val()
             return notificationsHandler.sendEventNotificationToCloseByVolunteers(
               eventData,
-              previousStatus === 'assigned' ? 'קריאה חוזרת' : 'קריאה חדשה'
+              previousStatus === 'assigned' ? 'קריאה חוזרת' : 'קריאה חדשה',
+              admin
             )
           })
           .then(() => resolve())

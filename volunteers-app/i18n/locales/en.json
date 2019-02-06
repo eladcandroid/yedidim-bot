@@ -33,6 +33,8 @@
     "You are not authenticated yet. Please authenticate to receive events.",
   "Authentication.button": "Authenticate me",
   "Authentication.signout": "Sign out",
+  "Authentication.share": "Share app",
+  "Share.msg": "Click the link to join Yedidim",
   "Event.alert.ignore.title": "Ignore Event",
   "Event.alert.ignore.text": "I'm not interested in accepting the event",
   "Event.alert.ignore.confirm": "Confirm",
@@ -76,14 +78,18 @@
   "Feedback.button.cancel": "Cancel Event & Send",
   "Feedback.title": "Feedback",
   "Home.event.loadingTitle": "Please wait, loading event...",
-  "Home.noevents": "Sorry, no events were found",
   "Home.title": "Home",
   "Event.button.ignore": "Ignore",
   "Event.button.cancel": "Cancel",
   "Event.button.accept": "Accept",
   "Event.button.finalise": "Finalise",
+  "Event.button.guide": "Volunteers guide",
+  "Event.button.history": "History",
   "About.Startach.facebook": "Visit our Facebook page",
   "About.Startach.title": "Startach",
+  "About.MyCities.title": "My Cities",
+  "About.AddCity.title": "Add City",
+  "About.EditCity.title": "Edit City",
   "About.Startach.p1":
     "Startach is a social initiative aimed at developing technological solutions to contribute to and assist different audiences in Israeli society.",
   "About.Startach.p2":
@@ -106,5 +112,8 @@
   "NotificationReport.button.text": "Test notifications for everyone",
   "NotificationReport.volunteers": "Volunteers",
   "NotificationReport.dispatchers": "Dispatchers",
-  "NotificationReport.admins": "Administrators"
+  "NotificationReport.admins": "Administrators",
+  "Locations.add": "Add New Location",
+  "Locations.add.confirm": "Add",
+  "Locations.remove.confirm": "Remove Location"
 }

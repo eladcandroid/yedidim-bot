@@ -9,7 +9,7 @@ import {
   Left,
   Separator
 } from 'native-base'
-import { Image } from 'react-native'
+import { Image, Linking, Share } from 'react-native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage } from 'react-intl'
 import { NavigationActions } from 'react-navigation'
@@ -17,6 +17,8 @@ import sendTestNotificationWithFeedback from 'components/SendTestNotificationWit
 import AlignedText from 'components/AlignedText'
 import Logo from './logo.png'
 import packageJson from '../../package.json'
+
+const SHARE_URL = 'https://yedidim-il.org/הצטרפו-אלינו/'
 
 const SideBar = ({
   signOut,
@@ -60,6 +62,40 @@ const SideBar = ({
         <ListItem
           button
           onPress={() => {
+            navigation.dispatch(
+              NavigationActions.navigate({
+                routeName: 'MyCities'
+              })
+            )
+          }}
+        >
+          <AlignedText>הישובים שלי</AlignedText>
+        </ListItem>
+
+        <ListItem
+          button
+          onPress={() =>
+            Linking.openURL('https://yedidim-il.org/חוברת-הדרכה-למתנדבים/')}
+        >
+          <FormattedMessage id="Event.button.guide" defaultMessage="Guide">
+            {txt => <AlignedText>{txt}</AlignedText>}
+          </FormattedMessage>
+        </ListItem>
+
+        <ListItem
+          button
+          onPress={() =>
+            Share.share({
+              message: `לחץ על הקישור להצטרפות לארגון ידידים בדרכים ${SHARE_URL}`
+            })}
+        >
+          <FormattedMessage id="Authentication.share" defaultMessage="Share">
+            {txt => <AlignedText>{txt}</AlignedText>}
+          </FormattedMessage>
+        </ListItem>
+        <ListItem
+          button
+          onPress={() => {
             sendTestNotificationWithFeedback(id, role)
           }}
         >
@@ -73,6 +109,7 @@ const SideBar = ({
             {txt => <AlignedText>{txt}</AlignedText>}
           </FormattedMessage>
         </ListItem>
+
         <ListItem
           button
           onPress={() => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Asset, Font, AppLoading, Constants } from 'expo'
 import createRootStore from 'stores'
-import { Image, I18nManager } from 'react-native'
+import { Image, I18nManager, StyleSheet } from 'react-native'
 import { Provider, observer } from 'mobx-react/native'
 import categoriesImages from 'const'
 import Sentry from 'sentry-expo'
@@ -50,7 +50,9 @@ class App extends Component {
     const fontAssets = Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'), // eslint-disable-line
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'), // eslint-disable-line
-      Ionicons: require('native-base/Fonts/Ionicons.ttf') // eslint-disable-line
+      Ionicons: require('native-base/Fonts/Ionicons.ttf'), // eslint-disable-line
+      Alef: require('./assets/fonts/Alef-Regular.ttf'), // eslint-disable-line
+      AlefBold: require('./assets/fonts/Alef-Bold.ttf') // eslint-disable-line
     })
 
     await Promise.all([...imageAssets, fontAssets])

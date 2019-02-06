@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
-import { Linking, View } from 'react-native'
+import { Image, Linking, StyleSheet, View, ScrollView } from 'react-native'
 
 import {
   Button,
@@ -13,7 +13,6 @@ import {
   Col,
   Row,
   Text,
-  H2,
   Thumbnail
 } from 'native-base'
 import { MapView } from 'expo'
@@ -22,11 +21,62 @@ import NotificationBadge from 'components/NotificationBadge'
 import TextFieldRow from './TextFieldRow'
 import AlignedText from './AlignedText'
 
+const styles = StyleSheet.create({
+  textBold: {
+    fontFamily: 'AlefBold',
+    marginBottom: 5
+  },
+  detailsSection: {
+    flex: 1,
+    flexDirection: 'column',
+    width: '100%'
+  },
+  EventDetailsContainer: {
+    marginBottom: 20,
+    paddingLeft: 25,
+    paddingTop: 15,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  noteWithUpperBorder: {
+    borderTopColor: 'gray',
+    borderTopWidth: 1
+  },
+  waze: {
+    width: 40,
+    height: 40,
+    borderRadius: 20
+  },
+  imgBtn: {
+    height: 40,
+    width: 40,
+    marginBottom: 5
+  },
+  linkBtn: {
+    backgroundColor: 'white',
+    width: 40,
+    flex: 1,
+    flexDirection: 'column',
+    height: '100%',
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 0
+  }
+})
+
 const MarginView = styled.View`
-  margin: 10px 10px;
+  margin: 10px 0;
+`
+
+const LabelText = styled.Text`
+  text-align: left;
+  font-family: 'Alef';
+  font-size: 16px;
 `
 const EventDetails = ({
   isAdmin,
+  cancelHandler,
   event: {
     categoryName,
     categoryImg,
@@ -42,15 +92,15 @@ const EventDetails = ({
     isAssigned,
     dispatcher,
     sentNotification,
-    errorNotification,
-    receivedNotification,
-    assignedTo
+    errorNotification
+    // receivedNotification,
+    // assignedTo
   },
   children
 }) => (
   <Container>
     <Content style={{ flex: 1, backgroundColor: '#fff' }}>
-      <Grid>
+      <View>
         <Row>
           <Col size={1}>
             <MarginView>
@@ -59,7 +109,18 @@ const EventDetails = ({
           </Col>
           <Col size={3}>
             <MarginView>
-              <H2 style={{ textAlign: 'left' }}>{categoryName}</H2>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  borderBottomColor: 'gray',
+                  borderBottomWidth: 2,
+                  fontWeight: 'bold',
+                  fontFamily: 'AlefBold',
+                  marginTop: 10
+                }}
+              >
+                {categoryName}
+              </Text>
               <FormattedRelative value={timestamp}>
                 {relative => <AlignedText note>{relative}</AlignedText>}
               </FormattedRelative>
@@ -104,122 +165,152 @@ const EventDetails = ({
             </MapView>
           </Col>
         </Row>
-        <FormattedMessage id="Event.description" defaultMessage="Description">
-          {label => <TextFieldRow label={label} value={more} />}
-        </FormattedMessage>
-        <FormattedMessage id="Event.location" defaultMessage="Location">
-          {label => <TextFieldRow label={label} value={displayAddress} />}
-        </FormattedMessage>
-        {isAssigned && (
-          <FormattedMessage id="Event.caller" defaultMessage="Name">
-            {label => <TextFieldRow label={label} value={caller} />}
-          </FormattedMessage>
-        )}
-        {isAssigned && (
-          <FormattedMessage id="Event.phone" defaultMessage="Phone">
-            {label => <TextFieldRow label={label} value={phone} />}
-          </FormattedMessage>
-        )}
-        {isAssigned && (
-          <FormattedMessage
-            id="Event.privateInfo"
-            defaultMessage="Private Info"
-          >
-            {label => <TextFieldRow label={label} value={privateInfo} />}
-          </FormattedMessage>
-        )}
-        <FormattedMessage id="Event.carType" defaultMessage="Car type">
-          {label => <TextFieldRow label={label} value={carType} />}
-        </FormattedMessage>
-        {assignedTo &&
-          !!assignedTo.name && (
-            <TextFieldRow label="מתנדב" value={assignedTo.name} />
-          )}
-        {isAssigned &&
-          dispatcher && (
-            <FormattedMessage id="Dispatcher.name" defaultMessage="Dispatcher">
-              {label => <TextFieldRow label={label} value={dispatcher.name} />}
-            </FormattedMessage>
-          )}
-        {isAssigned &&
-          dispatcher && (
-            <FormattedMessage
-              id="Dispatcher.phone"
-              defaultMessage="Dispatcher's Phone"
-            >
-              {label => (
-                <TextFieldRow
-                  label={label}
-                  value={dispatcher.callCenterPhone}
-                />
-              )}
-            </FormattedMessage>
-          )}
-        <Row>
+        <Row
+          style={{
+            flex: 1,
+            width: '100%',
+            marginTop: 10
+          }}
+        >
           <Col>
-            <MarginView>
-              <Button
-                block
-                info
-                onPress={() =>
-                  Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
-              >
-                <Icon name="md-map" />
-                <FormattedMessage
-                  id="Event.button.navigate"
-                  defaultMessage="Navigate with Waze"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
-              </Button>
-            </MarginView>
-          </Col>
-        </Row>
-        {isAssigned && (
-          <Row>
-            <Col>
-              <MarginView>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                marginLeft: 7
+              }}
+            >
+              <View>
+                <Image
+                  style={styles.waze}
+                  source={require('../images/waze-logo.png')}
+                />
+              </View>
+              <View>
                 <Button
-                  block
-                  success
-                  onPress={() => Linking.openURL(`tel:${phone}`)}
+                  style={{
+                    height: 30,
+                    borderRadius: 20,
+                    backgroundColor: '#4285f4',
+                    padding: 0,
+                    marginLeft: 4,
+                    marginTop: 3
+                  }}
+                  onPress={() =>
+                    Linking.openURL(`https://waze.com/ul?ll=${lat},${lon}`)}
                 >
-                  <Icon name="md-call" />
                   <FormattedMessage
-                    id="Event.button.callPerson"
-                    defaultMessage="Call Person"
+                    id={
+                      isAssigned ? 'Event.navigate' : 'Event.button.check.time'
+                    }
                   >
-                    {txt => <Text>{txt}</Text>}
+                    {txt => (
+                      <Text style={{ fontSize: 14, fontFamily: 'AlefBold' }}>
+                        {txt}
+                      </Text>
+                    )}
                   </FormattedMessage>
                 </Button>
-              </MarginView>
-            </Col>
-          </Row>
+              </View>
+            </View>
+          </Col>
+        </Row>
+        {!isAssigned && (
+          <View style={styles.EventDetailsContainer}>
+            <View style={styles.detailsSection}>
+              <FormattedMessage id="Event.description">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+              <LabelText>{displayAddress}</LabelText>
+              <LabelText>{carType}</LabelText>
+              <LabelText>{more}</LabelText>
+            </View>
+          </View>
         )}
-        {isAssigned &&
-          dispatcher && (
-            <Row>
-              <Col>
-                <MarginView>
+        {isAssigned && (
+          <View style={styles.EventDetailsContainer}>
+            <View style={styles.detailsSection}>
+              <FormattedMessage id="Event.caller">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+              <LabelText>{displayAddress}</LabelText>
+              <LabelText>{caller}</LabelText>
+              <LabelText>{phone}</LabelText>
+            </View>
+            <View style={styles.detailsSection}>
+              <FormattedMessage id="Event.description">
+                {text => <LabelText style={styles.textBold}>{text}</LabelText>}
+              </FormattedMessage>
+              <LabelText>{carType}</LabelText>
+              {privateInfo && <LabelText>{privateInfo}</LabelText>}
+              <LabelText>{more}</LabelText>
+            </View>
+          </View>
+        )}
+        {isAssigned && (
+          <View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '80%',
+                alignSelf: 'center',
+                paddingBottom: 20
+              }}
+            >
+              <Button
+                style={[styles.linkBtn, styles.centerBtn]}
+                onPress={cancelHandler.onPress}
+              >
+                <Image
+                  style={styles.imgBtn}
+                  source={require('../../assets/icons/cancel.png')}
+                />
+                <FormattedMessage id="Event.button.cancel">
+                  {text => <LabelText>{text}</LabelText>}
+                </FormattedMessage>
+              </Button>
+              <Button
+                style={styles.linkBtn}
+                onPress={() => Linking.openURL(`tel:${phone}`)}
+              >
+                <Image
+                  style={styles.imgBtn}
+                  source={require('../../assets/icons/icon_call.png')}
+                />
+                <LabelText>התקשר</LabelText>
+                <LabelText>למזעיק הסיוע</LabelText>
+              </Button>
+            </View>
+            {dispatcher &&
+              dispatcher.callCenterPhone && (
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '80%',
+                    alignSelf: 'center',
+                    paddingBottom: 20
+                  }}
+                >
                   <Button
-                    block
-                    success
+                    style={styles.linkBtn}
                     onPress={() =>
                       Linking.openURL(`tel:${dispatcher.callCenterPhone}`)}
                   >
-                    <Icon name="md-call" />
-                    <FormattedMessage
-                      id="Dispatcher.button.callDispatcher"
-                      defaultMessage="Call Dispatcher"
-                    >
-                      {txt => <Text>{txt}</Text>}
-                    </FormattedMessage>
+                    <Image
+                      style={styles.imgBtn}
+                      source={require('../../assets/icons/icon_call.png')}
+                    />
+                    <LabelText>התקשר למוקד</LabelText>
                   </Button>
-                </MarginView>
-              </Col>
-            </Row>
-          )}
-      </Grid>
+                </View>
+              )}
+          </View>
+        )}
+      </View>
     </Content>
     <View style={{ height: 70, backgroundColor: '#fff' }}>{children}</View>
   </Container>

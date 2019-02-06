@@ -30,13 +30,17 @@ exports.onEventCreated = functions.database
 exports.onStatusUpdated = functions.database
   .ref('/events/{eventId}/status')
   .onWrite((event, context) => {
-    return eventUpdatesHandlers.onEventStatusUpdate(event, context)
+    return eventUpdatesHandlers.onEventStatusUpdate(event, context, admin)
   })
 
 exports.onVolunteersLocationsUpdated = functions.database
   .ref('/volunteer/{volunteerId}/Locations')
   .onWrite((event, context) => {
-    return eventUpdatesHandlers.onVolunteersLocationsUpdated(event, context)
+    return eventUpdatesHandlers.onVolunteersLocationsUpdated(
+      event,
+      context,
+      admin
+    )
   })
 
 exports.onIsOpenUpdated = functions.database

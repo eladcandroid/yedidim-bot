@@ -19,6 +19,7 @@ import {
 import EventDetails from 'components/EventDetails'
 import ButtonsConfirmationBar from 'components/ButtonsConfirmationBar'
 import TakenEventButtons from 'components/TakenEventButtons'
+import appStyles from '../global-styles'
 
 const toastMsgs = {
   finalise: defineMessages({
@@ -185,22 +186,22 @@ class EventScreen extends Component {
     // Make sure when isAssigned is not defined we don't show arrows
     return {
       header: (
-        <Header>
+        <Header style={appStyles.navigationHeaderStyles}>
           <Left>
-            {typeof isAssigned !== 'undefined' &&
-              !isAssigned && (
-                <Button
-                  transparent
-                  onPress={() => {
-                    trackEvent('Navigation', { page: 'Home' })
-                    navigation.navigate({ routeName: 'Home' })
-                  }}
-                >
-                  <Icon
-                    name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
-                  />
-                </Button>
-              )}
+            {!isAssigned && (
+              <Button
+                transparent
+                onPress={() => {
+                  trackEvent('Navigation', { page: 'Home' })
+                  navigation.navigate({ routeName: 'Home' })
+                }}
+              >
+                <Icon
+                  style={appStyles.headerTitle}
+                  name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
+                />
+              </Button>
+            )}
           </Left>
           <Body>
             {isAssigned ? (
@@ -208,14 +209,22 @@ class EventScreen extends Component {
                 id="Event.title.active"
                 defaultMessage="Active event"
               >
-                {txt => <Title>{txt}</Title>}
+                {txt => (
+                  <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                    {txt}
+                  </Title>
+                )}
               </FormattedMessage>
             ) : (
               <FormattedMessage
                 id="Event.title.inactive"
                 defaultMessage="Event"
               >
-                {txt => <Title>{txt}</Title>}
+                {txt => (
+                  <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                    {txt}
+                  </Title>
+                )}
               </FormattedMessage>
             )}
           </Body>
@@ -283,7 +292,6 @@ class EventScreen extends Component {
       isTaken,
       isAdmin
     } = this.props
-
     if (!event || !event.id) {
       return (
         <FormattedMessage
@@ -375,13 +383,12 @@ class EventScreen extends Component {
         </View>
       )
     }
-
     return (
-      <EventDetails event={event} isAdmin={isAdmin}>
-        {isTaken ? (
+      <EventDetails event={event} isAdmin={isAdmin} cancelHandler={cancelBtn}>
+        {isTaken && !isAssigned ? (
           <TakenEventButtons onPress={this.handleRemoveEvent} />
         ) : (
-          <ButtonsConfirmationBar ok={okBtn} cancel={cancelBtn} />
+          <ButtonsConfirmationBar ok={okBtn} />
         )}
       </EventDetails>
     )

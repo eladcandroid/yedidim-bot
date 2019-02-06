@@ -12,6 +12,7 @@ import {
   Icon
 } from 'native-base'
 import { View, ActivityIndicator, Alert } from 'react-native'
+import appStyles from '../../global-styles'
 import styled from 'styled-components/native'
 import { AuthSession } from 'expo'
 import { inject, observer } from 'mobx-react/native'
@@ -78,14 +79,14 @@ class PhoneAuthenticationScreen extends React.Component {
 
     return (
       <Container>
-        <Header>
+        <Header style={appStyles.navigationHeaderStyles}>
           <Left />
           <Body>
             <FormattedMessage
               id="Authentication.title"
               defaultMessage="Authentication"
             >
-              {txt => <Title>{txt}</Title>}
+              {txt => <Title style={appStyles.appFont}>{txt}</Title>}
             </FormattedMessage>
           </Body>
           <Right />

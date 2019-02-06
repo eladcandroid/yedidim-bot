@@ -1,7 +1,16 @@
 import React, { Component } from 'react'
+import appStyles from '../global-styles'
 import styled from 'styled-components/native'
 import { inject, observer } from 'mobx-react/native'
 import { FormattedMessage, FormattedRelative } from 'react-intl'
+import {
+  Image,
+  Linking,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl
+} from 'react-native'
 import {
   Button,
   Container,
@@ -15,9 +24,10 @@ import {
   Text,
   List,
   ListItem,
-  Thumbnail
+  Thumbnail,
+  Grid,
+  Row
 } from 'native-base'
-import { ActivityIndicator, RefreshControl } from 'react-native'
 import debounce from 'lodash.debounce'
 import format from 'date-fns/format'
 import { trackEvent } from 'io/analytics'
@@ -32,14 +42,41 @@ const MessageView = styled.View`
   padding: 15px 0;
 `
 
-const LastUpdatedView = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 0;
-  border-bottom-width: 1px
-  border-bottom-color: #D3D3D3; 
+const BarItem = styled.Text`
+  width: 25%;
+  text-align: center;
+  font-family: 'Alef';
 `
+
+const StatusBar = styled.View`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  align-items: baseline;
+  padding: 5px 15px;
+  border-bottom-width: 1px;
+  border-bottom-color: #d3d3d3;
+`
+
+const styles = StyleSheet.create({
+  btn: {
+    borderRadius: 10,
+    marginHorizontal: 15,
+    flex: 1,
+    paddingHorizontal: 20,
+    height: 35
+  },
+  guideButton: {
+    backgroundColor: 'orange'
+  },
+  footer: {
+    marginBottom: 20,
+    marginTop: 10,
+    width: '100%',
+    flex: 1,
+    justifyContent: 'space-between'
+  }
+})
 
 // TODO Move saveNotificationToken to be executed after signin, if error exists then show button on home asking user to notification access (trigger again)
 // TODO Don't use once to listen to user changes, that way we can have a computed property to enable notifications (Notification Store - will be used for muted)
@@ -112,13 +149,43 @@ const EventItem = observer(
         onPress={() => {
           onPress(id)
         }}
+        style={{
+          width: '90%',
+          backgroundColor: 'white',
+          borderBottomWidth: 3,
+          borderBottomColor: isTaken ? 'grey' : 'red',
+          marginTop: 10,
+          marginRight: 'auto',
+          marginBottom: 0,
+          marginLeft: 'auto'
+        }}
       >
         <Left>
-          <Thumbnail small source={categoryImg} />
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              borderColor: isTaken ? 'grey' : 'red',
+              borderWidth: 1,
+              borderRadius: 25,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Image
+              style={{ width: 30, resizeMode: 'contain' }}
+              source={categoryImg}
+            />
+          </View>
         </Left>
         <Body>
           <AlignedText>
-            {categoryName} - {displayAddress} {carType && `(${carType})`}
+            <Text style={{ fontWeight: 'bold', fontFamily: 'Alef' }}>
+              {' '}
+              {categoryName} {'\n'}{' '}
+            </Text>{' '}
+            {displayAddress} {carType && `(${carType})`}
           </AlignedText>
           <AlignedText note>{more}</AlignedText>
           {isAdmin && (
@@ -129,7 +196,16 @@ const EventItem = observer(
             />
           )}
         </Body>
-        <Right>
+        <Right
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            paddingBottom: 0,
+            paddingRight: 0
+          }}
+        >
           <FormattedRelative value={timestamp}>
             {relative => <AlignedText note>{relative}</AlignedText>}
           </FormattedRelative>
@@ -140,9 +216,10 @@ const EventItem = observer(
               style={{
                 padding: 3,
                 marginTop: 3,
-                backgroundColor: 'red',
+                backgroundColor: 'grey',
                 color: 'white',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                fontFamily: 'Alef'
               }}
             >
               נלקח
@@ -161,7 +238,7 @@ class HomeScreen extends Component {
     screenProps: { toggleMute, isMuted }
   }) => ({
     header: (
-      <Header>
+      <Header style={appStyles.navigationHeaderStyles}>
         <Left>
           <Button
             transparent
@@ -170,18 +247,22 @@ class HomeScreen extends Component {
               navigation.navigate('DrawerOpen')
             }}
           >
-            <Icon name="menu" />
+            <Icon style={appStyles.headerTitle} name="menu" />
           </Button>
         </Left>
         <Body>
           <FormattedMessage id="Home.title" defaultMessage="Home">
-            {txt => <Title>{txt}</Title>}
+            {txt => (
+              <Title style={[appStyles.appFont, appStyles.headerTitle]}>
+                {txt}
+              </Title>
+            )}
           </FormattedMessage>
         </Body>
         <Right>
           <Button transparent onPress={toggleMute}>
             <Icon
-              style={isMuted ? { color: 'red' } : {}}
+              style={{ color: 'white' }}
               name={`ios-notifications${isMuted ? '-off' : ''}`}
             />
           </Button>
@@ -232,42 +313,49 @@ class HomeScreen extends Component {
     return (
       <Container>
         <Content
+          style={{ flex: 1 }}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={this.handleRefresh}
             />
           }
-          style={{ backgroundColor: '#fff' }}
         >
           {!refreshing && (
-            <LastUpdatedView>
-              <Text>מעודכן ל{format(lastUpdatedDate, 'H:mm')}</Text>
-            </LastUpdatedView>
+            <StatusBar
+              style={{
+                backgroundColor: currentUser.isMuted ? '#e75656' : '#63db63'
+              }}
+            >
+              <BarItem>{currentUser.name}</BarItem>
+              <BarItem>מחובר</BarItem>
+              <BarItem>
+                {currentUser.isMuted ? 'מצב מושתק' : 'מצב זמין'}
+              </BarItem>
+              <BarItem>{format(lastUpdatedDate, 'H:mm')}</BarItem>
+            </StatusBar>
           )}
           {hasEvents && (
-            <List
-              dataArray={sortedEventsByStatusAndTimestamp}
-              renderRow={event => (
-                <EventItem
-                  event={event}
-                  onPress={this.handleEventItemPress}
-                  isAdmin={currentUser.isAdmin}
-                />
-              )}
-            />
+            <Content style={{ flex: 1 }}>
+              <List
+                dataArray={sortedEventsByStatusAndTimestamp}
+                renderRow={event => (
+                  <EventItem
+                    event={event}
+                    onPress={this.handleEventItemPress}
+                    isAdmin={currentUser.isAdmin}
+                  />
+                )}
+              />
+            </Content>
           )}
           {!hasEvents &&
             !refreshing && (
               <MessageView>
-                <FormattedMessage
-                  id="Home.noevents"
-                  defaultMessage="Sorry, no events were found"
-                >
-                  {txt => <Text>{txt}</Text>}
-                </FormattedMessage>
+                <Text>לא קיימים כעת אירועים פעילים</Text>
               </MessageView>
             )}
+          {/* add button here */}
         </Content>
       </Container>
     )

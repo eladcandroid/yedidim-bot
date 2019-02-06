@@ -1,21 +1,25 @@
-const Consts = require('./consts')
+import { NOTIFICATION_SEARCH_RADIUS_KM, CategoriesDisplay } from './consts'
 
 const {
   sendNotificationToUsers,
   sendNotificationByGeoFireLocation
 } = require('../lib/notifications')
 
-exports.handleUpdateEvent = (eventId, change) => {
-  let eventData = change.after.val()
-  let previousValue = change.before.val()
-  console.log('Event updated = ', eventData)
+// exports.handleUpdateEvent = (eventId, change, admin) => {
+//   let eventData = change.after.val()
+//   let previousValue = change.before.val()
+//   console.log('Event updated = ', eventData)
 
-  if (!haveToSendNotification(eventData, previousValue)) {
-    console.log('blocked', eventData.status)
-    return Promise.resolve('blocked')
-  }
-  return sendEventNotificationToCloseByVolunteers(eventData, 'קריאה חדשה')
-}
+//   if (!haveToSendNotification(eventData, previousValue)) {
+//     console.log('blocked', eventData.status)
+//     return Promise.resolve('blocked')
+//   }
+//   return sendEventNotificationToCloseByVolunteers(
+//     eventData,
+//     'קריאה חדשה',
+//     admin
+//   )
+// }
 exports.sendNotificationBySearchRadius = async (req, res, admin) => {
   try {
     let { eventId } = req.body
@@ -29,6 +33,7 @@ exports.sendNotificationBySearchRadius = async (req, res, admin) => {
       await sendEventNotificationToCloseByVolunteers(
         event,
         'קריאה חדשה',
+        admin,
         searchRadius
       )
       res.status(200).send('')
@@ -57,7 +62,7 @@ exports.sendNotificationToRecipient = async (req, res, admin) => {
         let title =
           user.EventKey === eventId ? 'התראה על אירוע פעיל' : 'התראה על אירוע'
 
-        let message = formatNotification(event)
+        let message = await formatNotification(event, admin)
         let data = {
           eventId: event.key,
           type: 'event'
@@ -139,17 +144,18 @@ exports.sendVolunteerTestNotification = async (req, res, admin) => {
     res.status(500).send(e)
   }
 }
-let sendEventNotificationToCloseByVolunteers = (
+let sendEventNotificationToCloseByVolunteers = async (
   eventData,
   notificationTitle,
+  admin,
   radius
 ) => {
   let latitude = eventData.details.geo.lat
   let longitude = eventData.details.geo.lon
-  radius = radius || Consts.NOTIFICATION_SEARCH_RADIUS_KM
+  radius = radius || NOTIFICATION_SEARCH_RADIUS_KM
   let title = notificationTitle
 
-  let message = formatNotification(eventData)
+  let message = await formatNotification(eventData, admin)
   let data = {
     eventId: eventData.key,
     type: 'event'
@@ -168,16 +174,21 @@ let sendEventNotificationToCloseByVolunteers = (
 
 exports.sendEventNotificationToCloseByVolunteers = sendEventNotificationToCloseByVolunteers
 
-let formatNotification = eventData => {
-  return ` ${Consts.CategoriesDisplay[eventData.details.category] ||
-    'לא ידוע'} ב${eventData.details.address} . סוג רכב ${
+let formatNotification = async (eventData, admin) => {
+  const categories = await CategoriesDisplay(admin)
+
+  const category = categories.find(
+    category => category.id === eventData.details.category
+  ) || { displayName: 'לא ידוע' }
+
+  return ` ${category.displayName} ב${eventData.details.address} . סוג רכב ${
     eventData.details['car type']
   } לחץ לפרטים`
 }
 
-let haveToSendNotification = (eventData, previousValue) => {
-  return (
-    eventData.status === 'sent' &&
-    (previousValue === null || previousValue.status !== 'sent')
-  )
-}
+// let haveToSendNotification = (eventData, previousValue) => {
+//   return (
+//     eventData.status === 'sent' &&
+//     (previousValue === null || previousValue.status !== 'sent')
+//   )
+// }
