@@ -34,10 +34,11 @@ exports.loadLatestOpenEvents = async (req, res, admin) => {
       req.query[props] ? parseFloat(req.query[props]) : undefined
     )
 
-    const decodedToken = await admin.auth().verifyIdToken(req.query.authToken)
-    const authToken = decodedToken.phone_number
+    const user = await admin.auth().verifyIdToken(req.query.authToken)
+    const authToken =
+      user.phone_number || user.email.replace('@yedidim.org', '')
 
-    console.log('[LatestOpenEvents]', authToken, coords)
+    console.log('[LatestOpenEvents]', user, authToken, coords)
 
     if (coords[0] && coords[1]) {
       // Save user location
