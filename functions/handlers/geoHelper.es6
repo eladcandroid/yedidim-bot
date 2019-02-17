@@ -2,6 +2,10 @@ let GeoFire = require('geofire')
 
 exports.saveLocation = (collectionName, admin, key, location) => {
   let geoFire = new GeoFire(admin.database().ref(collectionName))
+  if (!location[0] || !location[1]) {
+    return
+  }
+
   return geoFire
     .set(key, location)
     .then(() => {

@@ -154,7 +154,7 @@ exports.loadLatestOpenEvents = async (req, res, admin) => {
       console.log(
         '[LatestOpenEvents] Return without location',
         authToken,
-        eventsToReturn
+        events
       )
 
       res.status(200).send(events)

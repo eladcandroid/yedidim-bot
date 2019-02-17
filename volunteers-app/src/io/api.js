@@ -1,6 +1,5 @@
 import firebase from 'firebase'
-import { Location } from 'expo'
-import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler'
+import { Location, Permissions } from 'expo'
 import OneSignal from 'react-native-onesignal'
 import { config, firebaseFunctionsUrl } from '../config'
 
@@ -210,11 +209,16 @@ export async function loadLatestOpenEvents() {
     longitude: ''
   }
 
-  if (await phonePermissionsHandler.getLocationPermission()) {
-    const { coords } = await Location.getCurrentPositionAsync({
-      enableHighAccuracy: true
-    })
-    coordinates = coords
+  try {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION)
+    if (status === 'granted') {
+      const { coords } = await Location.getCurrentPositionAsync({
+        enableHighAccuracy: true
+      })
+      coordinates = coords
+    }
+  } catch (error) {
+    // Do nothing, location is disabled
   }
 
   const authToken = await firebase.auth().currentUser.getIdToken()
