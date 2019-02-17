@@ -9,6 +9,7 @@ const sendExpoFollowerNotification = require('./handlers/notificationsHandler')
 const locationHandler = require('./handlers/locationHandler')
 const testNotificationHandler = require('./handlers/testNotificationHandler')
 const eventUpdatesHandlers = require('./handlers/eventUpdatesHandlers')
+const events = require('./handlers/events')
 const { tokens } = require('./config')
 
 //Main http function to handle all webhook calls
@@ -103,4 +104,8 @@ exports.saveUserLocation = functions.https.onRequest((req, res) => {
 
 exports.manageDB = functions.https.onRequest((req, res) => {
   return manageDB.handleHttp(req, res, admin)
+})
+
+exports.loadLatestOpenEvents = functions.https.onRequest((req, res) => {
+  return events.loadLatestOpenEvents(req, res, admin)
 })
