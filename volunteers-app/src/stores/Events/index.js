@@ -44,17 +44,25 @@ export default types
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
         const events = yield api.loadLatestOpenEvents()
         // TODO Receive events and only remove those that are not in list
-        self.removeAllEvents()
+        self.removeAllEvents(events)
         events.forEach(addEvent)
         self.lastUpdatedDate = new Date().getTime()
       }),
       removeEvent(eventId) {
         destroy(self.events.get(eventId))
       },
-      removeAllEvents: () => {
+      removeAllEvents: (eventsNotToRemove = []) => {
+        const eventsIdNotToRemove = eventsNotToRemove.map(
+          existingEvent => existingEvent.id
+        )
+
         self.events.values().forEach(event => {
-          // Remove all events apart from the assigned to the user
-          if (!event.isAssigned) {
+          // Remove all events apart from the assigned to the user and that not are
+          // in list not to remove
+          if (
+            !event.isAssigned &&
+            !eventsIdNotToRemove.find(id => id === event.id)
+          ) {
             self.removeEvent(event.id)
           }
         })
