@@ -35,11 +35,13 @@ import { trackEvent } from 'io/analytics'
 import AlignedText from 'components/AlignedText'
 import NotificationBadge from 'components/NotificationBadge'
 
+import Sentry from 'sentry-expo'
+
 const MessageView = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 15px 0;
+  padding: 15px 5px;
 `
 
 const BarItem = styled.Text`
@@ -281,8 +283,11 @@ class HomeScreen extends Component {
 
   handleRefresh = async () => {
     try {
-      this.setState(() => ({ refreshing: true }))
+      this.setState(() => ({ refreshError: false, refreshing: true }))
       await this.props.eventStore.loadLatestOpenEvents()
+    } catch (error) {
+      Sentry.captureException(error)
+      this.setState(() => ({ refreshError: true }))
     } finally {
       this.setState(() => ({
         refreshing: false
@@ -308,7 +313,7 @@ class HomeScreen extends Component {
       },
       currentUser
     } = this.props
-    const { refreshing } = this.state
+    const { refreshing, refreshError } = this.state
 
     return (
       <Container>
@@ -349,12 +354,25 @@ class HomeScreen extends Component {
               />
             </Content>
           )}
-          {!hasEvents &&
-            !refreshing && (
-              <MessageView>
-                <Text>לא קיימים כעת אירועים פעילים</Text>
-              </MessageView>
-            )}
+          {!hasEvents && !refreshing && !refreshError && (
+            <MessageView>
+              <Text>לא קיימים כעת אירועים פעילים</Text>
+            </MessageView>
+          )}
+          {refreshError && (
+            <MessageView>
+              <Text
+                style={{
+                  color: '#e75656',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}
+              >
+                אירע שגיאה במשיכת אירועים. נא לנסות שנית. אם תימשך השגיאה, נא
+                ליצור קשר עם התמיכת טכנית.
+              </Text>
+            </MessageView>
+          )}
           {/* add button here */}
         </Content>
       </Container>
