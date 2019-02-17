@@ -1,32 +1,38 @@
 import * as geoHelper from './geoHelper'
 import logger from '../lib/logger'
+const values = require('object.values')
 
 exports.loadLatestOpenEvents = async (req, res, admin) => {
-  console.log('[LatestOpenEvents]', req.params)
+  console.log('[LatestOpenEvents]', req.query)
 
   try {
-    const { latitude, longitude } = req.params
+    const coords = ['latitude', 'longitude'].map(props =>
+      req.query[props] ? parseFloat(req.query[props]) : undefined
+    )
 
-    const decodedToken = await admin.auth().verifyIdToken(req.params.authToken)
+    const decodedToken = await admin.auth().verifyIdToken(req.query.authToken)
     const authToken = decodedToken.phone_number
 
-    console.log('[LatestOpenEvents]', authToken, latitude, longitude)
+    console.log('[LatestOpenEvents]', authToken, coords)
 
-    // Save user location
-    await geoHelper.saveLocation('user_location', admin, authToken, [
-      latitude,
-      longitude
-    ])
+    if (coords[0] && coords[1]) {
+      // Save user location
+      await geoHelper.saveLocation('user_location', admin, authToken, coords)
 
-    const snapshot = await firebase
+      // TODO Code with retrieving by location
+    } else {
+      // TODO Code without location
+    }
+
+    const snapshot = await admin
       .database()
       .ref('events')
-      .orderByChild('status')
-      .startAt('assigned')
-      .endAt('sent')
+      .orderByChild('isOpen')
+      .equalTo(true)
       .once('value')
 
-    const events = Object.values(snapshot.val() || {})
+    // Shim for Object.values (not in node6)
+    const events = values(snapshot.val() || {})
       .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
       .filter(event => event.status === 'assigned' || event.status === 'sent')
       .slice(0, 25)
@@ -36,8 +42,8 @@ exports.loadLatestOpenEvents = async (req, res, admin) => {
       userId: authToken,
       eventProperties: {
         origin: 'server',
-        latitude,
-        longitude
+        latitude: coords[0],
+        longitude: coords[1]
       }
     })
 
