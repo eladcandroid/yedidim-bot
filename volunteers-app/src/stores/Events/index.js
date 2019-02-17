@@ -42,8 +42,8 @@ export default types
 
     return {
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
-        const currentUserId = getRoot(self).authStore.currentUser.id
-        const events = yield api.loadLatestOpenEvents(currentUserId)
+        const events = yield api.loadLatestOpenEvents()
+        // TODO Receive events and only remove those that are not in list
         self.removeAllEvents()
         events.forEach(addEvent)
         self.lastUpdatedDate = new Date().getTime()

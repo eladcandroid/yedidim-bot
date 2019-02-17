@@ -3,7 +3,7 @@ import GeoFire from 'geofire'
 import { Location } from 'expo'
 import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler'
 import OneSignal from 'react-native-onesignal'
-import { config } from '../config'
+import { config, firebaseFunctionsUrl } from '../config'
 
 const EVENTS_SEARCH_RADIUS_KM = 20
 
@@ -283,8 +283,8 @@ async function fetchLatestOpenEventsLocationBased(userId) {
               .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
               .slice(0, 25)
             if (eventsToReturn.length < 25) {
-              const oldestEventsFirst = Object.values(eventsById).sort(
-                (a, b) => (a.timestamp < b.timestamp ? -1 : 1)
+              const oldestEventsFirst = Object.values(eventsById).sort((a, b) =>
+                a.timestamp < b.timestamp ? -1 : 1
               )
               let i = 0
               const userLocation = [latitude, longitude]
@@ -341,25 +341,64 @@ async function fetchLatestOpenedEvents() {
   })
 }
 
-export async function loadLatestOpenEvents(userId) {
-  let fetchedEvents
-  const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
-  if (hasLocationPermission) {
-    try {
-      fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
-    } catch (error) {
-      // User has given permissions but disabled temporary location or location is unavailable
-      fetchedEvents = await fetchLatestOpenedEvents()
-    }
-  } else {
-    fetchedEvents = await fetchLatestOpenedEvents()
+export async function loadLatestOpenEvents() {
+  let coordinates = {
+    latitude: '',
+    longitude: ''
   }
 
-  const events = fetchedEvents
-    .filter(childSnapshot => !!childSnapshot.key) // Remove events without a key
-    .map(childSnapshot => eventSnapshotToJSON(childSnapshot))
-  return events
+  if (await phonePermissionsHandler.getLocationPermission()) {
+    const { coords } = await Location.getCurrentPositionAsync({
+      enableHighAccuracy: true
+    })
+    coordinates = coords
+  }
+
+  const authToken = await firebase.auth().currentUser.getIdToken()
+
+  // Sending location
+  // Adding user id
+  const url = `${firebaseFunctionsUrl()}/loadLatestOpenEvents?authToken=${authToken}&latitude=${
+    coordinates.latitude
+  }&longitude=${coordinates.longitude}`
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+
+  // TODO Better error handling
+  if (response.status !== 200) {
+    throw new Error(await response.text())
+  }
+
+  const events = await response.json()
+
+  return events.map(event => eventSnapshotToJSON(event))
 }
+
+// export async function loadLatestOpenEvents(userId) {
+//   let fetchedEvents
+//   const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
+//   if (hasLocationPermission) {
+//     try {
+//       fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
+//     } catch (error) {
+//       // User has given permissions but disabled temporary location or location is unavailable
+//       fetchedEvents = await fetchLatestOpenedEvents()
+//     }
+//   } else {
+//     fetchedEvents = await fetchLatestOpenedEvents()
+//   }
+
+//   const events = fetchedEvents
+//     .filter(childSnapshot => !!childSnapshot.key) // Remove events without a key
+//     .map(childSnapshot => eventSnapshotToJSON(childSnapshot))
+//   return events
+// }
 
 export function subscribeToEvent(eventKey, onChangeCallback) {
   const callback = snapshot => {
