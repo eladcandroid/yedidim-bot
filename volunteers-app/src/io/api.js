@@ -1,11 +1,8 @@
 import firebase from 'firebase'
-import GeoFire from 'geofire'
 import { Location } from 'expo'
 import * as phonePermissionsHandler from 'phoneInterface/phonePermissionsHandler'
 import OneSignal from 'react-native-onesignal'
 import { config, firebaseFunctionsUrl } from '../config'
-
-const EVENTS_SEARCH_RADIUS_KM = 20
 
 async function registerForPushNotificationsAsync(userId) {
   return new Promise(resolve => {
@@ -154,16 +151,6 @@ export async function signOut() {
   return firebase.auth().signOut()
 }
 
-async function saveUserLocation(userId, latitude, longitude) {
-  try {
-    const geoFire = new GeoFire(firebase.database().ref('user_location'))
-    await geoFire.set(userId, [latitude, longitude])
-  } catch (e) {
-    // TODO: error logging?
-    console.error(e)
-  }
-}
-
 const eventSnapshotToJSON = snapshot => {
   if (!snapshot.details) {
     snapshot.details = {
@@ -217,130 +204,6 @@ const eventSnapshotToJSON = snapshot => {
   }
 }
 
-const filteredEvents = status =>
-  new Promise((resolve, reject) => {
-    firebase
-      .database()
-      .ref('events')
-      .orderByChild('status')
-      .equalTo(status)
-      .once(
-        'value',
-        snapshot => {
-          resolve(snapshot.val() || {})
-        },
-        error => reject(error)
-      )
-  })
-
-const relevantEvents = () =>
-  Promise.all(['assigned', 'sent'].map(filteredEvents)).then(results =>
-    Object.assign({}, ...results)
-  )
-
-async function fetchLatestOpenEventsLocationBased(userId) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const currentLocation = await Location.getCurrentPositionAsync({
-        enableHighAccuracy: true
-      })
-      const { latitude, longitude } = currentLocation.coords
-      saveUserLocation(userId, latitude, longitude)
-      const nearEventIdToDistance = {}
-      const geoFire = new GeoFire(
-        firebase
-          .database()
-          .ref()
-          .child('event-location')
-      )
-      const geoQuery = geoFire.query({
-        center: [latitude, longitude],
-        radius: EVENTS_SEARCH_RADIUS_KM
-      })
-
-      geoQuery.on('key_entered', (eventId, location, distance) => {
-        nearEventIdToDistance[eventId] = distance
-      })
-
-      geoQuery.on('ready', () => {
-        geoQuery.cancel()
-        relevantEvents()
-          .then(eventsById => {
-            // The query above also retrieves draft events, we need to filter
-            // it out
-            const eventsToReturn = Object.keys(eventsById)
-              .filter(eventId => !!nearEventIdToDistance[eventId])
-              .filter(
-                eventId =>
-                  eventsById[eventId].status === 'assigned' ||
-                  eventsById[eventId].status === 'sent'
-              )
-              .map(eventId => {
-                const event = eventsById[eventId]
-                event.distance = nearEventIdToDistance[eventId]
-                return event
-              })
-              .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
-              .slice(0, 25)
-            if (eventsToReturn.length < 25) {
-              const oldestEventsFirst = Object.values(eventsById).sort((a, b) =>
-                a.timestamp < b.timestamp ? -1 : 1
-              )
-              let i = 0
-              const userLocation = [latitude, longitude]
-              while (
-                eventsToReturn.length < 25 &&
-                i < oldestEventsFirst.length
-              ) {
-                const currentEvent = oldestEventsFirst[i]
-                if (!nearEventIdToDistance[currentEvent.uid]) {
-                  const eventLocation = [
-                    currentEvent.details.geo.lat,
-                    currentEvent.details.geo.lon
-                  ]
-                  currentEvent.distance = GeoFire.distance(
-                    userLocation,
-                    eventLocation
-                  )
-                  eventsToReturn.push(currentEvent)
-                }
-                i += 1
-              }
-            }
-            resolve(eventsToReturn)
-          })
-          .catch(error => reject(error))
-      })
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
-
-async function fetchLatestOpenedEvents() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      firebase
-        .database()
-        .ref('events')
-        .orderByChild('status')
-        .startAt('assigned')
-        .endAt('sent')
-        .once('value', snapshot => {
-          const events = Object.values(snapshot.val() || {})
-            .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
-            .filter(
-              event => event.status === 'assigned' || event.status === 'sent'
-            )
-            .slice(0, 25)
-          resolve(events)
-        })
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
-
 export async function loadLatestOpenEvents() {
   let coordinates = {
     latitude: '',
@@ -379,26 +242,6 @@ export async function loadLatestOpenEvents() {
 
   return events.map(event => eventSnapshotToJSON(event))
 }
-
-// export async function loadLatestOpenEvents(userId) {
-//   let fetchedEvents
-//   const hasLocationPermission = await phonePermissionsHandler.getLocationPermission()
-//   if (hasLocationPermission) {
-//     try {
-//       fetchedEvents = await fetchLatestOpenEventsLocationBased(userId)
-//     } catch (error) {
-//       // User has given permissions but disabled temporary location or location is unavailable
-//       fetchedEvents = await fetchLatestOpenedEvents()
-//     }
-//   } else {
-//     fetchedEvents = await fetchLatestOpenedEvents()
-//   }
-
-//   const events = fetchedEvents
-//     .filter(childSnapshot => !!childSnapshot.key) // Remove events without a key
-//     .map(childSnapshot => eventSnapshotToJSON(childSnapshot))
-//   return events
-// }
 
 export function subscribeToEvent(eventKey, onChangeCallback) {
   const callback = snapshot => {
