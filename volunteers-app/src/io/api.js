@@ -327,7 +327,7 @@ export async function unacceptEvent(eventKey, user) {
   const updates = {
     [`events/${eventKey}/status`]: 'sent',
     [`events/${eventKey}/assignedTo`]: null,
-    [`volunteer/${user.id}/EventKey`]: null
+    [`volunteer/${user}/EventKey`]: null
   }
 
   return firebase
