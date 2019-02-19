@@ -1,6 +1,7 @@
 import firebase from 'firebase'
 import { Location, Permissions } from 'expo'
 import OneSignal from 'react-native-onesignal'
+import Sentry from 'sentry-expo'
 import { config, firebaseFunctionsUrl } from '../config'
 
 async function registerForPushNotificationsAsync(userId) {
@@ -218,6 +219,7 @@ export async function loadLatestOpenEvents() {
       coordinates = coords
     }
   } catch (error) {
+    Sentry.captureException(error)
     // Do nothing, location is disabled
   }
 
@@ -327,7 +329,7 @@ export async function unacceptEvent(eventKey, user) {
   const updates = {
     [`events/${eventKey}/status`]: 'sent',
     [`events/${eventKey}/assignedTo`]: null,
-    [`volunteer/${user}/EventKey`]: null
+    [`volunteer/${user.id}/EventKey`]: null
   }
 
   return firebase

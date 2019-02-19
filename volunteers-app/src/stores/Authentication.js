@@ -2,6 +2,7 @@ import { types, getParent, flow, getSnapshot } from 'mobx-state-tree'
 import * as api from 'io/api'
 import { trackUserLogin, trackEvent } from 'io/analytics'
 import { acknowledgeTestNotification } from 'io/notifications'
+import Sentry from 'sentry-expo'
 
 const Location = types.model('Location', {
   id: types.identifier(types.string),
@@ -115,8 +116,10 @@ const AuthenticationStore = types
     function onUserChanged(userInfo) {
       if (!userInfo) {
         // Not authenticated
+        Sentry.setUserContext()
         self.currentUser = null
       } else {
+        Sentry.setUserContext(userInfo)
         self.currentUser = userInfo
       }
 

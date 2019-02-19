@@ -89,6 +89,13 @@ export default types
   }))
   .actions(self => ({
     onEventUpdated: flow(function* onEventUpdated(eventData) {
+      if (!eventData.id) {
+        // Event was removed (completed), unsubscribe
+        // It will be removed next time
+        self.beforeDestroy()
+        return
+      }
+
       eventData.distance =
         eventData.distance ||
         self.distance ||
@@ -152,7 +159,7 @@ export default types
       self.store.setLoading(true)
       const results = yield api.unacceptEvent(
         self.id,
-        getRoot(self).authStore.currentUser.id
+        getRoot(self).authStore.currentUser
       )
       self.store.setLoading(false)
       trackEvent('UnacceptEvent', {
