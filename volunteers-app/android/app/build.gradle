@@ -30,8 +30,8 @@ android {
   defaultConfig {
     applicationId 'com.startach.yedidim.volunteers.detached'
     targetSdkVersion 27
-    versionCode 14
-    versionName '7.0.0'
+    versionCode 18
+    versionName '11.0.0'
     ndk {
       abiFilters 'armeabi-v7a', 'x86'
     }
