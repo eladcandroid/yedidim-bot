@@ -61,8 +61,7 @@
   "Event.alert.takeError.text":
     "מצטערים, לא ניתן לקבל אירוע זה. נסה שוב, אם השגיאה נמשכת פנה למנהל המערכת",
   "Event.alert.takeError.confirm": "אישור",
-  "Event.error.notfound":
-    "מצטערים, אין אפשרות למצוא את פרטי האירוע. פנה למנהל המערכת.",
+  "Event.error.notfound": "מצטערים, אין אפשרות למצוא את פרטי האירוע. כנראה האירוע כבר טופל ונסגר.",
   "Event.details.waiting": "המתן, טוען את האירוע ...",
   "Event.title.active": "אירוע פעיל",
   "Event.title.inactive": "אירוע",

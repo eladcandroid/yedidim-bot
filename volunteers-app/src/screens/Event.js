@@ -182,7 +182,11 @@ const eventTakeErrorMsgs = defineMessages({
 @observer
 class EventScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const { state: { params: { isAssigned } } } = navigation
+    const {
+      state: {
+        params: { isAssigned }
+      }
+    } = navigation
     // Make sure when isAssigned is not defined we don't show arrows
     return {
       header: (
@@ -236,7 +240,12 @@ class EventScreen extends Component {
 
   componentWillMount() {
     const { navigation, event } = this.props
-    const { setParams, state: { params: { isAssigned } } } = navigation
+    const {
+      setParams,
+      state: {
+        params: { isAssigned }
+      }
+    } = navigation
     if (event && event.isAssigned !== isAssigned) {
       setParams({ isAssigned: event.isAssigned })
     }
@@ -245,7 +254,12 @@ class EventScreen extends Component {
   componentWillReceiveProps(nextProps) {
     const { navigation } = this.props
     const { event } = nextProps
-    const { setParams, state: { params: { isAssigned } } } = navigation
+    const {
+      setParams,
+      state: {
+        params: { isAssigned }
+      }
+    } = navigation
     if (event && event.isAssigned !== isAssigned) {
       setParams({ isAssigned: event.isAssigned })
     }
@@ -260,7 +274,11 @@ class EventScreen extends Component {
 
   // supports finalise and cancel
   handleCompleteEvent = async action => {
-    const { event, navigation, screenProps: { intl } } = this.props
+    const {
+      event,
+      navigation,
+      screenProps: { intl }
+    } = this.props
 
     // Execute action on event
     await event[action]()
@@ -296,7 +314,7 @@ class EventScreen extends Component {
       return (
         <FormattedMessage
           id="Event.error.notfound"
-          defaultMessage="Sorry, unable to find event details. Please contact administrator."
+          defaultMessage="Sorry, unable to find event details. Probably the event was already completed."
         >
           {txt => <Text>{txt}</Text>}
         </FormattedMessage>
@@ -396,7 +414,16 @@ class EventScreen extends Component {
 }
 
 export default inject(
-  ({ stores }, { navigation: { state: { params: { eventId } } } }) => {
+  (
+    { stores },
+    {
+      navigation: {
+        state: {
+          params: { eventId }
+        }
+      }
+    }
+  ) => {
     const event = stores.eventStore.findById(eventId)
     return {
       // Return isAssigned because we need mobx to refresh the view

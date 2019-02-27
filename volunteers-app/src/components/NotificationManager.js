@@ -6,6 +6,7 @@ import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
 import { defineMessages } from 'react-intl'
 import OneSignal from 'react-native-onesignal'
+import Sentry from 'sentry-expo'
 
 const newEventToast = defineMessages({
   button: {
@@ -94,23 +95,32 @@ const withNotificationManager = WrappedComponent => {
       payload: { additionalData },
       isOpenEvent
     }) => {
-      if (!additionalData) {
-        return
-      }
-      if (additionalData.type === 'event') {
-        this.handleEventNotification(isAppInFocus, additionalData, isOpenEvent)
-        return
-      }
+      try {
+        if (!additionalData) {
+          return
+        }
+        if (additionalData.type === 'event') {
+          this.handleEventNotification(
+            isAppInFocus,
+            additionalData,
+            isOpenEvent
+          )
+          return
+        }
 
-      if (additionalData.type === 'test') {
-        Alert.alert(
-          'בדיקת התראות',
-          'ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.',
-          [{ text: 'OK', onPress: () => {} }],
-          { cancelable: false }
-        )
-        // Acknowledge test on firebase
-        this.props.currentUser.acknowledgeTestNotification()
+        if (additionalData.type === 'test') {
+          Alert.alert(
+            'בדיקת התראות',
+            'ההתראות נבדקו ונמצאו תקינות. המערכת עודכנה עם תוצאות הבדיקה.',
+            [{ text: 'OK', onPress: () => {} }],
+            { cancelable: false }
+          )
+          // Acknowledge test on firebase
+          this.props.currentUser.acknowledgeTestNotification()
+        }
+      } catch (error) {
+        // If any error happens here, capture and avoid throwing out
+        Sentry.captureException(error)
       }
     }
 
