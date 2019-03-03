@@ -430,9 +430,6 @@ const mapStateToProps = (state, ownProps) => {
     state.dataSource.events && ownProps.params
       ? state.dataSource.events.find(event => event.key === ownProps.params.key)
       : undefined
-  if (!event) {
-    event = {status: EventStatus.Draft, details: {}}
-  }
   const categories = state.dataSource.categories || []
   return {
     event,
@@ -445,6 +442,10 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(EventDetailsEditor)
+
+EventDetailsEditor.defaultProps = {
+  event: {status: EventStatus.Draft, details: {}}
+}
 
 EventDetailsEditor.propTypes = {
   createEvent: PropTypes.func,
