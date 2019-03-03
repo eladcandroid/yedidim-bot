@@ -46,6 +46,7 @@ class EventDetails extends Component {
     this.openVolunteerPhone = this.openVolunteerPhone.bind(this)
     this.openAddressInMaps = this.openAddressInMaps.bind(this)
     this.openAddressInPlusCodeMaps = this.openAddressInPlusCodeMaps.bind(this)
+    this.sendWhatsAppToCaller = this.sendWhatsAppToCaller.bind(this)
     this.editEvent = this.editEvent.bind(this)
     this.openNotificationPrompt = this.openNotificationPrompt.bind(this)
   }
@@ -73,6 +74,10 @@ class EventDetails extends Component {
 
   openAddressInMaps() {
     Linking.openURL(getGoogleMapsUrl(this.props.event))
+  }
+
+  sendWhatsAppToCaller() {
+    Linking.openURL('whatsapp://send?phone=' + this.props.event.details['phone number'])
   }
 
   openAddressInPlusCodeMaps() {
@@ -305,9 +310,11 @@ class EventDetails extends Component {
             {event.details['private_info']}
           </Text>
           <Text style={getTextStyle(styles.fieldName)}>טלפון</Text>
-          <Text style={getTextStyle(styles.fieldValue)}>
-            {event.details['phone number']}
-          </Text>
+          <TouchableHighlight onPress={this.sendWhatsAppToCaller}>
+            <Text style={getTextStyle(styles.addressFieldValue)}>
+              {event.details['phone number']}
+            </Text>
+          </TouchableHighlight>
           <Text style={getTextStyle(styles.fieldName)}>שם</Text>
           <Text style={getTextStyle(styles.fieldValue)}>
             {event.details['caller name']}
