@@ -37,6 +37,8 @@ import NotificationBadge from 'components/NotificationBadge'
 
 import Sentry from 'sentry-expo'
 
+import { REFRESH_TIMEOUT } from 'config'
+
 const MessageView = styled.View`
   flex: 1;
   align-items: center;
@@ -281,14 +283,40 @@ class HomeScreen extends Component {
     this.handleRefresh()
   }
 
+  timeoutRefreshStart = () => {
+    // Cancel previous timeout refresh
+    this.timeoutRefreshCancel()
+
+    this.timeoutId = setTimeout(() => {
+      // Remove all events from store
+      this.props.eventStore.removeAllEvents()
+      // Set as error
+      this.setState(() => ({
+        refreshing: false,
+        refreshError: true
+      }))
+    }, REFRESH_TIMEOUT)
+  }
+
+  timeoutRefreshCancel = () => {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId)
+    }
+  }
+
   handleRefresh = async () => {
     try {
       this.setState(() => ({ refreshError: false, refreshing: true }))
+      // Start timeout refresh count, if time passes and events are
+      //  not loaded and blocked, we unblock the UI
+      this.timeoutRefreshStart()
       await this.props.eventStore.loadLatestOpenEvents()
     } catch (error) {
       Sentry.captureException(error)
       this.setState(() => ({ refreshError: true }))
     } finally {
+      // Cancel timeout refresh
+      this.timeoutRefreshCancel()
       this.setState(() => ({
         refreshing: false
       }))
@@ -340,7 +368,7 @@ class HomeScreen extends Component {
               <BarItem>{format(lastUpdatedDate, 'H:mm')}</BarItem>
             </StatusBar>
           )}
-          {hasEvents && (
+          {hasEvents && !refreshing && !refreshError && (
             <Content style={{ flex: 1 }}>
               <List
                 dataArray={sortedEventsByStatusAndTimestamp}
@@ -368,8 +396,8 @@ class HomeScreen extends Component {
                   textAlign: 'center'
                 }}
               >
-                אירע שגיאה במשיכת אירועים. נא לנסות שנית. אם תימשך השגיאה, נא
-                ליצור קשר עם התמיכת טכנית.
+                מצטערים, לא הצלחנו לעדכן את רשימת האירועים הפעילים בגלל בעיות
+                רשת. נא לנסות שנית.
               </Text>
             </MessageView>
           )}

@@ -58,6 +58,8 @@ export const config = () => configByEnvironment[environment()]
 export const hostingDomain = () =>
   environment() === 'production' ? 'yedidim-production' : 'yedidim-sandbox-2'
 
+export const REFRESH_TIMEOUT = 15000
+
 export default {
   firebaseCredentials,
   environment,
