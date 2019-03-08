@@ -42,11 +42,18 @@ export default types
 
     return {
       loadLatestOpenEvents: flow(function* loadLatestOpenEvents() {
-        const events = yield api.loadLatestOpenEvents()
-        // TODO Receive events and only remove those that are not in list
-        self.removeAllEvents(events)
-        events.forEach(addEvent)
-        self.lastUpdatedDate = new Date().getTime()
+        try {
+          const events = yield api.loadLatestOpenEvents()
+          // TODO Receive events and only remove those that are not in list
+          self.removeAllEvents(events)
+          events.forEach(addEvent)
+          self.lastUpdatedDate = new Date().getTime()
+        } catch (error) {
+          // Error, cannot retrieve latest events, clean events tracked
+          self.removeAllEvents()
+          // Rethrow error
+          throw error
+        }
       }),
       removeEvent(eventId) {
         destroy(self.events.get(eventId))
