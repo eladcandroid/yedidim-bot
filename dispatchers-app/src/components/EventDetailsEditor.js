@@ -53,7 +53,7 @@ class EventDetailsEditor extends Component {
       details: {
         address: undefined,
         geo: undefined,
-        category: 'Other'
+        category: undefined
       },
       listViewDisplayed: 'auto',
       changes: []
@@ -227,6 +227,14 @@ class EventDetailsEditor extends Component {
 
   renderCategoryPicker() {
     const {details} = this.state
+    const categories = [...this.props.categories];
+    if (!details.category) {
+      categories.unshift({
+        displayName: 'בחר בעיה',
+        id: -1
+      })
+    }
+
     return (
       <Picker
         iosHeader="בחר סוג בעיה"
@@ -238,15 +246,13 @@ class EventDetailsEditor extends Component {
         selectedValue={details.category}
         onValueChange={value => this.setCategory(value)}
       >
-        {this.props.categories.map(category => {
-          return (
-            <Picker.Item
-              label={category.displayName}
-              value={category.id}
-              key={category.id}
-            />
-          )
-        })}
+        {categories.map(category => (
+          <Picker.Item
+            label={category.displayName}
+            value={category.id}
+            key={category.id}
+          />
+        ))}
       </Picker>
     )
   }
