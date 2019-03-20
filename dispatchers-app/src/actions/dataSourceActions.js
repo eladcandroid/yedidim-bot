@@ -275,7 +275,9 @@ export function updateEventStatus(event, status) {
     if (status === EventStatus.Completed) {
       // If status is completed, we need to remove assignment from user
       updatedEvent.assignedTo = null
-      updates[`volunteer/${event.assignedTo.id}/EventKey`] = null
+      if (event.assignedTo && event.assignedTo.id) {
+        updates[`volunteer/${event.assignedTo.id}/EventKey`] = null
+      }
     }
 
     updates[`events/${event.key}`] = updatedEvent

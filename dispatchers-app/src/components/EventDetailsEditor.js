@@ -146,8 +146,9 @@ class EventDetailsEditor extends Component {
       this.setState({error: {message: 'Plus Code לא חוקי', field: 'plus_code'}})
       return false
     }
-    location.address = plus_code.slice(8)
-    this.updateEventData({location})
+    location.address = plusCode.slice(8)
+
+    this.updateEventData({...location})
     return true
   }
 
@@ -158,7 +159,7 @@ class EventDetailsEditor extends Component {
       return false
     }
 
-    if (!details.geo && details.plus_code) {
+    if (details.plus_code) {
       if (!await this.validatePlusCode()) {
         return false
       }
