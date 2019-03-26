@@ -1,0 +1,98 @@
+[ {
+  "displayName" : "הנעה",
+  "id" : "Starting",
+  "subCategories" : [ {
+    "displayName" : "כבלים",
+    "id" : "Cables"
+  }, {
+    "displayName" : "כבלים חזקים",
+    "id" : "StrongCables"
+  }, {
+    "displayName" : "בוסטר בלבד",
+    "id" : "Booster"
+  }, {
+    "displayName" : "בוסטר גדול בלבד",
+    "id" : "LargeBooster"
+  }, {
+    "displayName" : "איפוס קודן",
+    "id" : "ResetCoder"
+  }, {
+    "displayName" : "פיוז",
+    "id" : "Fuse"
+  } ]
+}, {
+  "displayName" : "פנצ'ר",
+  "id" : "FlatTire",
+  "subCategories" : [ {
+    "displayName" : "החלפת גלגל",
+    "id" : "WheelChange"
+  }, {
+    "displayName" : "קומפרסור",
+    "id" : "Compressor"
+  }, {
+    "displayName" : "תולעת",
+    "id" : "Worm"
+  }, {
+    "displayName" : "כלים: ג'ק",
+    "id" : "Jack"
+  }, {
+    "displayName" : "כלים: מפתח ברגים",
+    "id" : "Screwdriver"
+  }, {
+    "displayName" : "ידית כח",
+    "id" : "PowerHandle"
+  }, {
+    "displayName" : "שחוקים",
+    "id" : "Worn"
+  }, {
+    "displayName" : "אין רזרבי",
+    "id" : "NoSpare"
+  } ]
+}, {
+  "displayName" : "שמן/מים/דלק",
+  "id" : "OilWaterFuel",
+  "subCategories" : [ {
+    "displayName" : "דלק 95",
+    "id" : "Fuel95"
+  }, {
+    "displayName" : "סולר",
+    "id" : "Diesel"
+  }, {
+    "displayName" : "מים",
+    "id" : "Water"
+  }, {
+    "displayName" : "שמן 0w20",
+    "id" : "Oil0w20"
+  }, {
+    "displayName" : "שמן 5w30",
+    "id" : "Oil5w30"
+  }, {
+    "displayName" : "שמן 5w40",
+    "id" : "Oil5w40"
+  }, {
+    "displayName" : "שמן 10w40",
+    "id" : "Oil10w40"
+  } ]
+}, {
+  "displayName" : "רכב נעול",
+  "id" : "LockedCar"
+}, {
+  "displayName" : "דלת טרוקה",
+  "id" : "SlammedDoor"
+}, {
+  "displayName" : "חילוץ שטח",
+  "id" : "Extraction",
+  "subCategories" : [ {
+    "displayName" : "חובה 4X4",
+    "id" : "FourByFour"
+  }, {
+    "displayName" : "לא חובה 4X4",
+    "id" : "NoFourByFour"
+  }, {
+    "displayName" : "ג'ק להרמה",
+    "id" : "LiftingJack"
+  } ]
+}, {
+  "displayName" : "אחר",
+  "id" : "Other"
+} ]
