@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import Sentry from 'sentry-expo'
+import { Root } from 'native-base'
 import { Constants, Font } from 'expo'
 import configureStore from './src/store/configureStore'
 import HomeScreen from './src/components/HomeScreen'
@@ -26,9 +27,11 @@ class App extends Component {
 
   render() {
     return (
-      <Provider store={store}>
-        <HomeScreen />
-      </Provider>
+      <Root>
+        <Provider store={store}>
+          <HomeScreen />
+        </Provider>
+      </Root>
     )
   }
 }
