@@ -63,11 +63,14 @@
     "displayName": "בוקסות למגנזיום",
     "id": "MagneziumBoxes"
   }, {
+    "displayName": "בוקסות לשחוקים",
+    "id": "WornPffBoxes"
+  }, {
     "displayName": "שינוע לפנצ'ריה",
     "id": "TransportToAutoShop"
   }]
 }, {
-  "displayName": "שמן/מים/דלק",
+  "displayName": "שמן-מים-דלק",
   "id": "OilWaterFuel",
   "subCategories": [{
     "displayName": "בדיקת שמן ומים",
