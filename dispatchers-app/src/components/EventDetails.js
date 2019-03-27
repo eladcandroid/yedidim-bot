@@ -11,7 +11,7 @@ import {
   StyleSheet,
   I18nManager
 } from 'react-native'
-import { Button } from 'native-base'
+import { Button, ActionSheet } from 'native-base'
 import { Prompt } from './Prompt'
 import {
   getTextStyle,
@@ -31,6 +31,18 @@ import {
 } from '../actions/dataSourceActions'
 import { sendNotification } from '../actions/notificationsActions'
 
+const communicationOptions = [
+  {
+    title: 'להתקשר',
+    action: phone => Linking.openURL(`tel:${phone}`)
+  },
+  {
+    title: 'וואטסאפ',
+    action: phone => Linking.openURL(`whatsapp://send?phone=${phone}`)
+  },
+  { title: 'ביטול', isCancel: true }
+]
+
 class EventDetails extends Component {
   constructor(props) {
     super(props)
@@ -43,7 +55,6 @@ class EventDetails extends Component {
     this.assignEvent = this.assignEvent.bind(this)
     this.openAssignmentPrompt = this.openAssignmentPrompt.bind(this)
     this.completeEvent = this.completeEvent.bind(this)
-    this.openVolunteerPhone = this.openVolunteerPhone.bind(this)
     this.openAddressInMaps = this.openAddressInMaps.bind(this)
     this.openAddressInPlusCodeMaps = this.openAddressInPlusCodeMaps.bind(this)
     this.editEvent = this.editEvent.bind(this)
@@ -228,12 +239,6 @@ class EventDetails extends Component {
     ]
   }
 
-  openVolunteerPhone(phone) {
-    if (phone) {
-      Linking.openURL('tel:' + phone)
-    }
-  }
-
   render() {
     const { event, volunteer, dispatcher } = this.props
 
@@ -253,10 +258,28 @@ class EventDetails extends Component {
               <Text style={getTextStyle(styles.fieldName)}>מתנדב</Text>
               <Text
                 style={getTextStyle(styles.linkFieldValue)}
-                onPress={this.openVolunteerPhone.bind(
-                  this,
-                  volunteer.assignedTo.phone
-                )}
+                onPress={() =>
+                  ActionSheet.show(
+                    {
+                      options: communicationOptions.map(opt => opt.title),
+                      cancelButtonIndex: communicationOptions.findIndex(
+                        opt => opt.isCancel
+                      ),
+                      title: 'איך תרצה לדבר עם המתנדב?'
+                    },
+                    buttonIndex => {
+                      if (
+                        volunteer.assignedTo.phone &&
+                        communicationOptions[buttonIndex] &&
+                        communicationOptions[buttonIndex].action
+                      ) {
+                        communicationOptions[buttonIndex].action(
+                          volunteer.assignedTo.phone
+                        )
+                      }
+                    }
+                  )
+                }
               >
                 {volunteer.assignedTo.name} {volunteer.assignedTo.phone}
               </Text>
