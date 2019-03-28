@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import {
   Platform,
   KeyboardAvoidingView,
@@ -10,18 +10,18 @@ import {
   StyleSheet,
   I18nManager
 } from 'react-native'
-import {union} from 'lodash'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-import {Picker, Form, Item, Label, Input, Button} from 'native-base'
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
-import {getTextStyle} from '../common/utils'
-import {EventStatus, EventSource, ScreenType} from '../constants/consts'
-import {createEvent, updateEvent} from '../actions/dataSourceActions'
+import { union } from 'lodash'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Picker, Form, Item, Label, Input, Button } from 'native-base'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import { getTextStyle } from '../common/utils'
+import { EventStatus, EventSource, ScreenType } from '../constants/consts'
+import { createEvent, updateEvent } from '../actions/dataSourceActions'
 import {
   geocodeAddress,
   getAddressDetailsFromGoogleResult
 } from '../actions/geocodingActions'
-import {sendNotification} from '../actions/notificationsActions'
+import { sendNotification } from '../actions/notificationsActions'
 
 class KeyboardAwareScrollViewComponent extends React.Component {
   render() {
@@ -62,35 +62,34 @@ class EventDetailsEditor extends Component {
     this.validatePlusCode = this.validatePlusCode.bind(this)
     this.createNewEvent = this.createNewEvent.bind(this)
     this.updateExistingEvent = this.updateExistingEvent.bind(this)
-    this.hideGooglePlacesSuggestions = this.hideGooglePlacesSuggestions.bind(this)
+    this.hideGooglePlacesSuggestions = this.hideGooglePlacesSuggestions.bind(
+      this
+    )
   }
 
   componentWillMount() {
-    const {event} = this.props
+    const { event } = this.props
     if (event) {
-      this.setState({details: event.details})
+      this.setState({ details: event.details })
     }
   }
 
-  componentWillReceiveProps({event: nextEvent}) {
-    const {changes} = this.state
-    const {event} = this.props
-    if (
-      nextEvent &&
-      nextEvent.details !== event.details
-    ) {
+  componentWillReceiveProps({ event: nextEvent }) {
+    const { changes } = this.state
+    const { event } = this.props
+    if (nextEvent && nextEvent.details !== event.details) {
       if (changes.length) {
         this.setState({
-          error: {message: 'אירוע שונה ע״י מוקדן אחר'},
+          error: { message: 'אירוע שונה ע״י מוקדן אחר' },
           changes: []
         })
       }
-      this.setState({details: nextEvent.details})
+      this.setState({ details: nextEvent.details })
     }
   }
 
   updateEventData(data) {
-    const {changes, details} = this.state
+    const { changes, details } = this.state
     let newDetails = details
     let newChanges = changes.slice()
     for (const [field, value] of Object.entries(data)) {
@@ -104,12 +103,12 @@ class EventDetailsEditor extends Component {
   }
 
   async createNewEvent() {
-    const {details} = this.state
-    const {createEvent, navigate} = this.props
-    if (!await this.validateEventData()) {
+    const { details } = this.state
+    const { createEvent, navigate } = this.props
+    if (!(await this.validateEventData())) {
       return
     }
-    this.setState({changes: []})
+    this.setState({ changes: [] })
     const event = {
       status: EventStatus.Sent,
       source: EventSource.App,
@@ -121,68 +120,73 @@ class EventDetailsEditor extends Component {
   }
 
   updateExistingEvent() {
-    const {event, updateEvent, sendNotification, navigate} = this.props
-    const {details, changes} = this.state
+    const { event, updateEvent, sendNotification, navigate } = this.props
+    const { details, changes } = this.state
     if (!this.validateEventData()) {
       return
     }
-    updateEvent({...event, details}, changes)
-    sendNotification(
-      event.key,
-      event.assignedTo
-    )
+    updateEvent({ ...event, details }, changes)
+    sendNotification(event.key, event.assignedTo)
     navigate(ScreenType.EventsList)
   }
 
   async validatePlusCode() {
-    const {details} = this.state
+    const { details } = this.state
     const plusCode = details.plus_code
-    if (plusCode.length < 11 || !plusCode.includes(' ') || !plusCode.includes('+')) {
-      this.setState({error: {message: 'צריך להזין plus code וכתובת', field: 'plus_code'}})
+    if (
+      plusCode.length < 11 ||
+      !plusCode.includes(' ') ||
+      !plusCode.includes('+')
+    ) {
+      this.setState({
+        error: { message: 'צריך להזין plus code וכתובת', field: 'plus_code' }
+      })
       return false
     }
     let location = await geocodeAddress(plusCode, true)
     if (!location) {
-      this.setState({error: {message: 'Plus Code לא חוקי', field: 'plus_code'}})
+      this.setState({
+        error: { message: 'Plus Code לא חוקי', field: 'plus_code' }
+      })
       return false
     }
     location.address = plusCode.slice(8)
 
-    this.updateEventData({...location})
+    this.updateEventData({ ...location })
     return true
   }
 
   async validateEventData() {
-    const {details} = this.state
+    const { details } = this.state
     if (!details.address && !details.plus_code) {
-      this.setState({error: {message: 'לא הוזנה כתובת', field: 'address'}})
+      this.setState({ error: { message: 'לא הוזנה כתובת', field: 'address' } })
       return false
     }
 
     if (details.plus_code) {
-      if (!await this.validatePlusCode()) {
+      if (!(await this.validatePlusCode())) {
         return false
       }
     }
     if (!details.geo) {
-      this.setState({error: {message: 'כתובת לא נבדקה', field: 'address'}})
+      this.setState({ error: { message: 'כתובת לא נבדקה', field: 'address' } })
       return false
     }
     if (typeof details.category === 'undefined') {
       this.setState({
-        error: {message: 'לא נבחר סוג בעיה', field: 'category'}
+        error: { message: 'לא נבחר סוג בעיה', field: 'category' }
       })
       return false
     }
-    if (!details['car type']) {
+    if (!details['car type'] && details.subCategory !== 'SlammedDoor') {
       this.setState({
-        error: {message: 'לא הוזן סוג הרכב', field: 'car type'}
+        error: { message: 'לא הוזן סוג הרכב', field: 'car type' }
       })
       return false
     }
     if (!details['phone number']) {
       this.setState({
-        error: {message: 'לא הוזן מספר טלפון', field: 'phone number'}
+        error: { message: 'לא הוזן מספר טלפון', field: 'phone number' }
       })
       return false
     }
@@ -192,12 +196,12 @@ class EventDetailsEditor extends Component {
       )
     ) {
       this.setState({
-        error: {message: 'מספר טלפון לא חוקי', field: 'phone number'}
+        error: { message: 'מספר טלפון לא חוקי', field: 'phone number' }
       })
       return false
     }
     if (!details['caller name']) {
-      this.setState({error: {message: 'לא הוזן שם', field: 'caller name'}})
+      this.setState({ error: { message: 'לא הוזן שם', field: 'caller name' } })
       return false
     }
     return true
@@ -211,7 +215,7 @@ class EventDetailsEditor extends Component {
       {
         text: 'אישור',
         onPress: () => {
-          this.setState({error: undefined})
+          this.setState({ error: undefined })
         }
       }
     ])
@@ -223,12 +227,12 @@ class EventDetailsEditor extends Component {
     )
     const subCategory =
       category && category.subCategories ? category.subCategories[0].id : null
-    this.updateEventData({category: categoryId, subCategory})
+    this.updateEventData({ category: categoryId, subCategory })
   }
 
   renderCategoryPicker() {
-    const {details} = this.state
-    const categories = [...this.props.categories];
+    const { details } = this.state
+    const categories = [...this.props.categories]
     if (!details.category) {
       categories.unshift({
         displayName: 'בחר בעיה',
@@ -259,8 +263,8 @@ class EventDetailsEditor extends Component {
   }
 
   renderSubCategoryPicker() {
-    const {details} = this.state
-    const {categories} = this.props
+    const { details } = this.state
+    const { categories } = this.props
     const category = categories.find(
       category => category.id === details.category
     )
@@ -276,9 +280,7 @@ class EventDetailsEditor extends Component {
         itemTextStyle={getTextStyle(styles.pickerItem)}
         textStyle={getTextStyle(styles.pickerItem)}
         selectedValue={details.subCategory}
-        onValueChange={value =>
-          this.updateEventData({subCategory: value})
-        }
+        onValueChange={value => this.updateEventData({ subCategory: value })}
       >
         {category.subCategories.map(subCategory => {
           return (
@@ -294,17 +296,19 @@ class EventDetailsEditor extends Component {
   }
 
   renderInput(label, field, type = 'default') {
-    const {details} = this.state
+    const { details } = this.state
     return (
       <Item floatingLabel style={styles.item}>
-        <Label style={I18nManager.isRTL ? undefined : {textAlign: 'right'}}>
+        <Label style={I18nManager.isRTL ? undefined : { textAlign: 'right' }}>
           {label}
         </Label>
         <Input
           value={details[field]}
           keyboardType={type}
           onChangeText={value => {
-            this.updateEventData({[field]: type === 'numeric' ? value.trim() : value})
+            this.updateEventData({
+              [field]: type === 'numeric' ? value.trim() : value
+            })
           }}
         />
       </Item>
@@ -312,11 +316,11 @@ class EventDetailsEditor extends Component {
   }
 
   hideGooglePlacesSuggestions() {
-    this.setState({listViewDisplayed: false})
+    this.setState({ listViewDisplayed: false })
   }
 
   GooglePlacesInput() {
-    const {details, listViewDisplayed} = this.state
+    const { details, listViewDisplayed } = this.state
     // Fixed issues with list not closing on selection by applying
     // https://github.com/FaridSafi/react-native-google-places-autocomplete/issues/329#issuecomment-434664874
     return (
@@ -330,12 +334,12 @@ class EventDetailsEditor extends Component {
         fetchDetails
         renderDescription={row => row.description} // custom description render
         onFocus={() => {
-          this.setState({listViewDisplayed: 'auto'})
+          this.setState({ listViewDisplayed: 'auto' })
         }}
         onPress={(data, _details = null) => {
           // 'details' is provided when fetchDetails = true
-          const {address, geo} = getAddressDetailsFromGoogleResult(_details)
-          this.updateEventData({address, geo})
+          const { address, geo } = getAddressDetailsFromGoogleResult(_details)
+          this.updateEventData({ address, geo })
           this.hideGooglePlacesSuggestions()
         }}
         getDefaultValue={() => ''}
@@ -377,8 +381,8 @@ class EventDetailsEditor extends Component {
   }
 
   render() {
-    const {event} = this.props
-    const {details, changes} = this.state
+    const { event } = this.props
+    const { details, changes } = this.state
 
     return (
       <KeyboardAwareScrollViewComponent>
@@ -390,8 +394,8 @@ class EventDetailsEditor extends Component {
             <Label style={getTextStyle(styles.pickerLabel)}>סוג אירוע</Label>
             {this.renderCategoryPicker()}
             {this.renderSubCategoryPicker()}
-            {details.category !== 'SlammedDoor' &&
-            this.renderInput('סוג רכב', 'car type')}
+            {details.subCategory !== 'SlammedDoor' &&
+              this.renderInput('סוג רכב', 'car type')}
             {this.renderInput('Plus Code מיקום דרך', 'plus_code')}
             {this.renderInput('פרטים', 'more')}
             {this.renderInput('מידע פרטי', 'private_info')}
@@ -402,11 +406,7 @@ class EventDetailsEditor extends Component {
             full
             style={styles.createButton}
             disabled={event.key && !changes.length}
-            onPress={
-              event.key
-                ? this.updateExistingEvent
-                : this.createNewEvent
-            }
+            onPress={event.key ? this.updateExistingEvent : this.createNewEvent}
           >
             <Text style={styles.buttonText}>
               {event.key ? 'עדכן' : 'פתח'} אירוע{' '}
@@ -451,7 +451,7 @@ export default connect(
 )(EventDetailsEditor)
 
 EventDetailsEditor.defaultProps = {
-  event: {status: EventStatus.Draft, details: {}}
+  event: { status: EventStatus.Draft, details: {} }
 }
 
 EventDetailsEditor.propTypes = {
