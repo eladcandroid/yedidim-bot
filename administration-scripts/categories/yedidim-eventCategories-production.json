@@ -1,98 +1,149 @@
-[ {
-  "displayName" : "הנעה",
-  "id" : "Starting",
-  "subCategories" : [ {
-    "displayName" : "כבלים",
-    "id" : "Cables"
+[{
+  "displayName": "הנעה",
+  "id": "Starting",
+  "subCategories": [{
+    "displayName": "כבלים",
+    "id": "Cables"
   }, {
-    "displayName" : "כבלים חזקים",
-    "id" : "StrongCables"
+    "displayName": "כבלים חזקים",
+    "id": "StrongCables"
   }, {
-    "displayName" : "בוסטר בלבד",
-    "id" : "Booster"
+    "displayName": "בוסטר בלבד",
+    "id": "Booster"
   }, {
-    "displayName" : "בוסטר גדול בלבד",
-    "id" : "LargeBooster"
+    "displayName": "בוסטר גדול בלבד",
+    "id": "LargeBooster"
   }, {
-    "displayName" : "איפוס קודן",
-    "id" : "ResetCoder"
+    "displayName": "איפוס קודן",
+    "id": "ResetCoder"
   }, {
-    "displayName" : "פיוז",
-    "id" : "Fuse"
-  } ]
+    "displayName": "פיוז",
+    "id": "Fuse"
+  }, {
+    "displayName": "ליווי בוסטר",
+    "id": "BoosterEscort"
+  }, {
+    "displayName": "סטרטר תפוס",
+    "id": "Starter"
+  }, {
+    "displayName": "כבלים + מפתח 10",
+    "id": "Cabels10Key"
+  }, {
+    "displayName": "כבלים + מברג פיליפס",
+    "id": "CabelsPhillipSkrewdriver"
+  }, {
+    "displayName": "ניתוק מצבר",
+    "id": "BatteryDissconnection"
+  }]
 }, {
-  "displayName" : "פנצ'ר",
-  "id" : "FlatTire",
-  "subCategories" : [ {
-    "displayName" : "החלפת גלגל",
-    "id" : "WheelChange"
+  "displayName": "פנצ'ר",
+  "id": "FlatTire",
+  "subCategories": [{
+    "displayName": "פנצ'ר",
+    "id": "WheelChange"
   }, {
-    "displayName" : "קומפרסור",
-    "id" : "Compressor"
+    "displayName": "קומפרסור",
+    "id": "Compressor"
   }, {
-    "displayName" : "תולעת",
-    "id" : "Worm"
+    "displayName": "תולעת + קומפרסור",
+    "id": "WormAndCompressor"
   }, {
-    "displayName" : "כלים: ג'ק",
-    "id" : "Jack"
+    "displayName": "פנצ'ר + כלים",
+    "id": "WheelCahngeAndTools"
   }, {
-    "displayName" : "כלים: מפתח ברגים",
-    "id" : "Screwdriver"
+    "displayName": "כלים: ג'ק",
+    "id": "Jack"
   }, {
-    "displayName" : "ידית כח",
-    "id" : "PowerHandle"
+    "displayName": "כלים: מפתח ברגים",
+    "id": "Screwdriver"
   }, {
-    "displayName" : "שחוקים",
-    "id" : "Worn"
+    "displayName": "ידית כח",
+    "id": "PowerHandle"
   }, {
-    "displayName" : "אין רזרבי",
-    "id" : "NoSpare"
-  } ]
+    "displayName": "בוקסות למגנזיום",
+    "id": "MagneziumBoxes"
+  }, {
+    "displayName": "בוקסות לשחוקים",
+    "id": "WornPffBoxes"
+  }, {
+    "displayName": "שינוע לפנצ'ריה",
+    "id": "TransportToAutoShop"
+  }]
 }, {
-  "displayName" : "שמן/מים/דלק",
-  "id" : "OilWaterFuel",
-  "subCategories" : [ {
-    "displayName" : "דלק 95",
-    "id" : "Fuel95"
+  "displayName": "שמן-מים-דלק",
+  "id": "OilWaterFuel",
+  "subCategories": [{
+    "displayName": "בדיקת שמן ומים",
+    "id": "OilWaterCheck"
   }, {
-    "displayName" : "סולר",
-    "id" : "Diesel"
+    "displayName": "דלק 95",
+    "id": "Fuel95"
   }, {
-    "displayName" : "מים",
-    "id" : "Water"
+    "displayName": "סולר",
+    "id": "Diesel"
   }, {
-    "displayName" : "שמן 0w20",
-    "id" : "Oil0w20"
+    "displayName": "מים לרדיאטור",
+    "id": "Water"
   }, {
-    "displayName" : "שמן 5w30",
-    "id" : "Oil5w30"
+    "displayName": "שמן 0w20",
+    "id": "Oil0w20"
   }, {
-    "displayName" : "שמן 5w40",
-    "id" : "Oil5w40"
+    "displayName": "שמן 5w30",
+    "id": "Oil5w30"
   }, {
-    "displayName" : "שמן 10w40",
-    "id" : "Oil10w40"
-  } ]
+    "displayName": "שמן 5w40",
+    "id": "Oil5w40"
+  }, {
+    "displayName": "שמן 10w40",
+    "id": "Oil10w40"
+  }]
 }, {
-  "displayName" : "רכב נעול",
-  "id" : "LockedCar"
-}, {
-  "displayName" : "דלת טרוקה",
-  "id" : "SlammedDoor"
-}, {
-  "displayName" : "חילוץ שטח",
-  "id" : "Extraction",
-  "subCategories" : [ {
-    "displayName" : "חובה 4X4",
-    "id" : "FourByFour"
+  "displayName": "רכב נעול",
+  "id": "LockedCar",
+  "subCategories": [{
+    "displayName": "פתיחה",
+    "id": "Unlock"
   }, {
-    "displayName" : "לא חובה 4X4",
-    "id" : "NoFourByFour"
-  }, {
-    "displayName" : "ג'ק להרמה",
-    "id" : "LiftingJack"
-  } ]
+    "displayName": "פתיחה + כבלים",
+    "id": "UnlockAndCables"
+  }]
 }, {
-  "displayName" : "אחר",
-  "id" : "Other"
-} ]
+  "displayName": "דלת",
+  "id": "Door",
+  "subCategories": [{
+    "displayName": "דלת טרוקה",
+    "id": "SlammedDoor"
+  }, {
+    "displayName": "חולץ מפתחות",
+    "id": "KeysExtractor"
+  }, {
+    "displayName": "ספריי שמן",
+    "id": "OilSpray"
+  }]
+}, {
+  "displayName": "חילוץ שטח",
+  "id": "Extraction",
+  "subCategories": [{
+    "displayName": "משיכה - חובה 4X4",
+    "id": "FourByFour"
+  }, {
+    "displayName": "משיכה - לא חובה 4X4",
+    "id": "NoFourByFour"
+  }, {
+    "displayName": "משיכה קלה",
+    "id": "LightPull"
+  }, {
+    "displayName": "ג'ק להרמה",
+    "id": "LiftingJack"
+  }]
+}, {
+  "displayName": "אחר",
+  "id": "Other",
+  "subCategories": [{
+    "displayName": "אחר",
+    "id": "OtherOther"
+  }, {
+    "displayName": "שינוע לתחבורה ציבורית",
+    "id": "PublicTransport"
+  }]
+}]

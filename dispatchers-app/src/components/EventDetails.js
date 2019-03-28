@@ -31,6 +31,12 @@ import {
 } from '../actions/dataSourceActions'
 import { sendNotification } from '../actions/notificationsActions'
 
+const toInternationalNumber = phone =>
+  `+972${phone
+    .trim()
+    .replace(/^0/, '')
+    .replace(/-/g, '')}`
+
 const communicationOptions = [
   {
     title: 'להתקשר',
@@ -38,7 +44,8 @@ const communicationOptions = [
   },
   {
     title: 'וואטסאפ',
-    action: phone => Linking.openURL(`whatsapp://send?phone=${phone}`)
+    action: phone =>
+      Linking.openURL(`whatsapp://send?phone=${toInternationalNumber(phone)}`)
   },
   { title: 'ביטול', isCancel: true }
 ]
