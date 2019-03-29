@@ -50,6 +50,12 @@ exports.onEventStatusUpdate = (event, context, admin) => {
       ' for event ' +
       eventId
   )
+  admin.database()
+        .ref(`events/${eventId}`)
+        .once('value')
+        .then(changedEvent => {
+          console.log('Event data:', changedEvent.val())
+        })
   let promises = [Promise.resolve()]
   let currentIsOpen = calculateIsOpen(currentStatus)
   let previousIsOpen = calculateIsOpen(previousStatus)
