@@ -5,7 +5,7 @@ import Home from 'screens/Home'
 import Event from 'screens/Event'
 import AboutStartach from 'screens/AboutStartach'
 import NotificationTest from 'screens/Admin/NotificationTest'
-import MyCities from 'screens/MyCities'
+import Settings from 'screens/Settings'
 import AddCity from 'screens/AddCity'
 import EditCity from 'screens/EditCity'
 
@@ -13,7 +13,7 @@ const AuthenticatedStack = StackNavigator({
   Home: { screen: Home },
   Event: { screen: Event },
   AboutStartach: { screen: AboutStartach },
-  MyCities: { screen: MyCities },
+  Settings: { screen: Settings },
   NotificationReport: { screen: NotificationTest },
   AddCity: { screen: AddCity },
   EditCity: { screen: EditCity }

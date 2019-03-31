@@ -25,7 +25,6 @@ export const sendNotificationByGeoFireLocation = async props => {
   const { title, message, data, appType, radius, latitude, longitude } = props
 
   return new Promise((resolve, reject) => {
-    const usersInRadius = []
     const geoFire = new GeoFire(admin.database().ref('/user_location'))
 
     const userQueryParams = {
@@ -41,8 +40,12 @@ export const sendNotificationByGeoFireLocation = async props => {
 
     const geoQuery = geoFire.query(userQueryParams)
 
+    const usersInRadius = []
+    const userIdToDistanceFromEvent = {}
+
     geoQuery.on('key_entered', function(userId, location, distance) {
-      usersInRadius.push({ userId, location, distance })
+        usersInRadius.push({ userId, location, distance })
+        userIdToDistanceFromEvent[userId] = distance
     })
 
     geoQuery.on('ready', function() {
@@ -66,6 +69,7 @@ export const sendNotificationByGeoFireLocation = async props => {
           uniqueUserIdsInRadius.length
         } in location`,
         uniqueUserIdsInRadius,
+        userIdToDistanceFromEvent,
         data
       )
 
@@ -103,9 +107,14 @@ export const sendNotificationByGeoFireLocation = async props => {
 
           const users = Object.keys(usersById)
             .filter(
-              userId =>
-                uniqueUserIdsInRadius.indexOf(userId) > -1 &&
-                !userMutedNotifications(usersById[userId])
+              userId => {
+                let currentUser = usersById[userId]
+                return (
+                  uniqueUserIdsInRadius.indexOf(userId) > -1 &&
+                  !userMutedNotifications(currentUser) &&
+                  (!currentUser.Radius || (currentUser.Radius >= userIdToDistanceFromEvent[userId]))
+                )
+              }
             )
             .map(userId => ({ userId, ...usersById[userId] }))
 

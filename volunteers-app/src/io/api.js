@@ -36,7 +36,8 @@ const userSnapshotToJSON = snapshot => ({
   muted: snapshot.Muted,
   acceptedEventId: snapshot.EventKey,
   role: snapshot.Role,
-  locations: snapshot.Locations
+  locations: snapshot.Locations,
+  radius: snapshot.Radius
 })
 
 // Store subscription so to be able to unsubscribe on logoff

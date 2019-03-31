@@ -22,7 +22,8 @@ const CurrentUser = types
       types.enumeration('Role', ['volunteer', 'dispatcher', 'admin']),
       'volunteer'
     ),
-    locations: types.optional(types.array(Location), [])
+    locations: types.optional(types.array(Location), []),
+    radius: types.maybe(types.number)
   })
   .views(self => ({
     get isMuted() {
@@ -54,6 +55,18 @@ const CurrentUser = types
     acknowledgeTestNotification: () => {
       acknowledgeTestNotification(self.id)
     },
+    setRadius: flow(function* setRadius(radius) {
+      if (!radius) {
+        return
+      }
+      self.radius = radius
+
+      trackEvent('SetRadius', { radius: radius })
+
+      yield api.updateUser(self.id, {
+        Radius: self.radius
+      })
+    }),
     addLocation: flow(function* addLocation(addedLocation) {
       // Check if location is valid and is not in the list yet
       if (
@@ -64,7 +77,7 @@ const CurrentUser = types
         return
       }
 
-      // Optmistic push location to user
+      // Optimistic push location to user
       self.locations.push(addedLocation)
 
       trackEvent('AddLocation', { location: addedLocation })
@@ -83,7 +96,7 @@ const CurrentUser = types
         return
       }
 
-      // Optmistic push location to user
+      // Optimistic push location to user
       self.locations = self.locations.filter(
         location => location.id !== removedLocation.id
       )
