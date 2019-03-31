@@ -1,7 +1,7 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react/native'
 import { reaction } from 'mobx'
-import { Alert } from 'react-native'
+import { Alert, AppState } from 'react-native'
 import { Toast } from 'native-base'
 import { NavigationActions } from 'react-navigation'
 import { defineMessages } from 'react-intl'
@@ -21,7 +21,14 @@ const newEventToast = defineMessages({
 
 const withNotificationManager = WrappedComponent => {
   const Component = class extends React.Component {
+    state = {
+      appState: AppState.currentState
+    }
+
     componentWillMount() {
+      // Handle App State
+      AppState.addEventListener('change', this.handleAppStateChange)
+
       // Handle Notification received
       OneSignal.addEventListener('received', this.onReceived)
       OneSignal.addEventListener('opened', this.onOpened)
@@ -41,6 +48,7 @@ const withNotificationManager = WrappedComponent => {
 
     componentWillUnmount() {
       this.disposer()
+      AppState.removeEventListener('change', this.handleAppStateChange)
       OneSignal.removeEventListener('ids')
       OneSignal.removeEventListener('received', this.onReceived)
       OneSignal.removeEventListener('opened', this.onOpened)
@@ -52,6 +60,37 @@ const withNotificationManager = WrappedComponent => {
 
     onOpened = ({ notification }) => {
       this.handleNotification({ ...notification, isOpenEvent: true })
+    }
+
+    onAppToForeground = () => {
+      // Add all events back to store and reattach listeners
+      //  That will included events that came in while in notification
+      this.props.attachAllEvents()
+    }
+
+    onAppToBackground = () => {
+      // Remove and store all events from store (that will also remove subscription)
+      this.props.detachAllEvents()
+    }
+
+    handleAppStateChange = nextAppState => {
+      if (
+        this.state.appState.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        // console.log('App has come to the foreground!')
+        this.onAppToForeground()
+      }
+
+      if (
+        nextAppState.match(/inactive|background/) &&
+        this.state.appState === 'active'
+      ) {
+        // console.log('App has come to the background!')
+        this.onAppToBackground()
+      }
+
+      this.setState({ appState: nextAppState })
     }
 
     handleAcceptedEventByUser = eventId => {
@@ -135,12 +174,15 @@ const withNotificationManager = WrappedComponent => {
 
       // Add event to store
       const { eventId } = data
-      this.props.addEventFromNotification(eventId)
+      this.props.addEventFromNotification(
+        eventId,
+        AppState.currentState === 'background'
+      )
 
       if (isOpenEvent) {
         // If is open event, user touched notification, open it
-        this.navigateToEvent({ eventId: eventId })
-      } else if (isAppInFocus) {
+        this.navigateToEvent({ eventId })
+      } else if (AppState.currentState === 'active') {
         // The app is foregrounded and it is not an open event, show toast
         Toast.show({
           text: this.props.screenProps.intl.formatMessage(newEventToast.text),
@@ -150,13 +192,19 @@ const withNotificationManager = WrappedComponent => {
           ),
           type: 'warning',
           duration: 20000,
-          onClose: () => this.navigateToEvent({ eventId: eventId })
+          onClose: () => this.navigateToEvent({ eventId })
         })
       }
     }
 
     render() {
-      const { currentUser, addEventFromNotification, ...other } = this.props
+      const {
+        currentUser,
+        addEventFromNotification,
+        detachAllEvents,
+        attachAllEvents,
+        ...other
+      } = this.props
 
       return <WrappedComponent {...other} />
     }
@@ -166,6 +214,8 @@ const withNotificationManager = WrappedComponent => {
   Component.router = WrappedComponent.router
 
   return inject(({ stores }) => ({
+    detachAllEvents: stores.eventStore.detachAllEvents,
+    attachAllEvents: stores.eventStore.attachAllEvents,
     addEventFromNotification: stores.eventStore.addEventFromNotification,
     currentUser: stores.authStore.currentUser
   }))(observer(Component))
