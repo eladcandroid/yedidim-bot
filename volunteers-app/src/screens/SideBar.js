@@ -64,12 +64,12 @@ const SideBar = ({
           onPress={() => {
             navigation.dispatch(
               NavigationActions.navigate({
-                routeName: 'MyCities'
+                routeName: 'Settings'
               })
             )
           }}
         >
-          <AlignedText>הישובים שלי</AlignedText>
+          <AlignedText>הגדרות</AlignedText>
         </ListItem>
 
         <ListItem

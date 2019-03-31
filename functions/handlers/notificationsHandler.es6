@@ -41,6 +41,7 @@ exports.sendNotificationBySearchRadius = async (req, res, admin) => {
       res.status(404).send('Did not find event ' + eventId)
     }
   } catch (e) {
+    console.error('[sendNotificationBySearchRadius] Error:', e)
     res.status(500).send(e)
   }
 }

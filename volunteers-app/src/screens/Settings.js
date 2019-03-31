@@ -1,15 +1,6 @@
 import React, { Component } from 'react'
-import { FormattedMessage, FormattedRelative } from 'react-intl'
-import {
-  I18nManager,
-  Linking,
-  Image,
-  View,
-  ActivityIndicator
-} from 'react-native'
-import { trackEvent } from 'io/analytics'
-import StartachLogo from 'images/startach-logo.jpg'
-
+import { FormattedMessage } from 'react-intl'
+import { I18nManager, View, ActivityIndicator } from 'react-native'
 import {
   Button,
   Body,
@@ -21,18 +12,16 @@ import {
   Container,
   Content,
   Text,
-  Grid,
-  Col,
-  Row,
-  List,
-  ListItem
+  ListItem,
+  Radio
 } from 'native-base'
 import { NavigationActions } from 'react-navigation'
 import { inject, observer } from 'mobx-react/native'
-import appStyles, { AppText } from '../global-styles'
-
-import AlignedText from 'components/AlignedText'
 import styled from 'styled-components/native'
+
+import AlignedText from '../components/AlignedText'
+import { trackEvent } from '../io/analytics'
+import appStyles, { AppText } from '../global-styles'
 
 const LabelText = styled.Text`
   text-align: left;
@@ -91,7 +80,7 @@ const LocationItem = observer(
 )
 
 @observer
-class MyCities extends Component {
+class Settings extends Component {
   static navigationOptions = ({ navigation }) => ({
     header: (
       <Header style={appStyles.navigationHeaderStyles}>
@@ -99,7 +88,7 @@ class MyCities extends Component {
           <Button
             transparent
             onPress={() => {
-              trackEvent('Navigation', { page: 'BackFromMyCities' })
+              trackEvent('Navigation', { page: 'BackFromSettings' })
               navigation.goBack()
             }}
           >
@@ -111,7 +100,7 @@ class MyCities extends Component {
         </Left>
         <Body>
           <FormattedMessage
-            id="About.MyCities.title"
+            id="About.Settings.title"
             defaultMessage="הישובים שלי"
           >
             {txt => (
@@ -128,10 +117,16 @@ class MyCities extends Component {
 
   render() {
     const userLocations = this.props.currentUser.locations
+    const availableRadiusValues = [
+      { label: '1 ק״מ', value: 1 },
+      { label: '3 ק״מ', value: 3 },
+      { label: '5 ק״מ', value: 5 }
+    ]
     return (
       <Container>
         <Content style={{ flex: 1, backgroundColor: '#fff' }}>
           <View style={{ alignItems: 'center', marginTop: 30 }}>
+            <Title>הישובים שלי</Title>
             {userLocations.length === 0 && (
               <LabelText>{zeroStateText}</LabelText>
             )}
@@ -175,6 +170,31 @@ class MyCities extends Component {
               ניתן להוסיף עד שלושה ישובים
             </Text>
           )}
+
+          <Title
+            style={{
+              marginTop: 50
+            }}
+          >
+            רדיוס לקבלת התראות
+          </Title>
+          {availableRadiusValues.map(data => (
+            <ListItem
+              key={data.value}
+              onPress={() => {
+                this.props.currentUser.setRadius(data.value)
+              }}
+            >
+              <Left>
+                <Text>{data.label}</Text>
+              </Left>
+              <Right>
+                <Radio
+                  selected={this.props.currentUser.radius === data.value}
+                />
+              </Right>
+            </ListItem>
+          ))}
         </Content>
       </Container>
     )
@@ -183,4 +203,4 @@ class MyCities extends Component {
 
 export default inject(({ stores }) => ({
   currentUser: stores.authStore.currentUser
-}))(MyCities)
+}))(Settings)
