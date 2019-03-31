@@ -42,14 +42,16 @@ exports.onEventStatusUpdate = (event, context, admin) => {
   let eventId = context.params.eventId
   let currentStatus = event.after.val()
   let previousStatus = event.before.val()
+
   console.log(
-    'Status changed from ' +
+    'Event Status changed from ' +
       previousStatus +
       ' to ' +
       currentStatus +
-      ' for event ' +
+      ' for eventId' +
       eventId
   )
+
   let promises = [Promise.resolve()]
   let currentIsOpen = calculateIsOpen(currentStatus)
   let previousIsOpen = calculateIsOpen(previousStatus)
@@ -57,6 +59,29 @@ exports.onEventStatusUpdate = (event, context, admin) => {
     console.log('Setting isOpen ' + currentIsOpen + ' for event ' + eventId)
     promises.push(event.after.ref.parent.child('isOpen').set(currentIsOpen))
   }
+
+  // Log new event state for bug detection
+  promises.push(
+    new Promise((resolve, reject) => {
+      event.after.ref.parent
+        .once('value')
+        .then(eventSnapshot => {
+          const eventData = eventSnapshot.val()
+          console.log(
+            'Event Status changed from ' +
+              previousStatus +
+              ' to ' +
+              currentStatus +
+              ' for event data',
+            eventId,
+            eventData
+          )
+          resolve()
+        })
+        .catch(e => reject(e))
+    })
+  )
+
   if (shouldNotifyVolunteers(previousStatus, currentStatus)) {
     console.log('Will notify volunteers of event ', eventId)
     promises.push(
