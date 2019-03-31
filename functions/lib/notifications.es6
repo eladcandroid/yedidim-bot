@@ -41,8 +41,8 @@ export const sendNotificationByGeoFireLocation = async props => {
 
     const geoQuery = geoFire.query(userQueryParams)
 
-    geoQuery.on('key_entered', function(userId) {
-      usersInRadius.push(userId)
+    geoQuery.on('key_entered', function(userId, location, distance) {
+      usersInRadius.push({ userId, location, distance })
     })
 
     geoQuery.on('ready', function() {
@@ -58,7 +58,7 @@ export const sendNotificationByGeoFireLocation = async props => {
       // Extract userIds from 'userId-locationId' entries
       // And remove duplicated using set
       const uniqueUserIdsInRadius = [
-        ...new Set(usersInRadius.map(userId => userId.split('-')[0]))
+        ...new Set(usersInRadius.map(({ userId }) => userId.split('-')[0]))
       ]
 
       console.log(
