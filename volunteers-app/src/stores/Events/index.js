@@ -58,6 +58,12 @@ export default types
       removeEvent(eventId) {
         destroy(self.events.get(eventId))
       },
+      detachAllEvents: () => {
+        self.events.values().forEach(event => event.detachEvent())
+      },
+      attachAllEvents: () => {
+        self.events.values().forEach(event => event.attachEvent())
+      },
       removeAllEvents: (eventsNotToRemove = []) => {
         const eventsIdNotToRemove = eventsNotToRemove.map(
           existingEvent => existingEvent.id
@@ -74,8 +80,8 @@ export default types
           }
         })
       },
-      addEventFromNotification: eventId => {
-        addEvent({ id: eventId })
+      addEventFromNotification: (eventId, initAsDetachedEvent) => {
+        addEvent({ id: eventId, initAsDetachedEvent: !!initAsDetachedEvent })
 
         // api.acknowledgeReceivedEvent(
         //   eventId,

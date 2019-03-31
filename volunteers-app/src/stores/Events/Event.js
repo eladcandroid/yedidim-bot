@@ -40,7 +40,8 @@ export default types
     sentNotification: types.optional(types.array(types.string), []),
     errorNotification: types.optional(types.array(types.string), []),
     receivedNotification: types.optional(types.array(types.string), []),
-    isLoading: false
+    isLoading: false,
+    initAsDetachedEvent: false
   })
   .views(self => ({
     get store() {
@@ -116,10 +117,23 @@ export default types
       if (!self.address || !self.category) {
         self.isLoading = true
       }
-      self.unsubscribeId = api.subscribeToEvent(self.id, self.onEventUpdated)
+      if (!self.initAsDetachedEvent) {
+        self.attachEvent()
+      }
     },
     beforeDestroy: () => {
-      api.unsubscribeToEvent(self.id, self.unsubscribeId)
+      self.detachEvent()
+    },
+    attachEvent: () => {
+      if (!self.unsubscribeId) {
+        self.unsubscribeId = api.subscribeToEvent(self.id, self.onEventUpdated)
+      }
+    },
+    detachEvent: () => {
+      if (self.unsubscribeId) {
+        api.unsubscribeToEvent(self.id, self.unsubscribeId)
+        delete self.unsubscribeId
+      }
     },
     remove: () => {
       trackEvent('IgnoreEvent', {
