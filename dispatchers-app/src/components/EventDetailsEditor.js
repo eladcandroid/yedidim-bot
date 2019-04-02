@@ -90,7 +90,7 @@ class EventDetailsEditor extends Component {
 
   updateEventData(data) {
     const { changes, details } = this.state
-    let newDetails = details
+    let newDetails = {...details}
     let newChanges = changes.slice()
     for (const [field, value] of Object.entries(data)) {
       newChanges = union(newChanges, [field])
