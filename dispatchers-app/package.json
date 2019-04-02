@@ -39,5 +39,5 @@
   "eslintConfig": {
     "extends": "universe/native"
   },
-  "version": "6.2.10"
+  "version": "6.2.12"
 }
