@@ -23,7 +23,8 @@ const CurrentUser = types
       'volunteer'
     ),
     locations: types.optional(types.array(Location), []),
-    radius: types.maybe(types.number)
+    radius: types.maybe(types.number),
+    lastSeen: types.maybe(types.Date)
   })
   .views(self => ({
     get isMuted() {
@@ -42,6 +43,14 @@ const CurrentUser = types
     }
   }))
   .actions(self => ({
+    updateUserLastSeen: flow(function* updateUserLastSeen() {
+      const newLastSeen = new Date().getTime()
+      trackEvent('UpdateUserLastSeen', { lastSeen: newLastSeen })
+
+      yield api.updateUser(self.id, {
+        LastSeen: newLastSeen
+      })
+    }),
     toggleMute: flow(function* toggleMute() {
       // if it is muted, then unmuted (remove field) or set new timestamp for now
       const newMute = self.isMuted ? null : new Date().getTime()
@@ -132,8 +141,19 @@ const AuthenticationStore = types
         Sentry.setUserContext()
         self.currentUser = null
       } else {
+        // Check if user has changed
+        // This method called any time the user has a property changed, but
+        // we want to track when user has logged in (when app starts or logging is done)
+        const userHasChanged =
+          !self.currentUser || self.currentUser.id !== userInfo.id
+
         Sentry.setUserContext(userInfo)
         self.currentUser = userInfo
+
+        if (userHasChanged) {
+          // User logged in has changed, update
+          self.currentUser.updateUserLastSeen()
+        }
       }
 
       trackUserLogin(self.currentUser && self.currentUser.id)
