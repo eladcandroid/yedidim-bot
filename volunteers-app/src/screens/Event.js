@@ -381,7 +381,7 @@ class EventScreen extends Component {
         : this.handleRemoveEvent
     }
 
-    if (event.isLoading) {
+    if (event.isLackingCriticalInfo) {
       return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
           <ActivityIndicator

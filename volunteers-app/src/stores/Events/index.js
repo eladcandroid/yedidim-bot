@@ -23,13 +23,16 @@ export default types
       return self.events.size > 0
     },
     get sortedEventsByStatusAndTimestamp() {
-      return self.allEvents.slice().sort((a, b) => {
-        if (a.isTaken === b.isTaken) {
-          return a.timestamp - b.timestamp
-        }
-        // display taken events last
-        return a.isTaken ? 1 : -1
-      })
+      return self.allEvents
+        .slice()
+        .filter(event => !event.isLackingCriticalInfo)
+        .sort((a, b) => {
+          if (a.isTaken === b.isTaken) {
+            return a.timestamp - b.timestamp
+          }
+          // display taken events last
+          return a.isTaken ? 1 : -1
+        })
     }
   }))
   .actions(self => {

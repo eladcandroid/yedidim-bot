@@ -122,117 +122,122 @@ const EventItem = observer(
       displayAddress,
       more,
       timestamp,
-      isLoading,
+      // isLoading,
       isTaken,
+      isCompleted,
       distance,
       sentNotification,
       receivedNotification,
       errorNotification,
       assignedTo
     }
-  }) =>
-    isLoading ? (
-      <ListItem avatar>
-        <Left>
-          <ActivityIndicator size="large" />
-        </Left>
-        <Body>
-          <FormattedMessage
-            id="Home.event.loadingTitle"
-            defaultMessage="Please wait, loading event..."
-          >
-            {txt => <AlignedText>{txt}</AlignedText>}
-          </FormattedMessage>
-          <AlignedText note />
-        </Body>
-        <Right />
-      </ListItem>
-    ) : (
-      <ListItem
-        avatar
-        onPress={() => {
-          onPress(id)
-        }}
-        style={{
-          width: '90%',
-          backgroundColor: 'white',
-          borderBottomWidth: 3,
-          borderBottomColor: isTaken ? 'grey' : 'red',
-          marginTop: 10,
-          marginRight: 'auto',
-          marginBottom: 0,
-          marginLeft: 'auto'
-        }}
-      >
-        <Left>
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              borderColor: isTaken ? 'grey' : 'red',
-              borderWidth: 1,
-              borderRadius: 25,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Image
-              style={{ width: 30, resizeMode: 'contain' }}
-              source={categoryImg}
-            />
-          </View>
-        </Left>
-        <Body>
-          <AlignedText>
-            <Text style={{ fontWeight: 'bold', fontFamily: 'Alef' }}>
-              {' '}
-              {categoryName} {'\n'}{' '}
-            </Text>{' '}
-            {displayAddress} {carType && `(${carType})`}
-          </AlignedText>
-          <AlignedText note>{more}</AlignedText>
-          {isAdmin && (
-            <NotificationBadge
-              sent={sentNotification}
-              error={errorNotification}
-              received={receivedNotification}
-            />
-          )}
-        </Body>
-        <Right
+  }) => (
+    // isLoading ? (
+    //   <ListItem avatar>
+    //     <Left>
+    //       <ActivityIndicator size="large" />
+    //     </Left>
+    //     <Body>
+    //       <FormattedMessage
+    //         id="Home.event.loadingTitle"
+    //         defaultMessage="Please wait, loading event..."
+    //       >
+    //         {txt => <AlignedText>{txt}</AlignedText>}
+    //       </FormattedMessage>
+    //       <AlignedText note />
+    //     </Body>
+    //     <Right />
+    //   </ListItem>
+    // ) : (
+    <ListItem
+      avatar
+      onPress={() => {
+        onPress(id)
+      }}
+      style={{
+        width: '90%',
+        backgroundColor: 'white',
+        borderBottomWidth: 3,
+        borderBottomColor: isTaken ? 'grey' : 'red',
+        marginTop: 10,
+        marginRight: 'auto',
+        marginBottom: 0,
+        marginLeft: 'auto'
+      }}
+    >
+      <Left>
+        <View
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            paddingBottom: 0,
-            paddingRight: 0
+            width: 50,
+            height: 50,
+            borderColor: isTaken ? 'grey' : 'red',
+            borderWidth: 1,
+            borderRadius: 25,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
         >
-          <FormattedRelative value={timestamp}>
-            {relative => <AlignedText note>{relative}</AlignedText>}
-          </FormattedRelative>
-          {distance && distanceToString(distance)}
-          {isTaken && (
-            <AlignedText
-              note
-              style={{
-                padding: 3,
-                marginTop: 3,
-                backgroundColor: 'grey',
-                color: 'white',
-                fontWeight: 'bold',
-                fontFamily: 'Alef'
-              }}
-            >
-              נלקח
-              {assignedTo && assignedTo.name && ` ע״י ${assignedTo.name}`}
-            </AlignedText>
-          )}
-        </Right>
-      </ListItem>
-    )
+          <Image
+            style={{ width: 30, resizeMode: 'contain' }}
+            source={categoryImg}
+          />
+        </View>
+      </Left>
+      <Body>
+        <AlignedText>
+          <Text style={{ fontWeight: 'bold', fontFamily: 'Alef' }}>
+            {' '}
+            {categoryName} {'\n'}{' '}
+          </Text>{' '}
+          {displayAddress} {carType && `(${carType})`}
+        </AlignedText>
+        <AlignedText note>{more}</AlignedText>
+        {isAdmin && (
+          <NotificationBadge
+            sent={sentNotification}
+            error={errorNotification}
+            received={receivedNotification}
+          />
+        )}
+      </Body>
+      <Right
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          paddingBottom: 0,
+          paddingRight: 0
+        }}
+      >
+        <FormattedRelative value={timestamp}>
+          {relative => <AlignedText note>{relative}</AlignedText>}
+        </FormattedRelative>
+        {distance && distanceToString(distance)}
+        {isTaken && (
+          <AlignedText
+            note
+            style={{
+              padding: 3,
+              marginTop: 3,
+              backgroundColor: 'grey',
+              color: 'white',
+              fontWeight: 'bold',
+              fontFamily: 'Alef'
+            }}
+          >
+            {isCompleted ? 'נסגר' : 'נלקח'}
+            {!isCompleted &&
+              assignedTo &&
+              assignedTo.name &&
+              ` ע״י ${assignedTo.name}`}
+          </AlignedText>
+        )}
+      </Right>
+    </ListItem>
+  )
+  // )
 )
 
 @observer

@@ -40,7 +40,6 @@ export default types
     sentNotification: types.optional(types.array(types.string), []),
     errorNotification: types.optional(types.array(types.string), []),
     receivedNotification: types.optional(types.array(types.string), []),
-    isLoading: false,
     initAsDetachedEvent: false
   })
   .views(self => ({
@@ -64,6 +63,9 @@ export default types
         self.status === 'completed'
       )
     },
+    get isCompleted() {
+      return self.status === 'completed'
+    },
     get displayAddress() {
       return self.address && self.address.replace(/, ישראל$/, '')
     },
@@ -86,13 +88,15 @@ export default types
     },
     get categoryImg() {
       return categoryImg(self.category)
+    },
+    get isLackingCriticalInfo() {
+      return !self.address || !self.category
     }
   }))
   .actions(self => ({
     onEventUpdated: flow(function* onEventUpdated(eventData) {
       if (!eventData.id) {
-        // Event was removed (completed), unsubscribe
-        // It will be removed next time
+        // Event was removed (completed), data came back invalid, unsubscribe and do not update
         self.beforeDestroy()
         return
       }
@@ -106,17 +110,15 @@ export default types
       const shouldFetchDispatcher =
         !self.dispatcher && eventData.dispatcherId && self.isAssigned
       if (shouldFetchDispatcher) {
-        self.isLoading = true
         self.dispatcher = yield api.fetchDispatcher(eventData.dispatcherId)
       }
-      // Not loading anymore (if it was loading)
-      self.isLoading = false
+
+      if (self.isCompleted) {
+        // Event is now completed, detach from updates to save memory
+        self.detachEvent()
+      }
     }),
     afterCreate: () => {
-      // If no data is provided with event, set it as loading
-      if (!self.address || !self.category) {
-        self.isLoading = true
-      }
       if (!self.initAsDetachedEvent) {
         self.attachEvent()
       }
