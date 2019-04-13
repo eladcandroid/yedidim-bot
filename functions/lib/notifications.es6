@@ -44,8 +44,13 @@ export const sendNotificationByGeoFireLocation = async props => {
     const userIdToDistanceFromEvent = {}
 
     geoQuery.on('key_entered', function(userId, location, distance) {
-        usersInRadius.push({ userId, location, distance })
-        userIdToDistanceFromEvent[userId] = distance
+        let slicedUserId = userId.split('-')[0]
+        if (usersInRadius.indexOf(slicedUserId) === -1) {
+          usersInRadius.push(slicedUserId)
+        }
+        if (!userIdToDistanceFromEvent[slicedUserId] || distance < userIdToDistanceFromEvent[slicedUserId]) {
+          userIdToDistanceFromEvent[slicedUserId] = distance
+        }
     })
 
     geoQuery.on('ready', function() {
@@ -53,29 +58,17 @@ export const sendNotificationByGeoFireLocation = async props => {
       console.log(
         `[sendNotificationByGeoFireLocation] Found ${
           usersInRadius.length
-        } in location`,
+        } in location. usersInRadius:`,
         usersInRadius,
-        data
-      )
-
-      // Extract userIds from 'userId-locationId' entries
-      // And remove duplicated using set
-      const uniqueUserIdsInRadius = [
-        ...new Set(usersInRadius.map(({ userId }) => userId.split('-')[0]))
-      ]
-
-      console.log(
-        `[sendNotificationByGeoFireLocation] Found unique userIds ${
-          uniqueUserIdsInRadius.length
-        } in location`,
-        uniqueUserIdsInRadius,
+        `userIdToDistanceFromEvent:`,
         userIdToDistanceFromEvent,
+        `Event data:`,
         data
       )
 
       // Logging found users for location
       logger.track(
-        uniqueUserIdsInRadius.map(userId => ({
+        usersInRadius.map(userId => ({
           eventType: 'event notification by radius (search)', // required
           userId,
           eventProperties: {
@@ -110,7 +103,7 @@ export const sendNotificationByGeoFireLocation = async props => {
               userId => {
                 let currentUser = usersById[userId]
                 return (
-                  uniqueUserIdsInRadius.indexOf(userId) > -1 &&
+                  usersInRadius.indexOf(userId) > -1 &&
                   !userMutedNotifications(currentUser) &&
                   (!currentUser.Radius || (currentUser.Radius >= userIdToDistanceFromEvent[userId]))
                 )

@@ -56,6 +56,8 @@ exports.onEventDeleted = functions.database
     return eventUpdatesHandlers.onEventDeleted(snapshot, context, admin)
   })
 
+// cURL example:
+// curl -X POST -d "eventId=-Lb2oSM3yown-mjgbAzN&searchRadius=5" "http://localhost:5001/yedidim-sandbox-2/us-central1/sendNotificationBySearchRadius"
 exports.sendNotificationBySearchRadius = functions.https.onRequest(
   (req, res) => {
     return sendExpoFollowerNotification.sendNotificationBySearchRadius(
