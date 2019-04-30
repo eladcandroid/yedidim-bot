@@ -139,7 +139,9 @@ class EventsSearch extends Component {
                   EventsListColumn.Time,
                   EventsListColumn.Name,
                   EventsListColumn.Phone,
-                  EventsListColumn.Case
+                  EventsListColumn.CarType,
+                  EventsListColumn.Case,
+                  EventsListColumn.City
                 ]}
                 categories={this.props.categories}
                 navigate={this.props.navigate}

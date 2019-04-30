@@ -15,7 +15,8 @@ export const EventsListColumn = {
   Phone: { id: 2, label: 'טלפון' },
   Case: { id: 3, label: 'בעיה' },
   City: { id: 4, label: 'כתובת' },
-  Source: { id: 5, label: '' }
+  CarType: { id: 5, label: 'סוג רכב' },
+  Source: { id: 6, label: '' }
 }
 
 class EventsList extends Component {
@@ -62,6 +63,10 @@ class EventsList extends Component {
           ) : (
             <Text style={getTextStyle(styles.cellText)} />
           )
+        ) : col === EventsListColumn.CarType ? (
+          <Text style={getTextStyle(styles.cellText)} allowFontScaling={false}>
+            {event.details['car type']}
+          </Text>
         ) : (
           undefined
         )}
@@ -77,8 +82,8 @@ class EventsList extends Component {
           style={
             col === EventsListColumn.Source
               ? { width: 30 }
-              : col === EventsListColumn.Phone
-              ? { width: 100 }
+              : [EventsListColumn.Phone, EventsListColumn.CarType].includes(col)
+              ? { width: 90 }
               : undefined
           }
           key={col.id}
