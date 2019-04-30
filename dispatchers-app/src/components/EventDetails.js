@@ -9,7 +9,8 @@ import {
   TouchableHighlight,
   Linking,
   StyleSheet,
-  I18nManager
+  I18nManager,
+  Alert
 } from 'react-native'
 import { Button, ActionSheet } from 'native-base'
 import { Prompt } from './Prompt'
@@ -150,6 +151,22 @@ class EventDetails extends Component {
     this.props.navigate(ScreenType.EventsList)
   }
 
+  showCompleteEventAlert = () => {
+    Alert.alert(
+      'סיום טיפול באירוע',
+      'האם אתה בטוח שתם הטיפול האירוע?',
+      [
+        {
+          text: 'ביטול',
+          onPress: () => {},
+          style: 'cancel'
+        },
+        { text: 'האירוע טופל', onPress: this.completeEvent }
+      ],
+      { cancelable: true }
+    )
+  }
+
   isEventAssignedToDispatcher() {
     return !!this.props.event.dispatcher
   }
@@ -212,7 +229,7 @@ class EventDetails extends Component {
         ) : (
           <Button
             style={styles.button}
-            onPress={this.completeEvent}
+            onPress={this.showCompleteEventAlert}
             disabled={!this.isAllowToHandleEvent()}
           >
             <Text style={styles.buttonText}>טופל</Text>
@@ -498,5 +515,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     alignSelf: 'center'
+  },
+  modalContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 0
   }
 })
