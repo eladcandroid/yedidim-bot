@@ -472,7 +472,8 @@ function getEventsQuery(collection, fromDate, toDate, phone) {
 }
 
 export function searchEvents(phone, fromDate, toDate) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const dispatchers = getState().dataSource.dispatchers || {}
     let queryEvents = getEventsQuery('events', fromDate, toDate, phone)
     let queryEventsArchive = getEventsQuery(
       'events_archive',
@@ -491,6 +492,7 @@ export function searchEvents(phone, fromDate, toDate) {
             event => event.details['phone number'] === phone
           )
         }
+        loadDispatchersOfEvents(events, dispatchers, dispatch)
         dispatch(setSearchEvents(events))
       })
       .catch(err => {
@@ -499,6 +501,20 @@ export function searchEvents(phone, fromDate, toDate) {
         }
       })
   }
+}
+
+function loadDispatchersOfEvents(events, existingDispatchers, dispatch) {
+  const loadedDispatchersIds = []
+  events.forEach(event => {
+    const dispatcherId = event.dispatcher
+    if (
+      !existingDispatchers[dispatcherId] &&
+      !loadedDispatchersIds.includes(dispatcherId)
+    ) {
+      dispatch(loadDispatcher(event.dispatcher))
+      loadedDispatchersIds.push(dispatcherId)
+    }
+  })
 }
 
 function loadVolunteers() {

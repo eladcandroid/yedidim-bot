@@ -108,9 +108,7 @@ const formatCSVCell = data => {
 }
 
 const getEventDispatcher = (dispatchers, event) => {
-  const dispatcher = dispatchers.find(
-    dispatcher => dispatcher.id === event.dispatcher
-  )
+  const dispatcher = dispatchers[event.dispatcher]
   return dispatcher ? dispatcher.name : ''
 }
 
