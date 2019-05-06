@@ -66,6 +66,7 @@ exports.sendNotificationToRecipient = async (req, res, admin) => {
         let message = await formatNotification(event, admin)
         let data = {
           eventId: event.key,
+          event,
           type: 'event'
         }
         await sendNotificationToUsers({
@@ -159,6 +160,7 @@ let sendEventNotificationToCloseByVolunteers = async (
   let message = await formatNotification(eventData, admin)
   let data = {
     eventId: eventData.key,
+    event: eventData,
     type: 'event'
   }
   // return sendNotificationByOneSignalLocation({

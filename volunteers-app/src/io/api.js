@@ -153,7 +153,7 @@ export async function signOut() {
   return firebase.auth().signOut()
 }
 
-const eventSnapshotToJSON = snapshot => {
+export const eventSnapshotToJSON = snapshot => {
   if (!snapshot.details) {
     snapshot.details = {
       geo: {}
@@ -167,7 +167,7 @@ const eventSnapshotToJSON = snapshot => {
       typeof snapshot.assignedTo === 'string'
         ? { id: snapshot.assignedTo, name: '', phone: snapshot.assignedTo }
         : snapshot.assignedTo,
-    timestamp: snapshot.timestamp,
+    timestamp: snapshot.timestamp || new Date().getTime(),
     address: snapshot.details.address,
     caller: snapshot.details['caller name'],
     carType: snapshot.details['car type'],

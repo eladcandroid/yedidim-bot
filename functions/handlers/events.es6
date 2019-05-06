@@ -67,7 +67,10 @@ exports.loadLatestOpenEvents = async (req, res, admin) => {
             // The query above also retrieves draft events, we need to filter
             // it out
             const eventsToReturn = Object.keys(eventsById)
-              .filter(eventId => !!eventsById[eventId].isOpen)
+              .filter(
+                eventId =>
+                  !!eventsById[eventId].isOpen && !!eventsById[eventId].details
+              )
               .filter(eventId => !!nearEventIdToDistance[eventId])
               .filter(
                 eventId =>
@@ -83,7 +86,7 @@ exports.loadLatestOpenEvents = async (req, res, admin) => {
               .slice(0, 25)
             if (eventsToReturn.length < 25) {
               const oldestEventsFirst = values(eventsById)
-                .filter(event => !!event.isOpen)
+                .filter(event => !!event.isOpen && !!event.details)
                 .sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1))
               let i = 0
               while (

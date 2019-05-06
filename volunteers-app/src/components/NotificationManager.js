@@ -7,6 +7,7 @@ import { NavigationActions } from 'react-navigation'
 import { defineMessages } from 'react-intl'
 import OneSignal from 'react-native-onesignal'
 import Sentry from 'sentry-expo'
+import { eventSnapshotToJSON } from 'io/api'
 
 const newEventToast = defineMessages({
   button: {
@@ -96,7 +97,7 @@ const withNotificationManager = WrappedComponent => {
     handleAcceptedEventByUser = eventId => {
       if (eventId) {
         // Add event
-        this.props.addEventFromNotification(eventId)
+        this.props.addEventFromNotification({ eventId })
         // Navigate to it locked
         this.navigateToEvent(
           {
@@ -173,11 +174,12 @@ const withNotificationManager = WrappedComponent => {
       }
 
       // Add event to store
-      const { eventId } = data
-      this.props.addEventFromNotification(
+      const { eventId, event } = data
+      this.props.addEventFromNotification({
         eventId,
-        AppState.currentState === 'background'
-      )
+        initAsDetachedEvent: AppState.currentState === 'background',
+        event: eventSnapshotToJSON(event)
+      })
 
       if (isOpenEvent) {
         // If is open event, user touched notification, open it

@@ -23,16 +23,18 @@ export default types
       return self.events.size > 0
     },
     get sortedEventsByStatusAndTimestamp() {
-      return self.allEvents
-        .slice()
-        .filter(event => !event.isLackingCriticalInfo)
-        .sort((a, b) => {
-          if (a.isTaken === b.isTaken) {
-            return a.timestamp - b.timestamp
-          }
-          // display taken events last
-          return a.isTaken ? 1 : -1
-        })
+      return (
+        self.allEvents
+          .slice()
+          // .filter(event => !event.isLackingCriticalInfo)
+          .sort((a, b) => {
+            if (a.isTaken === b.isTaken) {
+              return a.timestamp - b.timestamp
+            }
+            // display taken events last
+            return a.isTaken ? 1 : -1
+          })
+      )
     }
   }))
   .actions(self => {
@@ -83,8 +85,12 @@ export default types
           }
         })
       },
-      addEventFromNotification: (eventId, initAsDetachedEvent) => {
-        addEvent({ id: eventId, initAsDetachedEvent: !!initAsDetachedEvent })
+      addEventFromNotification: ({ eventId, initAsDetachedEvent, event }) => {
+        addEvent({
+          id: eventId,
+          initAsDetachedEvent: !!initAsDetachedEvent,
+          ...(event || {})
+        })
 
         // api.acknowledgeReceivedEvent(
         //   eventId,
