@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Asset, Font, AppLoading, Constants } from 'expo'
-import createRootStore from 'stores'
+import createRootStore from 'stores/'
 import { Image, I18nManager, StyleSheet } from 'react-native'
 import { Provider, observer } from 'mobx-react/native'
 import categoriesImages from 'const'
